@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Playlist YouTube – Dark Mode & Responsive Navbar</title>
+  <style>
+    :root {
+      --bg: #121212;
+      --bg-alt: #1e1e1e;
+      --primary: #ff6600;
+      --primary-dark: #cc5200;
+      --text: #eee;
+      --text-muted: #bbb;
+      --shadow: rgba(255, 102, 0, 0.3);
+      --radius: 10px;
+      --gap: 1rem;
+      --error-bg: #420000;
+      --error-text: #ff3300;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0; padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: none;
+      background-color: var(--primary-dark);
+      border-radius: var(--radius);
+      padding: 0.5rem 1rem;
+    }
+
+    header {
+      background-color: var(--bg-alt);
+      box-shadow: 0 2px 8px var(--shadow);
+      padding: var(--gap);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .brand {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: var(--gap);
+    }
+
+    nav a {
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius);
+      transition: background-color 0.3s ease;
+      font-weight: 600;
+      user-select: none;
+      text-decoration: none;
+    }
+
+    form {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    input[type="text"] {
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius);
+      border: 2px solid var(--primary);
+      background-color: var(--bg);
+      color: var(--text);
+      font-size: 1rem;
+      transition: box-shadow 0.3s ease;
+      min-width: 180px;
+    }
+
+    input[type="text"]:focus {
+      outline: none;
+      box-shadow: 0 0 8px var(--primary);
+      border-color: var(--primary);
+    }
+
+    button[type="submit"],
+    #reset-button {
+      background-color: var(--primary);
+      color: var(--bg);
+      border: none;
+      border-radius: var(--radius);
+      padding: 0.5rem 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 0 6px var(--primary);
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+      user-select: none;
+    }
+
+    button[type="submit"]:hover,
+    #reset-button:hover {
+      background-color: var(--primary-dark);
+      box-shadow: 0 0 12px var(--primary-dark);
+    }
+
+    #reset-button {
+      display: none;
+    }
+
+    main {
+      flex-grow: 1;
+      padding: calc(var(--gap) * 2);
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    #video-list {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: calc(var(--gap) * 2);
+    }
+
+    .card {
+      background-color: var(--bg-alt);
+      border-radius: var(--radius);
+      box-shadow: 0 4px 12px rgba(255, 102, 0, 0.3);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.2s ease;
+      cursor: pointer;
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(255, 102, 0, 0.7);
+    }
+
+    .thumb {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+    }
+
+    .card-content {
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+
+    .title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .published {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    #loader {
+      text-align: center;
+      padding: var(--gap);
+      font-weight: 600;
+      color: var(--primary);
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    #error-message {
+      background-color: var(--error-bg);
+      color: var(--error-text);
+      padding: 1rem;
+      border-radius: var(--radius);
+      margin-bottom: var(--gap);
+      text-align: center;
+      font-weight: 700;
+    }
+
+    .menu-toggle {
+      background: none;
+      border: none;
+      cursor: pointer;
+      display: none;
+      flex-direction: column;
+      justify-content: space-around;
+      width: 28px;
+      height: 24px;
+      padding: 0;
+      box-sizing: content-box;
+    }
+
+    .menu-toggle span {
+      display: block;
+      width: 28px;
+      height: 3px;
+      background-color: var(--primary);
+      border-radius: 3px;
+      transition: all 0.3s linear;
+      position: relative;
+      transform-origin: 1px;
+    }
+
+    .menu-toggle.active span:nth-child(1) {
+      transform: rotate(45deg);
+    }
+    .menu-toggle.active span:nth-child(2) {
+      opacity: 0;
+    }
+    .menu-toggle.active span:nth-child(3) {
+      transform: rotate(-45deg);
+    }
+
+    @media (max-width: 768px) {
+      header {
+        padding: 1.5rem 1rem;
+      }
+
+      nav {
+        position: fixed;
+        top: 70px;
+        right: 0;
+        background-color: var(--bg-alt);
+        height: calc(100% - 70px);
+        width: 250px;
+        flex-direction: column;
+        padding: var(--gap);
+        gap: var(--gap);
+        transform: translateX(100%);
+        transition: transform 0.3s ease;
+        box-shadow: -4px 0 12px rgba(255, 102, 0, 0.7);
+        z-index: 999;
+      }
+
+      nav.open {
+        transform: translateX(0);
+      }
+
+      nav a {
+        padding: 1rem;
+        font-size: 1.2rem;
+        text-decoration: none;
+      }
+
+      form {
+        width: 100%;
+      }
+
+      input[type="text"] {
+        min-width: 0;
+        flex-grow: 1;
+        font-size: 1rem;
+      }
+
+      #reset-button {
+        display: block;
+        margin-top: 0.5rem;
+        background-color: var(--primary-dark);
+      }
+
+      #video-list {
+        grid-template-columns: 1fr;
+      }
+
+      .menu-toggle {
+        display: flex;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">YouTube Playlist</div>
+    <button class="menu-toggle" aria-label="Toggle menu" aria-expanded="false">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+    <nav>
+      <a href="#home" tabindex="0">Home</a>
+      <a href="#playlist" tabindex="0">Playlist</a>
+      <a href="#about" tabindex="0">About</a>
+      <form id="search-form" role="search">
+        <input
+          type="text"
+          id="search-input"
+          placeholder="Cari video…"
+          aria-label="Cari video"
+          autocomplete="off"
+        />
+        <button type="submit">Cari</button>
+        <button type="button" id="reset-button" class="hidden">Tampilkan Semua</button>
+      </form>
+    </nav>
+  </header>
+
+  <main>
+    <div id="error-message" class="hidden"></div>
+    <div id="video-list"></div>
+    <div id="loader" class="hidden">Memuat…</div>
+  </main>
+
+  <script>
+    const API_KEY = "AIzaSyDq4QPxumyDdxZB6ZlUciD7dsSA5ftQsQk";
+    const PLAYLIST_ID = "PL-FZtns4xgSElDgxA-146aX585xzalgbx";
+    const CHANNEL_ID = "UC87Oi8WXRAI2ncAX7CoBT6w";
+    const MAX_RESULTS = 12;
+
+    let nextPageToken = "";
+    let fetching = false;
+    let mode = "playlist";
+    let lastQuery = "";
+
+    const videoListEl = document.getElementById("video-list");
+    const loaderEl = document.getElementById("loader");
+    const searchForm = document.getElementById("search-form");
+    const searchInput = document.getElementById("search-input");
+    const resetButton = document.getElementById("reset-button");
+    const errorMessageEl = document.getElementById("error-message");
+    const menuToggle = document.querySelector(".menu-toggle");
+    const nav = document.querySelector("nav");
+
+    async function fetchVideos() {
+      if (fetching) return;
+      fetching = true;
+      loaderEl.classList.remove("hidden");
+      errorMessageEl.classList.add("hidden");
+      try {
+        const url =
+          mode === "playlist"
+            ? `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${PLAYLIST_ID}&maxResults=${MAX_RESULTS}&key=${API_KEY}&pageToken=${nextPageToken}`
+            : `https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&channelId=${CHANNEL_ID}&q=${encodeURIComponent(
+                lastQuery
+              )}&maxResults=${MAX_RESULTS}&key=${API_KEY}&pageToken=${nextPageToken}`;
+
+        const res = await fetch(url);
+        if (!res.ok) throw new Error("HTTP error " + res.status);
+        const data = await res.json();
+        renderVideos(data);
+        nextPageToken = data.nextPageToken || "";
+      } catch (err) {
+        errorMessageEl.textContent =
+          "Gagal memuat data. Periksa koneksi atau API Key Anda.";
+        errorMessageEl.classList.remove("hidden");
+      } finally {
+        loaderEl.classList.add("hidden");
+        fetching = false;
+        checkShortPage();
+      }
+    }
+
+    function renderVideos(data) {
+      const items = data.items || [];
+      if (mode === "search" && items.length === 0) {
+        errorMessageEl.textContent = "Tidak ada hasil pencarian.";
+        errorMessageEl.classList.remove("hidden");
+      } else {
+        errorMessageEl.classList.add("hidden");
+      }
+      const fragment = document.createDocumentFragment();
+      items.forEach((item) => {
+        const snippet = item.snippet;
+        if (!snippet || snippet.title === "Private video" || snippet.title === "Video pribadi") return;
+        const vidId = mode === "playlist" ? snippet.resourceId.videoId : item.id.videoId;
+        const card = document.createElement("a");
+        card.href = `https://www.youtube.com/watch?v=${vidId}`;
+        card.target = "_blank";
+        card.rel = "noopener noreferrer";
+        card.className = "card";
+        card.innerHTML = `
+          <img class="thumb" src="${snippet.thumbnails?.medium?.url || ''}" alt="Thumbnail ${snippet.title}" />
+          <div class="card-content">
+            <div class="title">${snippet.title}</div>
+            <div class="published">${new Date(snippet.publishedAt).toLocaleDateString()}</div>
+          </div>
+        `;
+        fragment.appendChild(card);
+      });
+      videoListEl.appendChild(fragment);
+    }
+
+    function checkShortPage() {
+      if (document.body.scrollHeight <= window.innerHeight && nextPageToken && !fetching) {
+        fetchVideos();
+      }
+    }
+
+    window.addEventListener("scroll", () => {
+      const nearBottom = window.innerHeight + window.scrollY >= document.body.offsetHeight - 300;
+      if (nearBottom && nextPageToken && !fetching) {
+        fetchVideos();
+      }
+    });
+
+    searchForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const query = searchInput.value.trim();
+      if (!query) return;
+      mode = "search";
+      lastQuery = query;
+      nextPageToken = "";
+      videoListEl.innerHTML = "";
+      fetchVideos();
+      resetButton.classList.remove("hidden");
+    });
+
+    resetButton.addEventListener("click", () => {
+      mode = "playlist";
+      lastQuery = "";
+      nextPageToken = "";
+      videoListEl.innerHTML = "";
+      resetButton.classList.add("hidden");
+      fetchVideos();
+      searchInput.value = "";
+    });
+
+    menuToggle.addEventListener("click", () => {
+      const expanded = menuToggle.getAttribute("aria-expanded") === "true";
+menuToggle.setAttribute("aria-expanded", !expanded);
+menuToggle.classList.toggle("active");
+nav.classList.toggle("open");
+});// close menu when clicking outside nav on mobile
+document.addEventListener("click", (e) => {
+  if (
+    !nav.contains(e.target) &&
+    !menuToggle.contains(e.target) &&
+    nav.classList.contains("open")
+  ) {
+    nav.classList.remove("open");
+    menuToggle.classList.remove("active");
+    menuToggle.setAttribute("aria-expanded", "false");
+  }
+});
+
+// Load initial videos
+fetchVideos();
+</script> </body> </html>
