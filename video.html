@@ -3,67 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="style.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
   <title>Detail Video YouTube</title>
   <style>
-    :root {
-      --bg: #121212;
-      --bg-alt: #1e1e1e;
-      --primary: #ff6600;
-      --primary-dark: #cc5200;
-      --text: #eee;
-      --text-muted: #bbb;
-      --shadow: rgba(255, 102, 0, 0.3);
-      --radius: 10px;
-      --gap: 1rem;
-      --footer-bg: #1a1a1a;
-    }
-    * {
-      box-sizing: border-box;
-    }
-    body {
-      background-color: var(--bg);
-      color: var(--text);
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      margin: 0;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-    a {
-      color: var(--primary);
-      text-decoration: underline;
-    }
-    a:hover {
-      color: var(--primary-dark);
-      text-decoration: none;
-    }
-    header {
-      background-color: var(--bg-alt);
-      box-shadow: 0 2px 8px var(--shadow);
-      padding: var(--gap);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-    }
-    header .brand {
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: var(--primary);
-    }
-    header nav a {
-      margin-left: 1rem;
-      font-weight: 600;
-      text-decoration: none;
-      color: var(--text);
-      transition: color 0.3s ease;
-    }
-    header nav a:hover {
-      color: var(--primary);
-      text-decoration: underline;
-    }
     main {
       flex-grow: 1;
       padding: var(--gap);
@@ -168,13 +112,22 @@
 </head>
 <body>
   <header>
-    <div class="brand">YouTube Playlist</div>
+    <div class="brand">Play Pictures</div>
+    <button class="menu-toggle" aria-label="Toggle menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
     <nav>
-      <a href="index.html">Beranda</a>
-      <a href="playlist.html">Playlist</a>
-      <a href="about.html">Tentang</a>
+      <a href="./">Home</a>
+      <a href="#playlist">Playlist</a>
+      <a href="./about">About</a>
+      <form id="search-form" role="search">
+        <input type="text" id="search-input" placeholder="Masukkan Kata Kunci" aria-label="Cari video" autocomplete="off" />
+        <button type="submit">Cari</button>
+        <button type="button" id="reset-button" class="hidden">Tampilkan Semua</button>
+      </form>
     </nav>
   </header>
+
 
   <main>
     <div id="player"></div>
@@ -193,10 +146,25 @@
     </section>
   </main>
 
+  <!-- Floating Search Button -->
+  <button id="floating-search" aria-label="Search"><i class="fas fa-search"></i></button>
+
+
+  <!-- Search Overlay -->
+  <div id="search-overlay">
+    <form id="overlay-search-form">
+      <input type="text" id="overlay-search-input" placeholder="Cari video…" />
+      <button type="submit">Cari</button>
+      <button type="button" id="overlay-close">Tutup</button>
+    </form>
+  </div>
+
+
   <footer>
-    &copy; 2025 YouTube Playlist. Dibuat oleh <a href="mailto:youremail@example.com">Nama Anda</a>.
+    &copy; 2025 <a href="./">Play Pictures</a>.  Capturing Your Best Moment With Us.
   </footer>
 
   <script src="video.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
