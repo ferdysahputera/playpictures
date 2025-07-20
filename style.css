@@ -1,0 +1,341 @@
+:root {
+  --bg: #1a1a1a;
+  --text: #f0f0f0;
+  --accent: #ff6a00;
+  --card-bg: #2a2a2a;
+  --hover: #333;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Segoe UI", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  min-height: 100vh;
+  padding-bottom: 4rem;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--card-bg);
+  padding: 1rem 2rem;
+  border-bottom: 2px solid var(--accent);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--accent);
+}
+
+.menu-toggle {
+  font-size: 1.5rem;
+  background: none;
+  border: none;
+  color: var(--text);
+  cursor: pointer;
+  display: none;
+}
+
+nav ul {
+  display: flex;
+  gap: 1.5rem;
+  list-style: none;
+}
+
+nav a {
+  color: var(--text);
+  text-decoration: none;
+  padding: 0.5rem;
+  border-radius: 5px;
+  transition: background 0.3s;
+}
+
+nav a:hover {
+  background: var(--hover);
+}
+
+.search-container {
+  padding: 1rem 2rem;
+  background: var(--bg);
+  border-bottom: 1px solid var(--card-bg);
+}
+
+#search-form {
+  display: flex;
+  gap: 0.5rem;
+}
+
+#search-input, #overlay-search-input {
+  flex: 1;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  border: none;
+  background: var(--card-bg);
+  color: var(--text);
+}
+
+#search-form button,
+#overlay-search-form button {
+  padding: 0.5rem 1rem;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#video-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+  padding: 2rem;
+}
+
+.card {
+  background: var(--card-bg);
+  border-radius: 10px;
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.thumb {
+  width: 100%;
+  display: block;
+}
+
+.card-content {
+  padding: 1rem;
+}
+
+.title {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.published {
+  font-size: 0.9rem;
+  color: #aaa;
+}
+
+#loader {
+  text-align: center;
+  padding: 2rem;
+}
+
+.error-message {
+  text-align: center;
+  color: #ff4c4c;
+  margin-top: 1rem;
+}
+
+.hidden {
+  display: none;
+}
+
+#floating-search {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  padding: 1rem;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  z-index: 100;
+  cursor: pointer;
+}
+
+#search-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(20, 20, 20, 0.95);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+}
+
+#search-overlay.active {
+  display: flex;
+}
+
+.overlay-content {
+  background: var(--card-bg);
+  padding: 2rem;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+}
+
+#overlay-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #fff;
+  cursor: pointer;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  nav {
+    position: absolute;
+    top: 70px;
+    left: 0;
+    width: 100%;
+    background: var(--card-bg);
+    display: none;
+    flex-direction: column;
+  }
+
+  nav.open {
+    display: flex;
+  }
+
+  nav ul {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  nav li {
+    border-top: 1px solid #333;
+  }
+
+  .menu-toggle {
+    display: block;
+  }
+}
+
+/* toogle */
+
+.menu-toggle span {
+  display: block;
+  width: 25px;
+  height: 3px;
+  margin: 5px;
+  background-color: var(--text);
+  transition: 0.4s;
+}
+
+.menu-toggle.active span:nth-child(1) {
+  transform: translateY(8px) rotate(45deg);
+}
+
+.menu-toggle.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.menu-toggle.active span:nth-child(3) {
+  transform: translateY(-8px) rotate(-45deg);
+}
+
+/* Animasi halaman */
+.fade-in {
+  animation: fadeIn 0.4s ease-in;
+}
+
+.fade-out {
+  animation: fadeOut 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0 }
+  to { opacity: 1 }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1 }
+  to { opacity: 0 }
+}
+
+
+/* floating search */
+
+#search-overlay {
+  transition: opacity 0.4s ease;
+  opacity: 0;
+  pointer-events: none;
+}
+
+#search-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Floating Search Animation */
+
+#floating-search {
+  animation: floatIn 0.5s ease;
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+
+#floating-search:hover {
+  transform: scale(1.1);
+}
+
+@keyframes floatIn {
+  from {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+
+/* Tambahan Slide-In Animation */
+
+
+#search-overlay {
+  transform: translateY(-30px);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.4s ease, opacity 0.4s ease;
+}
+
+#search-overlay.active {
+  transform: translateY(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+
+#search-form button,
+#overlay-search-form button,
+#reset-button {
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+#search-form button:hover,
+#overlay-search-form button:hover,
+#reset-button:hover {
+  background: #ff8533;
+  transform: scale(1.05);
+}

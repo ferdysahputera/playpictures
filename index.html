@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Play Pictures - Capturing Your Best Moment With Us</title>
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<body class="fade-in">
+  <header>
+    <div class="logo">Play Pictures</div>
+    <button class="menu-toggle" aria-label="Toggle menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <nav>
+      <ul>
+        <li><a href="#">Home</a></li>
+        <li><a href="#">About</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="search-container">
+    <form id="search-form">
+      <input type="text" id="search-input" placeholder="Cari video...">
+        <button type="submit"><i class="fas fa-search"></i></button>
+      <button type="button" id="reset-button" class="hidden" title="Reset">
+  <i class="fas fa-rotate-left"></i>
+</button>
+    </form>
+  </div>
+
+  <main id="video-list"></main>
+  <div id="loader" class="hidden">Loading...</div>
+  <div id="error-message" class="error-message hidden"></div>
+
+  <!-- Floating Search (Mobile) -->
+<button id="floating-search" aria-label="Search">
+  <i class="fas fa-search"></i>
+</button>
+
+  <div id="search-overlay">
+    <div class="overlay-content">
+      <button id="overlay-close" aria-label="Tutup">?</button>
+      <form id="overlay-search-form">
+        <input type="text" id="overlay-search-input" placeholder="Cari video...">
+        <button type="submit"><i class="fas fa-search"></i></button>
+      </form>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

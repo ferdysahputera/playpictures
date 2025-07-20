@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Play Pictures</title>
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    .video-page {
+      display: flex;
+      flex-direction: row;
+      gap: 2rem;
+      padding: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .left-column {
+      flex: 2;
+      min-width: 300px;
+    }
+
+    .right-column {
+      flex: 1;
+      min-width: 250px;
+    }
+
+    .video-frame-container {
+      border: 3px solid var(--accent);
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 0 15px rgba(255, 106, 0, 0.2);
+    }
+
+    .video-frame-container iframe {
+      width: 100%;
+      height: 400px;
+      display: block;
+    }
+
+    .video-info {
+      margin-top: 1rem;
+    }
+
+    .video-description {
+      position: relative;
+      max-height: 120px;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+      white-space: pre-line;
+    }
+
+    .video-description.expanded {
+      max-height: none;
+    }
+
+    .toggle-desc {
+      color: var(--accent);
+      background: none;
+      border: none;
+      margin-top: 0.5rem;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .share-buttons {
+      margin-top: 1rem;
+      display: flex;
+      gap: 1rem;
+    }
+
+    .share-buttons button {
+      background: var(--card-bg);
+      color: var(--text);
+      border: 1px solid var(--accent);
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+
+    .share-buttons button:hover {
+      background: var(--accent);
+      color: white;
+    }
+
+    .related-videos h3 {
+      margin-bottom: 1rem;
+    }
+
+    .video-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .video-grid .card {
+      display: flex;
+      gap: 1rem;
+      background: var(--card-bg);
+      padding: 0.5rem;
+      border-radius: 8px;
+    }
+
+    .video-grid .thumb {
+      width: 100px;
+      height: 70px;
+      object-fit: cover;
+      border-radius: 5px;
+    }
+
+    .video-grid .card-content {
+      flex: 1;
+    }
+
+    @media (max-width: 768px) {
+      .video-page {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body class="fade-in">
+  <header>
+    <div class="logo">Play Pictures</div>
+    <button class="menu-toggle" aria-label="Toggle menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <nav>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="#">About</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Floating Search -->
+  <button id="floating-search" aria-label="Search"><i class="fas fa-search"></i></button>
+  <div id="search-overlay">
+    <div class="overlay-content">
+      <button id="overlay-close" aria-label="Tutup">?</button>
+      <form id="overlay-search-form">
+        <input type="text" id="overlay-search-input" placeholder="Cari video...">
+        <button type="submit"><i class="fas fa-search"></i></button>
+      </form>
+    </div>
+  </div>
+
+  <main class="video-page">
+    <!-- KIRI -->
+    <div class="left-column">
+      <div class="video-frame-container">
+        <iframe id="video-frame" frameborder="0" allowfullscreen></iframe>
+      </div>
+      <div class="video-info">
+        <h2 id="video-title">Memuat judul...</h2>
+        <div id="video-description" class="video-description">Memuat deskripsi...</div>
+        <button id="toggle-desc" class="toggle-desc hidden">Lihat Selengkapnya</button>
+
+        <div class="share-buttons">
+          <button id="copy-link"><i class="fas fa-link"></i> Salin Link</button>
+          <button id="share-whatsapp"><i class="fab fa-whatsapp"></i> WhatsApp</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- KANAN -->
+    <div class="right-column related-videos">
+      <h3>Video Rekomendasi</h3>
+      <div id="related-list" class="video-grid"></div>
+    </div>
+  </main>
+
+  <script>
+    const videoId = new URLSearchParams(window.location.search).get("v");
+    const API_KEY = "AIzaSyDq4QPxumyDdxZB6ZlUciD7dsSA5ftQsQk";
+    const CHANNEL_ID = "UC87Oi8WXRAI2ncAX7CoBT6w";
+    const MAX_RESULTS = 6;
+
+    const iframe = document.getElementById("video-frame");
+    const titleEl = document.getElementById("video-title");
+    const descEl = document.getElementById("video-description");
+    const toggleBtn = document.getElementById("toggle-desc");
+    const relatedList = document.getElementById("related-list");
+
+    if (videoId) {
+      iframe.src = `https://www.youtube.com/embed/${videoId}?rel=0&autoplay=1`;
+
+      fetch(`https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${videoId}&key=${API_KEY}`)
+        .then(res => res.json())
+        .then(data => {
+          const snippet = data.items[0].snippet;
+          titleEl.textContent = snippet.title;
+          descEl.innerHTML = linkify(snippet.description);
+
+          if (descEl.scrollHeight > 120) {
+            toggleBtn.classList.remove("hidden");
+            toggleBtn.addEventListener("click", () => {
+              descEl.classList.toggle("expanded");
+              toggleBtn.textContent = descEl.classList.contains("expanded")
+                ? "Tutup"
+                : "Lihat Selengkapnya";
+            });
+          }
+
+          const ids = extractVideoIdsFromDescription(snippet.description);
+          fetchRecommended(ids);
+          fetchChannelRecommendations();
+        });
+    }
+
+    function linkify(text) {
+      const urlPattern = /(\bhttps?:\/\/[^\s]+)/gi;
+      return text.replace(urlPattern, function (url) {
+        const ytMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]{11})/);
+        if (ytMatch) {
+          const id = ytMatch[1];
+          return `<a href="video.html?v=${id}">${url}</a>`;
+        } else {
+          return `<a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`;
+        }
+      });
+    }
+
+    function extractVideoIdsFromDescription(desc) {
+      const matches = desc.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]{11})/g) || [];
+      const ids = matches.map(link => {
+        const match = link.match(/(?:v=|\.be\/)([\w-]{11})/);
+        return match ? match[1] : null;
+      }).filter(Boolean);
+      return [...new Set(ids)].filter(id => id !== videoId).slice(0, MAX_RESULTS);
+    }
+
+    function fetchRecommended(ids) {
+      if (!ids.length) return;
+      fetch(`https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${ids.join(',')}&key=${API_KEY}`)
+        .then(res => res.json())
+        .then(data => {
+          data.items.forEach(item => {
+            const snippet = item.snippet;
+            const vidId = item.id;
+            const card = document.createElement("a");
+            card.href = `video.html?v=${vidId}`;
+            card.className = "card";
+            card.innerHTML = `
+              <img class="thumb" src="${snippet.thumbnails.medium.url}" alt="Thumbnail ${snippet.title}">
+              <div class="card-content">
+                <div class="title">${snippet.title}</div>
+                <div class="published">${new Date(snippet.publishedAt).toLocaleDateString()}</div>
+              </div>
+            `;
+            relatedList.appendChild(card);
+          });
+        });
+    }
+
+    function fetchChannelRecommendations() {
+      fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${CHANNEL_ID}&maxResults=5&order=date&type=video&key=${API_KEY}`)
+        .then(res => res.json())
+        .then(data => {
+          data.items.forEach(item => {
+            const vidId = item.id.videoId;
+            if (vidId === videoId) return;
+            const snippet = item.snippet;
+            const card = document.createElement("a");
+            card.href = `video.html?v=${vidId}`;
+            card.className = "card";
+            card.innerHTML = `
+              <img class="thumb" src="${snippet.thumbnails.medium.url}" alt="Thumbnail ${snippet.title}">
+              <div class="card-content">
+                <div class="title">${snippet.title}</div>
+                <div class="published">${new Date(snippet.publishedAt).toLocaleDateString()}</div>
+              </div>
+            `;
+            relatedList.appendChild(card);
+          });
+        });
+    }
+
+    // Share + Copy
+    const copyBtn = document.getElementById("copy-link");
+    const waBtn = document.getElementById("share-whatsapp");
+
+    copyBtn.addEventListener("click", () => {
+      const url = window.location.href;
+      navigator.clipboard.writeText(url).then(() => {
+        copyBtn.textContent = "? Tersalin!";
+        setTimeout(() => {
+          copyBtn.innerHTML = '<i class="fas fa-link"></i> Salin Link';
+        }, 2000);
+      });
+    });
+
+    waBtn.addEventListener("click", () => {
+      const url = encodeURIComponent(window.location.href);
+      const text = encodeURIComponent("Lihat video ini:");
+      window.open(`https://wa.me/?text=${text}%20${url}`, "_blank");
+    });
+
+    // Hamburger
+    const menuToggle = document.querySelector(".menu-toggle");
+    const nav = document.querySelector("nav");
+    menuToggle.addEventListener("click", () => {
+      const expanded = menuToggle.getAttribute("aria-expanded") === "true";
+      menuToggle.setAttribute("aria-expanded", !expanded);
+      menuToggle.classList.toggle("active");
+      nav.classList.toggle("open");
+    });
+    document.addEventListener("click", (e) => {
+      if (!nav.contains(e.target) && !menuToggle.contains(e.target)) {
+        nav.classList.remove("open");
+        menuToggle.classList.remove("active");
+        menuToggle.setAttribute("aria-expanded", "false");
+      }
+    });
+
+    // Floating Search
+    const floatingSearchBtn = document.getElementById("floating-search");
+    const searchOverlay = document.getElementById("search-overlay");
+    const overlaySearchForm = document.getElementById("overlay-search-form");
+    const overlaySearchInput = document.getElementById("overlay-search-input");
+    const overlayClose = document.getElementById("overlay-close");
+
+    floatingSearchBtn.addEventListener("click", () => {
+      searchOverlay.classList.add("active");
+      overlaySearchInput.focus();
+    });
+
+    overlayClose.addEventListener("click", () => {
+      searchOverlay.classList.remove("active");
+    });
+
+    overlaySearchForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const query = overlaySearchInput.value.trim();
+      if (!query) return;
+      window.location.href = `index.html?q=${encodeURIComponent(query)}`;
+    });
+
+    // Transisi
+    document.querySelectorAll('a[href]').forEach(link => {
+      if (link.target !== "_blank") {
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          document.body.classList.add('fade-out');
+          const href = this.getAttribute('href');
+          setTimeout(() => window.location.href = href, 300);
+        });
+      }
+    });
+  </script>
+</body>
+</html>
