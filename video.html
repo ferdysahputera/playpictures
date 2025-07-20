@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Play Pictures</title>
+  <title>Detail Video</title>
   <link rel="stylesheet" href="style.css"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <style>
@@ -43,24 +43,12 @@
     }
 
     .video-description {
-      position: relative;
-      max-height: 120px;
-      overflow: hidden;
-      transition: max-height 0.3s ease;
       white-space: pre-line;
     }
 
-    .video-description.expanded {
-      max-height: none;
-    }
-
-    .toggle-desc {
+    .video-description a {
       color: var(--accent);
-      background: none;
-      border: none;
-      margin-top: 0.5rem;
-      cursor: pointer;
-      font-weight: bold;
+      text-decoration: underline;
     }
 
     .share-buttons {
@@ -113,6 +101,20 @@
       flex: 1;
     }
 
+    /* Fullscreen video support */
+    :fullscreen iframe,
+    :-webkit-full-screen iframe {
+      width: 100vw !important;
+      height: 100vh !important;
+      object-fit: cover;
+    }
+
+    @media screen and (orientation: landscape) {
+      iframe {
+        height: 100vh !important;
+      }
+    }
+
     @media (max-width: 768px) {
       .video-page {
         flex-direction: column;
@@ -122,7 +124,7 @@
 </head>
 <body class="fade-in">
   <header>
-    <div class="logo">Play Pictures</div>
+    <div class="logo">VideoKu</div>
     <button class="menu-toggle" aria-label="Toggle menu" aria-expanded="false">
       <span></span><span></span><span></span>
     </button>
@@ -138,7 +140,7 @@
   <button id="floating-search" aria-label="Search"><i class="fas fa-search"></i></button>
   <div id="search-overlay">
     <div class="overlay-content">
-      <button id="overlay-close" aria-label="Tutup">?</button>
+      <button id="overlay-close" aria-label="Tutup">✖</button>
       <form id="overlay-search-form">
         <input type="text" id="overlay-search-input" placeholder="Cari video...">
         <button type="submit"><i class="fas fa-search"></i></button>
@@ -155,7 +157,6 @@
       <div class="video-info">
         <h2 id="video-title">Memuat judul...</h2>
         <div id="video-description" class="video-description">Memuat deskripsi...</div>
-        <button id="toggle-desc" class="toggle-desc hidden">Lihat Selengkapnya</button>
 
         <div class="share-buttons">
           <button id="copy-link"><i class="fas fa-link"></i> Salin Link</button>
@@ -180,7 +181,6 @@
     const iframe = document.getElementById("video-frame");
     const titleEl = document.getElementById("video-title");
     const descEl = document.getElementById("video-description");
-    const toggleBtn = document.getElementById("toggle-desc");
     const relatedList = document.getElementById("related-list");
 
     if (videoId) {
@@ -193,20 +193,20 @@
           titleEl.textContent = snippet.title;
           descEl.innerHTML = linkify(snippet.description);
 
-          if (descEl.scrollHeight > 120) {
-            toggleBtn.classList.remove("hidden");
-            toggleBtn.addEventListener("click", () => {
-              descEl.classList.toggle("expanded");
-              toggleBtn.textContent = descEl.classList.contains("expanded")
-                ? "Tutup"
-                : "Lihat Selengkapnya";
-            });
-          }
-
           const ids = extractVideoIdsFromDescription(snippet.description);
           fetchRecommended(ids);
           fetchChannelRecommendations();
         });
+
+      // Optional fullscreen trigger for mobile
+      iframe.addEventListener("load", () => {
+        if (window.innerWidth < 768 && iframe.requestFullscreen) {
+          const isPortrait = window.matchMedia("(orientation: portrait)").matches;
+          if (isPortrait) {
+            iframe.requestFullscreen().catch(() => {});
+          }
+        }
+      });
     }
 
     function linkify(text) {
@@ -284,7 +284,7 @@
     copyBtn.addEventListener("click", () => {
       const url = window.location.href;
       navigator.clipboard.writeText(url).then(() => {
-        copyBtn.textContent = "? Tersalin!";
+        copyBtn.textContent = "✅ Tersalin!";
         setTimeout(() => {
           copyBtn.innerHTML = '<i class="fas fa-link"></i> Salin Link';
         }, 2000);
