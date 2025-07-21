@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Tentang Kami - Play Pictures</title>
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<body class="fade-in">
+  <header>
+    
+    <div class="logo"><a href="index.html"><img src="logo.png"/></a></div>
+
+    <button class="menu-toggle" aria-label="Toggle menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <nav>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html" class="active">Tentang</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="about-wrapper">
+    <section class="about-box">
+      <div class="about-left">
+        <h1>Tentang Play Pictures</h1>
+        <p>
+          <strong>Play Pictures</strong> adalah tim kreatif yang berfokus pada dokumentasi momen-momen terbaik Anda melalui video sinematik. 
+          Kami mengabadikan pernikahan, prewedding, ulang tahun, acara keluarga, hingga konten promosi bisnis dengan sentuhan profesional dan artistik.
+        </p>
+        <p>
+          Kami percaya bahwa setiap detik dalam hidup layak dikenang, dan kami hadir untuk memastikan kenangan itu terekam sempurna.
+        </p>
+
+        <h2>Hubungi Kami</h2>
+        <ul class="contact-info">
+          <li><i class="fab fa-whatsapp"></i> <a href="https://wa.me/6285211871656" target="_blank">085211871656</a></li>
+          <li><i class="fas fa-phone"></i> <a href="tel:+6285211871656">085211871656</a></li>
+          <li><i class="fas fa-envelope"></i> <a href="mailto:ferdysahputera@gmail.com">ferdysahputera@gmail.com</a></li>
+        </ul>
+      </div>
+
+      <div class="about-right">
+        <h2>Lokasi Kami</h2>
+        <div class="map-container">
+          <iframe 
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d217.46367461620474!2d102.59302902482376!3d-3.449778303206455!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e313bf73cc4b895%3A0xde17d174bcfcc67b!2sPlay%20Media%20Photo%20%26%20Video%20Shooting!5e1!3m2!1sid!2sid!4v1753053812450!5m2!1sid!2sid" 
+            width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy">
+          </iframe>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Musik Backsound -->
+  <audio id="background-music" src="assets/audio/backsound.mp3" loop autoplay muted></audio>
+  <button id="music-toggle" aria-label="Toggle music">
+    <i class="fas fa-volume-mute"></i>
+  </button>
+
+  <script>
+    const music = document.getElementById('background-music');
+    const toggleBtn = document.getElementById('music-toggle');
+    let isPlaying = false;
+
+    toggleBtn.addEventListener('click', () => {
+      if (music.paused) {
+        music.muted = false;
+        music.play();
+        toggleBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+        isPlaying = true;
+      } else {
+        music.pause();
+        toggleBtn.innerHTML = '<i class="fas fa-volume-mute"></i>';
+        isPlaying = false;
+      }
+    });
+
+    window.addEventListener('click', () => {
+      if (!isPlaying) {
+        music.muted = false;
+      }
+    }, { once: true });
+  </script>
+</body>
+</html>
