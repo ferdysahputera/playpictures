@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Ittaqo Digital - Zahira Balanced Edition</title>
+<title>Ittaqo Digital - Perbaikan Data</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Tenor+Sans&family=Teko:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
@@ -11,7 +11,6 @@
     body { margin: 0; font-family: 'Tenor Sans', sans-serif; background: #08101b; color: var(--white); overflow: hidden; height: 100vh; width: 100vw; }
     .container { display: flex; height: calc(100vh - 42px); padding: 10px; gap: 10px; box-sizing: border-box; }
     
-    /* Panel Kiri (Jadwal) */
     .left { width: 32%; display: flex; flex-direction: column; gap: 6px; height: 100%; background: var(--royal-blue); border-radius: 12px; border: 2px solid var(--gold-leaf); padding: 12px; box-sizing: border-box; }
     .card-top { background: rgba(0,0,0,0.3); border-radius: 10px; padding: 8px; text-align: center; border-bottom: 2px solid var(--gold-leaf); }
     .clock { font-family: 'Teko', sans-serif; font-size: 2.8rem; font-weight: 600; color: var(--gold-leaf); line-height: 0.8; }
@@ -24,7 +23,6 @@
     .nama-sholat { flex: 1; font-size: 0.75rem; font-weight: 600; text-align: left; letter-spacing: 1px; }
     .waktu-sholat { font-family: 'Teko', sans-serif; font-size: 1.5rem; color: var(--white); }
 
-    /* Panel Kanan (Konten) */
     .right { flex: 1; position: relative; border-radius: 15px; overflow: hidden; border: 2px solid var(--gold-leaf); background: #000; }
     .slide-img { width: 100%; height: 100%; object-fit: cover; position: absolute; opacity: 0; transition: 2.5s; }
     .slide-img.active { opacity: 0.5; }
@@ -33,7 +31,6 @@
     .info-category { color: var(--gold-leaf); font-size: 0.55rem; font-weight: bold; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 3px; }
     .info-content { font-size: 0.85rem; color: var(--white); line-height: 1.3; }
 
-    /* Footer Marquee */
     .footer { height: 42px; background: #050b14; display: flex; align-items: center; border-top: 1px solid var(--gold-leaf); overflow: hidden; }
     .cd-fixed { background: var(--gold-leaf); color: var(--deep-black); height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 0 20px; min-width: 110px; z-index: 100; }
     .cd-fixed span:first-child { font-size: 0.5rem; font-weight: 800; }
@@ -42,7 +39,6 @@
     .marquee { font-size: 0.85rem; white-space: nowrap; animation: marquee 25s linear infinite; color: var(--gold-light); padding-left: 20px; }
     @keyframes marquee { from { transform: translateX(100%); } to { transform: translateX(-100%); } }
 
-    /* Overlay Adzan/Iqomah */
     #fullOverlay { position: fixed; inset: 0; z-index: 9999; display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
     #fullOverlay::before { content: ""; position: absolute; inset: 0; background: rgba(10, 25, 47, 0.96); backdrop-filter: blur(20px); z-index: -1; }
     #ovPetugas { margin-top: 30px; display: none; width: 80%; }
@@ -72,15 +68,17 @@
     <div class="right">
         <div style="position:absolute; top:20px; left:25px; z-index:10;">
             <h1 id="dispMasjid" style="font-family:'Cinzel'; font-size:1.6rem; color:var(--gold-leaf); margin:0;">Memuat...</h1>
-            <p id="dispAddr" style="font-size:0.65rem; opacity:0.8; margin:0; letter-spacing: 1px;">SILAKAN TUNGGU</p>
+            <p id="dispAddr" style="font-size:0.65rem; opacity:0.8; margin:0; letter-spacing: 1px;">SINKRONISASI DATA</p>
         </div>
         
-        <img src="https://images.unsplash.com/photo-1590076215667-873d3289816c?q=80&w=1000" class="slide-img active">
-        <img src="https://images.unsplash.com/photo-1542623024-a797bb77bbbc?q=80&w=1000" class="slide-img">
+        <div id="imageContainer">
+            <img src="https://images.unsplash.com/photo-1590076215667-873d3289816c?q=80&w=1000" class="slide-img active">
+            <img src="https://images.unsplash.com/photo-1542623024-a797bb77bbbc?q=80&w=1000" class="slide-img">
+        </div>
         
         <div class="info-board" id="infoBoard">
-            <div class="info-category" id="infoCat">Informasi</div>
-            <div class="info-content" id="infoText">Menghubungkan ke Database...</div>
+            <div class="info-category" id="infoCat">Laporan</div>
+            <div class="info-content" id="infoText">Menghubungkan ke Sheets...</div>
         </div>
     </div>
 </div>
@@ -109,12 +107,22 @@
     let infoIdx = 0;
     let audioCtx = null;
 
+    // Fungsi perbaikan parsing CSV untuk menangani koma di dalam tanda kutip
+    function parseCSVRow(row) {
+        const regex = /(".*?"|[^",\s]+)(?=\s*,|\s*$)/g;
+        const matches = row.match(regex);
+        if (!matches) return [];
+        return matches.map(m => m.replace(/^"|"$/g, '').trim());
+    }
+
     async function loadSettings() {
         try {
             const res = await fetch(sheetURL);
             const csv = await res.text();
-            const rows = csv.split('\n');
-            const data = rows[1].split(','); // Data baris ke-2
+            const rows = csv.split(/\r?\n/);
+            const data = parseCSVRow(rows[1]); // Mengambil data baris ke-2
+
+            if (data.length < 9) throw new Error("Format CSV tidak lengkap");
 
             settings = {
                 nama: data[0], addr: data[1], khatib: data[2], imam: data[3],
@@ -127,13 +135,16 @@
             document.getElementById('dispMarquee').innerText = settings.marquee;
             document.getElementById('ovKhatib').innerText = "KHATIB: " + settings.khatib;
             document.getElementById('ovImam').innerText = "IMAM: " + settings.imam;
-        } catch (e) { console.error("Database Error", e); }
+        } catch (e) { 
+            console.error("Gagal memuat data:", e);
+            document.getElementById('infoText').innerText = "Cek koneksi internet atau link CSV";
+        }
     }
 
     const getInfoData = () => [
         {cat: "Petugas Jumat", text: `Khatib: ${settings.khatib || '-'}<br>Imam: ${settings.imam || '-'}`},
         {cat: "Laporan Kas", text: `Saldo: ${settings.saldo || '-'}<br>Infaq Jumat: ${settings.infaq || '-'}`},
-        {cat: "Pesan", text: settings.marquee || '-'}
+        {cat: "Informasi", text: settings.marquee || '-'}
     ];
 
     async function getPrayer() {
@@ -146,7 +157,7 @@
             
             const map = {Fajr:'subuh', Dhuhr:'dzuhur', Asr:'ashar', Maghrib:'maghrib', Isha:'isya'};
             Object.keys(map).forEach(k => document.getElementById(map[k]).innerText = prayerTimes[k]);
-        } catch(e) { console.error("Prayer API Error"); }
+        } catch(e) { console.error("API Jadwal Sholat Bermasalah"); }
     }
 
     function update() {
@@ -173,7 +184,6 @@
                 found = true;
             } else document.getElementById('row-'+p.id).classList.remove('active');
 
-            // Overlay Logic
             const ov = document.getElementById('fullOverlay');
             const dAzan = settings.durAdzan || 120;
             const dIqomah = settings.durIqomah || 300;
@@ -214,14 +224,16 @@
 
     setInterval(() => {
         const imgs = document.querySelectorAll('.slide-img'), active = document.querySelector('.slide-img.active');
-        active.classList.remove('active'); (active.nextElementSibling || imgs[0]).classList.add('active');
+        if (imgs.length > 1) {
+            active.classList.remove('active');
+            (active.nextElementSibling || imgs[0]).classList.add('active');
+        }
     }, 12000);
 
-    // Initial Start
     loadSettings();
     getPrayer();
     setInterval(update, 1000);
-    setInterval(loadSettings, 60000); // Re-sync Sheets tiap menit
+    setInterval(loadSettings, 60000); // Sinkronisasi otomatis tiap menit
 </script>
 </body>
 </html>
