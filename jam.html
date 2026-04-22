@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Ittaqo Digital - Zahira Compact Pro</title>
+<title>Ittaqo Digital - Zahira Balanced Edition</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Tenor+Sans&family=Teko:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
@@ -14,49 +14,55 @@
     
     body { margin: 0; font-family: 'Tenor Sans', sans-serif; background: #08101b; color: var(--white); overflow: hidden; height: 100vh; width: 100vw; }
 
-    .container { display: flex; height: calc(100vh - 50px); padding: 10px; gap: 10px; box-sizing: border-box; }
+    .container { display: flex; height: calc(100vh - 42px); padding: 10px; gap: 10px; box-sizing: border-box; }
 
-    /* Panel Kiri (Zahira Adjustment: Lebih Ramping) */
+    /* Panel Kiri */
     .left { 
         width: 32%; display: flex; flex-direction: column; gap: 6px; height: 100%; 
         background: var(--royal-blue); border-radius: 12px; border: 2px solid var(--gold-leaf);
         padding: 12px; box-sizing: border-box;
     }
     
-    .card-top { background: rgba(0,0,0,0.3); border-radius: 10px; padding: 10px; text-align: center; border-bottom: 2px solid var(--gold-leaf); }
-    /* Jam Diperkecil */
-    .clock { font-family: 'Teko', sans-serif; font-size: 3rem; font-weight: 600; color: var(--gold-leaf); line-height: 0.8; letter-spacing: 1px; }
-    /* Tanggal Diperkecil */
-    .date-info { font-size: 0.65rem; color: var(--white); margin-top: 5px; letter-spacing: 0.5px; font-weight: 500; text-transform: uppercase; }
+    .card-top { background: rgba(0,0,0,0.3); border-radius: 10px; padding: 8px; text-align: center; border-bottom: 2px solid var(--gold-leaf); }
+    .clock { font-family: 'Teko', sans-serif; font-size: 2.8rem; font-weight: 600; color: var(--gold-leaf); line-height: 0.8; }
+    .date-info { font-size: 0.6rem; color: var(--white); margin-top: 4px; letter-spacing: 0.5px; text-transform: uppercase; }
 
-    /* Jadwal Sholat Lebih Rapi */
-    .jadwal-list { display: grid; grid-template-rows: repeat(5, 1fr); gap: 6px; flex-grow: 1; margin-top: 8px; margin-bottom: 5px; }
+    /* Jadwal List */
+    .jadwal-list { display: grid; grid-template-rows: repeat(5, 1fr); gap: 5px; flex-grow: 1; margin-top: 8px; }
     .jadwal-item { display: flex; align-items: center; padding: 0 15px; background: rgba(255, 255, 255, 0.03); border-radius: 8px; border: 1px solid rgba(212, 175, 55, 0.1); }
-    .jadwal-item.active { background: var(--deep-black) !important; border: 2px solid var(--gold-leaf); box-shadow: 0 0 15px rgba(212, 175, 55, 0.2); }
+    .jadwal-item.active { background: var(--deep-black) !important; border: 2px solid var(--gold-leaf); }
 
-    .icon-box { width: 30px; color: var(--gold-leaf); font-size: 1.1rem; display: flex; align-items: center; justify-content: flex-start; }
-    .nama-sholat { flex: 1; font-size: 0.8rem; font-weight: 600; text-align: left; letter-spacing: 1px; }
-    .waktu-sholat { font-family: 'Teko', sans-serif; font-size: 1.6rem; color: var(--white); font-weight: 500; }
+    .icon-box { width: 28px; color: var(--gold-leaf); font-size: 1rem; }
+    .nama-sholat { flex: 1; font-size: 0.75rem; font-weight: 600; text-align: left; letter-spacing: 1px; }
+    .waktu-sholat { font-family: 'Teko', sans-serif; font-size: 1.5rem; color: var(--white); }
 
-    /* Panel Kanan */
+    /* Panel Kanan & Lower Third */
     .right { flex: 1; position: relative; border-radius: 15px; overflow: hidden; border: 2px solid var(--gold-leaf); background: #000; }
     .slide-img { width: 100%; height: 100%; object-fit: cover; position: absolute; opacity: 0; transition: 2.5s; }
     .slide-img.active { opacity: 0.5; }
 
-    /* Footer & Running Text Proporsional */
-    .footer { height: 50px; background: #050b14; display: flex; align-items: center; border-top: 1px solid var(--gold-leaf); overflow: hidden; }
+    .info-board {
+        position: absolute; bottom: 15px; left: 15px; right: 15px;
+        background: rgba(10, 25, 47, 0.9); border-radius: 10px;
+        border-left: 5px solid var(--gold-leaf); padding: 12px 18px;
+        z-index: 50; transition: opacity 0.8s ease; opacity: 1;
+    }
+    .info-category { color: var(--gold-leaf); font-size: 0.55rem; font-weight: bold; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 3px; }
+    .info-content { font-size: 0.85rem; color: var(--white); line-height: 1.3; }
+
+    /* Footer Diperkecil */
+    .footer { height: 42px; background: #050b14; display: flex; align-items: center; border-top: 1px solid var(--gold-leaf); overflow: hidden; }
     
     .cd-fixed { 
         background: var(--gold-leaf); color: var(--deep-black); height: 100%; 
         display: flex; flex-direction: column; justify-content: center; align-items: center;
-        padding: 0 25px; min-width: 130px; z-index: 100; box-shadow: 8px 0 20px rgba(0,0,0,0.5);
+        padding: 0 20px; min-width: 110px; z-index: 100;
     }
-    .cd-fixed span:first-child { font-size: 0.55rem; font-weight: 800; letter-spacing: 1px; }
-    .cd-fixed span:last-child { font-family: 'Teko', sans-serif; font-size: 1.7rem; font-weight: 700; line-height: 1; }
+    .cd-fixed span:first-child { font-size: 0.5rem; font-weight: 800; letter-spacing: 0.5px; }
+    .cd-fixed span:last-child { font-family: 'Teko', sans-serif; font-size: 1.4rem; font-weight: 700; line-height: 0.9; }
 
-    /* Running Text Pendek & Rapi */
-    .marquee-container { flex: 1; overflow: hidden; padding-right: 20px; }
-    .marquee { font-size: 0.95rem; white-space: nowrap; animation: marquee 25s linear infinite; color: var(--gold-light); display: inline-block; padding-left: 20px; }
+    .marquee-container { flex: 1; overflow: hidden; }
+    .marquee { font-size: 0.85rem; white-space: nowrap; animation: marquee 25s linear infinite; color: var(--gold-light); padding-left: 20px; }
     @keyframes marquee { from { transform: translateX(100%); } to { transform: translateX(-100%); } }
 
     /* Overlay */
@@ -64,12 +70,11 @@
     #fullOverlay::before { content: ""; position: absolute; inset: 0; background: rgba(10, 25, 47, 0.96); backdrop-filter: blur(20px); z-index: -1; }
     
     #ovPetugas { margin-top: 30px; display: none; width: 80%; }
-    .ov-petugas-title { font-family: 'Cinzel', serif; color: var(--gold-leaf); font-size: 1.4rem; border-bottom: 2px solid var(--gold-leaf); display: inline-block; padding-bottom: 5px; margin-bottom: 15px; }
+    .ov-petugas-title { font-family: 'Cinzel', serif; color: var(--gold-leaf); font-size: 1.4rem; border-bottom: 2px solid var(--gold-leaf); padding-bottom: 5px; margin-bottom: 15px; display: inline-block; }
     .ov-petugas-name { font-size: 1.9rem; font-weight: 600; margin: 8px 0; color: white; text-transform: uppercase; }
 
     .mode-sholat::before { background: #000 !important; }
-    .mode-sholat #ovTitle, .mode-sholat #ovMsg, #ovPetugas { display: none !important; }
-    .mode-sholat #ovTimer { font-size: 13rem; color: var(--gold-leaf); font-family: 'Teko', sans-serif; }
+    .mode-sholat #ovTimer { font-size: 12rem; color: var(--gold-leaf); font-family: 'Teko', sans-serif; }
 </style>
 </head>
 <body onclick="startAudio()">
@@ -78,8 +83,8 @@
     <div class="left">
         <div class="card-top">
             <div class="clock" id="clock">00:00:00</div>
-            <div id="masehiDate" class="date-info">Memuat Tanggal...</div>
-            <div id="hijriDate" class="date-info" style="color:var(--gold-light); opacity: 0.8;">Memuat Hijriah...</div>
+            <div id="masehiDate" class="date-info">-- -- ----</div>
+            <div id="hijriDate" class="date-info" style="color:var(--gold-light); opacity: 0.8;">-- -- ----</div>
         </div>
         <div class="jadwal-list">
             <div class="jadwal-item" id="row-Fajr"><div class="icon-box"><i class="fa-solid fa-cloud-sun"></i></div><div class="nama-sholat">SUBUH</div><div class="waktu-sholat" id="subuh">--:--</div></div>
@@ -90,12 +95,17 @@
         </div>
     </div>
     <div class="right">
-        <div style="position:absolute; top:25px; left:30px; z-index:10;">
-            <h1 style="font-family:'Cinzel'; font-size:1.8rem; color:var(--gold-leaf); margin:0;">Masjid Raya Ittaqo</h1>
-            <p style="font-size:0.7rem; opacity:0.8; margin:0;">PEKANBARU, RIAU</p>
+        <div style="position:absolute; top:20px; left:25px; z-index:10;">
+            <h1 style="font-family:'Cinzel'; font-size:1.6rem; color:var(--gold-leaf); margin:0;">Masjid Raya Ittaqo</h1>
+            <p style="font-size:0.65rem; opacity:0.8; margin:0; letter-spacing: 1px;">PEKANBARU, RIAU</p>
         </div>
         <img src="https://images.unsplash.com/photo-1590076215667-873d3289816c?q=80&w=1000" class="slide-img active">
         <img src="https://images.unsplash.com/photo-1542623024-a797bb77bbbc?q=80&w=1000" class="slide-img">
+        
+        <div class="info-board" id="infoBoard">
+            <div class="info-category" id="infoCat">Petugas Jumat</div>
+            <div class="info-content" id="infoText">Memuat data...</div>
+        </div>
     </div>
 </div>
 
@@ -108,19 +118,25 @@
 
 <div id="fullOverlay">
     <div style="font-family:'Cinzel'; font-size:2.5rem; color:var(--gold-leaf);" id="ovTitle">ADZAN</div>
-    <div id="ovTimer" style="font-family:'Teko'; font-size:6rem; font-weight: 600;">00:00</div>
+    <div id="ovTimer" style="font-family:'Teko'; font-size:6rem;">00:00</div>
     <div id="ovPetugas">
         <div class="ov-petugas-title">PETUGAS JUMAT HARI INI</div>
         <div class="ov-petugas-name">KHATIB: Ust. Dr. Abdullah Syukri, MA</div>
         <div class="ov-petugas-name">IMAM: Ust. Ahmad Fauzi, S.Pd.I</div>
     </div>
-    <div style="font-size:1rem; opacity:0.9; margin-top:15px;" id="ovMsg">Persiapan Ibadah</div>
 </div>
 
 <script>
     let prayerTimes = {};
     let audioCtx = null;
+    let infoIdx = 0;
     const isFriday = new Date().getDay() === 5;
+
+    const infoData = [
+        {cat: "Petugas Jumat", text: "Khatib: Ust. Dr. Abdullah Syukri, MA<br>Imam: Ust. Ahmad Fauzi, S.Pd.I"},
+        {cat: "Laporan Kas", text: "Saldo Kas Masjid: Rp 18.450.000<br>Infaq Jumat Lalu: Rp 4.200.000"},
+        {cat: "Hadist Hari Ini", text: "Sampaikanlah dariku walau hanya satu ayat.<br>(HR. Bukhari)"}
+    ];
 
     function startAudio() { if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
     function playBeep(f, d) { if(!audioCtx) return; const o=audioCtx.createOscillator(), g=audioCtx.createGain(); o.connect(g); g.connect(audioCtx.destination); o.frequency.value=f; g.gain.value=0.1; o.start(); o.stop(audioCtx.currentTime+d); }
@@ -166,7 +182,7 @@
 
             const ov = document.getElementById('fullOverlay');
             const ovPetugas = document.getElementById('ovPetugas');
-            
+
             if(isFriday && p.id === 'Dhuhr') {
                 if(diffS <= 0 && diffS >= -300) { 
                     ov.style.display = 'flex'; ov.classList.remove('mode-sholat');
@@ -196,6 +212,17 @@
             }
         });
     }
+
+    setInterval(() => {
+        const board = document.getElementById('infoBoard');
+        board.style.opacity = '0';
+        setTimeout(() => {
+            infoIdx = (infoIdx + 1) % infoData.length;
+            document.getElementById('infoCat').innerText = infoData[infoIdx].cat;
+            document.getElementById('infoText').innerHTML = infoData[infoIdx].text;
+            board.style.opacity = '1';
+        }, 850);
+    }, 12000);
 
     setInterval(() => {
         const imgs = document.querySelectorAll('.slide-img'), active = document.querySelector('.slide-img.active');
