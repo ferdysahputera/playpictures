@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Ittaqo Digital</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --primary: #0a192f; --gold: #d4af37; --bg: #f4f7f6; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); margin: 0; display: flex; }
+        .sidebar { width: 250px; background: var(--primary); color: white; height: 100vh; position: fixed; padding: 20px; }
+        .sidebar h2 { color: var(--gold); border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; }
+        .main-content { margin-left: 290px; padding: 40px; width: calc(100% - 330px); }
+        .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        h3 { margin-top: 0; color: var(--primary); border-left: 4px solid var(--gold); padding-left: 10px; margin-bottom: 20px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 5px; color: #555; }
+        input, textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .btn-save { background: var(--primary); color: var(--gold); border: 2px solid var(--gold); padding: 15px; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; font-size: 1rem; }
+        .status { padding: 10px; background: #d4edda; color: #155724; border-radius: 6px; margin-bottom: 15px; display: none; text-align: center; }
+    </style>
+</head>
+<body>
+
+<div class="sidebar">
+    <h2>ITTAQO ADMIN</h2>
+    <p style="font-size: 0.8rem; opacity: 0.7;">Zahira Balanced Edition v1.0</p>
+</div>
+
+<div class="main-content">
+    <div id="status" class="status">Data Berhasil Disimpan & Diperbarui!</div>
+    <form id="adminForm">
+        <div class="card">
+            <h3><i class="fas fa-mosque"></i> Identitas Masjid</h3>
+            <div class="form-group">
+                <label>Nama Masjid</label>
+                <input type="text" id="masjidName" value="Masjid Raya Ittaqo">
+            </div>
+            <div class="form-group">
+                <label>Alamat / Kota</label>
+                <input type="text" id="masjidAddr" value="PEKANBARU, RIAU">
+            </div>
+        </div>
+
+        <div class="card">
+            <h3><i class="fas fa-user-tie"></i> Petugas Jumat</h3>
+            <div class="grid-2">
+                <div class="form-group"><label>Khatib</label><input type="text" id="khatib" value="Ust. Dr. Abdullah Syukri, MA"></div>
+                <div class="form-group"><label>Imam</label><input type="text" id="imam" value="Ust. Ahmad Fauzi, S.Pd.I"></div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3><i class="fas fa-wallet"></i> Laporan Keuangan</h3>
+            <div class="grid-2">
+                <div class="form-group"><label>Saldo Kas</label><input type="text" id="saldo" value="Rp 18.450.000"></div>
+                <div class="form-group"><label>Infaq Jumat Lalu</label><input type="text" id="infaq" value="Rp 4.200.000"></div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3><i class="fas fa-bullhorn"></i> Informasi & Slide</h3>
+            <div class="form-group"><label>Running Text</label><textarea id="marquee" rows="2">Luruskan shaf... Matikan ponsel... Jaga kebersihan masjid...</textarea></div>
+            <div class="form-group"><label>URL Gambar Slide (Pisahkan dengan koma)</label><textarea id="slides" rows="2">https://images.unsplash.com/photo-1590076215667-873d3289816c,https://images.unsplash.com/photo-1542623024-a797bb77bbbc</textarea></div>
+        </div>
+
+        <div class="card">
+            <h3><i class="fas fa-clock"></i> Pengaturan Waktu (Detik)</h3>
+            <div class="grid-2">
+                <div class="form-group"><label>Durasi Adzan</label><input type="number" id="durAdzan" value="120"></div>
+                <div class="form-group"><label>Durasi Iqomah</label><input type="number" id="durIqomah" value="300"></div>
+            </div>
+        </div>
+
+        <button type="submit" class="btn-save">UPDATE DISPLAY</button>
+    </form>
+</div>
+
+<script>
+    const form = document.getElementById('adminForm');
+    // Load existing data
+    window.onload = () => {
+        const data = JSON.parse(localStorage.getItem('mosqueSettings'));
+        if(data) Object.keys(data).forEach(key => { if(document.getElementById(key)) document.getElementById(key).value = data[key]; });
+    };
+
+    form.onsubmit = (e) => {
+        e.preventDefault();
+        const settings = {};
+        new FormData(form).forEach((v, k) => settings[k] = v); // Note: Simple manual mapping below for reliability
+        const data = {
+            masjidName: document.getElementById('masjidName').value,
+            masjidAddr: document.getElementById('masjidAddr').value,
+            khatib: document.getElementById('khatib').value,
+            imam: document.getElementById('imam').value,
+            saldo: document.getElementById('saldo').value,
+            infaq: document.getElementById('infaq').value,
+            marquee: document.getElementById('marquee').value,
+            slides: document.getElementById('slides').value,
+            durAdzan: document.getElementById('durAdzan').value,
+            durIqomah: document.getElementById('durIqomah').value
+        };
+        localStorage.setItem('mosqueSettings', JSON.stringify(data));
+        document.getElementById('status').style.display = 'block';
+        setTimeout(() => document.getElementById('status').style.display = 'none', 3000);
+    };
+</script>
+</body>
+</html>
