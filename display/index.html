@@ -10,22 +10,30 @@
     :root { --royal-blue: #0a192f; --gold-leaf: #d4af37; --gold-light: #f3e5ab; --white: #ffffff; --deep-black: #000000; }
     body { margin: 0; font-family: 'Tenor Sans', sans-serif; background: #08101b; color: var(--white); overflow: hidden; height: 100vh; width: 100vw; }
     .container { display: flex; height: calc(100vh - 42px); padding: 10px; gap: 10px; box-sizing: border-box; }
+    
+    /* Panel Kiri (Jadwal) */
     .left { width: 32%; display: flex; flex-direction: column; gap: 6px; height: 100%; background: var(--royal-blue); border-radius: 12px; border: 2px solid var(--gold-leaf); padding: 12px; box-sizing: border-box; }
     .card-top { background: rgba(0,0,0,0.3); border-radius: 10px; padding: 8px; text-align: center; border-bottom: 2px solid var(--gold-leaf); }
     .clock { font-family: 'Teko', sans-serif; font-size: 2.8rem; font-weight: 600; color: var(--gold-leaf); line-height: 0.8; }
     .date-info { font-size: 0.6rem; color: var(--white); margin-top: 4px; letter-spacing: 0.5px; text-transform: uppercase; }
+    
     .jadwal-list { display: grid; grid-template-rows: repeat(5, 1fr); gap: 5px; flex-grow: 1; margin-top: 8px; }
     .jadwal-item { display: flex; align-items: center; padding: 0 15px; background: rgba(255, 255, 255, 0.03); border-radius: 8px; border: 1px solid rgba(212, 175, 55, 0.1); }
     .jadwal-item.active { background: var(--deep-black) !important; border: 2px solid var(--gold-leaf); }
     .icon-box { width: 28px; color: var(--gold-leaf); font-size: 1rem; }
     .nama-sholat { flex: 1; font-size: 0.75rem; font-weight: 600; text-align: left; letter-spacing: 1px; }
     .waktu-sholat { font-family: 'Teko', sans-serif; font-size: 1.5rem; color: var(--white); }
+
+    /* Panel Kanan (Konten) */
     .right { flex: 1; position: relative; border-radius: 15px; overflow: hidden; border: 2px solid var(--gold-leaf); background: #000; }
     .slide-img { width: 100%; height: 100%; object-fit: cover; position: absolute; opacity: 0; transition: 2.5s; }
     .slide-img.active { opacity: 0.5; }
-    .info-board { position: absolute; bottom: 15px; left: 15px; right: 15px; background: rgba(10, 25, 47, 0.9); border-radius: 10px; border-left: 5px solid var(--gold-leaf); padding: 12px 18px; z-index: 50; transition: opacity 0.8s ease; opacity: 1; }
+    
+    .info-board { position: absolute; bottom: 15px; left: 15px; right: 15px; background: rgba(10, 25, 47, 0.9); border-radius: 10px; border-left: 5px solid var(--gold-leaf); padding: 12px 18px; z-index: 50; transition: opacity 0.8s ease; }
     .info-category { color: var(--gold-leaf); font-size: 0.55rem; font-weight: bold; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 3px; }
     .info-content { font-size: 0.85rem; color: var(--white); line-height: 1.3; }
+
+    /* Footer Marquee */
     .footer { height: 42px; background: #050b14; display: flex; align-items: center; border-top: 1px solid var(--gold-leaf); overflow: hidden; }
     .cd-fixed { background: var(--gold-leaf); color: var(--deep-black); height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 0 20px; min-width: 110px; z-index: 100; }
     .cd-fixed span:first-child { font-size: 0.5rem; font-weight: 800; }
@@ -33,6 +41,8 @@
     .marquee-container { flex: 1; overflow: hidden; }
     .marquee { font-size: 0.85rem; white-space: nowrap; animation: marquee 25s linear infinite; color: var(--gold-light); padding-left: 20px; }
     @keyframes marquee { from { transform: translateX(100%); } to { transform: translateX(-100%); } }
+
+    /* Overlay Adzan/Iqomah */
     #fullOverlay { position: fixed; inset: 0; z-index: 9999; display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
     #fullOverlay::before { content: ""; position: absolute; inset: 0; background: rgba(10, 25, 47, 0.96); backdrop-filter: blur(20px); z-index: -1; }
     #ovPetugas { margin-top: 30px; display: none; width: 80%; }
@@ -59,15 +69,18 @@
             <div class="jadwal-item" id="row-Isha"><div class="icon-box"><i class="fa-solid fa-star-and-crescent"></i></div><div class="nama-sholat">ISYA</div><div class="waktu-sholat" id="isya">--:--</div></div>
         </div>
     </div>
-    <div class="right" id="slideCont">
+    <div class="right">
         <div style="position:absolute; top:20px; left:25px; z-index:10;">
-            <h1 id="dispMasjid" style="font-family:'Cinzel'; font-size:1.6rem; color:var(--gold-leaf); margin:0;">Masjid Raya Ittaqo</h1>
-            <p id="dispAddr" style="font-size:0.65rem; opacity:0.8; margin:0; letter-spacing: 1px;">PEKANBARU, RIAU</p>
+            <h1 id="dispMasjid" style="font-family:'Cinzel'; font-size:1.6rem; color:var(--gold-leaf); margin:0;">Memuat...</h1>
+            <p id="dispAddr" style="font-size:0.65rem; opacity:0.8; margin:0; letter-spacing: 1px;">SILAKAN TUNGGU</p>
         </div>
-        <div id="imageWrapper"></div>
+        
+        <img src="https://images.unsplash.com/photo-1590076215667-873d3289816c?q=80&w=1000" class="slide-img active">
+        <img src="https://images.unsplash.com/photo-1542623024-a797bb77bbbc?q=80&w=1000" class="slide-img">
+        
         <div class="info-board" id="infoBoard">
-            <div class="info-category" id="infoCat">Petugas Jumat</div>
-            <div class="info-content" id="infoText">Memuat data...</div>
+            <div class="info-category" id="infoCat">Informasi</div>
+            <div class="info-content" id="infoText">Menghubungkan ke Database...</div>
         </div>
     </div>
 </div>
@@ -88,49 +101,40 @@
 </div>
 
 <script>
+    // MASUKKAN LINK CSV ANDA DI SINI
+    const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT5dYp8rHAbwqZdYPHZf1D6ghopUgmIcs-Afa2nuqGe-eBPLAKHVXZatZvoLJbZtltbjhahNmKrLd0o/pub?gid=1616939076&single=true&output=csv";
+
     let prayerTimes = {};
-    let audioCtx = null;
-    let infoIdx = 0;
     let settings = {};
+    let infoIdx = 0;
+    let audioCtx = null;
 
-    function loadSettings() {
-        settings = JSON.parse(localStorage.getItem('mosqueSettings')) || {
-            masjidName: "Masjid Raya Ittaqo",
-            masjidAddr: "PEKANBARU, RIAU",
-            khatib: "Ust. Dr. Abdullah Syukri, MA",
-            imam: "Ust. Ahmad Fauzi, S.Pd.I",
-            saldo: "Rp 18.450.000",
-            infaq: "Rp 4.200.000",
-            marquee: "Luruskan shaf... Matikan ponsel...",
-            slides: "https://images.unsplash.com/photo-1590076215667-873d3289816c,https://images.unsplash.com/photo-1542623024-a797bb77bbbc",
-            durAdzan: 120,
-            durIqomah: 300
-        };
-        
-        document.getElementById('dispMasjid').innerText = settings.masjidName;
-        document.getElementById('dispAddr').innerText = settings.masjidAddr;
-        document.getElementById('dispMarquee').innerText = settings.marquee;
-        document.getElementById('ovKhatib').innerText = "KHATIB: " + settings.khatib;
-        document.getElementById('ovImam').innerText = "IMAM: " + settings.imam;
+    async function loadSettings() {
+        try {
+            const res = await fetch(sheetURL);
+            const csv = await res.text();
+            const rows = csv.split('\n');
+            const data = rows[1].split(','); // Data baris ke-2
 
-        // Load Images
-        const wrapper = document.getElementById('imageWrapper');
-        wrapper.innerHTML = '';
-        settings.slides.split(',').forEach((url, i) => {
-            const img = document.createElement('img');
-            img.src = url.trim();
-            img.className = 'slide-img' + (i === 0 ? ' active' : '');
-            wrapper.appendChild(img);
-        });
+            settings = {
+                nama: data[0], addr: data[1], khatib: data[2], imam: data[3],
+                saldo: data[4], infaq: data[5], marquee: data[6],
+                durAdzan: parseInt(data[7]) || 120, durIqomah: parseInt(data[8]) || 300
+            };
+
+            document.getElementById('dispMasjid').innerText = settings.nama;
+            document.getElementById('dispAddr').innerText = settings.addr;
+            document.getElementById('dispMarquee').innerText = settings.marquee;
+            document.getElementById('ovKhatib').innerText = "KHATIB: " + settings.khatib;
+            document.getElementById('ovImam').innerText = "IMAM: " + settings.imam;
+        } catch (e) { console.error("Database Error", e); }
     }
 
-    const infoData = () => [
-        {cat: "Petugas Jumat", text: `Khatib: ${settings.khatib}<br>Imam: ${settings.imam}`},
-        {cat: "Laporan Kas", text: `Saldo Kas: ${settings.saldo}<br>Infaq Jumat: ${settings.infaq}`},
-        {cat: "Pesan", text: settings.marquee}
+    const getInfoData = () => [
+        {cat: "Petugas Jumat", text: `Khatib: ${settings.khatib || '-'}<br>Imam: ${settings.imam || '-'}`},
+        {cat: "Laporan Kas", text: `Saldo: ${settings.saldo || '-'}<br>Infaq Jumat: ${settings.infaq || '-'}`},
+        {cat: "Pesan", text: settings.marquee || '-'}
     ];
-
-    function startAudio() { if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
 
     async function getPrayer() {
         try {
@@ -139,15 +143,17 @@
             prayerTimes = d.data.timings;
             document.getElementById('masehiDate').innerText = new Date().toLocaleDateString('id-ID', {weekday:'long', day:'numeric', month:'long', year:'numeric'});
             document.getElementById('hijriDate').innerText = `${d.data.date.hijri.day} ${d.data.date.hijri.month.en} ${d.data.date.hijri.year} H`.toUpperCase();
+            
             const map = {Fajr:'subuh', Dhuhr:'dzuhur', Asr:'ashar', Maghrib:'maghrib', Isha:'isya'};
             Object.keys(map).forEach(k => document.getElementById(map[k]).innerText = prayerTimes[k]);
-        } catch(e) { console.error("API Error"); }
+        } catch(e) { console.error("Prayer API Error"); }
     }
 
     function update() {
         const now = new Date();
         const curS = (now.getHours() * 3600) + (now.getMinutes() * 60) + now.getSeconds();
         document.getElementById('clock').innerText = now.toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit', second:'2-digit', hour12:false});
+        
         if(!prayerTimes.Fajr) return;
 
         const isFriday = now.getDay() === 5;
@@ -167,9 +173,10 @@
                 found = true;
             } else document.getElementById('row-'+p.id).classList.remove('active');
 
+            // Overlay Logic
             const ov = document.getElementById('fullOverlay');
-            const dAzan = parseInt(settings.durAdzan);
-            const dIqomah = parseInt(settings.durIqomah);
+            const dAzan = settings.durAdzan || 120;
+            const dIqomah = settings.durIqomah || 300;
 
             if(diffS <= 0 && diffS >= -dAzan) {
                 ov.style.display = 'flex';
@@ -179,6 +186,7 @@
                 document.getElementById('ovTimer').innerText = `${Math.floor(rem/60)}:${(rem%60).toString().padStart(2,'0')}`;
             } else if(diffS < -dAzan && diffS >= -(dAzan + dIqomah) && !(isFriday && p.id === 'Dhuhr')) {
                 document.getElementById('ovTitle').innerText = "IQOMAH";
+                document.getElementById('ovPetugas').style.display = 'none';
                 let rem = (dAzan + dIqomah) + diffS;
                 document.getElementById('ovTimer').innerText = `${Math.floor(rem/60)}:${(rem%60).toString().padStart(2,'0')}`;
             } else if(diffS < -(dAzan + dIqomah) && diffS >= -1200) {
@@ -190,30 +198,30 @@
         });
     }
 
+    function startAudio() { if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
+
     setInterval(() => {
         const board = document.getElementById('infoBoard');
         board.style.opacity = '0';
         setTimeout(() => {
-            const data = infoData();
-            infoIdx = (infoIdx + 1) % data.length;
-            document.getElementById('infoCat').innerText = data[infoIdx].cat;
-            document.getElementById('infoText').innerHTML = data[infoIdx].text;
+            const info = getInfoData();
+            infoIdx = (infoIdx + 1) % info.length;
+            document.getElementById('infoCat').innerText = info[infoIdx].cat;
+            document.getElementById('infoText').innerHTML = info[infoIdx].text;
             board.style.opacity = '1';
         }, 850);
     }, 10000);
 
     setInterval(() => {
         const imgs = document.querySelectorAll('.slide-img'), active = document.querySelector('.slide-img.active');
-        if(imgs.length > 1) {
-            active.classList.remove('active');
-            (active.nextElementSibling || imgs[0]).classList.add('active');
-        }
+        active.classList.remove('active'); (active.nextElementSibling || imgs[0]).classList.add('active');
     }, 12000);
 
-    setInterval(loadSettings, 5000); // Sinkronisasi otomatis setiap 5 detik
+    // Initial Start
     loadSettings();
-    setInterval(update, 1000);
     getPrayer();
+    setInterval(update, 1000);
+    setInterval(loadSettings, 60000); // Re-sync Sheets tiap menit
 </script>
 </body>
 </html>
