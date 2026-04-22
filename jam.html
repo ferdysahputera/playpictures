@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Ittaqo Digital - Zahira Balanced Edition</title>
+<title>Ittaqo Digital - Zahira Final Premium</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Tenor+Sans&family=Teko:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
@@ -14,14 +14,14 @@
     
     body { margin: 0; font-family: 'Tenor Sans', sans-serif; background: #08101b; color: var(--white); overflow: hidden; height: 100vh; width: 100vw; }
 
-    .container { display: flex; height: calc(100vh - 45px); padding: 12px; gap: 12px; box-sizing: border-box; }
-    .blurred { filter: blur(20px) brightness(0.6); }
+    .container { display: flex; height: calc(100vh - 45px); padding: 12px; gap: 12px; box-sizing: border-box; transition: 0.5s; }
+    .blurred { filter: blur(20px) brightness(0.3); }
 
-    /* Panel Kiri - Jadwal */
+    /* Panel Kiri */
     .left { 
         width: 35%; display: flex; flex-direction: column; gap: 8px; height: 100%; 
         background: var(--royal-blue); border-radius: 15px; border: 2px solid var(--gold-leaf);
-        padding: 12px; box-sizing: border-box; position: relative;
+        padding: 12px; box-sizing: border-box;
     }
     
     .card-top { background: rgba(0,0,0,0.2); border-radius: 10px; padding: 10px; text-align: center; border-bottom: 1px solid var(--gold-leaf); }
@@ -29,59 +29,41 @@
     .date-info { font-size: 0.65rem; color: var(--white); margin-top: 5px; letter-spacing: 1px; }
 
     .jadwal-list { display: grid; grid-template-rows: repeat(5, 1fr); gap: 6px; flex-grow: 1; margin-top: 5px; }
-    
-    /* RAPIKAN JADWAL: Logo Kiri - Nama Tengah - Waktu Kanan */
-    .jadwal-item { 
-        display: flex; align-items: center; padding: 0 15px; 
-        background: rgba(255, 255, 255, 0.03); border-radius: 10px; 
-        border: 1px solid rgba(212, 175, 55, 0.1); transition: 0.5s;
-    }
-    .jadwal-item.active { 
-        background: var(--deep-black) !important; border: 2px solid var(--gold-leaf); 
-        box-shadow: 0 0 15px rgba(212, 175, 55, 0.3); transform: scale(1.02);
-    }
+    .jadwal-item { display: flex; align-items: center; padding: 0 15px; background: rgba(255, 255, 255, 0.03); border-radius: 10px; border: 1px solid rgba(212, 175, 55, 0.1); }
+    .jadwal-item.active { background: var(--deep-black) !important; border: 2px solid var(--gold-leaf); box-shadow: 0 0 15px rgba(212, 175, 55, 0.3); }
 
-    .icon-box { width: 30px; font-size: 1.1rem; color: var(--gold-light); display: flex; justify-content: flex-start; }
-    .nama-sholat { flex: 1; font-size: 0.8rem; font-weight: 600; letter-spacing: 1px; margin-left: 5px; }
-    .waktu-sholat { font-family: 'Teko', sans-serif; font-size: 1.6rem; font-weight: 500; color: var(--white); }
+    .icon-box { width: 30px; font-size: 1.1rem; color: var(--gold-light); }
+    .nama-sholat { flex: 1; font-size: 0.8rem; font-weight: 600; margin-left: 5px; }
+    .waktu-sholat { font-family: 'Teko', sans-serif; font-size: 1.6rem; color: var(--white); }
 
     /* Panel Kanan */
     .right { flex: 1; position: relative; border-radius: 20px; overflow: hidden; border: 2px solid var(--gold-leaf); background: #000; }
     .slide-img { width: 100%; height: 100%; object-fit: cover; position: absolute; opacity: 0; transition: 2s; }
     .slide-img.active { opacity: 0.6; }
 
-    .masjid-header { position: absolute; top: 20px; left: 25px; z-index: 10; }
-    .masjid-header h1 { font-family: 'Cinzel', serif; font-size: 1.6rem; margin: 0; color: var(--gold-leaf); letter-spacing: 1px; }
-
-    /* Footer - Countdown di Kiri */
-    .footer { height: 45px; background: #050b14; display: flex; align-items: center; border-top: 1px solid var(--gold-leaf); }
-    .countdown-section { 
-        background: var(--gold-leaf); color: var(--deep-black); height: 100%; 
-        padding: 0 20px; display: flex; align-items: center; gap: 10px;
-        font-family: 'Teko', sans-serif; font-weight: 600; min-width: 180px;
-    }
-    .marquee-section { flex: 1; overflow: hidden; }
-    .marquee { font-size: 1rem; white-space: nowrap; animation: marquee 25s linear infinite; color: var(--gold-light); }
+    /* Footer */
+    .footer { height: 45px; background: #050b14; display: flex; align-items: center; border-top: 1px solid var(--gold-leaf); transition: 0.5s; }
+    .countdown-section { background: var(--gold-leaf); color: var(--deep-black); height: 100%; padding: 0 20px; display: flex; align-items: center; gap: 10px; font-family: 'Teko', sans-serif; font-weight: 600; min-width: 180px; }
+    .marquee { flex: 1; font-size: 1rem; white-space: nowrap; animation: marquee 25s linear infinite; color: var(--gold-light); padding-left: 20px; }
     @keyframes marquee { from { transform: translateX(100%); } to { transform: translateX(-100%); } }
 
-    /* Overlay */
-    #fullOverlay {
-        position: fixed; inset: 0; z-index: 9999; display: none; flex-direction: column; align-items: center; justify-content: center;
-        background-size: cover; background-position: center; text-align: center;
-    }
-    #fullOverlay::before { content: ""; position: absolute; inset: 0; background: rgba(10, 25, 47, 0.85); backdrop-filter: blur(10px); z-index: -1; }
+    /* Overlay Full */
+    #fullOverlay { position: fixed; inset: 0; z-index: 9999; display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center; transition: 0.5s; }
+    .ov-bg { position: absolute; inset: 0; background-size: cover; background-position: center; filter: blur(10px) brightness(0.4); z-index: -2; }
+    .ov-mask { position: absolute; inset: 0; background: rgba(10, 25, 47, 0.85); z-index: -1; }
+
+    /* MODE SHOLAT (BLACK SCREEN) */
+    .mode-sholat { background: #000 !important; }
+    .mode-sholat .ov-bg, .mode-sholat .ov-mask { display: none; }
+    .mode-sholat #ovTitle, .mode-sholat #ovMsg { display: none; }
+    .mode-sholat #ovTimer { font-size: 12rem; color: var(--gold-leaf); }
 </style>
 </head>
 <body onclick="startAudio()">
 
 <div id="mainUI" class="container">
     <div class="left">
-        <div class="card-top">
-            <div class="clock" id="clock">00:00</div>
-            <div id="masehiDate" class="date-info" style="font-weight: 600;">-- -- ----</div>
-            <div id="hijriDate" class="date-info" style="color: var(--gold-light); opacity: 0.8;">-- -- ----</div>
-        </div>
-
+        <div class="card-top"><div class="clock" id="clock">00:00</div><div id="masehiDate" class="date-info">-- -- ----</div><div id="hijriDate" class="date-info" style="color:var(--gold-light)">-- -- ----</div></div>
         <div class="jadwal-list">
             <div class="jadwal-item" id="row-Fajr"><div class="icon-box"><i class="fa-solid fa-cloud-sun"></i></div><div class="nama-sholat">SUBUH</div><div class="waktu-sholat" id="subuh">--:--</div></div>
             <div class="jadwal-item" id="row-Dhuhr"><div class="icon-box"><i class="fa-solid fa-sun"></i></div><div class="nama-sholat">DZUHUR</div><div class="waktu-sholat" id="dzuhur">--:--</div></div>
@@ -90,58 +72,58 @@
             <div class="jadwal-item" id="row-Isha"><div class="icon-box"><i class="fa-solid fa-star-and-crescent"></i></div><div class="nama-sholat">ISYA</div><div class="waktu-sholat" id="isya">--:--</div></div>
         </div>
     </div>
-
     <div class="right">
-        <div class="masjid-header">
-            <h1>Masjid Al-Ikhlas</h1>
-            <p style="font-size: 0.7rem; opacity: 0.8; margin: 0;">Kampung Baru, Selupu Rejang</p>
+        <div style="position:absolute; top:20px; left:25px; z-index:10;">
+            <h1 style="font-family:'Cinzel'; font-size:1.6rem; color:var(--gold-leaf); margin:0;">Masjid Raya Ittaqo</h1>
+            <p style="font-size:0.7rem; opacity:0.8; margin:0;">Pekanbaru, Riau - Indonesia</p>
         </div>
         <img src="https://images.unsplash.com/photo-1590076215667-873d3289816c?q=80&w=1000" class="slide-img active">
         <img src="https://images.unsplash.com/photo-1542623024-a797bb77bbbc?q=80&w=1000" class="slide-img">
-        
-        <div style="position: absolute; bottom: 15px; left: 15px; right: 15px; background: rgba(10,25,47,0.9); padding: 12px; border-radius: 12px; border-left: 5px solid var(--gold-leaf); z-index: 50;">
+        <div style="position:absolute; bottom:15px; left:15px; right:15px; background:rgba(10,25,47,0.9); padding:12px; border-radius:12px; border-left:5px solid var(--gold-leaf); z-index:50;">
             <div style="color:var(--gold-leaf); font-size:0.55rem; font-weight:bold;">PENGUMUMAN</div>
-            <div style="font-size: 0.9rem; margin-top: 3px;" id="ltTitle">Memuat informasi...</div>
+            <div style="font-size:0.9rem; margin-top:3px;" id="ltTitle">Memuat informasi...</div>
         </div>
     </div>
 </div>
 
-<div class="footer">
-    <div class="countdown-section">
-        <span id="targetName" style="font-size: 0.7rem; opacity: 0.8;">MENUJU</span>
-        <span id="countdown" style="font-size: 1.4rem;">00:00:00</span>
-    </div>
-    <div class="marquee-section">
-        <div class="marquee">Luruskan dan rapatkan shaf demi kesempurnaan sholat... Matikan ponsel selama di dalam masjid... Jaga kebersihan...</div>
-    </div>
+<div class="footer" id="footerMain">
+    <div class="countdown-section"><span id="targetName" style="font-size:0.7rem; opacity:0.8;">MENUJU</span><span id="countdown" style="font-size:1.4rem;">00:00:00</span></div>
+    <div class="marquee">Luruskan dan rapatkan shaf... Matikan ponsel... Jaga ketenangan masjid...</div>
 </div>
 
 <div id="fullOverlay">
-    <div style="font-family: 'Cinzel'; font-size: 2.5rem; color: var(--gold-leaf);" id="ovTitle">IQOMAH</div>
-    <div style="font-family: 'Teko'; font-size: 6rem;" id="ovTimer">00:00</div>
-    <div style="font-size: 1.1rem; opacity: 0.9;" id="ovMsg">Luruskan Shaf</div>
+    <div class="ov-bg" style="background-image:url('https://images.unsplash.com/photo-1564121211835-e88c852648ab?q=80&w=1000')"></div>
+    <div class="ov-mask"></div>
+    <div style="font-family:'Cinzel'; font-size:2.5rem; color:var(--gold-leaf);" id="ovTitle">ADZAN</div>
+    <div style="font-family:'Teko'; font-size:6rem;" id="ovTimer">00:00</div>
+    <div style="font-size:1.1rem; opacity:0.9;" id="ovMsg">Luruskan Shaf</div>
 </div>
-
-<audio id="murottalAudio"></audio>
 
 <script>
     let prayerTimes = {};
     let audioCtx = null;
     let infoIdx = 0;
-    const infoData = [{t:"Khatib Jumat: Ust. Dr. Khatib | Imam : Imam"}, {t:"Saldo Kas: Rp 18.450.000"}, {t:"Kajian Rutin Selasa Ba'da Maghrib"}];
+    const infoData = [{t:"Khatib Jumat: Ust. Dr. Abdullah Syukri"}, {t:"Saldo Kas: Rp 18.450.000"}, {t:"Kajian Rutin Selasa Ba'da Maghrib"}];
 
     function startAudio() { if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
+
+    function playBeep(freq, duration) {
+        if(!audioCtx) return;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain); gain.connect(audioCtx.destination);
+        osc.frequency.value = freq; gain.gain.value = 0.1;
+        osc.start(); osc.stop(audioCtx.currentTime + duration);
+    }
 
     async function getPrayer() {
         try {
             const res = await fetch('https://api.aladhan.com/v1/timingsByCity?city=Pekanbaru&country=Indonesia&method=11');
             const d = await res.json();
             prayerTimes = d.data.timings;
-            
             const m = new Date();
             document.getElementById('masehiDate').innerText = m.toLocaleDateString('id-ID', {day:'numeric', month:'long', year:'numeric'});
             document.getElementById('hijriDate').innerText = `${d.data.date.hijri.day} ${d.data.date.hijri.month.en} ${d.data.date.hijri.year} H`.toUpperCase();
-            
             const map = {Fajr:'subuh', Dhuhr:'dzuhur', Asr:'ashar', Maghrib:'maghrib', Isha:'isya'};
             Object.keys(map).forEach(k => document.getElementById(map[k]).innerText = prayerTimes[k]);
         } catch(e) { console.error("API Error"); }
@@ -153,11 +135,7 @@
         document.getElementById('clock').innerText = now.toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit', hour12:false});
         
         if(!prayerTimes.Fajr) return;
-        const list = [
-            {id:'Fajr', name:'SUBUH', t:prayerTimes.Fajr}, {id:'Dhuhr', name:'DZUHUR', t:prayerTimes.Dhuhr}, 
-            {id:'Asr', name:'ASHAR', t:prayerTimes.Asr}, {id:'Maghrib', name:'MAGHRIB', t:prayerTimes.Maghrib}, 
-            {id:'Isha', name:'ISYA', t:prayerTimes.Isha}
-        ];
+        const list = [{id:'Fajr',name:'SUBUH',t:prayerTimes.Fajr},{id:'Dhuhr',name:'DZUHUR',t:prayerTimes.Dhuhr},{id:'Asr',name:'ASHAR',t:prayerTimes.Asr},{id:'Maghrib',name:'MAGHRIB',t:prayerTimes.Maghrib},{id:'Isha',name:'ISYA',t:prayerTimes.Isha}];
         
         let found = false;
         list.forEach(p => {
@@ -168,48 +146,54 @@
             if (diffS > 0 && !found) {
                 document.getElementById('row-'+p.id).classList.add('active');
                 document.getElementById('targetName').innerText = `MENUJU ${p.name}`;
-                
-                let hrs = Math.floor(diffS / 3600);
-                let mins = Math.floor((diffS % 3600) / 60);
-                let secs = diffS % 60;
+                let hrs = Math.floor(diffS / 3600), mins = Math.floor((diffS % 3600) / 60), secs = diffS % 60;
                 document.getElementById('countdown').innerText = `${hrs.toString().padStart(2,'0')}:${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`;
                 found = true;
-            } else {
-                document.getElementById('row-'+p.id).classList.remove('active');
-            }
+            } else document.getElementById('row-'+p.id).classList.remove('active');
 
-            // Overlay Logic
-            if(diffS <= 60 && diffS > 0) showOV("ADZAN", diffS, "Persiapan Adzan");
-            else if(diffS <= 0 && diffS >= -120) showOV("WAKTU ADZAN", 120 + diffS, "Berdoa antara Adzan & Iqomah");
-            else if(diffS < -120 && diffS >= -420) {
+            // BEEP ADZAN
+            if(diffS === 0 && now.getMilliseconds() < 100) playBeep(1200, 0.5);
+
+            // LOGIKA OVERLAY & MODE SHOLAT
+            const ov = document.getElementById('fullOverlay');
+            const main = document.getElementById('mainUI');
+            const foot = document.getElementById('footerMain');
+
+            if(diffS <= 0 && diffS >= -120) { // ADZAN (2 Menit)
+                showOV("WAKTU ADZAN", 120 + diffS, "Berdoa antara Adzan & Iqomah");
+            } else if(diffS < -120 && diffS >= -420) { // IQOMAH (5 Menit)
                 let iq = 300 + (diffS + 120);
-                if(iq > 0) showOV("IQOMAH", iq, "Luruskan Shaf");
-                else showOV("SHOLAT", 0, "Khusyuk dalam Ibadah");
-            } else if (!found && diffS > 60) hideOV();
+                showOV("IQOMAH", iq, "Luruskan dan Rapatkan Shaf");
+            } else if(diffS < -420 && diffS >= -1020) { // SHOLAT (10 Menit)
+                if(diffS === -421) { playBeep(800, 0.3); setTimeout(()=>playBeep(800, 0.3), 500); }
+                ov.style.display = 'flex';
+                ov.classList.add('mode-sholat');
+                main.classList.add('blurred');
+                foot.style.opacity = '0';
+                document.getElementById('ovTimer').innerText = now.toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit', hour12:false});
+            } else if (!found && diffS > 0) {
+                ov.style.display = 'none';
+                ov.classList.remove('mode-sholat');
+                main.classList.remove('blurred');
+                foot.style.opacity = '1';
+            }
         });
     }
 
     function showOV(t, s, m) {
         const ov = document.getElementById('fullOverlay');
         ov.style.display = 'flex';
-        ov.style.backgroundImage = `url('https://images.unsplash.com/photo-1564121211835-e88c852648ab?q=80&w=1000')`;
+        ov.classList.remove('mode-sholat');
         document.getElementById('mainUI').classList.add('blurred');
         document.getElementById('ovTitle').innerText = t;
         document.getElementById('ovMsg').innerText = m;
-        if(s > 0) document.getElementById('ovTimer').innerText = `${Math.floor(s/60).toString().padStart(2,'0')}:${(s%60).toString().padStart(2,'0')}`;
-        else document.getElementById('ovTimer').innerText = "IBADAH";
+        document.getElementById('ovTimer').innerText = `${Math.floor(s/60).toString().padStart(2,'0')}:${(s%60).toString().padStart(2,'0')}`;
     }
-
-    function hideOV() { document.getElementById('fullOverlay').style.display = 'none'; document.getElementById('mainUI').classList.remove('blurred'); }
 
     setInterval(() => {
         const lt = document.getElementById('ltTitle');
         lt.style.opacity = 0;
-        setTimeout(() => {
-            lt.innerText = infoData[infoIdx].t;
-            lt.style.opacity = 1;
-            infoIdx = (infoIdx + 1) % infoData.length;
-        }, 500);
+        setTimeout(() => { lt.innerText = infoData[infoIdx].t; lt.style.opacity = 1; infoIdx = (infoIdx + 1) % infoData.length; }, 500);
     }, 10000);
 
     setInterval(() => {
