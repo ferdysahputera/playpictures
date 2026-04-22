@@ -3,104 +3,92 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Ittaqo Digital - Blue Islamic Edition</title>
+<title>Ittaqo Digital - Light Blue Edition</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;600&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
     :root { 
-        --deep-blue: #0d1b2a; 
-        --navy-blue: #1b263b;
-        --gold-accent: #ffd700;
+        --bright-blue: #00a8e8; 
+        --soft-blue: #e3f2fd;
+        --deep-blue: #007ea7;
         --white: #ffffff;
-        --off-white: #f1f3f6;
-        --text-dark: #1d1d1f;
+        --text-main: #003459;
     }
     
-    body { margin: 0; font-family: 'Poppins', sans-serif; background: var(--off-white); color: var(--text-dark); overflow: hidden; height: 100vh; width: 100vw; }
+    body { margin: 0; font-family: 'Poppins', sans-serif; background: #f0f7fa; color: var(--text-main); overflow: hidden; height: 100vh; width: 100vw; }
 
     /* Container Utama */
     .container { display: flex; height: calc(100vh - 40px); padding: 10px; gap: 10px; box-sizing: border-box; }
 
-    /* Panel Kiri (Jadwal) - Dengan Ornamen */
+    /* Panel Kiri (Jadwal) - Ornamen Biru Terang */
     .left { 
         width: 38%; display: flex; flex-direction: column; gap: 8px; height: 100%; 
-        position: relative; padding: 10px; box-sizing: border-box; background: var(--white);
-        border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        background-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80"%3E%3Cg fill="%230d1b2a" fill-opacity="0.03"%3E%3Cpath d="M0 0h80v80H0z"/%3E%3Cpath d="M40 0l40 40-40 40L0 40z"/%3E%3C/g%3E%3C/svg%3E'); /* Pola Islami Halus */
+        position: relative; padding: 10px; box-sizing: border-box; 
+        background: var(--soft-blue); border-radius: 15px;
+        box-shadow: 0 4px 20px rgba(0, 168, 232, 0.1);
+        background-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 60 60"%3E%3Cg fill="%2300a8e8" fill-opacity="0.05"%3E%3Cpath d="M30 0l30 30-30 30L0 30z"/%3E%3C/g%3E%3C/svg%3E');
     }
     
     .card-top { 
-        background: rgba(255, 255, 255, 0.9); border-radius: 10px; padding: 8px; 
-        text-align: center; border: 1px solid #eee;
+        background: rgba(255, 255, 255, 0.9); border-radius: 12px; padding: 8px; 
+        text-align: center; border: 1px solid rgba(0, 168, 232, 0.2);
     }
-    .clock { font-family: 'Orbitron', sans-serif; font-size: 2.2rem; font-weight: 700; color: var(--deep-blue); line-height: 1; }
-    .date-info { font-size: 0.65rem; color: var(--navy-blue); font-weight: 600; margin-top: 4px; text-transform: uppercase; }
+    .clock { font-family: 'Orbitron', sans-serif; font-size: 2.2rem; font-weight: 700; color: var(--bright-blue); line-height: 1; }
+    .date-info { font-size: 0.65rem; color: var(--deep-blue); font-weight: 600; margin-top: 4px; letter-spacing: 1px; }
 
     .jadwal-list { display: grid; grid-template-rows: repeat(5, 1fr); gap: 6px; flex-grow: 1; }
     .jadwal-item { 
         display: flex; align-items: center; padding: 0 12px; 
-        background: rgba(255, 255, 255, 0.85); border-radius: 10px; 
-        border-left: 5px solid rgba(13, 27, 42, 0.1); transition: 0.3s;
+        background: rgba(255, 255, 255, 0.8); border-radius: 10px; 
+        border-left: 5px solid var(--bright-blue); transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
     
-    /* Warna Identitas Jadwal */
-    #row-Fajr { border-left-color: var(--navy-blue); }
-    #row-Dhuhr { border-left-color: var(--navy-blue); }
-    #row-Asr { border-left-color: var(--navy-blue); }
-    #row-Maghrib { border-left-color: var(--navy-blue); }
-    #row-Isha { border-left-color: var(--navy-blue); }
-
-    /* Aktif/Sorot - Dominan Biru */
+    /* Efek Sorot Aktif - Biru Terang */
     .jadwal-item.active { 
-        background: var(--deep-blue) !important; 
-        color: var(--white) !important; 
-        transform: scale(1.02); 
-        box-shadow: 0 5px 15px rgba(13, 27, 42, 0.2);
+        background: var(--bright-blue) !important; 
+        transform: scale(1.03); 
+        box-shadow: 0 0 15px rgba(0, 168, 232, 0.4);
     }
     .jadwal-item.active * { color: var(--white) !important; }
 
-    .icon-box { width: 25px; font-size: 1rem; margin-right: 8px; text-align: center; color: var(--gold-accent); }
+    .icon-box { width: 25px; font-size: 1rem; margin-right: 8px; text-align: center; color: var(--deep-blue); }
     .text-group { display: flex; flex-direction: column; }
-    .label-sholat { font-size: 0.55rem; text-transform: uppercase; font-weight: 700; opacity: 0.7; color: var(--deep-blue); }
-    .waktu-sholat { font-family: 'Orbitron', sans-serif; font-size: 1.1rem; font-weight: 600; color: var(--deep-blue); }
+    .label-sholat { font-size: 0.55rem; text-transform: uppercase; font-weight: 700; opacity: 0.8; color: var(--deep-blue); }
+    .waktu-sholat { font-family: 'Orbitron', sans-serif; font-size: 1.1rem; font-weight: 600; color: var(--text-main); }
 
-    /* Panel Kanan (Slide & Info) */
-    .right { flex: 1; position: relative; border-radius: 20px; overflow: hidden; background: #000; }
+    /* Panel Kanan (Visual) */
+    .right { flex: 1; position: relative; border-radius: 20px; overflow: hidden; background: #003459; }
     .slide-img { width: 100%; height: 100%; object-fit: cover; position: absolute; opacity: 0; transition: 2s; }
-    .slide-img.active { opacity: 0.6; }
+    .slide-img.active { opacity: 0.7; }
 
-    .masjid-header { position: absolute; top: 15px; left: 20px; z-index: 10; color: white; text-shadow: 2px 2px 10px rgba(0,0,0,0.5); }
-    .masjid-header h1 { font-family: 'Playfair Display', serif; font-size: 1.4rem; margin: 0; letter-spacing: 1px; }
+    .masjid-header { position: absolute; top: 15px; left: 20px; z-index: 10; color: white; }
+    .masjid-header h1 { font-family: 'Playfair Display', serif; font-size: 1.4rem; margin: 0; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
     
     .lower-third {
         position: absolute; bottom: 15px; left: 15px; right: 15px;
         background: rgba(255, 255, 255, 0.95); padding: 10px 15px; border-radius: 12px; 
-        border-left: 5px solid var(--deep-blue); transform: translateY(200%); transition: 0.6s; z-index: 50;
+        border-left: 5px solid var(--bright-blue); transform: translateY(200%); transition: 0.6s; z-index: 50;
     }
     .lower-third.show { transform: translateY(0); }
-    .lt-label { color: var(--deep-blue); font-weight: 800; font-size: 0.55rem; text-transform: uppercase; }
 
-    /* Overlay Fullscreen Mobile */
+    /* Overlay Fullscreen */
     #fullOverlay {
         position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
         z-index: 9999; display: none; flex-direction: column; align-items: center; justify-content: center;
-        background: var(--deep-blue); text-align: center; color: var(--white);
+        background: var(--soft-blue); text-align: center;
     }
-    .ov-title { font-family: 'Playfair Display', serif; font-size: 2.2rem; color: var(--gold-accent); }
-    .ov-timer { font-family: 'Orbitron', sans-serif; font-size: 5rem; font-weight: 700; color: var(--white); }
+    .ov-title { font-family: 'Playfair Display', serif; font-size: 2.2rem; color: var(--bright-blue); }
+    .ov-timer { font-family: 'Orbitron', sans-serif; font-size: 5rem; font-weight: 700; color: var(--text-main); }
 
     /* Footer */
     .footer { height: 40px; background: var(--white); display: flex; align-items: center; overflow: hidden; border-top: 1px solid #eee; }
-    .marquee { font-size: 0.9rem; font-weight: 400; white-space: nowrap; animation: marquee 20s linear infinite; color: var(--deep-blue); }
+    .marquee { font-size: 0.9rem; font-weight: 600; white-space: nowrap; animation: marquee 20s linear infinite; color: var(--deep-blue); }
     @keyframes marquee { from { transform: translateX(100vw); } to { transform: translateX(-100%); } }
 
-    /* Khusus Lanskap HP Kecil */
     @media (max-height: 400px) {
         .clock { font-size: 1.8rem; }
         .waktu-sholat { font-size: 1rem; }
-        .container { padding: 5px; gap: 8px; }
-        .card-top { padding: 5px; }
-        .left { padding: 5px; gap: 5px; }
+        .container { padding: 5px; }
     }
 </style>
 </head>
@@ -121,22 +109,22 @@
             <div class="jadwal-item" id="row-Isha"><div class="icon-box"><i class="fa-solid fa-star-and-crescent"></i></div><div class="text-group"><span class="label-sholat">Isya</span><span class="waktu-sholat" id="isya">--:--</span></div></div>
         </div>
 
-        <div class="card-top" style="border: 1.5px solid var(--deep-blue); padding: 5px; background: rgba(255,255,255,0.95);">
-            <div id="countdown" style="font-family: 'Orbitron'; font-size: 1.2rem; color: var(--deep-blue); font-weight: 700;">00:00:00</div>
+        <div class="card-top" style="border: 1.5px solid var(--bright-blue); background: var(--white);">
+            <div id="countdown" style="font-family: 'Orbitron'; font-size: 1.2rem; color: var(--bright-blue); font-weight: 700;">00:00:00</div>
         </div>
     </div>
 
     <div class="right">
         <div class="masjid-header">
-            <h1 style="font-size: 1.2rem;">Masjid Raya Ittaqo</h1>
-            <p style="font-size: 0.6rem; opacity: 0.7; margin: 0;">Pekanbaru, Riau</p>
+            <h1>Masjid Raya Ittaqo</h1>
+            <p style="font-size: 0.65rem; opacity: 0.9; margin: 0;">Pekanbaru, Riau - Indonesia</p>
         </div>
         <img src="https://images.unsplash.com/photo-1590076215667-873d3289816c?q=80&w=1000" class="slide-img active">
         <img src="https://images.unsplash.com/photo-1542623024-a797bb77bbbc?q=80&w=1000" class="slide-img">
         
         <div class="lower-third" id="lowerThird">
-            <div class="lt-label" id="ltLabel">INFO</div>
-            <div style="font-size: 0.9rem; font-weight: 600; color: var(--deep-blue);" id="ltTitle">...</div>
+            <div style="color: var(--bright-blue); font-weight: 800; font-size: 0.55rem;">INFO MASJID</div>
+            <div style="font-size: 0.9rem; font-weight: 600;" id="ltTitle">...</div>
         </div>
     </div>
 </div>
@@ -144,10 +132,10 @@
 <div id="fullOverlay">
     <div class="ov-title" id="ovTitle">IQOMAH</div>
     <div class="ov-timer" id="ovTimer">00:00</div>
-    <div style="font-size: 1rem; opacity: 0.8;" id="ovMsg">Luruskan Barisan</div>
+    <div style="font-size: 1rem; opacity: 0.7;" id="ovMsg">Rapatkan Barisan</div>
 </div>
 
-<div class="footer"><div class="marquee">Ketuk layar untuk suara... Luruskan shaf... Matikan ponsel...</div></div>
+<div class="footer"><div class="marquee">Ketuk layar sekali untuk mengaktifkan audio... Luruskan dan rapatkan shaf demi kesempurnaan sholat...</div></div>
 
 <audio id="murottalAudio"></audio>
 
@@ -155,7 +143,7 @@
     let prayerTimes = {};
     let audioCtx = null;
     let infoIdx = 0;
-    const infoData = [{c:"JUMAT", t:"Khatib: Ust. Dr. Abdullah"}, {c:"KAS", t:"Saldo: Rp 18.450.000"}, {c:"INFO", t:"Kajian Selasa Ba'da Maghrib"}];
+    const infoData = [{t:"Khatib Jumat: Ust. Dr. Abdullah"}, {t:"Saldo Infaq: Rp 18.450.000"}, {t:"Kajian Rutin Selasa Ba'da Maghrib"}];
 
     function startAudio() { if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
 
@@ -194,13 +182,11 @@
             const targetM = parseInt(h) * 60 + parseInt(m);
             const diff = targetM - curM;
 
-            // Murottal 15-3 Menit
             if(diff <= 15 && diff > 3) {
                 const a = document.getElementById('murottalAudio');
                 if(a.paused) { a.src = "https://download.quranicaudio.com/quran/mishari_rashid_al_afasy/055.mp3"; a.play(); }
             } else if(diff <= 3) { document.getElementById('murottalAudio').pause(); }
 
-            // Highlight - Dominan Biru
             if(diff > 0 && !found) {
                 document.getElementById('row-'+p.id).classList.add('active');
                 let sRem = (diff * 60) - curS;
@@ -210,13 +196,12 @@
 
             if(diff === 0 && curS === 0) playBeep(1200);
 
-            // Overlay Responsive
             if(diff === 1) showOV("ADZAN", 60 - curS, "Persiapan...");
             else if(diff === 0) showOV("WAKTU ADZAN", 120 - curS, "Dengarkan Adzan");
             else if(diff <= -1 && diff >= -15) {
                 let iq = (5 * 60) - ((Math.abs(diff)-1) * 60 + curS);
                 if(iq > 0) showOV("IQOMAH", iq, "Luruskan Shaf");
-                else if(Math.abs(diff) <= 15) showOV("SHOLAT", 0, "Matikan HP");
+                else if(Math.abs(diff) <= 15) showOV("SHOLAT", 0, "Khusyuk dalam Ibadah");
                 else hideOV();
             } else if(!found && diff > 1) hideOV();
         });
@@ -236,7 +221,6 @@
         const lt = document.getElementById('lowerThird');
         lt.classList.remove('show');
         setTimeout(() => {
-            document.getElementById('ltLabel').innerText = infoData[infoIdx].c;
             document.getElementById('ltTitle').innerText = infoData[infoIdx].t;
             lt.classList.add('show');
             infoIdx = (infoIdx + 1) % infoData.length;
