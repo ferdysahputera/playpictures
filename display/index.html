@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Ittaqo Digital - Fix Database Integration</title>
+<title>Ittaqo Digital - Fix & Database Integrated</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Tenor+Sans&family=Teko:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
@@ -16,7 +16,6 @@
 
     .container { display: flex; height: calc(100vh - 42px); padding: 10px; gap: 10px; box-sizing: border-box; }
 
-    /* Panel Kiri */
     .left { 
         width: 32%; display: flex; flex-direction: column; gap: 6px; height: 100%; 
         background: var(--royal-blue); border-radius: 12px; border: 2px solid var(--gold-leaf);
@@ -27,16 +26,14 @@
     .clock { font-family: 'Teko', sans-serif; font-size: 2.8rem; font-weight: 600; color: var(--gold-leaf); line-height: 0.8; }
     .date-info { font-size: 0.6rem; color: var(--white); margin-top: 4px; letter-spacing: 0.5px; text-transform: uppercase; }
 
-    /* Jadwal List */
     .jadwal-list { display: grid; grid-template-rows: repeat(5, 1fr); gap: 5px; flex-grow: 1; margin-top: 8px; }
     .jadwal-item { display: flex; align-items: center; padding: 0 15px; background: rgba(255, 255, 255, 0.03); border-radius: 8px; border: 1px solid rgba(212, 175, 55, 0.1); }
     .jadwal-item.active { background: var(--deep-black) !important; border: 2px solid var(--gold-leaf); box-shadow: 0 0 15px rgba(212, 175, 55, 0.2); }
 
     .icon-box { width: 28px; color: var(--gold-leaf); font-size: 1rem; }
     .nama-sholat { flex: 1; font-size: 0.75rem; font-weight: 600; text-align: left; letter-spacing: 1px; }
-    .waktu-sholat { font-family: 'Teko', sans-serif; font-size: 1.5rem; color: var(--white); font-weight: 500; }
+    .waktu-sholat { font-family: 'Teko', sans-serif; font-size: 1.5rem; color: var(--white); }
 
-    /* Panel Kanan & Info Board */
     .right { flex: 1; position: relative; border-radius: 15px; overflow: hidden; border: 2px solid var(--gold-leaf); background: #000; }
     .slide-img { width: 100%; height: 100%; object-fit: cover; position: absolute; opacity: 0; transition: 2.5s; }
     .slide-img.active { opacity: 0.5; }
@@ -45,12 +42,11 @@
         position: absolute; bottom: 15px; left: 15px; right: 15px;
         background: rgba(10, 25, 47, 0.9); border-radius: 10px;
         border-left: 5px solid var(--gold-leaf); padding: 12px 18px;
-        z-index: 50; transition: opacity 0.8s ease;
+        z-index: 50; transition: opacity 0.8s ease; opacity: 1;
     }
     .info-category { color: var(--gold-leaf); font-size: 0.55rem; font-weight: bold; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 3px; }
     .info-content { font-size: 0.85rem; color: var(--white); line-height: 1.3; }
 
-    /* Footer Ramping */
     .footer { height: 42px; background: #050b14; display: flex; align-items: center; border-top: 1px solid var(--gold-leaf); overflow: hidden; }
     
     .cd-fixed { 
@@ -65,7 +61,6 @@
     .marquee { font-size: 0.85rem; white-space: nowrap; animation: marquee 25s linear infinite; color: var(--gold-light); padding-left: 20px; }
     @keyframes marquee { from { transform: translateX(100%); } to { transform: translateX(-100%); } }
 
-    /* Overlay Adzan */
     #fullOverlay { position: fixed; inset: 0; z-index: 9999; display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
     #fullOverlay::before { content: ""; position: absolute; inset: 0; background: rgba(10, 25, 47, 0.96); backdrop-filter: blur(20px); z-index: -1; }
     
@@ -77,14 +72,14 @@
     .mode-sholat #ovTimer { font-size: 12rem; color: var(--gold-leaf); font-family: 'Teko', sans-serif; }
 </style>
 </head>
-<body onclick="startAudio()">
+<body>
 
 <div id="mainUI" class="container">
     <div class="left">
         <div class="card-top">
             <div class="clock" id="clock">00:00:00</div>
-            <div id="masehiDate" class="date-info">Memuat...</div>
-            <div id="hijriDate" class="date-info" style="color:var(--gold-light); opacity: 0.8;">Memuat...</div>
+            <div id="masehiDate" class="date-info">-- -- ----</div>
+            <div id="hijriDate" class="date-info" style="color:var(--gold-light); opacity: 0.8;">-- -- ----</div>
         </div>
         <div class="jadwal-list">
             <div class="jadwal-item" id="row-Fajr"><div class="icon-box"><i class="fa-solid fa-cloud-sun"></i></div><div class="nama-sholat">SUBUH</div><div class="waktu-sholat" id="subuh">--:--</div></div>
@@ -96,15 +91,15 @@
     </div>
     <div class="right">
         <div style="position:absolute; top:20px; left:25px; z-index:10;">
-            <h1 id="dbMasjidName" style="font-family:'Cinzel'; font-size:1.6rem; color:var(--gold-leaf); margin:0;">Masjid Al-Ikhlas</h1>
-            <p id="dbMasjidAddr" style="font-size:0.65rem; opacity:0.8; margin:0; letter-spacing: 1px;">DESA KAMPUNG E</p>
+            <h1 style="font-family:'Cinzel'; font-size:1.6rem; color:var(--gold-leaf); margin:0;">Masjid Al-Ikhlas</h1>
+            <p style="font-size:0.65rem; opacity:0.8; margin:0; letter-spacing: 1px;">Desa Kampung E</p>
         </div>
         <img src="https://images.unsplash.com/photo-1590076215667-873d3289816c?q=80&w=1000" class="slide-img active">
         <img src="https://images.unsplash.com/photo-1542623024-a797bb77bbbc?q=80&w=1000" class="slide-img">
         
         <div class="info-board" id="infoBoard">
             <div class="info-category" id="infoCat">Petugas Jumat</div>
-            <div class="info-content" id="infoText">Sinkronisasi data...</div>
+            <div class="info-content" id="infoText">Memuat data...</div>
         </div>
     </div>
 </div>
@@ -112,7 +107,7 @@
 <div class="footer">
     <div class="cd-fixed"><span id="targetName">MENUJU</span><span id="countdown">00:00:00</span></div>
     <div class="marquee-container">
-        <div class="marquee" id="dbRunningText">Memuat pesan...</div>
+        [span_1](start_span)<div class="marquee">Luruskan shaf... Jaga kebersihan masjid... Infaq Jumat lalu Rp 4.200.000...[span_1](end_span)</div>
     </div>
 </div>
 
@@ -121,45 +116,33 @@
     <div id="ovTimer" style="font-family:'Teko'; font-size:6rem;">00:00</div>
     <div id="ovPetugas">
         <div class="ov-petugas-title">PETUGAS JUMAT HARI INI</div>
-        <div class="ov-petugas-name" id="ovKhatib">KHATIB: --</div>
-        <div class="ov-petugas-name" id="ovImam">IMAM: --</div>
-        <div class="ov-petugas-name" id="ovMuazin" style="font-size:1.4rem; opacity:0.8">MUAZIN: --</div>
+        <div class="ov-petugas-name">KHATIB: Ust. [span_2](start_span)Khatib Juma[span_2](end_span)</div>
+        [span_3](start_span)<div class="ov-petugas-name">IMAM: Bapak Sucipto[span_3](end_span)</div>
+        [span_4](start_span)<div class="ov-petugas-name" style="font-size:1.4rem; opacity:0.8">MUAZIN: Windarto[span_4](end_span)</div>
     </div>
 </div>
 
 <script>
-    [span_3](start_span)// Integrasi Data Berdasarkan Database[span_3](end_span)
     const db = {
-        nama: "Masjid Al-Ikhlas",
-        alamat: "Desa Kampung E",
-        khatib: "Ust. Khatib Juma",
-        imam: "Bapak Sucipto",
-        muazin: "Windarto",
-        keuangan: "4.200.000",
-        running: "Luruskan shaf... Jaga kebersihan masjid... Infaq Jumat lalu Rp 4.200.000...",
-        [span_4](start_span)adzan: 120, // Detik[span_4](end_span)
-        [span_5](start_span)iqomah: 300 // Detik[span_5](end_span)
+        [span_5](start_span)adzan: 120, //[span_5](end_span)
+        [span_6](start_span)iqomah: 300 //[span_6](end_span)
     };
 
     let prayerTimes = {};
     let infoIdx = 0;
     const isFriday = new Date().getDay() === 5;
 
-    [span_6](start_span)// Set Tampilan Awal dari Database[span_6](end_span)
-    document.getElementById('dbMasjidName').innerText = db.nama;
-    document.getElementById('dbMasjidAddr').innerText = db.alamat;
-    document.getElementById('dbRunningText').innerText = db.running;
-    document.getElementById('ovKhatib').innerText = `KHATIB: ${db.khatib}`;
-    document.getElementById('ovImam').innerText = `IMAM: ${db.imam}`;
-    document.getElementById('ovMuazin').innerText = `MUAZIN: ${db.muazin}`;
+    const infoData = [
+        [span_7](start_span){cat: "Petugas Jumat", text: "Khatib: Ust. Khatib Juma<br>Imam: Bapak Sucipto[span_7](end_span)"},
+        [span_8](start_span){cat: "Laporan Kas", text: "Saldo Infaq: Rp 4.200.000<br>Muazin: Windarto[span_8](end_span)"},
+        [span_9](start_span){cat: "Lokasi", text: "Desa Kampung E[span_9](end_span)"}
+    ];
 
     async function getPrayer() {
         try {
-            // API Menggunakan Lokasi Pekanbaru sesuai request sebelumnya
             const res = await fetch('https://api.aladhan.com/v1/timingsByCity?city=Pekanbaru&country=Indonesia&method=11');
             const d = await res.json();
             prayerTimes = d.data.timings;
-            
             const m = new Date();
             document.getElementById('masehiDate').innerText = m.toLocaleDateString('id-ID', {weekday:'long', day:'numeric', month:'long', year:'numeric'});
             document.getElementById('hijriDate').innerText = `${d.data.date.hijri.day} ${d.data.date.hijri.month.en} ${d.data.date.hijri.year} H`.toUpperCase();
@@ -173,16 +156,16 @@
             Object.keys(map).forEach(k => {
                 if(prayerTimes[k]) document.getElementById(map[k]).innerText = prayerTimes[k];
             });
-        } catch(e) { console.error("Gagal memuat jadwal."); }
+        } catch(e) { console.error("API Error"); }
     }
 
     function update() {
         const now = new Date();
-        const curS = (now.getHours() * 3600) + (now.getMinutes() * 60) + now.getSeconds();
         document.getElementById('clock').innerText = now.toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit', second:'2-digit', hour12:false});
         
         if(!prayerTimes.Fajr) return;
         
+        const curS = (now.getHours() * 3600) + (now.getMinutes() * 60) + now.getSeconds();
         const list = [
             {id:'Fajr', name:'SUBUH', t:prayerTimes.Fajr},
             {id:'Dhuhr', name:isFriday?'JUMAT':'DZUHUR', t:prayerTimes.Dhuhr},
@@ -197,69 +180,42 @@
             const targetS = (parseInt(h) * 3600) + (parseInt(m) * 60);
             const diffS = targetS - curS;
 
-            // Highlight baris jadwal aktif
-            const row = document.getElementById('row-'+p.id);
             if (diffS > 0 && !found) {
-                row.classList.add('active');
+                document.getElementById('row-'+p.id).classList.add('active');
                 document.getElementById('targetName').innerText = `MENUJU ${p.name}`;
-                let h_disp = Math.floor(diffS/3600), m_disp = Math.floor((diffS%3600)/60), s_disp = diffS%60;
-                document.getElementById('countdown').innerText = `${h_disp.toString().padStart(2,'0')}:${m_disp.toString().padStart(2,'0')}:${s_disp.toString().padStart(2,'0')}`;
+                let h_d = Math.floor(diffS/3600), m_d = Math.floor((diffS%3600)/60), s_d = diffS%60;
+                document.getElementById('countdown').innerText = `${h_d.toString().padStart(2,'0')}:${m_d.toString().padStart(2,'0')}:${s_d.toString().padStart(2,'0')}`;
                 found = true;
             } else {
-                row.classList.remove('active');
+                document.getElementById('row-'+p.id).classList.remove('active');
             }
 
-            [span_7](start_span)// Kontrol Overlay (Adzan & Iqomah)[span_7](end_span)
             const ov = document.getElementById('fullOverlay');
-            const ovPetugas = document.getElementById('ovPetugas');
-
-            if(diffS <= 0 && diffS >= -db.adzan) { // Fase Adzan
+            if(diffS <= 0 && diffS >= -db.adzan) { 
                 ov.style.display = 'flex';
-                ov.classList.remove('mode-sholat');
-                document.getElementById('ovTitle').innerText = isFriday && p.id === 'Dhuhr' ? "ADZAN JUMAT" : "ADZAN";
-                ovPetugas.style.display = isFriday && p.id === 'Dhuhr' ? 'block' : 'none';
                 let rem = db.adzan + diffS;
                 document.getElementById('ovTimer').innerText = `${Math.floor(rem/60)}:${(rem%60).toString().padStart(2,'0')}`;
-            } 
-            else if(diffS < -db.adzan && diffS >= -(db.adzan + db.iqomah) && p.id !== 'Dhuhr') { // Fase Iqomah
+                document.getElementById('ovPetugas').style.display = (isFriday && p.id === 'Dhuhr') ? 'block' : 'none';
+            } else if(diffS < -db.adzan && diffS >= -(db.adzan + db.iqomah) && p.id !== 'Dhuhr') {
                 document.getElementById('ovTitle').innerText = "IQOMAH";
-                ovPetugas.style.display = 'none';
                 let iqS = db.iqomah + (diffS + db.adzan);
                 document.getElementById('ovTimer').innerText = `${Math.floor(iqS/60)}:${(iqS%60).toString().padStart(2,'0')}`;
-            }
-            else if(diffS < -(db.adzan + db.iqomah) && diffS >= -1200) { // Fase Sholat (Blackout)
-                ov.classList.add('mode-sholat');
-                document.getElementById('ovTimer').innerText = now.toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit', hour12:false});
-            }
-            else if (!found && diffS > 0) {
+            } else if (!found && diffS > 0) {
                 ov.style.display = 'none';
             }
         });
     }
 
-    [span_8](start_span)// Rotasi Info Board[span_8](end_span)
-    const infoRotation = [
-        {cat: "Petugas Jumat", text: `Khatib: ${db.khatib}<br>Imam: ${db.imam}`},
-        {cat: "Laporan Kas", text: `Saldo Infaq: Rp ${db.keuangan}<br>Muazin: ${db.muazin}`},
-        {cat: "Lokasi", text: db.alamat}
-    ];
-
     setInterval(() => {
         const board = document.getElementById('infoBoard');
         board.style.opacity = '0';
         setTimeout(() => {
-            infoIdx = (infoIdx + 1) % infoRotation.length;
-            document.getElementById('infoCat').innerText = infoRotation[infoIdx].cat;
-            document.getElementById('infoText').innerHTML = infoRotation[infoIdx].text;
+            infoIdx = (infoIdx + 1) % infoData.length;
+            document.getElementById('infoCat').innerText = infoData[infoIdx].cat;
+            document.getElementById('infoText').innerHTML = infoData[infoIdx].text;
             board.style.opacity = '1';
         }, 850);
     }, 15000);
-
-    // Background Slideshow
-    setInterval(() => {
-        const imgs = document.querySelectorAll('.slide-img'), active = document.querySelector('.slide-img.active');
-        active.classList.remove('active'); (active.nextElementSibling || imgs[0]).classList.add('active');
-    }, 10000);
 
     setInterval(update, 1000);
     getPrayer();
