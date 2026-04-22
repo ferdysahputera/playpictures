@@ -1,0 +1,146 @@
+<script>
+    let prayerTimes = {};
+    let audioCtx = null;
+    let infoIdx = 0;
+    const isFriday = new Date().getDay() === 5;
+
+    const infoData = [
+        {cat: "Petugas Jumat", text: "Khatib: Ust. Dr. Abdullah Syukri, MA<br>Imam: Ust. Ahmad Fauzi, S.Pd.I"},
+        {cat: "Laporan Kas", text: "Saldo Kas Masjid: Rp 18.450.000<br>Infaq Jumat Lalu: Rp 4.200.000"},
+        {cat: "Hadist Hari Ini", text: "Sampaikanlah dariku walau hanya satu ayat.<br>(HR. Bukhari)"}
+    ];
+
+    function startAudio() { if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
+    
+    async function getPrayer() {
+        try {
+            // Menggunakan API dari prayertimes.org (Contoh untuk Pekanbaru)
+            // Catatan: Pastikan ID lokasi sesuai atau gunakan koordinat jika diperlukan
+            const res = await fetch('https://prayertimes.org/indonesia/pekanbaru.json');
+            const d = await res.json();
+            
+            // Mapping data dari struktur prayertimes.org ke variabel lokal
+            // Biasanya struktur mereka: d.times[0] untuk hari ini
+            const todayData = d.times[0]; 
+            
+            prayerTimes = {
+                Fajr: todayData.fajr,
+                Dhuhr: todayData.dhuhr,
+                Asr: todayData.asr,
+                Maghrib: todayData.maghrib,
+                Isha: todayData.isha
+            };
+
+            const m = new Date();
+            document.getElementById('masehiDate').innerText = m.toLocaleDateString('id-ID', {weekday:'long', day:'numeric', month:'long', year:'numeric'});
+            
+            // Mengambil info Hijriah (jika tersedia di API, jika tidak gunakan fallback teks)
+            if(todayData.hijri) {
+                document.getElementById('hijriDate').innerText = todayData.hijri.toUpperCase();
+            }
+
+            if(isFriday) {
+                document.getElementById('dhuhrLabel').innerText = "JUMAT";
+                document.getElementById('dhuhrIcon').className = "fa-solid fa-mosque";
+            }
+
+            const map = {Fajr:'subuh', Dhuhr:'dzuhur', Asr:'ashar', Maghrib:'maghrib', Isha:'isya'};
+            Object.keys(map).forEach(k => {
+                document.getElementById(map[k]).innerText = prayerTimes[k];
+            });
+
+        } catch(e) { 
+            console.error("API Error: Pastikan koneksi atau endpoint prayertimes.org tersedia"); 
+        }
+    }
+
+    function update() {
+        const now = new Date();
+        const curS = (now.getHours() * 3600) + (now.getMinutes() * 60) + now.getSeconds();
+        document.getElementById('clock').innerText = now.toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit', second:'2-digit', hour12:false});
+        
+        if(!prayerTimes.Fajr) return;
+        const list = [
+            {id:'Fajr',name:'SUBUH',t:prayerTimes.Fajr},
+            {id:'Dhuhr',name:isFriday?'JUMAT':'DZUHUR',t:prayerTimes.Dhuhr},
+            {id:'Asr',name:'ASHAR',t:prayerTimes.Asr},
+            {id:'Maghrib',name:'MAGHRIB',t:prayerTimes.Maghrib},
+            {id:'Isha',name:'ISYA',t:prayerTimes.Isha}
+        ];
+        
+        let found = false;
+        list.forEach(p => {
+            const [h, m] = p.t.split(':');
+            const targetS = (parseInt(h) * 3600) + (parseInt(m) * 60);
+            const diffS = targetS - curS;
+
+            const row = document.getElementById('row-'+p.id);
+            if (diffS > 0 && !found) {
+                row.classList.add('active');
+                document.getElementById('targetName').innerText = `MENUJU ${p.name}`;
+                let hrs = Math.floor(diffS/3600), mins = Math.floor((diffS%3600)/60), secs = diffS%60;
+                document.getElementById('countdown').innerText = `${hrs.toString().padStart(2,'0')}:${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`;
+                found = true;
+            } else {
+                row.classList.remove('active');
+            }
+
+            const ov = document.getElementById('fullOverlay');
+            const ovPetugas = document.getElementById('ovPetugas');
+
+            // Logika Overlay Adzan/Iqomah tetap sama
+            if(isFriday && p.id === 'Dhuhr') {
+                if(diffS <= 0 && diffS >= -300) { 
+                    ov.style.display = 'flex'; ov.classList.remove('mode-sholat');
+                    ovPetugas.style.display = 'block';
+                    document.getElementById('ovTitle').innerText = "ADZAN JUMAT";
+                    let rem = 300 + diffS;
+                    document.getElementById('ovTimer').innerText = `${Math.floor(rem/60)}:${(rem%60).toString().padStart(2,'0')}`;
+                } else if(diffS < -300 && diffS >= -3300) { 
+                    ov.style.display = 'flex'; ov.classList.add('mode-sholat');
+                    document.getElementById('ovTimer').innerText = now.toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit', hour12:false});
+                } else if (!found && diffS > 0) ov.style.display = 'none';
+            } else {
+                if(diffS <= 0 && diffS >= -120) {
+                    ov.style.display = 'flex'; ov.classList.remove('mode-sholat');
+                    ovPetugas.style.display = 'none';
+                    document.getElementById('ovTitle').innerText = "ADZAN";
+                    let rem = 120 + diffS;
+                    document.getElementById('ovTimer').innerText = `${Math.floor(rem/60)}:${(rem%60).toString().padStart(2,'0')}`;
+                } else if(diffS < -120 && diffS >= -420) {
+                    document.getElementById('ovTitle').innerText = "IQOMAH";
+                    let iqS = 300 + (diffS + 120);
+                    document.getElementById('ovTimer').innerText = `${Math.floor(iqS/60)}:${(iqS%60).toString().padStart(2,'0')}`;
+                } else if(diffS < -420 && diffS >= -1020) {
+                    ov.style.display = 'flex'; ov.classList.add('mode-sholat');
+                    document.getElementById('ovTimer').innerText = now.toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit', hour12:false});
+                } else if (!found && diffS > 0) ov.style.display = 'none';
+            }
+        });
+    }
+
+    // Interval lainnya tetap sama
+    setInterval(() => {
+        const board = document.getElementById('infoBoard');
+        if(board) {
+            board.style.opacity = '0';
+            setTimeout(() => {
+                infoIdx = (infoIdx + 1) % infoData.length;
+                document.getElementById('infoCat').innerText = infoData[infoIdx].cat;
+                document.getElementById('infoText').innerHTML = infoData[infoIdx].text;
+                board.style.opacity = '1';
+            }, 850);
+        }
+    }, 12000);
+
+    setInterval(() => {
+        const imgs = document.querySelectorAll('.slide-img'), active = document.querySelector('.slide-img.active');
+        if(active) {
+            active.classList.remove('active'); 
+            (active.nextElementSibling || imgs[0]).classList.add('active');
+        }
+    }, 12000);
+
+    setInterval(update, 1000);
+    getPrayer();
+</script>
