@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Ittaqo Digital - Zahira Elegant Layout</title>
+<title>Ittaqo Digital - Zahira Balanced Edition</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Tenor+Sans&family=Teko:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
@@ -14,67 +14,59 @@
     
     body { margin: 0; font-family: 'Tenor Sans', sans-serif; background: #08101b; color: var(--white); overflow: hidden; height: 100vh; width: 100vw; }
 
-    .container { display: flex; height: calc(100vh - 40px); padding: 12px; gap: 12px; box-sizing: border-box; }
+    .container { display: flex; height: calc(100vh - 45px); padding: 12px; gap: 12px; box-sizing: border-box; }
     .blurred { filter: blur(20px) brightness(0.6); }
 
-    /* Panel Kiri - Jadwal Statis */
+    /* Panel Kiri - Jadwal */
     .left { 
         width: 35%; display: flex; flex-direction: column; gap: 8px; height: 100%; 
         background: var(--royal-blue); border-radius: 15px; border: 2px solid var(--gold-leaf);
         padding: 12px; box-sizing: border-box; position: relative;
-        background-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80"%3E%3Cg fill="%23d4af37" fill-opacity="0.03"%3E%3Cpath d="M40 0l40 40-40 40L0 40z"/%3E%3C/g%3E%3C/svg%3E');
     }
     
-    .card-top { background: rgba(0,0,0,0.2); border-radius: 10px; padding: 8px; text-align: center; border-bottom: 1px solid var(--gold-leaf); }
-    .clock { font-family: 'Teko', sans-serif; font-size: 3rem; font-weight: 600; color: var(--gold-leaf); line-height: 1; }
-    .date-row { font-size: 0.65rem; color: var(--white); margin-top: 4px; letter-spacing: 1px; }
+    .card-top { background: rgba(0,0,0,0.2); border-radius: 10px; padding: 10px; text-align: center; border-bottom: 1px solid var(--gold-leaf); }
+    .clock { font-family: 'Teko', sans-serif; font-size: 3.2rem; font-weight: 600; color: var(--gold-leaf); line-height: 0.9; }
+    .date-info { font-size: 0.65rem; color: var(--white); margin-top: 5px; letter-spacing: 1px; }
 
     .jadwal-list { display: grid; grid-template-rows: repeat(5, 1fr); gap: 6px; flex-grow: 1; margin-top: 5px; }
-    .jadwal-item { 
-        display: flex; align-items: center; justify-content: space-between; padding: 0 15px; 
-        background: rgba(255, 255, 255, 0.03); border-radius: 10px; border: 1px solid rgba(212, 175, 55, 0.1);
-    }
     
-    /* Active State - Black & Gold */
+    /* RAPIKAN JADWAL: Logo Kiri - Nama Tengah - Waktu Kanan */
+    .jadwal-item { 
+        display: flex; align-items: center; padding: 0 15px; 
+        background: rgba(255, 255, 255, 0.03); border-radius: 10px; 
+        border: 1px solid rgba(212, 175, 55, 0.1); transition: 0.5s;
+    }
     .jadwal-item.active { 
         background: var(--deep-black) !important; border: 2px solid var(--gold-leaf); 
-        box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+        box-shadow: 0 0 15px rgba(212, 175, 55, 0.3); transform: scale(1.02);
     }
-    .jadwal-item.active .waktu-sholat { font-size: 1.7rem; color: var(--white); flex: 1; text-align: center; }
 
-    .icon-box { width: 25px; font-size: 1.1rem; color: var(--gold-light); }
-    .waktu-sholat { font-family: 'Teko', sans-serif; font-size: 1.4rem; font-weight: 500; color: var(--white); }
+    .icon-box { width: 30px; font-size: 1.1rem; color: var(--gold-light); display: flex; justify-content: flex-start; }
+    .nama-sholat { flex: 1; font-size: 0.8rem; font-weight: 600; letter-spacing: 1px; margin-left: 5px; }
+    .waktu-sholat { font-family: 'Teko', sans-serif; font-size: 1.6rem; font-weight: 500; color: var(--white); }
 
     /* Panel Kanan */
     .right { flex: 1; position: relative; border-radius: 20px; overflow: hidden; border: 2px solid var(--gold-leaf); background: #000; }
     .slide-img { width: 100%; height: 100%; object-fit: cover; position: absolute; opacity: 0; transition: 2s; }
     .slide-img.active { opacity: 0.6; }
 
-    /* Floating Countdown Card - New Position */
-    .floating-countdown {
-        position: absolute; bottom: 95px; left: 20px; 
-        background: rgba(0, 0, 0, 0.8); padding: 8px 15px; border-radius: 10px;
-        border: 1px solid var(--gold-leaf); z-index: 60; display: flex; align-items: center; gap: 15px;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-    }
-    .cd-label { font-size: 0.7rem; color: var(--gold-leaf); font-weight: bold; letter-spacing: 1px; }
-    .cd-timer { font-family: 'Teko', sans-serif; font-size: 1.8rem; color: var(--white); min-width: 80px; }
+    .masjid-header { position: absolute; top: 20px; left: 25px; z-index: 10; }
+    .masjid-header h1 { font-family: 'Cinzel', serif; font-size: 1.6rem; margin: 0; color: var(--gold-leaf); letter-spacing: 1px; }
 
-    .lower-third {
-        position: absolute; bottom: 20px; left: 20px; right: 20px;
-        background: rgba(10, 25, 47, 0.9); padding: 12px 20px; border-radius: 12px; 
-        border-left: 6px solid var(--gold-leaf); z-index: 50; transition: 0.8s; transform: translateY(0);
+    /* Footer - Countdown di Kiri */
+    .footer { height: 45px; background: #050b14; display: flex; align-items: center; border-top: 1px solid var(--gold-leaf); }
+    .countdown-section { 
+        background: var(--gold-leaf); color: var(--deep-black); height: 100%; 
+        padding: 0 20px; display: flex; align-items: center; gap: 10px;
+        font-family: 'Teko', sans-serif; font-weight: 600; min-width: 180px;
     }
-
-    /* Footer */
-    .footer { height: 40px; background: #050b14; display: flex; align-items: center; border-top: 1px solid var(--gold-leaf); }
+    .marquee-section { flex: 1; overflow: hidden; }
     .marquee { font-size: 1rem; white-space: nowrap; animation: marquee 25s linear infinite; color: var(--gold-light); }
-    @keyframes marquee { from { transform: translateX(100vw); } to { transform: translateX(-100%); } }
+    @keyframes marquee { from { transform: translateX(100%); } to { transform: translateX(-100%); } }
 
-    /* Overlay Adzan/Iqomah */
+    /* Overlay */
     #fullOverlay {
-        position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 9999;
-        display: none; flex-direction: column; align-items: center; justify-content: center;
+        position: fixed; inset: 0; z-index: 9999; display: none; flex-direction: column; align-items: center; justify-content: center;
         background-size: cover; background-position: center; text-align: center;
     }
     #fullOverlay::before { content: ""; position: absolute; inset: 0; background: rgba(10, 25, 47, 0.85); backdrop-filter: blur(10px); z-index: -1; }
@@ -86,37 +78,41 @@
     <div class="left">
         <div class="card-top">
             <div class="clock" id="clock">00:00</div>
-            <div id="masehiDate" class="date-row" style="font-weight: 600;">-- -- ----</div>
-            <div id="hijriDate" class="date-row" style="color: var(--gold-light); opacity: 0.8;">-- -- ----</div>
+            <div id="masehiDate" class="date-info" style="font-weight: 600;">-- -- ----</div>
+            <div id="hijriDate" class="date-info" style="color: var(--gold-light); opacity: 0.8;">-- -- ----</div>
         </div>
 
         <div class="jadwal-list">
-            <div class="jadwal-item" id="row-Fajr"><div class="icon-box"><i class="fa-solid fa-cloud-sun"></i></div><span style="font-size: 0.7rem;">SUBUH</span><span class="waktu-sholat" id="subuh">--:--</span></div>
-            <div class="jadwal-item" id="row-Dhuhr"><div class="icon-box"><i class="fa-solid fa-sun"></i></div><span style="font-size: 0.7rem;">DZUHUR</span><span class="waktu-sholat" id="dzuhur">--:--</span></div>
-            <div class="jadwal-item" id="row-Asr"><div class="icon-box"><i class="fa-solid fa-cloud-sun-rain"></i></div><span style="font-size: 0.7rem;">ASHAR</span><span class="waktu-sholat" id="ashar">--:--</span></div>
-            <div class="jadwal-item" id="row-Maghrib"><div class="icon-box"><i class="fa-solid fa-moon"></i></div><span style="font-size: 0.7rem;">MAGHRIB</span><span class="waktu-sholat" id="maghrib">--:--</span></div>
-            <div class="jadwal-item" id="row-Isha"><div class="icon-box"><i class="fa-solid fa-star-and-crescent"></i></div><span style="font-size: 0.7rem;">ISYA</span><span class="waktu-sholat" id="isya">--:--</span></div>
+            <div class="jadwal-item" id="row-Fajr"><div class="icon-box"><i class="fa-solid fa-cloud-sun"></i></div><div class="nama-sholat">SUBUH</div><div class="waktu-sholat" id="subuh">--:--</div></div>
+            <div class="jadwal-item" id="row-Dhuhr"><div class="icon-box"><i class="fa-solid fa-sun"></i></div><div class="nama-sholat">DZUHUR</div><div class="waktu-sholat" id="dzuhur">--:--</div></div>
+            <div class="jadwal-item" id="row-Asr"><div class="icon-box"><i class="fa-solid fa-cloud-sun-rain"></i></div><div class="nama-sholat">ASHAR</div><div class="waktu-sholat" id="ashar">--:--</div></div>
+            <div class="jadwal-item" id="row-Maghrib"><div class="icon-box"><i class="fa-solid fa-moon"></i></div><div class="nama-sholat">MAGHRIB</div><div class="waktu-sholat" id="maghrib">--:--</div></div>
+            <div class="jadwal-item" id="row-Isha"><div class="icon-box"><i class="fa-solid fa-star-and-crescent"></i></div><div class="nama-sholat">ISYA</div><div class="waktu-sholat" id="isya">--:--</div></div>
         </div>
     </div>
 
     <div class="right">
-        <div style="position: absolute; top: 20px; left: 25px; z-index: 10;">
-            <h1 style="font-family: 'Cinzel'; font-size: 1.6rem; color: var(--gold-leaf); margin: 0;">Masjid Raya Ittaqo</h1>
-            <p style="font-size: 0.7rem; margin: 0; opacity: 0.8;">Pekanbaru, Riau</p>
+        <div class="masjid-header">
+            <h1>Masjid Raya Ittaqo</h1>
+            <p style="font-size: 0.7rem; opacity: 0.8; margin: 0;">Pekanbaru, Riau - Indonesia</p>
         </div>
-
         <img src="https://images.unsplash.com/photo-1590076215667-873d3289816c?q=80&w=1000" class="slide-img active">
         <img src="https://images.unsplash.com/photo-1542623024-a797bb77bbbc?q=80&w=1000" class="slide-img">
-
-        <div class="floating-countdown" id="cdFloating">
-            <div class="cd-label" id="targetName">MENUNGGU JADWAL</div>
-            <div class="cd-timer" id="countdown">00:00:00</div>
+        
+        <div style="position: absolute; bottom: 15px; left: 15px; right: 15px; background: rgba(10,25,47,0.9); padding: 12px; border-radius: 12px; border-left: 5px solid var(--gold-leaf); z-index: 50;">
+            <div style="color:var(--gold-leaf); font-size:0.55rem; font-weight:bold;">PENGUMUMAN</div>
+            <div style="font-size: 0.9rem; margin-top: 3px;" id="ltTitle">Memuat informasi...</div>
         </div>
+    </div>
+</div>
 
-        <div class="lower-third" id="lowerThird">
-            <div style="color:var(--gold-leaf); font-size:0.55rem; font-weight:bold; letter-spacing: 1px;">PENGUMUMAN</div>
-            <div style="font-size: 0.9rem; margin-top: 4px;" id="ltTitle">...</div>
-        </div>
+<div class="footer">
+    <div class="countdown-section">
+        <span id="targetName" style="font-size: 0.7rem; opacity: 0.8;">MENUJU</span>
+        <span id="countdown" style="font-size: 1.4rem;">00:00:00</span>
+    </div>
+    <div class="marquee-section">
+        <div class="marquee">Luruskan dan rapatkan shaf demi kesempurnaan sholat... Matikan ponsel selama di dalam masjid... Jaga kebersihan...</div>
     </div>
 </div>
 
@@ -125,8 +121,6 @@
     <div style="font-family: 'Teko'; font-size: 6rem;" id="ovTimer">00:00</div>
     <div style="font-size: 1.1rem; opacity: 0.9;" id="ovMsg">Luruskan Shaf</div>
 </div>
-
-<div class="footer"><div class="marquee">Luruskan dan rapatkan shaf demi kesempurnaan sholat... Matikan ponsel... Jaga kebersihan masjid...</div></div>
 
 <audio id="murottalAudio"></audio>
 
@@ -155,7 +149,7 @@
 
     function update() {
         const now = new Date();
-        const curTotalSec = (now.getHours() * 3600) + (now.getMinutes() * 60) + now.getSeconds();
+        const curS = (now.getHours() * 3600) + (now.getMinutes() * 60) + now.getSeconds();
         document.getElementById('clock').innerText = now.toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit', hour12:false});
         
         if(!prayerTimes.Fajr) return;
@@ -168,8 +162,8 @@
         let found = false;
         list.forEach(p => {
             const [h, m] = p.t.split(':');
-            const targetTotalSec = (parseInt(h) * 3600) + (parseInt(m) * 60);
-            const diffS = targetTotalSec - curTotalSec;
+            const targetS = (parseInt(h) * 3600) + (parseInt(m) * 60);
+            const diffS = targetS - curS;
 
             if (diffS > 0 && !found) {
                 document.getElementById('row-'+p.id).classList.add('active');
@@ -185,7 +179,6 @@
             }
 
             // Overlay Logic
-            const diffM = Math.floor(diffS / 60);
             if(diffS <= 60 && diffS > 0) showOV("ADZAN", diffS, "Persiapan Adzan");
             else if(diffS <= 0 && diffS >= -120) showOV("WAKTU ADZAN", 120 + diffS, "Berdoa antara Adzan & Iqomah");
             else if(diffS < -120 && diffS >= -420) {
@@ -209,18 +202,16 @@
 
     function hideOV() { document.getElementById('fullOverlay').style.display = 'none'; document.getElementById('mainUI').classList.remove('blurred'); }
 
-    // Carousel Info
     setInterval(() => {
-        const lt = document.getElementById('lowerThird');
+        const lt = document.getElementById('ltTitle');
         lt.style.opacity = 0;
         setTimeout(() => {
-            document.getElementById('ltTitle').innerText = infoData[infoIdx].t;
+            lt.innerText = infoData[infoIdx].t;
             lt.style.opacity = 1;
             infoIdx = (infoIdx + 1) % infoData.length;
         }, 500);
     }, 10000);
 
-    // Carousel Slide
     setInterval(() => {
         const imgs = document.querySelectorAll('.slide-img');
         const active = document.querySelector('.slide-img.active');
