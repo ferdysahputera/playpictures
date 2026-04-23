@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Ittaqo Digital - Kemenag Edition</title>
+    <title>Ittaqo Digital - Rejang Lebong Edition</title>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Tenor+Sans&family=Teko:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -96,7 +96,7 @@
     <div class="right">
         <div style="position:absolute; top:20px; left:25px; z-index:10;">
             <h1 style="font-family:'Cinzel'; font-size:1.6rem; color:var(--gold-leaf); margin:0;">Masjid Al-Ikhlas</h1>
-            <p id="lokasiMasjid" style="font-size:0.65rem; opacity:0.8; margin:0; letter-spacing: 1px;">KOTA PEKANBARU</p>
+            <p id="lokasiMasjid" style="font-size:0.65rem; opacity:0.8; margin:0; letter-spacing: 1px;">KAB. REJANG LEBONG</p>
         </div>
         <img src="https://images.unsplash.com/photo-1590076215667-873d3289816c?q=80&w=1000" class="slide-img active">
         <img src="https://images.unsplash.com/photo-1542623024-a797bb77bbbc?q=80&w=1000" class="slide-img">
@@ -126,8 +126,8 @@
 </div>
 
 <script>
-    // KONFIGURASI
-    const KOTA_ID = "1419"; // ID 1419 = Pekanbaru. Cari ID kota di api.myquran.com
+    // KONFIGURASI WILAYAH
+    const KOTA_ID = "0702"; // ID 0702 = Kab. Rejang Lebong
     const IQOMAH_MENIT = 5; 
     const ADZAN_MENIT = 2;
 
@@ -165,7 +165,7 @@
                 };
 
                 document.getElementById('masehiDate').innerText = j.tanggal;
-                document.getElementById('hijriDate').innerText = j.terbit + " (TERBIT)"; // Pengganti sementara info hijri
+                document.getElementById('hijriDate').innerText = "KAB. REJANG LEBONG"; 
                 document.getElementById('lokasiMasjid').innerText = json.data.lokasi;
 
                 if(isFriday) {
@@ -216,10 +216,8 @@
                 row.classList.remove('active');
             }
 
-            // Logika Layar Overlay
             const ov = document.getElementById('fullOverlay');
             if (diffS <= 0 && diffS >= -(ADZAN_MENIT * 60)) {
-                // FASE ADZAN
                 ov.style.display = 'flex';
                 ov.classList.remove('mode-sholat');
                 document.getElementById('ovTitle').innerText = (isFriday && p.id === 'Dzuhur') ? "ADZAN JUMAT" : "ADZAN";
@@ -227,12 +225,10 @@
                 document.getElementById('ovTimer').innerText = `${Math.floor(rem/60)}:${(rem%60).toString().padStart(2,'0')}`;
                 if(isFriday && p.id === 'Dzuhur') document.getElementById('ovPetugas').style.display = 'block';
             } else if (!isFriday && diffS < -(ADZAN_MENIT * 60) && diffS >= -((ADZAN_MENIT + IQOMAH_MENIT) * 60)) {
-                // FASE IQOMAH
                 document.getElementById('ovTitle').innerText = "IQOMAH";
                 let iqS = (IQOMAH_MENIT * 60) + (diffS + (ADZAN_MENIT * 60));
                 document.getElementById('ovTimer').innerText = `${Math.floor(iqS/60)}:${(iqS%60).toString().padStart(2,'0')}`;
             } else if (diffS < -((isFriday && p.id === 'Dzuhur' ? ADZAN_MENIT : ADZAN_MENIT + IQOMAH_MENIT) * 60) && diffS >= -1800) {
-                // FASE SHOLAT (Layar Gelap 30 Menit)
                 ov.style.display = 'flex';
                 ov.classList.add('mode-sholat');
                 document.getElementById('ovTimer').innerText = now.toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit', hour12:false});
@@ -243,7 +239,6 @@
         }
     }
 
-    // Rotasi Info
     setInterval(() => {
         const board = document.getElementById('infoBoard');
         board.style.opacity = '0';
@@ -255,7 +250,6 @@
         }, 850);
     }, 15000);
 
-    // Slideshow
     setInterval(() => {
         const imgs = document.querySelectorAll('.slide-img'), active = document.querySelector('.slide-img.active');
         if(active) {
