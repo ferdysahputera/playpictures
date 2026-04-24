@@ -51,8 +51,9 @@
             background-size: 60px 60px;
         }
 
-        /* ===== LAYOUT UTAMA ===== */
         .app { display:flex; flex-direction:column; height:100vh; position:relative; z-index:1; }
+        
+        /* HEADER */
         .header {
             display:flex; align-items:center; justify-content:space-between;
             padding: 8px 24px;
@@ -81,7 +82,7 @@
             color:var(--blue-light); font-weight:600; letter-spacing:0.5px;
         }
 
-        /* ===== KONTEN TENGAH ===== */
+        /* KONTEN */
         .content { display:flex; flex:1; overflow:hidden; gap:0; }
         .panel-left {
             width:38%; min-width:280px; padding:16px 20px;
@@ -94,7 +95,7 @@
             display:flex; flex-direction:column;
         }
 
-        /* ===== JADWAL SHOLAT ===== */
+        /* JADWAL SHOLAT */
         .prayer-header {
             display:flex; align-items:center; justify-content:space-between;
             margin-bottom:8px; padding-bottom:8px; border-bottom:1px solid var(--border);
@@ -127,7 +128,7 @@
         .prayer-time { font-size:clamp(13px,1.5vw,18px); font-weight:700; color:var(--text-primary); font-variant-numeric:tabular-nums; transition:color 0.5s; }
         .prayer-countdown { font-size:clamp(9px,0.9vw,11px); color:var(--text-muted); font-variant-numeric:tabular-nums; min-width:48px; text-align:right; }
 
-        /* ===== PANEL KANAN ===== */
+        /* PANEL KANAN */
         .slide-container {
             flex:1; position:relative; border-radius:12px; overflow:hidden;
             background: var(--bg-card); border:1px solid var(--border);
@@ -148,10 +149,7 @@
         }
 
         /* LOW THIRD */
-        .low-third {
-            position:absolute; bottom:16px; left:16px; right:16px;
-            overflow:hidden; height:56px;
-        }
+        .low-third { position:absolute; bottom:16px; left:16px; right:16px; overflow:hidden; height:56px; }
         .low-third-item {
             position:absolute; bottom:0; left:0; right:0;
             display:flex; align-items:center; gap:10px;
@@ -176,7 +174,7 @@
         .low-third-item .lt-title { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; }
         .low-third-item .lt-desc { font-size:clamp(11px,1.2vw,14px); color:var(--text-secondary); font-weight:400; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 
-        /* ===== FOOTER ===== */
+        /* FOOTER */
         .footer {
             display:flex; align-items:center; gap:16px;
             padding:6px 24px; min-height:48px; flex-shrink:0;
@@ -210,67 +208,50 @@
         .footer-running span { margin-right:60px; }
         .footer-running .rw-sep { color:var(--gold); margin:0 8px; }
         @keyframes runningText { 0%{transform:translateX(100%)} 100%{transform:translateX(-100%)} }
+        .footer-next-prayer { display:flex; flex-direction:column; align-items:center; gap:1px; flex-shrink:0; padding:0 10px; }
+        .footer-next-prayer .fnp-label { font-size:8px; color:var(--text-muted); font-weight:600; text-transform:uppercase; letter-spacing:0.5px; }
+        .footer-next-prayer .fnp-name { font-size:clamp(11px,1.2vw,14px); font-weight:700; color:var(--text-primary); }
 
-        /* ===== OVERLAY: AZAN / IQOMAH / SHOLAT ===== */
+        /* OVERLAYS */
         .overlay {
             position:fixed; inset:0; z-index:1000;
             display:flex; flex-direction:column; align-items:center; justify-content:center;
             opacity:0; pointer-events:none; transition:opacity 0.8s ease;
         }
         .overlay.visible { opacity:1; pointer-events:all; }
-        .overlay-azan {
-            background: radial-gradient(ellipse at center, rgba(5,20,50,0.97), rgba(2,8,20,0.99));
-        }
+        .overlay-azan { background: radial-gradient(ellipse at center, rgba(5,20,50,0.97), rgba(2,8,20,0.99)); }
         .overlay-azan::before {
             content:''; position:absolute; inset:0;
-            background:
-                radial-gradient(circle at 30% 40%, rgba(0,168,232,0.1) 0%, transparent 50%),
-                radial-gradient(circle at 70% 60%, rgba(201,164,76,0.06) 0%, transparent 50%);
+            background: radial-gradient(circle at 30% 40%, rgba(0,168,232,0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 60%, rgba(201,164,76,0.06) 0%, transparent 50%);
             animation:overlayPulse 4s ease-in-out infinite;
         }
         @keyframes overlayPulse { 0%,100%{opacity:0.5} 50%{opacity:1} }
-        .overlay-iqomah {
-            background: radial-gradient(ellipse at center, rgba(10,25,50,0.97), rgba(3,10,25,0.99));
-        }
+        .overlay-iqomah { background: radial-gradient(ellipse at center, rgba(10,25,50,0.97), rgba(3,10,25,0.99)); }
         .overlay-iqomah::before {
             content:''; position:absolute; inset:0;
             background: radial-gradient(circle at 50% 50%, rgba(0,229,255,0.05) 0%, transparent 60%);
             animation:overlayPulse 3s ease-in-out infinite;
         }
-        .overlay-sholat {
-            background: radial-gradient(ellipse at center, rgba(5,15,35,0.97), rgba(2,5,15,0.99));
-        }
+        .overlay-sholat { background: radial-gradient(ellipse at center, rgba(5,15,35,0.97), rgba(2,5,15,0.99)); }
         .overlay-content { position:relative; z-index:1; text-align:center; display:flex; flex-direction:column; align-items:center; }
         .ov-icon { font-size:clamp(40px,8vw,80px); margin-bottom:16px; }
         .overlay-azan .ov-icon { color:var(--gold-light); filter:drop-shadow(0 0 30px rgba(201,164,76,0.4)); }
         .overlay-iqomah .ov-icon { color:var(--cyan); filter:drop-shadow(0 0 30px rgba(0,229,255,0.4)); }
         .overlay-sholat .ov-icon { color:var(--blue-light); filter:drop-shadow(0 0 30px rgba(0,168,232,0.4)); }
-        .ov-title {
-            font-size:clamp(28px,5vw,56px); font-weight:900; letter-spacing:2px;
-            margin-bottom:8px;
-        }
+        .ov-title { font-size:clamp(28px,5vw,56px); font-weight:900; letter-spacing:2px; margin-bottom:8px; }
         .overlay-azan .ov-title { color:var(--gold-light); }
         .overlay-iqomah .ov-title { color:var(--cyan); }
         .overlay-sholat .ov-title { color:var(--blue-light); }
-        .ov-subtitle {
-            font-size:clamp(14px,2vw,24px); font-weight:400; color:var(--text-secondary);
-            margin-bottom:20px;
-        }
-        .ov-countdown {
-            font-size:clamp(48px,10vw,120px); font-weight:900; line-height:1;
-            font-variant-numeric:tabular-nums; margin-bottom:20px;
-        }
-        .overlay-azan .ov-countdown { color:var(--text-primary); }
+        .ov-subtitle { font-size:clamp(14px,2vw,24px); font-weight:400; color:var(--text-secondary); margin-bottom:20px; }
+        .ov-countdown { font-size:clamp(48px,10vw,120px); font-weight:900; line-height:1; font-variant-numeric:tabular-nums; margin-bottom:20px; }
         .overlay-iqomah .ov-countdown { color:var(--cyan); text-shadow:0 0 40px rgba(0,229,255,0.3); }
         .ov-info {
             font-size:clamp(12px,1.5vw,18px); color:var(--text-muted); max-width:600px;
             line-height:1.6; padding:12px 24px; border-radius:10px;
             background:rgba(255,255,255,0.03); border:1px solid var(--border);
         }
-        .ov-time-display {
-            font-size:clamp(16px,2.5vw,28px); font-weight:600; color:var(--text-secondary);
-            font-variant-numeric:tabular-nums; margin-top:12px;
-        }
+        .ov-time-display { font-size:clamp(16px,2.5vw,28px); font-weight:600; color:var(--text-secondary); font-variant-numeric:tabular-nums; margin-top:12px; }
         .ov-jumat-special {
             margin-top:20px; padding:12px 24px; border-radius:10px;
             background:rgba(201,164,76,0.08); border:1px solid rgba(201,164,76,0.2);
@@ -278,12 +259,7 @@
         .ov-jumat-special .jumat-label { font-size:12px; color:var(--gold); font-weight:600; text-transform:uppercase; letter-spacing:1px; }
         .ov-jumat-special .jumat-time { font-size:clamp(20px,3vw,32px); font-weight:800; color:var(--gold-light); margin-top:4px; }
 
-        /* ===== SHOLAT BERIKUTNYA DI FOOTER ===== */
-        .footer-next-prayer { display:flex; flex-direction:column; align-items:center; gap:1px; flex-shrink:0; padding:0 10px; }
-        .footer-next-prayer .fnp-label { font-size:8px; color:var(--text-muted); font-weight:600; text-transform:uppercase; letter-spacing:0.5px; }
-        .footer-next-prayer .fnp-name { font-size:clamp(11px,1.2vw,14px); font-weight:700; color:var(--text-primary); }
-
-        /* ===== TOAST ===== */
+        /* TOAST */
         .toast {
             position:fixed; top:80px; right:24px; z-index:2000;
             padding:12px 20px; border-radius:10px;
@@ -294,17 +270,7 @@
         }
         .toast.show { transform:translateX(0); }
 
-        /* ===== ANIMASI ===== */
-        @keyframes fadeInUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
-        @keyframes shimmer { 0%{background-position:-200% 0} 100%{background-position:200% 0} }
-        .shimmer-text {
-            background: linear-gradient(90deg, var(--gold-dark), var(--gold-light), var(--gold-dark));
-            background-size:200% 100%;
-            -webkit-background-clip:text; -webkit-text-fill-color:transparent;
-            animation: shimmer 3s linear infinite;
-        }
-
-        /* ===== RESPONSIVE ===== */
+        /* RESPONSIVE */
         @media(max-width:900px){
             .panel-left { width:42%; padding:10px 12px; }
             .panel-right { padding:10px 12px; }
@@ -364,7 +330,6 @@
 
     <!-- KONTEN -->
     <div class="content">
-        <!-- PANEL KIRI: JADWAL SHOLAT -->
         <aside class="panel-left" id="prayerPanel">
             <div class="prayer-header">
                 <h2><i class="fas fa-clock" style="margin-right:6px;color:var(--gold)"></i>Jadwal Sholat</h2>
@@ -373,7 +338,6 @@
             <div id="prayerList"></div>
         </aside>
 
-        <!-- PANEL KANAN: SLIDE + LOW THIRD -->
         <main class="panel-right">
             <div class="slide-container" id="slideContainer">
                 <div class="slide-overlay"></div>
@@ -465,7 +429,7 @@
     </div>
 </div>
 
-<!-- OVERLAY SHOLAT BERLANGSUNG -->
+<!-- OVERLAY SHOLAT -->
 <div class="overlay overlay-sholat" id="overlaySholat">
     <div class="overlay-content">
         <div class="ov-icon"><i class="fas fa-pray"></i></div>
@@ -476,16 +440,12 @@
     </div>
 </div>
 
-<!-- TOAST -->
 <div class="toast" id="toast"></div>
-
-<!-- AUDIO -->
-<audio id="audioBeep" preload="auto"></audio>
 <audio id="audioMurotal" preload="auto" loop></audio>
 
 <script>
 /* ============================================================
-   KONFIGURASI DEFAULT
+   DEFAULT CONFIG
    ============================================================ */
 const DEFAULT_CONFIG = {
     masjidName: "Masjid Agung Rejang Lebong",
@@ -494,19 +454,17 @@ const DEFAULT_CONFIG = {
     longitude: 102.5434,
     timezone: 7,
     source: "kemenag",
-    method: 1,
     slideImages: [
         "https://picsum.photos/seed/masjid1/1280/720",
         "https://picsum.photos/seed/masjid2/1280/720",
         "https://picsum.photos/seed/masjid3/1280/720",
-        "https://picsum.photos/seed/masjid4/1280/720",
-        "https://picsum.photos/seed/masjid5/1280/720"
+        "https://picsum.photos/seed/masjid4/1280/720"
     ],
     slideInterval: 8000,
     lowThirdInterval: 8000,
     runningText: "Selamat datang di Masjid Agung Rejang Lebong \u2666 Marilah kita meningkatkan iman dan taqwa \u2666 Jaga kebersihan dan ketertiban masjid \u2666 Sholat berjamaah lebih utama 27 derajat \u2666",
     kasInfo: "Pemasukan Rp 5.750.000 | Pengeluaran Rp 3.200.000 | Saldo Rp 42.350.000",
-    pembangunanInfo: "Program renovahsi masjid tahap 2 | Saldo: Rp 85.000.000 | Target: Rp 150.000.000",
+    pembangunanInfo: "Program renovasi masjid tahap 2 | Saldo: Rp 85.000.000 | Target: Rp 150.000.000",
     petugasJumat: "Imam: Ust. Ahmad Fauzi, Khatib: Ust. H. Muhammad Rizki, Muadzin: B. Syamsul",
     customInfo: "Kajian Ahad Pagi pukul 08.00 WIB bersama Ust. Dr. H. Sulaiman, M.Ag",
     adjustMinutes: { Subuh:0, Terbit:0, Dzuhur:0, Ashar:0, Maghrib:0, Isya:0 },
@@ -523,6 +481,7 @@ const DEFAULT_CONFIG = {
     jumatSholatInfo: "Sholat Jumat sedang berlangsung. Jangan meninggalkan sholat tanpa uzur.",
     jumatTimeDisplay: "12:30 WIB",
     jumatDurationMinutes: 35,
+    sholatDurationMinutes: 15,
     spreadsheetId: "",
     sheetName: "Config",
     refreshInterval: 60,
@@ -535,7 +494,7 @@ const DEFAULT_CONFIG = {
         { name:"Ramadhan 1447 H", date:"2026-03-03" },
         { name:"1 Syawal (Idul Fitri)", date:"2026-04-01" },
         { name:"Hari Arafah", date:"2026-05-07" },
-        { name:"Idul Adha 1447 H", date:"2026-05-08" },
+        { name:"Idul Adha 1447 H", date:"2026-05-08" }
     ]
 };
 
@@ -543,43 +502,39 @@ const DEFAULT_CONFIG = {
    STATE
    ============================================================ */
 let config = {};
-let schedule = {};
-let currentPhase = 'normal'; // normal | murotal | azan | iqomah | sholat
+// Menyimpan jadwal dalam format menit dari 00:00 (0-1439)
+let scheduleMin = {};
+let scheduleStr = {};
+let currentPhase = 'normal';
 let currentPrayerKey = null;
-let overlayTimeouts = [];
+let overlayTimers = [];
 let slideIndex = 0;
 let slideTimer = null;
-let ltIndex = 0;
+let ltIndex = -1;
 let ltTimer = null;
 let refreshTimer = null;
-let lastAzanMinute = -1;
-let lastIqomahSecond = -1;
+let triggeredAzan = {}; // Mencegah trigger ganda
 
 /* ============================================================
-   INISIALISASI
+   INIT
    ============================================================ */
 document.addEventListener('DOMContentLoaded', () => {
     loadConfig();
-    initClock();
+    setInterval(updateClock, 1000);
+    updateClock();
     initSlideShow();
     initLowThird();
     initRefresh();
 });
 
 /* ============================================================
-   KONFIGURASI
+   CONFIG
    ============================================================ */
 function loadConfig() {
     try {
         const saved = localStorage.getItem('sholatConfig');
-        if (saved) {
-            config = { ...DEFAULT_CONFIG, ...JSON.parse(saved) };
-        } else {
-            config = { ...DEFAULT_CONFIG };
-        }
-    } catch(e) {
-        config = { ...DEFAULT_CONFIG };
-    }
+        config = saved ? { ...DEFAULT_CONFIG, ...JSON.parse(saved) } : { ...DEFAULT_CONFIG };
+    } catch(e) { config = { ...DEFAULT_CONFIG }; }
     applyConfig();
     fetchFromSpreadsheet();
 }
@@ -587,8 +542,7 @@ function loadConfig() {
 function applyConfig() {
     document.getElementById('masjidName').textContent = config.masjidName;
     document.getElementById('masjidLocation').textContent = config.masjidLocation;
-    const src = config.source.toUpperCase();
-    document.getElementById('sourceBadge').textContent = src;
+    document.getElementById('sourceBadge').textContent = (config.source || 'kemenag').toUpperCase();
     document.getElementById('ltKas').textContent = config.kasInfo || '-';
     document.getElementById('ltPembangunan').textContent = config.pembangunanInfo || '-';
     document.getElementById('ltPetugas').textContent = config.petugasJumat || '-';
@@ -596,58 +550,43 @@ function applyConfig() {
     document.getElementById('azanInfo').textContent = config.azanInfoText;
     document.getElementById('iqomahInfo').textContent = config.iqomahInfoText;
     document.getElementById('sholatInfo').textContent = config.sholatInfoText;
-    // Murotal URL
+
     if (config.murotalUrl) {
         document.getElementById('audioMurotal').src = config.murotalUrl;
     } else {
         document.getElementById('audioMurotal').src = 'https://cdn.jsdelivr.net/gh/muratalquran/murotal@main/mishary-rashid-alafasy/001-al-fatiha.mp3';
     }
-    // Running text
+
     buildRunningText();
-    // Slides
     buildSlides();
-    // Jumat boxes
-    if (config.jumatMode) {
-        document.getElementById('azanJumatBox').style.display = '';
-        document.getElementById('iqomahJumatBox').style.display = '';
-        document.getElementById('azanJumatTime').textContent = config.jumatTimeDisplay || '-';
-        document.getElementById('iqomahJumatTime').textContent = config.jumatTimeDisplay || '-';
-    } else {
-        document.getElementById('azanJumatBox').style.display = 'none';
-        document.getElementById('iqomahJumatBox').style.display = 'none';
-    }
+    
+    document.getElementById('azanJumatBox').style.display = config.jumatMode ? '' : 'none';
+    document.getElementById('iqomahJumatBox').style.display = config.jumatMode ? '' : 'none';
+    document.getElementById('azanJumatTime').textContent = config.jumatTimeDisplay || '-';
+    document.getElementById('iqomahJumatTime').textContent = config.jumatTimeDisplay || '-';
+    
     calculateSchedule();
 }
 
 function buildRunningText() {
     const parts = (config.runningText || '').split('\u2666').map(s=>s.trim()).filter(Boolean);
-    const container = document.getElementById('runningText');
-    container.innerHTML = parts.map(p => `<span>${p} <span class="rw-sep">\u25C6</span></span>`).join('');
-    // Durasi berdasarkan panjang teks
-    const dur = Math.max(30, parts.join('').length * 0.3);
-    container.style.setProperty('--run-duration', dur + 's');
+    const el = document.getElementById('runningText');
+    el.innerHTML = parts.map(p => `<span>${p} <span class="rw-sep">\u25C6</span></span>`).join('');
+    el.style.setProperty('--run-duration', Math.max(30, parts.join('').length * 0.3) + 's');
 }
 
 function buildSlides() {
     const container = document.getElementById('slideContainer');
-    // Hapus slide lama (bukan overlay, bukan counter)
-    container.querySelectorAll('.slide-img').forEach(el => el.remove());
-    const imgs = config.slideImages || [];
-    imgs.forEach((src, i) => {
+    container.querySelectorAll('.slide-img').forEach(e => e.remove());
+    (config.slideImages || []).forEach((src, i) => {
         const img = document.createElement('img');
         img.className = 'slide-img' + (i === 0 ? ' active' : '');
-        img.src = src;
-        img.alt = 'Slide ' + (i+1);
-        img.loading = 'lazy';
+        img.src = src; img.alt = 'Slide '+(i+1); img.loading = 'lazy';
         container.insertBefore(img, container.querySelector('.slide-overlay'));
     });
     slideIndex = 0;
-    updateSlideCounter();
-}
-
-function updateSlideCounter() {
-    const total = Math.max(1, (config.slideImages || []).length);
-    document.getElementById('slideCounter').textContent = `${slideIndex + 1}/${total}`;
+    const total = Math.max(1, (config.slideImages||[]).length);
+    document.getElementById('slideCounter').textContent = `1/${total}`;
 }
 
 /* ============================================================
@@ -656,342 +595,282 @@ function updateSlideCounter() {
 function fetchFromSpreadsheet() {
     if (!config.spreadsheetId) return;
     const url = `https://docs.google.com/spreadsheets/d/${config.spreadsheetId}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(config.sheetName || 'Config')}`;
-    fetch(url)
-        .then(r => r.text())
-        .then(text => {
-            const match = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]+)\);?\s*$/);
-            if (!match) return;
-            const data = JSON.parse(match[1]);
-            const rows = data.table.rows;
-            if (!rows || rows.length === 0) return;
-            const newCfg = {};
-            rows.forEach(row => {
-                const key = row.c[0] ? String(row.c[0].v).trim() : '';
-                const val = row.c[1] ? row.c[1].v : '';
-                if (!key) return;
-                // Parsing khusus
-                if (key === 'slideImages') {
-                    newCfg[key] = String(val).split('|').map(s=>s.trim()).filter(Boolean);
-                } else if (key === 'adjustMinutes' || key === 'iqomahMinutes' || key === 'murotalMinutesBefore') {
-                    try { newCfg[key] = JSON.parse(val); } catch(e) { newCfg[key] = DEFAULT_CONFIG[key]; }
-                } else if (key === 'islamicEvents') {
-                    try { newCfg[key] = JSON.parse(val); } catch(e) { newCfg[key] = DEFAULT_CONFIG[key]; }
-                } else if (['latitude','longitude','timezone','slideInterval','lowThirdInterval','jumatDurationMinutes','refreshInterval'].includes(key)) {
-                    newCfg[key] = parseFloat(val) || 0;
-                } else if (['murotalEnabled','jumatMode'].includes(key)) {
-                    newCfg[key] = val === true || val === 'true' || val === '1';
-                } else {
-                    newCfg[key] = String(val);
-                }
-            });
-            const merged = { ...config, ...newCfg };
-            const changed = JSON.stringify(config) !== JSON.stringify(merged);
-            if (changed) {
-                config = merged;
-                localStorage.setItem('sholatConfig', JSON.stringify(config));
-                applyConfig();
-                showToast('Data spreadsheet diperbarui');
-            }
-        })
-        .catch(() => {});
+    fetch(url).then(r => r.text()).then(text => {
+        const m = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]+)\);?\s*$/);
+        if (!m) return;
+        const data = JSON.parse(m[1]);
+        const rows = data.table.rows;
+        if (!rows || !rows.length) return;
+        const nc = {};
+        rows.forEach(row => {
+            const k = row.c[0] ? String(row.c[0].v).trim() : '';
+            const v = row.c[1] !== null && row.c[1] !== undefined ? row.c[1] : '';
+            if (!k) return;
+            if (k==='slideImages') nc[k]=String(v).split('|').map(s=>s.trim()).filter(Boolean);
+            else if (['adjustMinutes','iqomahMinutes','murotalMinutesBefore','islamicEvents'].includes(k)) { try{nc[k]=JSON.parse(v)}catch(e){} }
+            else if (['latitude','longitude','timezone','slideInterval','lowThirdInterval','jumatDurationMinutes','sholatDurationMinutes','refreshInterval'].includes(k)) nc[k]=parseFloat(v)||0;
+            else if (['murotalEnabled','jumatMode'].includes(k)) nc[k]=(v===true||v==='true'||v===1);
+            else nc[k]=String(v);
+        });
+        const merged = { ...config, ...nc };
+        if (JSON.stringify(config) !== JSON.stringify(merged)) {
+            config = merged;
+            localStorage.setItem('sholatConfig', JSON.stringify(config));
+            applyConfig();
+            showToast('Data spreadsheet diperbarui');
+        }
+    }).catch(()=>{});
 }
 
 function initRefresh() {
     if (refreshTimer) clearInterval(refreshTimer);
-    const interval = (config.refreshInterval || 60) * 1000;
-    refreshTimer = setInterval(fetchFromSpreadsheet, interval);
+    refreshTimer = setInterval(fetchFromSpreadsheet, (config.refreshInterval || 60) * 1000);
 }
 
 /* ============================================================
-   PERHITUNGAN JADWAL SHOLAT
+   PERHITUNGAN ASTRONOMI (DIPERBAIKI)
    ============================================================ */
+const D2R = Math.PI / 180;
+const R2D = 180 / Math.PI;
+
+function dayOfYear(d) {
+    const s = new Date(d.getFullYear(), 0, 0);
+    return Math.floor((d - s) / 86400000);
+}
+
+function solarDeclination(doy) {
+    return 23.45 * Math.sin((360 / 365 * (doy - 81)) * D2R);
+}
+
+function equationOfTime(doy) {
+    const B = (360 / 365 * (doy - 81)) * D2R;
+    return 9.87 * Math.sin(2*B) - 7.53 * Math.cos(B) - 1.5 * Math.sin(B);
+}
+
+// Menghitung Half Hour Angle untuk sudut tertentu
+function computeHA(lat, decl, angle) {
+    const cosHA = (Math.sin(angle * D2R) - Math.sin(lat * D2R) * Math.sin(decl * D2R)) /
+                  (Math.cos(lat * D2R) * Math.cos(decl * D2R));
+    if (cosHA < -1 || cosHA > 1) return null;
+    return Math.acos(cosHA) * R2D / 15; // dalam jam
+}
+
 function calculateSchedule() {
     const now = new Date();
-    const jd = gregorianToJD(now.getFullYear(), now.getMonth()+1, now.getDate());
     const doy = dayOfYear(now);
+    const decl = solarDeclination(doy);
+    const eqt = equationOfTime(doy);
+    const lat = config.latitude;
+    const lng = config.longitude;
+    const tz = config.timezone;
 
-    if (config.source === 'manual') {
-        // Manual: gunakan data dari config.manualTimes jika ada
-        schedule = config.manualTimes || {};
-        if (!schedule.Subuh) schedule.Subuh = '05:00';
-        if (!schedule.Terbit) schedule.Terbit = '06:10';
-        if (!schedule.Dzuhur) schedule.Dzuhur = '12:10';
-        if (!schedule.Ashar) schedule.Ashar = '15:25';
-        if (!schedule.Maghrib) schedule.Maghrib = '18:05';
-        if (!schedule.Isya) schedule.Isya = '19:15';
+    // Waktu noon (setengah hari) dalam jam desimal lokal
+    const noon = 12 - (lng / 15) + tz + (eqt / 60);
+
+    // HA untuk berbagai sudut
+    const haSubuh = computeHA(lat, decl, -18);
+    const haTerbit = computeHA(lat, decl, -0.833);
+    const haIsyaK = computeHA(lat, decl, -18);
+    const haIsyaM = computeHA(lat, decl, -20);
+
+    // Ashar Syafii: saat bayangan objek = tinggi objek + 1
+    // artinya sin(alt) = 1 / (1 + 1/tan(|lat-dec|))
+    const tanA = Math.abs(Math.tan((lat - decl) * D2R));
+    const sinAltA = 1 / (1 + 1 / Math.max(0.001, tanA));
+    const cosHAAshar = (sinAltA - Math.sin(lat * D2R) * Math.sin(decl * D2R)) /
+                       (Math.cos(lat * D2R) * Math.cos(decl * D2R));
+    const haAshar = (cosHAAshar >= -1 && cosHAAshar <= 1) ? Math.acos(cosHAAshar) * R2D / 15 : null;
+
+    if (config.source === 'manual' && config.manualTimes) {
+        ['Subuh','Terbit','Dzuhur','Ashar','Maghrib','Isya'].forEach(k => {
+            scheduleStr[k] = config.manualTimes[k] || '00:00';
+            scheduleMin[k] = timeToMin(scheduleStr[k]);
+        });
     } else {
-        const decl = solarDeclination(doy);
-        const eqt = equationOfTime(doy);
-        const lat = config.latitude;
-        const lng = config.longitude;
-        const tz = config.timezone;
-
-        const baseNoon = 12 - (lng / 15) + tz + (eqt / 60);
-        const sinHa = (Math.sin(deg2rad(-0.8333)) - Math.sin(deg2rad(lat)) * Math.sin(deg2rad(decl))) /
-                       (Math.cos(deg2rad(lat)) * Math.cos(deg2rad(decl)));
-        const ha = rad2deg(Math.asin(Math.max(-1, Math.min(1, sinHa))));
-        const haHours = ha / 15;
-
-        let times = {
-            Subuh: null, Terbit: null, Dzuhur: null, Ashar: null, Maghrib: null, Isya: null
-        };
-
-        if (config.source === 'kemenag') {
-            // KEMENAG: Subuh -20°, Terbit -0.833°, Dzuhur +3°, Ashar -1° bayangan tinggi objek, Maghrib -0.833°, Isya -18°
-            times.Subuh = haForAngle(lat, decl, -20);
-            times.Terbit = haHours;
-            times.Dzuhur = 0 + 3/60; // +3 menit dari noon
-            // Ashar: bayangan = tinggi objek + 1 -> tan(z) = 1 + cot(lat-dec)
-            const asinArg = (1 + 1/Math.tan(deg2rad(Math.abs(lat - decl)))) * -1;
-            if (asinArg >= -1 && asinArg <= 1) {
-                times.Ashar = rad2deg(Math.acos(asinArg)) / 15;
-            } else {
-                times.Ashar = haHours * 0.8;
-            }
-            times.Maghrib = haHours;
-            times.Isya = haForAngle(lat, decl, -18);
-        } else if (config.source === 'muhammadiyah') {
-            // Muhammadiyah: Subuh -20°, Terbit -0.833°, Dzuhur noon+2menit, Ashar tinggi matahari=1°, Maghrib -0.833°, Isya -20°
-            times.Subuh = haForAngle(lat, decl, -20);
-            times.Terbit = haHours;
-            times.Dzuhur = 0 + 2/60;
-            const asinArg2 = (1 - Math.tan(deg2rad(lat)) * Math.tan(deg2rad(decl))) * -1;
-            if (asinArg2 >= -1 && asinArg2 <= 1) {
-                times.Ashar = rad2deg(Math.acos(asinArg2)) / 15;
-            } else {
-                times.Ashar = haHours * 0.8;
-            }
-            times.Maghrib = haHours;
-            times.Isya = haForAngle(lat, decl, -20);
+        // Subuh
+        if (config.source === 'kemenag' || config.source === 'muhammadiyah') {
+            const ha = computeHA(lat, decl, -20);
+            scheduleStr.Subuh = ha ? fmtTime(noon - ha) : '05:00';
         } else {
-            // prayertimes.org (method=1 default): Subuh -18°, Terbit -0.833°, Dzuhur noon, Ashar Syafii, Maghrib -0.833°, Isya -17°
-            times.Subuh = haForAngle(lat, decl, -18);
-            times.Terbit = haHours;
-            times.Dzuhur = 0;
-            const asinArg3 = (Math.sin(deg2rad(1)) + Math.sin(deg2rad(lat)) * Math.sin(deg2rad(decl))) /
-                             (Math.cos(deg2rad(lat)) * Math.cos(deg2rad(decl)));
-            if (asinArg3 >= -1 && asinArg3 <= 1) {
-                times.Ashar = rad2deg(Math.acos(asinArg3)) / 15;
-            } else {
-                times.Ashar = haHours * 0.8;
-            }
-            times.Maghrib = haHours;
-            times.Isya = haForAngle(lat, decl, -17);
+            scheduleStr.Subuh = haSubuh ? fmtTime(noon - haSubuh) : '05:00';
         }
-
-        // Konversi ke waktu lokal
-        for (let key in times) {
-            if (times[key] === null) { schedule[key] = '00:00'; continue; }
-            let t;
-            if (key === 'Ashar') {
-                t = baseNoon + times[key]; // Ashar ditambahkan dari noon
-            } else if (key === 'Subuh') {
-                t = baseNoon - times[key];
-            } else if (key === 'Terbit' || key === 'Maghrib') {
-                t = baseNoon - times[key];
-            } else if (key === 'Isya') {
-                t = baseNoon + times[key];
-            } else {
-                t = baseNoon + times[key];
-            }
-            // Koreksi Ashar: harus setelah Dzuhur
-            schedule[key] = minutesToTime(timeToMinutes(baseNoon + (times[key] || 0)) + (config.adjustMinutes[key] || 0));
-            // Langsung pakai: t + adjust
-            let adj = config.adjustMinutes[key] || 0;
-            schedule[key] = minutesToTime(Math.round(timeToMinutes(formatTime(t))) + adj);
+        // Terbit
+        scheduleStr.Terbit = haTerbit ? fmtTime(noon - haTerbit) : '06:00';
+        // Dzuhur
+        const dzuhurAdj = config.source === 'kemenag' ? 3/60 : (config.source === 'muhammadiyah' ? 2/60 : 0);
+        scheduleStr.Dzuhur = fmtTime(noon + dzuhurAdj);
+        // Ashar
+        scheduleStr.Ashar = haAshar ? fmtTime(noon + haAshar) : '15:30';
+        // Maghrib
+        scheduleStr.Maghrib = haTerbit ? fmtTime(noon + haTerbit) : '18:00';
+        // Isya
+        if (config.source === 'kemenag') {
+            scheduleStr.Isya = haIsyaK ? fmtTime(noon + haIsyaK) : '19:15';
+        } else if (config.source === 'muhammadiyah') {
+            scheduleStr.Isya = haIsyaM ? fmtTime(noon + haIsyaM) : '19:15';
+        } else {
+            const haI = computeHA(lat, decl, -17);
+            scheduleStr.Isya = haI ? fmtTime(noon + haI) : '19:15';
         }
     }
+
+    // Terapkan adjust menit
+    for (let k in scheduleStr) {
+        let m = timeToMin(scheduleStr[k]) + (config.adjustMinutes?.[k] || 0);
+        m = ((m % 1440) + 1440) % 1440;
+        scheduleMin[k] = m;
+        scheduleStr[k] = minToTime(m);
+    }
+
     renderPrayerList();
 }
 
-function haForAngle(lat, decl, angle) {
-    const sinHa = (Math.sin(deg2rad(angle)) - Math.sin(deg2rad(lat)) * Math.sin(deg2rad(decl))) /
-                   (Math.cos(deg2rad(lat)) * Math.cos(deg2rad(decl)));
-    if (sinHa < -1 || sinHa > 1) return null;
-    return rad2deg(Math.acos(sinHa)) / 15; // dalam jam
-}
-
-function formatTime(hours) {
-    hours = ((hours % 24) + 24) % 24;
-    const h = Math.floor(hours);
-    const m = Math.floor((hours - h) * 60);
+function fmtTime(decHours) {
+    decHours = ((decHours % 24) + 24) % 24;
+    const h = Math.floor(decHours);
+    const m = Math.round((decHours - h) * 60);
     return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`;
 }
 
-function deg2rad(d) { return d * Math.PI / 180; }
-function rad2deg(r) { return r * 180 / Math.PI; }
-function solarDeclination(doy) { return 23.45 * Math.sin(deg2rad(360 / 365 * (doy - 81))); }
-function equationOfTime(doy) {
-    const B = 360 / 365 * (doy - 81);
-    return 9.87 * Math.sin(deg2rad(2*B)) - 7.53 * Math.cos(deg2rad(B)) - 1.5 * Math.sin(deg2rad(B));
-}
-function dayOfYear(d) {
-    const start = new Date(d.getFullYear(), 0, 0);
-    return Math.floor((d - start) / 86400000);
-}
-function timeToMinutes(t) {
+function timeToMin(t) {
     if (!t || !t.includes(':')) return 0;
     const [h,m] = t.split(':').map(Number);
-    return h * 60 + m;
+    return h * 60 + (m || 0);
 }
-function minutesToTime(m) {
-    m = ((m % 1440) + 1440) % 1440;
-    const h = Math.floor(m / 60);
-    const min = m % 60;
-    return `${String(h).padStart(2,'0')}:${String(min).padStart(2,'0')}`;
+
+function minToTime(m) {
+    m = ((Math.round(m) % 1440) + 1440) % 1440;
+    return `${String(Math.floor(m/60)).padStart(2,'0')}:${String(m%60).padStart(2,'0')}`;
 }
 
 /* ============================================================
-   HIJRI CALENDER (APPROXIMASI)
+   HIJRI
    ============================================================ */
-function gregorianToJD(year, month, day) {
-    if (month <= 2) { year--; month += 12; }
-    const A = Math.floor(year / 100);
-    const B = 2 - A + Math.floor(A / 4);
-    return Math.floor(365.25 * (year + 4716)) + Math.floor(30.6001 * (month + 1)) + day + B - 1524.5;
+function gregorianToJD(y, m, d) {
+    if (m <= 2) { y--; m += 12; }
+    const A = Math.floor(y/100);
+    return Math.floor(365.25*(y+4716)) + Math.floor(30.6001*(m+1)) + d + 2 - A + Math.floor(A/4) - 1524.5;
 }
-
 function jdToHijri(jd) {
     jd = Math.floor(jd) + 0.5;
     const L = Math.floor(jd - 1948439.5 + 10632);
-    const N = Math.floor((L - 1) / 10631);
-    const remaining = L - 10631 * N + 354;
-    const J = Math.floor((10985 - remaining) / 5316) * Math.floor((50 * remaining) / 17719) + Math.floor(remaining / 5670) * Math.floor((43 * remaining) / 15238);
-    const adjusted = remaining - Math.floor((30 - J) / 15) * Math.floor((17719 * J) / 50) - Math.floor(J / 16) * Math.floor((15238 * J) / 43) + 29;
-    const month = Math.floor((24 * adjusted) / 709);
-    const day = adjusted - Math.floor((709 * month) / 24);
-    const year = 30 * N + J - 30;
+    const N = Math.floor((L-1)/10631);
+    const rem = L - 10631*N + 354;
+    const J = Math.floor((10985-rem)/5316)*Math.floor((50*rem)/17719) + Math.floor(rem/5670)*Math.floor((43*rem)/15238);
+    const adj = rem - Math.floor((30-J)/15)*Math.floor((17719*J)/50) - Math.floor(J/16)*Math.floor((15238*J)/43) + 29;
+    const month = Math.floor((24*adj)/709);
+    const day = adj - Math.floor((709*month)/24);
+    const year = 30*N + J - 30;
     return { year, month, day };
 }
-
-const hijriMonths = ['Muharram','Safar','Rabi\'ul Awal','Rabi\'ul Akhir','Jumadil Awal','Jumadil Akhir','Rajab','Sya\'ban','Ramadhan','Syawal','Dzulqa\'dah','Dzulhijjah'];
-
-function getHijriString() {
-    const now = new Date();
-    const jd = gregorianToJD(now.getFullYear(), now.getMonth()+1, now.getDate());
-    const h = jdToHijri(jd);
-    return `${h.day} ${hijriMonths[h.month-1] || ''} ${h.year} H`;
+const hMonths = ['Muharram','Safar','Rabi\'ul Awal','Rabi\'ul Akhir','Jumadil Awal','Jumadil Akhir','Rajab','Sya\'ban','Ramadhan','Syawal','Dzulqa\'dah','Dzulhijjah'];
+function getHijriStr() {
+    const n = new Date();
+    const h = jdToHijri(gregorianToJD(n.getFullYear(), n.getMonth()+1, n.getDate()));
+    return `${h.day} ${hMonths[h.month-1]||''} ${h.year} H`;
 }
 
 /* ============================================================
-   JAM & TANGGAL
+   JAM & COUNTDOWN
    ============================================================ */
-function initClock() {
-    updateClock();
-    setInterval(updateClock, 1000);
-}
+const prayerMeta = {
+    Subuh:  { icon:'fa-cloud-moon', label:'Subuh' },
+    Terbit: { icon:'fa-sun',        label:'Terbit' },
+    Dzuhur: { icon:'fa-sun',        label:'Dzuhur' },
+    Ashar:  { icon:'fa-cloud-sun',  label:'Ashar' },
+    Maghrib:{ icon:'fa-moon',       label:'Maghrib' },
+    Isya:   { icon:'fa-star',       label:'Isya' }
+};
+const prayerOrder = ['Subuh','Dzuhur','Ashar','Maghrib','Isya']; // Hanya sholat (bukan Terbit)
 
 function updateClock() {
     const now = new Date();
-    const h = String(now.getHours()).padStart(2,'0');
-    const m = String(now.getMinutes()).padStart(2,'0');
-    const s = String(now.getSeconds()).padStart(2,'0');
-    document.getElementById('headerTime').textContent = `${h}:${m}:${s}`;
+    document.getElementById('headerTime').textContent =
+        `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')}`;
 
     const days = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
     const months = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
     document.getElementById('headerMasehi').textContent = `${days[now.getDay()]}, ${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
-    document.getElementById('headerHijri').textContent = getHijriString();
+    document.getElementById('headerHijri').textContent = getHijriStr();
 
-    // Update hitung mundur sholat
-    updatePrayerCountdown(now);
-    // Update hitung mundur hari besar Islam
+    // Reset triggered azan saat pergantian hari
+    if (now.getHours() === 0 && now.getMinutes() === 0 && now.getSeconds() < 2) {
+        triggeredAzan = {};
+        calculateSchedule();
+    }
+
+    updatePrayerUI(now);
     updateIslamicCountdown(now);
-    // Cek fase (azan/iqomah/murotal/sholat)
     checkPhase(now);
 }
 
-/* ============================================================
-   RENDER JADWAL SHOLAT
-   ============================================================ */
-const prayerMeta = {
-    Subuh: { icon:'fa-cloud-moon', label:'Subuh' },
-    Terbit: { icon:'fa-sun', label:'Terbit' },
-    Dzuhur: { icon:'fa-sun', label:'Dzuhur' },
-    Ashar: { icon:'fa-cloud-sun', label:'Ashar' },
-    Maghrib: { icon:'fa-moon', label:'Maghrib' },
-    Isya: { icon:'fa-star', label:'Isya' }
-};
-
-function renderPrayerList() {
-    const container = document.getElementById('prayerList');
-    container.innerHTML = '';
-    const now = new Date();
-    const nowMin = now.getHours() * 60 + now.getMinutes();
-
-    for (let key in prayerMeta) {
-        const meta = prayerMeta[key];
-        const time = schedule[key] || '00:00';
-        const pMin = timeToMinutes(time);
-        const isPassed = pMin <= nowMin && key !== 'Terbit';
-        const isNext = findNextPrayer() === key;
-
-        const item = document.createElement('div');
-        item.className = 'prayer-item' + (isNext ? ' active' : '') + (isPassed && !isNext ? ' passed' : '');
-        item.id = 'pi-' + key;
-        item.innerHTML = `
-            <div class="prayer-icon"><i class="fas ${meta.icon}"></i></div>
-            <div class="prayer-name">${meta.label}</div>
-            <div class="prayer-time">${time}</div>
-            <div class="prayer-countdown" id="pc-${key}">${isNext ? '...' : ''}</div>
-        `;
-        container.appendChild(item);
+function findNextPrayer(nowMin) {
+    for (let k of prayerOrder) {
+        if (scheduleMin[k] > nowMin) return k;
     }
+    return 'Subuh'; // Besok
 }
 
-function findNextPrayer() {
-    const now = new Date();
-    const nowMin = now.getHours() * 60 + now.getMinutes();
-    const order = ['Subuh','Terbit','Dzuhur','Ashar','Maghrib','Isya'];
-    // Cari sholat berikutnya (bukan Terbit)
-    for (let key of order) {
-        if (key === 'Terbit') continue;
-        if (timeToMinutes(schedule[key] || '00:00') > nowMin) return key;
-    }
-    // Jika semua sudah lewat, Subuh besok
-    return 'Subuh';
-}
-
-function updatePrayerCountdown(now) {
+function updatePrayerUI(now) {
     const nowMin = now.getHours() * 60 + now.getMinutes();
     const nowSec = now.getSeconds();
-    const next = findNextPrayer();
-    const nextMin = timeToMinutes(schedule[next] || '00:00');
-
-    let diff = nextMin - nowMin;
-    if (diff <= 0) diff += 1440; // besok
+    const next = findNextPrayer(nowMin);
+    
+    let diff = scheduleMin[next] - nowMin;
+    if (diff <= 0) diff += 1440;
 
     const h = Math.floor(diff / 60);
     const m = diff % 60;
     const s = 59 - nowSec;
-    const cdStr = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+    
+    document.getElementById('footerCountdown').textContent = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+    document.getElementById('footerCountdownTo').textContent = `ke ${prayerMeta[next].label}`;
+    document.getElementById('footerNextName').textContent = prayerMeta[next].label;
+    document.getElementById('nextPrayerLabel').textContent = `${prayerMeta[next].label} berikutnya`;
 
-    document.getElementById('footerCountdown').textContent = cdStr;
-    document.getElementById('footerCountdownTo').textContent = `ke ${prayerMeta[next]?.label || next}`;
-    document.getElementById('footerNextName').textContent = prayerMeta[next]?.label || next;
-    document.getElementById('nextPrayerLabel').textContent = `${prayerMeta[next]?.label || next} berikutnya`;
-
-    // Update countdown di item aktif
-    const pcEl = document.getElementById('pc-' + next);
-    if (pcEl) pcEl.textContent = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`;
-
-    // Update active state
-    const order = ['Subuh','Terbit','Dzuhur','Ashar','Maghrib','Isya'];
-    order.forEach(key => {
-        const el = document.getElementById('pi-' + key);
+    // Update list items
+    const allKeys = ['Subuh','Terbit','Dzuhur','Ashar','Maghrib','Isya'];
+    allKeys.forEach(k => {
+        const el = document.getElementById('pi-' + k);
         if (!el) return;
         el.classList.remove('active', 'passed');
-        if (key === next) {
+        
+        const pMin = scheduleMin[k];
+        // Tentukan apakah sudah lewat (hanya untuk sholat, bukan Terbit)
+        const isPrayer = prayerOrder.includes(k);
+        let isPassed = false;
+        if (isPrayer) {
+            if (pMin < nowMin) isPassed = true;
+            // Jika next == Subuh dan k bukan Subuh, berarti sudah lewat hari ini
+            if (next === 'Subuh' && k !== 'Subuh') isPassed = true;
+        }
+
+        if (k === next) {
             el.classList.add('active');
-        } else if (timeToMinutes(schedule[key] || '00:00') <= nowMin && key !== 'Terbit') {
+            const cdEl = document.getElementById('pc-' + k);
+            if (cdEl) cdEl.textContent = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`;
+        } else if (isPassed) {
             el.classList.add('passed');
         }
     });
+}
 
-    // Recalculate schedule setiap pergantian hari
-    if (now.getHours() === 0 && now.getMinutes() === 0 && now.getSeconds() < 2) {
-        calculateSchedule();
-    }
+function renderPrayerList() {
+    const container = document.getElementById('prayerList');
+    container.innerHTML = '';
+    const allKeys = ['Subuh','Terbit','Dzuhur','Ashar','Maghrib','Isya'];
+    allKeys.forEach(k => {
+        const meta = prayerMeta[k];
+        const item = document.createElement('div');
+        item.className = 'prayer-item';
+        item.id = 'pi-' + k;
+        item.innerHTML = `
+            <div class="prayer-icon"><i class="fas ${meta.icon}"></i></div>
+            <div class="prayer-name">${meta.label}</div>
+            <div class="prayer-time">${scheduleStr[k]||'--:--'}</div>
+            <div class="prayer-countdown" id="pc-${k}"></div>`;
+        container.appendChild(item);
+    });
 }
 
 /* ============================================================
@@ -999,7 +878,7 @@ function updatePrayerCountdown(now) {
    ============================================================ */
 function updateIslamicCountdown(now) {
     const events = config.islamicEvents || [];
-    if (events.length === 0) {
+    if (!events.length) {
         document.getElementById('islamicCdBox').style.display = 'none';
         document.getElementById('islamicCdDivider').style.display = 'none';
         return;
@@ -1007,89 +886,76 @@ function updateIslamicCountdown(now) {
     document.getElementById('islamicCdBox').style.display = '';
     document.getElementById('islamicCdDivider').style.display = '';
 
-    const today = now.toISOString().slice(0, 10);
-    let nextEvent = null;
-    let minDiff = Infinity;
-
+    const today = now.toISOString().slice(0,10);
+    let nextEv = null, minDiff = Infinity;
     events.forEach(ev => {
-        let evDate = ev.date;
-        // Jika tanggal sudah lewat, anggap tahun depan (tambah 1 tahun)
-        if (evDate <= today) {
-            const parts = evDate.split('-');
-            const nextYear = parseInt(parts[0]) + 1;
-            evDate = `${nextYear}-${parts[1]}-${parts[2]}`;
+        let d = ev.date;
+        if (d <= today) {
+            const p = d.split('-');
+            d = `${parseInt(p[0])+1}-${p[1]}-${p[2]}`;
         }
-        const diff = (new Date(evDate) - new Date(today)) / 86400000;
-        if (diff < minDiff) {
-            minDiff = diff;
-            nextEvent = ev.name;
-        }
+        const diff = (new Date(d) - new Date(today)) / 86400000;
+        if (diff < minDiff) { minDiff = diff; nextEv = ev.name; }
     });
-
-    if (nextEvent) {
-        const days = Math.floor(minDiff);
-        document.getElementById('islamicCdLabel').textContent = nextEvent.length > 25 ? nextEvent.substring(0,25)+'...' : nextEvent;
-        document.getElementById('islamicCdValue').textContent = days === 0 ? 'Hari ini' : `${days} hari lagi`;
+    if (nextEv) {
+        document.getElementById('islamicCdLabel').textContent = nextEv.length > 25 ? nextEv.substring(0,25)+'...' : nextEv;
+        document.getElementById('islamicCdValue').textContent = Math.floor(minDiff) === 0 ? 'Hari ini' : `${Math.floor(minDiff)} hari lagi`;
     }
 }
 
 /* ============================================================
-   FASE: MUROTAL, AZAN, IQOMAH, SHOLAT
+   FASE: MUROTAL -> AZAN -> IQOMAH -> SHOLAT
    ============================================================ */
 function checkPhase(now) {
-    if (currentPhase === 'sholat') return; // Jangan interrupt sholat
+    if (currentPhase === 'sholat') return;
 
     const nowMin = now.getHours() * 60 + now.getMinutes();
     const nowSec = now.getSeconds();
-    const order = ['Subuh','Dzuhur','Ashar','Maghrib','Isya'];
+    const isJumat = config.jumatMode && now.getDay() === 5;
 
-    for (let key of order) {
-        const prayerMin = timeToMinutes(schedule[key] || '00:00');
-        const murotalBefore = config.murotalMinutesBefore?.[key] || 10;
-        const murotalStart = prayerMin - murotalBefore;
-        const iqomahMin = config.iqomahMinutes?.[key] || 2;
-        const jumatDur = (config.jumatMode && key === 'Dzuhur') ? (config.jumatDurationMinutes || 35) : 15;
+    for (let k of prayerOrder) {
+        const pMin = scheduleMin[k];
+        const murBefore = config.murotalMinutesBefore?.[k] || 10;
+        const murStart = pMin - murBefore;
+        const iqMin = config.iqomahMinutes?.[k] || 2;
+        const iqStart = pMin + iqMin;
 
-        // Murotal
-        if (config.murotalEnabled && nowMin >= murotalStart && nowMin < prayerMin && currentPhase === 'normal') {
-            startMurotal(key);
+        // MUROTAL
+        if (config.murotalEnabled && currentPhase === 'normal' && nowMin >= murStart && nowMin < pMin) {
+            startMurotal(k);
             return;
         }
         // Stop murotal saat azan
-        if (currentPhase === 'murotal' && nowMin >= prayerMin) {
+        if (currentPhase === 'murotal' && nowMin >= pMin) {
             stopMurotal();
         }
 
-        // Azan: tepat pada menit sholat
-        if (nowMin === prayerMin && nowSec < 60 && currentPhase !== 'azan' && currentPhase !== 'iqomah' && currentPhase !== 'sholat') {
-            if (lastAzanMinute !== nowMin) {
-                lastAzanMinute = nowMin;
+        // AZAN (tepat pada menit sholat, hanya sekali)
+        if (nowMin === pMin && currentPhase !== 'azan' && currentPhase !== 'iqomah' && currentPhase !== 'sholat') {
+            if (!triggeredAzan[k]) {
+                triggeredAzan[k] = true;
                 if (currentPhase === 'murotal') stopMurotal();
-                startAzan(key);
+                startAzan(k, isJumat && k === 'Dzuhur');
             }
             return;
         }
 
-        // Iqomah: iqomah menit setelah azan
-        const iqomahStart = prayerMin + iqomahMin;
-        if (nowMin === iqomahStart && nowSec < 60 && currentPhase !== 'iqomah' && currentPhase !== 'sholat') {
-            startIqomah(key);
-            return;
+        // IQOMAH
+        if (nowMin === iqStart && currentPhase !== 'iqomah' && currentPhase !== 'sholat') {
+            if (triggeredAzan[k]) {
+                startIqomah(k, isJumat && k === 'Dzuhur');
+                return;
+            }
         }
-    }
-
-    // Reset azan minute tracker
-    if (nowSec === 0 && nowMin !== lastAzanMinute) {
-        // Jika sudah melewati semua azan, reset
     }
 }
 
-function startMurotal(key) {
+function startMurotal(k) {
     currentPhase = 'murotal';
-    currentPrayerKey = key;
+    currentPrayerKey = k;
     const audio = document.getElementById('audioMurotal');
     audio.volume = 0.6;
-    audio.play().catch(() => {});
+    audio.play().catch(()=>{});
 }
 
 function stopMurotal() {
@@ -1099,155 +965,105 @@ function stopMurotal() {
     if (currentPhase === 'murotal') currentPhase = 'normal';
 }
 
-function startAzan(key) {
+function startAzan(k, isJumat) {
     currentPhase = 'azan';
-    currentPrayerKey = key;
-    const meta = prayerMeta[key];
-
+    currentPrayerKey = k;
+    
     document.getElementById('azanTitle').textContent = 'AZAN';
-    document.getElementById('azanSubtitle').textContent = `Sholat ${meta.label}`;
-    document.getElementById('azanTimeDisplay').textContent = schedule[key] || '-';
-
-    // Custom info untuk Jumat
-    if (config.jumatMode && key === 'Dzuhur') {
-        document.getElementById('azanInfo').textContent = config.jumatAzanInfo || config.azanInfoText;
-        document.getElementById('azanJumatBox').style.display = '';
-    } else {
-        document.getElementById('azanInfo').textContent = config.azanInfoText;
-        document.getElementById('azanJumatBox').style.display = config.jumatMode ? 'none' : 'none';
-    }
-
-    // Beep
-    playBeep();
-
+    document.getElementById('azanSubtitle').textContent = `Sholat ${prayerMeta[k].label}`;
+    document.getElementById('azanTimeDisplay').textContent = scheduleStr[k];
+    document.getElementById('azanInfo').textContent = isJumat ? (config.jumatAzanInfo || config.azanInfoText) : config.azanInfoText;
+    document.getElementById('azanJumatBox').style.display = isJumat ? '' : 'none';
+    
+    playBeepLong();
     showOverlay('overlayAzan');
-    // Azan 2 menit, lalu auto ke iqomah (jika iqomah 0 menit) atau normal
-    const iqomahMin = config.iqomahMinutes?.[key] || 2;
-    clearAllOverlayTimeouts();
-    if (iqomahMin <= 0) {
-        // Langsung ke sholat setelah 2 menit azan
-        overlayTimeouts.push(setTimeout(() => {
-            hideOverlay('overlayAzan');
-            currentPhase = 'normal';
-        }, 120000));
-    } else {
-        overlayTimeouts.push(setTimeout(() => {
-            hideOverlay('overlayAzan');
-            currentPhase = 'normal';
-            // Iqomah akan otomatis dipicu oleh checkPhase
-        }, 120000));
-    }
+    clearTimers();
+    
+    // Azan tampil 2 menit, lalu hilang (iqomah akan dipicu otomatis oleh checkPhase)
+    overlayTimers.push(setTimeout(() => {
+        hideOverlay('overlayAzan');
+        if (currentPhase === 'azan') currentPhase = 'normal';
+    }, 120000));
 }
 
-function startIqomah(key) {
+function startIqomah(k, isJumat) {
     currentPhase = 'iqomah';
-    currentPrayerKey = key;
-    const meta = prayerMeta[key];
-    const iqomahMin = config.iqomahMinutes?.[key] || 2;
-    let remaining = iqomahMin * 60;
+    currentPrayerKey = k;
+    const iqMin = config.iqomahMinutes?.[k] || 2;
+    let rem = iqMin * 60;
 
     document.getElementById('iqomahTitle').textContent = 'IQOMAH';
-    document.getElementById('iqomahSubtitle').textContent = `Sholat ${meta.label}`;
-
-    if (config.jumatMode && key === 'Dzuhur') {
-        document.getElementById('iqomahInfo').textContent = config.jumatIqomahInfo || config.iqomahInfoText;
-        document.getElementById('iqomahJumatBox').style.display = '';
-    } else {
-        document.getElementById('iqomahInfo').textContent = config.iqomahInfoText;
-        document.getElementById('iqomahJumatBox').style.display = 'none';
-    }
-
-    document.getElementById('iqomahCountdown').textContent = formatCountdown(remaining);
-    showOverlay('overlayIqomah');
-
-    // Beep saat mulai iqomah
+    document.getElementById('iqomahSubtitle').textContent = `Sholat ${prayerMeta[k].label}`;
+    document.getElementById('iqomahCountdown').textContent = fmtCd(rem);
+    document.getElementById('iqomahInfo').textContent = isJumat ? (config.jumatIqomahInfo || config.iqomahInfoText) : config.iqomahInfoText;
+    document.getElementById('iqomahJumatBox').style.display = isJumat ? '' : 'none';
+    
     playBeep();
+    showOverlay('overlayIqomah');
+    clearTimers();
 
-    clearAllOverlayTimeouts();
-    const interval = setInterval(() => {
-        remaining--;
-        if (remaining <= 0) {
-            clearInterval(interval);
+    const iv = setInterval(() => {
+        rem--;
+        if (rem <= 0) {
+            clearInterval(iv);
             hideOverlay('overlayIqomah');
-            startSholat(key);
+            startSholat(k, isJumat);
             return;
         }
-        document.getElementById('iqomahCountdown').textContent = formatCountdown(remaining);
-        // Beep 5 detik terakhir
-        if (remaining <= 5 && remaining > 0) playBeep();
+        document.getElementById('iqomahCountdown').textContent = fmtCd(rem);
+        if (rem <= 5 && rem > 0) playBeep();
     }, 1000);
-    overlayTimeouts.push(interval);
+    overlayTimers.push(iv);
 }
 
-function startSholat(key) {
+function startSholat(k, isJumat) {
     currentPhase = 'sholat';
-    currentPrayerKey = key;
-    const meta = prayerMeta[key];
-    const jumatDur = (config.jumatMode && key === 'Dzuhur') ? (config.jumatDurationMinutes || 35) : 15;
-    let remaining = jumatDur * 60;
+    currentPrayerKey = k;
+    const dur = isJumat ? (config.jumatDurationMinutes || 35) : (config.sholatDurationMinutes || 15);
+    let rem = dur * 60;
 
-    document.getElementById('sholatTitle').textContent = config.jumatMode && key === 'Dzuhur' ? 'SHOLAT JUMAT BERLANGSUNG' : 'SHOLAT BERLANGSUNG';
-    document.getElementById('sholatSubtitle').textContent = `Sholat ${meta.label}`;
+    document.getElementById('sholatTitle').textContent = isJumat ? 'SHOLAT JUMAT BERLANGSUNG' : 'SHOLAT BERLANGSUNG';
+    document.getElementById('sholatSubtitle').textContent = `Sholat ${prayerMeta[k].label}`;
+    document.getElementById('sholatInfo').textContent = isJumat ? (config.jumatSholatInfo || config.sholatInfoText) : config.sholatInfoText;
+    document.getElementById('sholatTimeDisplay').textContent = fmtCd(rem);
 
-    if (config.jumatMode && key === 'Dzuhur') {
-        document.getElementById('sholatInfo').textContent = config.jumatSholatInfo || config.sholatInfoText;
-    } else {
-        document.getElementById('sholatInfo').textContent = config.sholatInfoText;
-    }
-
-    document.getElementById('sholatTimeDisplay').textContent = formatCountdown(remaining);
     showOverlay('overlaySholat');
+    clearTimers();
 
-    clearAllOverlayTimeouts();
-    const interval = setInterval(() => {
-        remaining--;
-        if (remaining <= 0) {
-            clearInterval(interval);
+    const iv = setInterval(() => {
+        rem--;
+        if (rem <= 0) {
+            clearInterval(iv);
             hideOverlay('overlaySholat');
             currentPhase = 'normal';
-            lastAzanMinute = -1; // Reset
+            delete triggeredAzan[k];
             return;
         }
-        document.getElementById('sholatTimeDisplay').textContent = formatCountdown(remaining);
+        document.getElementById('sholatTimeDisplay').textContent = fmtCd(rem);
     }, 1000);
-    overlayTimeouts.push(interval);
+    overlayTimers.push(iv);
 }
 
-function formatCountdown(sec) {
-    const m = Math.floor(sec / 60);
-    const s = sec % 60;
-    return `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+function fmtCd(s) {
+    return `${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;
 }
 
-function showOverlay(id) {
-    document.getElementById(id).classList.add('visible');
-}
-
-function hideOverlay(id) {
-    document.getElementById(id).classList.remove('visible');
-}
-
-function clearAllOverlayTimeouts() {
-    overlayTimeouts.forEach(t => { clearTimeout(t); clearInterval(t); });
-    overlayTimeouts = [];
-}
+function showOverlay(id) { document.getElementById(id).classList.add('visible'); }
+function hideOverlay(id) { document.getElementById(id).classList.remove('visible'); }
+function clearTimers() { overlayTimers.forEach(t => { clearTimeout(t); clearInterval(t); }); overlayTimers = []; }
 
 /* ============================================================
-   BEEP
+   BEEP (Web Audio API)
    ============================================================ */
 function playBeep() {
     try {
         const ctx = new (window.AudioContext || window.webkitAudioContext)();
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.frequency.value = 880;
-        osc.type = 'sine';
-        gain.gain.setValueAtTime(0.4, ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.5);
-        osc.start(ctx.currentTime);
-        osc.stop(ctx.currentTime + 0.5);
+        const o = ctx.createOscillator(), g = ctx.createGain();
+        o.connect(g); g.connect(ctx.destination);
+        o.frequency.value = 880; o.type = 'sine';
+        g.gain.setValueAtTime(0.35, ctx.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
+        o.start(ctx.currentTime); o.stop(ctx.currentTime + 0.4);
     } catch(e) {}
 }
 
@@ -1255,104 +1071,71 @@ function playBeepLong() {
     try {
         const ctx = new (window.AudioContext || window.webkitAudioContext)();
         for (let i = 0; i < 3; i++) {
-            const osc = ctx.createOscillator();
-            const gain = ctx.createGain();
-            osc.connect(gain);
-            gain.connect(ctx.destination);
-            osc.frequency.value = 880;
-            osc.type = 'sine';
-            const start = ctx.currentTime + i * 0.6;
-            gain.gain.setValueAtTime(0.4, start);
-            gain.gain.exponentialRampToValueAtTime(0.001, start + 0.4);
-            osc.start(start);
-            osc.stop(start + 0.4);
+            const o = ctx.createOscillator(), g = ctx.createGain();
+            o.connect(g); g.connect(ctx.destination);
+            o.frequency.value = 880; o.type = 'sine';
+            const st = ctx.currentTime + i * 0.5;
+            g.gain.setValueAtTime(0.35, st);
+            g.gain.exponentialRampToValueAtTime(0.001, st + 0.35);
+            o.start(st); o.stop(st + 0.35);
         }
     } catch(e) {}
 }
 
 /* ============================================================
-   SLIDESHOW
+   SLIDESHOW & LOW THIRD
    ============================================================ */
 function initSlideShow() {
     if (slideTimer) clearInterval(slideTimer);
-    slideTimer = setInterval(nextSlide, config.slideInterval || 8000);
+    slideTimer = setInterval(() => {
+        const imgs = document.querySelectorAll('.slide-img');
+        if (imgs.length <= 1) return;
+        imgs[slideIndex].classList.remove('active');
+        slideIndex = (slideIndex + 1) % imgs.length;
+        imgs[slideIndex].classList.add('active');
+        const total = Math.max(1, (config.slideImages||[]).length);
+        document.getElementById('slideCounter').textContent = `${slideIndex+1}/${total}`;
+    }, config.slideInterval || 8000);
 }
 
-function nextSlide() {
-    const imgs = document.querySelectorAll('.slide-img');
-    if (imgs.length <= 1) return;
-    imgs[slideIndex].classList.remove('active');
-    slideIndex = (slideIndex + 1) % imgs.length;
-    imgs[slideIndex].classList.add('active');
-    updateSlideCounter();
-}
-
-/* ============================================================
-   LOW THIRD
-   ============================================================ */
 function initLowThird() {
     if (ltTimer) clearInterval(ltTimer);
-    ltTimer = setInterval(nextLowThird, config.lowThirdInterval || 8000);
-    // Tampilkan yang pertama
-    setTimeout(() => showLowThird(0), 500);
+    ltTimer = setInterval(nextLT, config.lowThirdInterval || 8000);
+    setTimeout(() => nextLT(), 500);
 }
 
-function nextLowThird() {
+function nextLT() {
     const items = document.querySelectorAll('.low-third-item');
-    if (items.length === 0) return;
-    items[ltIndex].classList.remove('show');
+    if (!items.length) return;
+    items.forEach(it => it.classList.remove('show'));
     ltIndex = (ltIndex + 1) % items.length;
-    showLowThird(ltIndex);
-}
-
-function showLowThird(idx) {
-    const items = document.querySelectorAll('.low-third-item');
-    if (items[idx]) items[idx].classList.add('show');
+    items[ltIndex].classList.add('show');
 }
 
 /* ============================================================
-   TOAST
+   TOAST & CROSS-TAB SYNC
    ============================================================ */
 function showToast(msg) {
-    const toast = document.getElementById('toast');
-    toast.textContent = msg;
-    toast.classList.add('show');
-    setTimeout(() => toast.classList.remove('show'), 3000);
+    const t = document.getElementById('toast');
+    t.textContent = msg; t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3000);
 }
 
-/* ============================================================
-   LISTENER: DATA DARI ADMIN (CROSS-TAB)
-   ============================================================ */
 window.addEventListener('storage', (e) => {
     if (e.key === 'sholatConfig') {
         config = { ...DEFAULT_CONFIG, ...JSON.parse(e.newValue) };
         applyConfig();
         showToast('Pengaturan diperbarui dari admin');
     }
-    if (e.key === 'sholatConfigForceRefresh') {
-        location.reload();
-    }
+    if (e.key === 'sholatConfigForceRefresh') location.reload();
 });
 
-/* ============================================================
-   KEYBOARD SHORTCUT (HANYA UNTUK DEBUG)
-   ============================================================ */
+// ESC untuk keluar dari overlay (debug)
 document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-        if (currentPhase === 'sholat' || currentPhase === 'iqomah' || currentPhase === 'azan') {
-            hideOverlay('overlayAzan');
-            hideOverlay('overlayIqomah');
-            hideOverlay('overlaySholat');
-            clearAllOverlayTimeouts();
-            stopMurotal();
-            currentPhase = 'normal';
-            lastAzanMinute = -1;
-        }
-    }
-    // Ctrl+Shift+R = hard refresh
-    if (e.ctrlKey && e.shiftKey && e.key === 'R') {
-        e.preventDefault();
-        location.reload();
+    if (e.key === 'Escape' && currentPhase !== 'normal') {
+        hideOverlay('overlayAzan'); hideOverlay('overlayIqomah'); hideOverlay('overlaySholat');
+        clearTimers(); stopMurotal();
+        currentPhase = 'normal'; triggeredAzan = {};
     }
 });
 </script>
