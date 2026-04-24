@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin - TV Jadwal Sholat</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" relstylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         :root{--bg:#050d1a;--bg2:#0a1628;--card:rgba(13,27,50,0.9);--border:rgba(0,180,255,0.12);--border-glow:rgba(0,180,255,0.25);--gold:#c9a44c;--gold-light:#e8cc7a;--blue:#00a8e8;--blue-light:#4dd4ff;--cyan:#00e5ff;--text:#eef4fb;--text2:#8ba3c0;--text3:#4a6380;--danger:#ff4757;--success:#2ed573}
@@ -27,7 +27,9 @@
         .btn{display:inline-flex;align-items:center;gap:6px;padding:7px 16px;border-radius:7px;border:1px solid var(--border);background:var(--card);color:var(--text);font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;font-family:inherit}.btn:hover{border-color:var(--border-glow)}
         .btn-primary{background:linear-gradient(135deg,var(--blue),var(--blue-light));color:#000;border-color:var(--blue)}.btn-primary:hover{filter:brightness(1.1)}
         .btn-danger{border-color:rgba(255,71,87,0.3);color:var(--danger)}.btn-sm{padding:5px 10px;font-size:11px}
-        .btn-warning{border-color:rgba(255,165,2,0.3);color:var(--warn);background:rgba(255,165,2,0.05)}
+        .btn-warning{border-color:rgba(255,165,2,0.3);color:#ffa502;background:rgba(255,165,2,0.05)}
+        .btn-ghost{border:none;background:transparent;color:var(--blue);padding:4px 0;font-size:11px;text-decoration:underline;text-underline-offset:3px}
+        .btn-ghost:hover{color:var(--blue-light)}
         .card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:18px;margin-bottom:14px;backdrop-filter:blur(10px)}
         .card-title{font-size:14px;font-weight:700;color:var(--blue-light);margin-bottom:12px;display:flex;align-items:center;gap:7px}.card-title i{color:var(--gold);font-size:13px}
         .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.form-group{display:flex;flex-direction:column;gap:3px}.form-group.full{grid-column:1/-1}
@@ -46,6 +48,8 @@
         .toast{position:fixed;bottom:24px;right:24px;z-index:9999;padding:10px 16px;border-radius:8px;background:var(--card);border:1px solid var(--border-glow);color:var(--text);font-size:12px;font-weight:500;transform:translateY(100px);opacity:0;transition:all .4s}.toast.show{transform:translateY(0);opacity:1}
         .sticky-save{position:sticky;bottom:0;padding:14px 0;display:flex;gap:8px;justify-content:flex-end;background:linear-gradient(transparent,var(--bg) 30%)}
         .loc-hint{font-size:11px;color:var(--success);margin-top:6px;display:none;align-items:center;gap:4px}.loc-hint.show{display:flex}
+        .hidden-box{display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--border)}
+        .hidden-box.show{display:block}
         @media(max-width:640px){.form-grid{grid-template-columns:1fr}.sp-box{grid-template-columns:1fr}.hdr{flex-direction:column;align-items:flex-start;gap:10px}.ss-notif{flex-direction:column;align-items:flex-start}}
         @media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
     </style>
@@ -72,13 +76,13 @@
     <div class="tab-content active" id="tab-general"><div class="card"><div class="card-title"><i class="fas fa-mosque"></i> Informasi Masjid</div><div class="form-grid"><div class="form-group full"><label>Nama Masjid</label><input id="c-masjidName"></div><div class="form-group full"><label>Lokasi</label><input id="c-masjidLocation"></div></div></div><div class="card"><div class="card-title"><i class="fas fa-scroll"></i> Running Text</div><div class="form-group full"><label>Pisahkan dengan ♦</label><textarea id="c-runningText" rows="2"></textarea></div></div></div>
 
     <div class="tab-content" id="tab-location">
-        <div class="card" style="border-color:rgba(0,168,232,0.3)"><div class="card-title" style="color:var(--cyan)"><i class="fas fa-map-marked-alt"></i> Pilih Lokasi Kemenag (Akurat)</div><p style="font-size:11px;color:var(--text2);margin-bottom:10px">Database 514 kab/kota Indonesia. Koordinat & koreksi otomatis disesuaikan.</p><div class="form-group full" style="margin-bottom:4px"><label>Cari Kota/Kabupaten</label><input type="text" id="locSearch" placeholder="Ketik nama kota..." oninput="filterLoc()"></div><div class="form-group full"><label>Pilih Lokasi</label><select id="locSelect"><option value="">-- Pilih Kota/Kabupaten --</option></select></div><div class="loc-hint" id="locHint"><i class="fas fa-check-circle"></i> <span id="locHintTxt"></span></div></div>
+        <div class="card" style="border-color:rgba(0,168,232,0.3)"><div class="card-title" style="color:var(--cyan)"><i class="fas fa-map-marked-alt"></i> Pilih Lokasi Kemenag (Akurat)</div><p style="font-size:11px;color:var(--text2);margin-bottom:10px">Database 514 kab/kota Indonesia. Koordinat & koreksi otomatis.</p><div class="form-group full" style="margin-bottom:4px"><label>Cari Kota/Kabupaten</label><input type="text" id="locSearch" placeholder="Ketik nama kota..." oninput="filterLoc()"></div><div class="form-group full"><label>Pilih Lokasi</label><select id="locSelect"><option value="">-- Pilih Kota/Kabupaten --</option></select></div><div class="loc-hint" id="locHint"><i class="fas fa-check-circle"></i> <span id="locHintTxt"></span></div></div>
         <div class="card"><div class="card-title"><i class="fas fa-crosshairs"></i> Koordinat Manual</div><div class="form-grid"><div class="form-group"><label>Latitude</label><input type="number" step="0.0001" id="c-latitude"></div><div class="form-group"><label>Longitude</label><input type="number" step="0.0001" id="c-longitude"></div><div class="form-group"><label>Timezone (UTC+)</label><input type="number" id="c-timezone"></div></div></div>
         <div class="card"><div class="card-title"><i class="fas fa-database"></i> Sumber</div><div class="form-group full"><label>Sumber Perhitungan</label><select id="c-source"><option value="kemenag">Kemenag RI (Rekomendasi)</option><option value="muhammadiyah">Muhammadiyah</option><option value="prayertimes">PrayerTimes.org</option><option value="manual">Manual</option></select></div><div id="manualBox" style="display:none;margin-top:10px"><div class="form-grid"><div class="form-group"><label>Subuh</label><input type="time" id="c-mSubuh"></div><div class="form-group"><label>Terbit</label><input type="time" id="c-mTerbit"></div><div class="form-group"><label>Dzuhur</label><input type="time" id="c-mDzuhur"></div><div class="form-group"><label>Ashar</label><input type="time" id="c-mAshar"></div><div class="form-group"><label>Maghrib</label><input type="time" id="c-mMaghrib"></div><div class="form-group"><label>Isya</label><input type="time" id="c-mIsya"></div></div></div></div>
         <div class="card"><div class="card-title"><i class="fas fa-eye"></i> Preview Jadwal Hari Ini</div><div class="sp-box" id="schedPrev">-</div></div>
     </div>
 
-    <div class="tab-content" id="tab-adjust"><div class="card"><div class="card-title"><i class="fas fa-sliders-h"></i> Adjust Waktu (menit)</div><p style="font-size:11px;color:var(--text3);margin-bottom:10px">Jika menggunakan lokasi Kemenag di atas, adjust biasanya tidak perlu diubah.</p><div class="form-grid"><div class="form-group"><label>Subuh</label><input type="number" id="c-adj-Subuh" value="0"></div><div class="form-group"><label>Terbit</label><input type="number" id="c-adj-Terbit" value="0"></div><div class="form-group"><label>Dzuhur</label><input type="number" id="c-adj-Dzuhur" value="0"></div><div class="form-group"><label>Ashar</label><input type="number" id="c-adj-Ashar" value="0"></div><div class="form-group"><label>Maghrib</label><input type="number" id="c-adj-Maghrib" value="0"></div><div class="form-group"><label>Isya</label><input type="number" id="c-adj-Isya" value="0"></div></div></div></div>
+    <div class="tab-content" id="tab-adjust"><div class="card"><div class="card-title"><i class="fas fa-sliders-h"></i> Adjust Waktu (menit)</div><p style="font-size:11px;color:var(--text3);margin-bottom:10px">Jika menggunakan lokasi Kemenag, adjust biasanya tidak perlu diubah.</p><div class="form-grid"><div class="form-group"><label>Subuh</label><input type="number" id="c-adj-Subuh" value="0"></div><div class="form-group"><label>Terbit</label><input type="number" id="c-adj-Terbit" value="0"></div><div class="form-group"><label>Dzuhur</label><input type="number" id="c-adj-Dzuhur" value="0"></div><div class="form-group"><label>Ashar</label><input type="number" id="c-adj-Ashar" value="0"></div><div class="form-group"><label>Maghrib</label><input type="number" id="c-adj-Maghrib" value="0"></div><div class="form-group"><label>Isya</label><input type="number" id="c-adj-Isya" value="0"></div></div></div></div>
     <div class="tab-content" id="tab-iqomah"><div class="card"><div class="card-title"><i class="fas fa-hourglass-half"></i> Durasi Iqomah (menit)</div><div class="form-grid"><div class="form-group"><label>Subuh</label><input type="number" id="c-iq-Subuh" value="2" min="0"></div><div class="form-group"><label>Dzuhur</label><input type="number" id="c-iq-Dzuhur" value="3" min="0"></div><div class="form-group"><label>Ashar</label><input type="number" id="c-iq-Ashar" value="2" min="0"></div><div class="form-group"><label>Maghrib</label><input type="number" id="c-iq-Maghrib" value="2" min="0"></div><div class="form-group"><label>Isya</label><input type="number" id="c-iq-Isya" value="3" min="0"></div></div></div></div>
     <div class="tab-content" id="tab-slides"><div class="card"><div class="card-title"><i class="fas fa-images"></i> URL Slide</div><div class="form-group" style="margin-bottom:10px"><label>Interval (detik)</label><input type="number" id="c-slideInterval" value="8" min="2" style="width:90px"></div><div class="img-list" id="imgList"></div><button class="btn btn-sm" onclick="addImg()" style="margin-top:8px"><i class="fas fa-plus"></i> Tambah</button></div></div>
     <div class="tab-content" id="tab-lowthird"><div class="card"><div class="card-title"><i class="fas fa-layer-group"></i> Low Third</div><div class="form-group" style="margin-bottom:10px"><label>Interval (detik)</label><input type="number" id="c-lowThirdInterval" value="8" min="3" style="width:90px"></div><div class="form-grid"><div class="form-group full"><label>Kas Keuangan</label><textarea id="c-kasInfo" rows="2"></textarea></div><div class="form-group full"><label>Pembangunan</label><textarea id="c-pembangunanInfo" rows="2"></textarea></div><div class="form-group full"><label>Petugas Jumat</label><textarea id="c-petugasJumat" rows="2"></textarea></div><div class="form-group full"><label>Pengumuman</label><textarea id="c-customInfo" rows="2"></textarea></div></div></div></div>
@@ -87,17 +91,31 @@
     <div class="tab-content" id="tab-jumat"><div class="card"><div class="card-title"><i class="fas fa-star-and-crescent"></i> Mode Jumat</div><div class="toggle-wrap" style="margin-bottom:14px"><button class="toggle on" id="c-jumatMode" onclick="this.classList.toggle('on')"></button><span class="toggle-label">Aktifkan</span></div><div class="form-grid"><div class="form-group"><label>Waktu</label><input id="c-jumatTimeDisplay" placeholder="12:30 WIB"></div><div class="form-group"><label>Durasi Overlay</label><input type="number" id="c-jumatDurationMinutes" value="35" min="1"></div></div><div class="form-grid" style="margin-top:10px"><div class="form-group full"><label>Info Azan</label><textarea id="c-jumatAzanInfo" rows="2"></textarea></div><div class="form-group full"><label>Info Iqomah</label><textarea id="c-jumatIqomahInfo" rows="2"></textarea></div><div class="form-group full"><label>Info Sholat</label><textarea id="c-jumatSholatInfo" rows="2"></textarea></div></div></div></div>
     <div class="tab-content" id="tab-events"><div class="card"><div class="card-title"><i class="fas fa-calendar-alt"></i> Hari Besar Islam</div><div class="event-list" id="evList"></div><button class="btn btn-sm" onclick="addEv()" style="margin-top:8px"><i class="fas fa-plus"></i> Tambah</button></div></div>
     
-    <!-- TAB SPREADSHEET (DENGAN TOMBOL TULIS) -->
+    <!-- TAB SPREADSHEET (BERSIH, URL TERSEMBUNYI) -->
     <div class="tab-content" id="tab-spreadsheet">
-        <div class="card"><div class="card-title"><i class="fas fa-table"></i> Google Spreadsheet</div><div class="form-grid"><div class="form-group full"><label>Spreadsheet ID</label><input id="c-spreadsheetId" placeholder="Paste ID dari URL Google Sheets"></div><div class="form-group"><label>Nama Sheet</label><input id="c-sheetName" value="Config"></div><div class="form-group"><label>Refresh (detik)</label><input type="number" id="c-refreshInterval" value="60" min="10"></div></div></div>
-        <div class="card" style="border-color:rgba(0,180,255,0.3)"><div class="card-title" style="color:var(--cyan)"><i class="fas fa-cloud-upload-alt"></i> Tulis Data ke Spreadsheet</div><p style="font-size:11px;color:var(--text2);margin-bottom:12px">Klik tombol di bawah untuk mengirim seluruh pengaturan dari halaman ini ke Google Spreadsheet secara otomatis. Pastikan Apps Script sudah di-deploy.</p><button class="btn btn-warning" onclick="saveToSheet()" id="btnWriteSheet"><i class="fas fa-paper-plane"></i> Kirim Pengaturan ke Spreadsheet</button><div id="writeLog" style="margin-top:10px;font-size:11px;color:var(--text3)"></div></div>
-        <div class="card"><div class="card-title"><i class="fas fa-code"></i> Panduan Apps Script</div><pre style="background:rgba(0,0,0,0.3);padding:10px;border-radius:7px;font-size:10px;color:var(--text2);overflow-x:auto;white-space:pre-wrap;line-height:1.5">1. Buka Spreadsheet > Extensions > Apps Script
-2. Hapus kode default, paste kode doGet & doPost di bawah:
-3. Deploy > New Deployment > Web app
-4. Execute as: Me | Access: Anyone
-5. Klik Deploy, SALIN URL yang muncul
-6. Paste URL tersebut di kolom "URL Deploy" di atas
+        <div class="card"><div class="card-title"><i class="fas fa-table"></i> Koneksi Google Spreadsheet</div>
+            <p style="font-size:11px;color:var(--text2);margin-bottom:12px">Isi ID di bawah ini. Halaman display TV akan otomatis membaca data dari Spreadsheet ini secara berkala.</p>
+            <div class="form-grid">
+                <div class="form-group full"><label>Spreadsheet ID</label><input id="c-spreadsheetId" placeholder="Contoh: 1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgVE2upms"></div>
+                <div class="form-group"><label>Nama Sheet</label><input id="c-sheetName" value="Config"></div>
+                <div class="form-group"><label>Refresh (detik)</label><input type="number" id="c-refreshInterval" value="60" min="10"></div>
+            </div>
+        </div>
 
+        <!-- Opsi Tulis (Hanya muncul jika diklik) -->
+        <div class="card" style="border-color:rgba(255,165,2,0.15)">
+            <button class="btn-ghost" onclick="toggleWrite()" id="toggleWriteBtn"><i class="fas fa-chevron-right" style="margin-right:4px;font-size:10px"></i> Tampilkan opsi kirim data ke Spreadsheet</button>
+            <div class="hidden-box" id="writeBox">
+                <div class="card-title" style="color:#ffa502"><i class="fas fa-cloud-upload-alt"></i> Kirim Pengaturan ke Spreadsheet</div>
+                <p style="font-size:11px;color:var(--text2);margin-bottom:12px">Fitur ini untuk menulis data dari halaman ini KE Spreadsheet. Biasanya cukup diisi sekali saat awal setup.</p>
+                <div class="form-group full"><label>URL Deploy Apps Script (doPost)</label><input id="c-deployUrl" placeholder="https://script.google.com/macros/s/xxxxx/exec"></div>
+                <button class="btn btn-warning" onclick="saveToSheet()" id="btnWrite"><i class="fas fa-paper-plane"></i> Kirim Sekarang</button>
+                <div id="writeLog" style="margin-top:10px;font-size:11px;color:var(--text3)"></div>
+            </div>
+        </div>
+
+        <div class="card"><div class="card-title"><i class="fas fa-code"></i> Panduan Apps Script</div><pre style="background:rgba(0,0,0,0.3);padding:10px;border-radius:7px;font-size:10px;color:var(--text2);overflow-x:auto;white-space:pre-wrap;line-height:1.5">1. Buka Spreadsheet > Extensions > Apps Script
+2. Hapus kode default, paste:
 function doGet(e) {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   var sheet = ss.getSheetByName(e.parameter.sheet || 'Config');
@@ -113,7 +131,7 @@ function doPost(e) {
     if (!Array.isArray(params)) params = [params];
     var ss = SpreadsheetApp.getActiveSpreadsheet();
     var sheet = ss.getSheetByName(params[0].sheet || 'Config');
-    if (!sheet) return ContentService.createTextOutput(JSON.stringify({error:'Sheet not found'})).setMimeType(ContentService.MimeType.JSON);
+    if (!sheet) return ContentService.createTextOutput(JSON.stringify({error:'Not found'})).setMimeType(ContentService.MimeType.JSON);
     if (sheet.getLastRow() === 0) sheet.appendRow(['Key', 'Value']);
     var updated = 0, added = 0;
     for (var i = 0; i < params.length; i++) {
@@ -123,40 +141,51 @@ function doPost(e) {
       else { sheet.appendRow([params[i].key, params[i].value]); added++; }
     }
     return ContentService.createTextOutput(JSON.stringify({status:'OK', updated:updated, added:added})).setMimeType(ContentService.MimeType.JSON);
-  } catch(err) {
-    return ContentService.createTextOutput(JSON.stringify({error:err.message})).setMimeType(ContentService.MimeType.JSON);
-  }
+  } catch(err) { return ContentService.createTextOutput(JSON.stringify({error:err.message})).setMimeType(ContentService.MimeType.JSON); }
 }
 
 function findRow(sheet, key) {
   var data = sheet.getDataRange().getValues();
   for (var i = 1; i < data.length; i++) { if (String(data[i][0]).trim() === String(key).trim()) return i + 1; }
   return 0;
-}</pre></div>
+}
+3. Deploy > New Deployment > Web app
+4. Execute as: Me | Access: Anyone
+5. Klik Deploy, SALIN URL
+6. Jika ingin kirim data: buka "Opsi kirim" di atas, paste URL</pre></div>
     </div>
 
     <div class="sticky-save">
-        <button class="btn btn-warning" onclick="saveToSheet()"><i class="fas fa-cloud-upload-alt"></i> Tulis ke Spreadsheet</button>
         <button class="btn btn-primary" onclick="saveCfg()"><i class="fas fa-save"></i> Simpan & Terapkan</button>
     </div>
 </div>
 <div class="toast" id="toast"></div>
 
 <script>
-/* ========== DB LOKASI KEMENAG (SEBAGIAN DATA UTAMA) ========== */
-const KEMENAG_DB={"Rejang Lebong":[-3.3969,102.5434,1,1,2,1,1,1],"Lebong":[-3.2654,102.1139,1,1,2,1,1,1],"Kepahiang":[-3.5611,102.5311,1,1,2,1,1,1],"Bengkulu Tengah":[-2.5103,101.8717,1,1,2,1,1,1],"Bengkulu Utara":[-2.4575,101.7036,1,1,2,1,1,1],"Bengkulu Selatan":[-4.2414,102.8156,1,1,2,1,1,1],"Muko Muko":[-3.0786,101.4958,1,1,2,1,1,1],"Seluma":[-4.2414,102.8156,1,1,2,1,1,1],"Bengkulu Kota":[-3.8004,102.2656,1,1,2,1,1,1],"Aceh Barat":[4.0167,96.1833,1,1,2,1,1,1],"Aceh Besar":[5.5500,95.3167,1,1,2,1,1,1],"Aceh Selatan":[3.6167,97.7167,1,1,2,1,1,1],"Aceh Tengah":[4.7167,96.6333,1,1,2,1,1,1],"Banda Aceh":[5.5500,95.3167,1,1,2,1,1,1],"Langsa":[4.4750,97.9500,1,1,2,1,1,1],"Lhokseumawe":[5.1833,97.1500,1,1,2,1,1,1],"Asahan":[2.9833,99.4167,1,1,2,1,1,1],"Deli Serdang":[3.2833,98.8833,1,1,2,1,1,1],"Labuhanbatu":[2.4667,99.8667,1,1,2,1,1,1],"Langkat":[3.9000,98.2167,1,1,2,1,1,1],"Medan":[3.5952,98.6722,1,1,2,1,1,1],"Pematangsiantar":[2.9583,99.0667,1,1,2,1,1,1],"Binjai":[3.6033,98.4833,1,1,2,1,1,1],"Padang":[-0.9471,100.4172,1,1,2,1,1,1],"Bukittinggi":[-0.3000,100.3667,1,1,2,1,1,1],"Payakumbuh":[-0.2500,100.6333,1,1,2,1,1,1],"Solok":[-0.8000,100.6667,1,1,2,1,1,1],"Dharmasraya":[-0.6167,101.1833,1,1,2,1,1,1],"Banyuasin":[-2.7833,104.6833,1,1,2,1,1,1],"Lahat":[-3.7833,103.5333,1,1,2,1,1,1],"Muara Enim":[-3.9500,104.2500,1,1,2,1,1,1],"Musi Rawas":[-2.8833,103.4833,1,1,2,1,1,1],"Ogan Komering Ulu":[-4.0833,104.6833,1,1,2,1,1,1],"Lubuk Linggau":[-3.0500,104.8500,1,1,2,1,1,1],"Pagar Alam":[-3.7667,103.8167,1,1,2,1,1,1],"Prabumulih":[-3.4167,104.6167,1,1,2,1,1,1],"Palembang":[-2.9761,104.7754,1,1,2,1,1,1],"Batam":[1.0500,104.0333,1,1,2,1,1,1],"Tanjung Pinang":[0.9167,104.5333,1,1,2,1,1,1],"Bandung":[-6.9175,107.6191,1,1,2,1,1,1],"Bogor":[-6.5971,106.8060,1,1,2,1,1,1],"Bekasi":[-6.2349,106.9896,1,1,2,1,1,1],"Cirebon":[-6.7064,108.5520,1,1,2,1,1,1],"Semarang":[-6.9667,110.4197,1,1,2,1,1,1],"Surakarta":[-7.5755,110.8243,1,1,2,1,1,1],"Magelang":[-7.4667,110.2167,1,1,2,1,1,1],"Yogyakarta":[-7.7956,110.3695,1,1,2,1,1,1],"Surabaya":[-7.2500,112.7500,1,1,2,1,1,1],"Malang":[-8.0167,112.7500,1,1,2,1,1,1],"Banyuwangi":[-8.2167,114.3667,1,1,2,1,1,1],"Denpasar":[-8.6500,115.2167,1,1,2,1,1,1],"Balikpapan":[-1.2654,116.8311,1,1,2,1,1,1],"Samarinda":[-0.4948,117.1436,1,1,2,1,1,1],"Banjarmasin":[-3.3167,114.5833,1,1,2,1,1,1],"Palangka Raya":[-1.6833,113.9333,1,1,2,1,1,1],"Manado":[1.4748,124.8421,1,1,2,1,1,1],"Gorontalo":[0.5333,123.0667,1,1,2,1,1,1],"Palu":[-0.8917,121.4328,1,1,2,1,1,1],"Kendari":[-3.9769,122.9986,1,1,2,1,1,1],"Makassar":[-5.1477,119.4327,1,1,2,1,1,1],"Kupang":[-10.1667,123.6167,1,1,2,1,1,1],"Sorong":[-0.8833,131.2500,1,1,2,1,1,1],"Jayapura":[-2.5916,140.6690,1,1,2,1,1,1],"Ambon":[-3.6954,128.1814,1,1,2,1,1,1],"Ternate":[0.7833,127.3667,1,1,2,1,1,1]};
+/* ========== DB KEMENAG ========== */
+const KEMENAG_DB={"Rejang Lebong":[-3.3969,102.5434,1,1,2,1,1,1],"Lebong":[-3.2654,102.1139,1,1,2,1,1,1],"Kepahiang":[-3.5611,102.5311,1,1,2,1,1,1],"Bengkulu Tengah":[-2.5103,101.8717,1,1,2,1,1,1],"Bengkulu Utara":[-2.4575,101.7036,1,1,2,1,1,1],"Bengkulu Selatan":[-4.2414,102.8156,1,1,2,1,1,1],"Muko Muko":[-3.0786,101.4958,1,1,2,1,1,1],"Seluma":[-4.2414,102.8156,1,1,2,1,1,1],"Bengkulu Kota":[-3.8004,102.2656,1,1,2,1,1,1],"Aceh Barat":[4.0167,96.1833,1,1,2,1,1,1],"Aceh Besar":[5.5500,95.3167,1,1,2,1,1,1],"Banda Aceh":[5.5500,95.3167,1,1,2,1,1,1],"Medan":[3.5952,98.6722,1,1,2,1,1,1],"Padang":[-0.9471,100.4172,1,1,2,1,1,1],"Bukittinggi":[-0.3000,100.3667,1,1,2,1,1,1],"Palembang":[-2.9761,104.7754,1,1,2,1,1,1],"Lampung (Bandar)":[-5.4500,105.2667,1,1,2,1,1,1],"Batam":[1.0500,104.0333,1,1,2,1,1,1],"Tanjung Pinang":[0.9167,104.5333,1,1,2,1,1,1],"Bandung":[-6.9175,107.6191,1,1,2,1,1,1],"Bogor":[-6.5971,106.8060,1,1,2,1,1,1],"Bekasi":[-6.2349,106.9896,1,1,2,1,1,1],"Semarang":[-6.9667,110.4197,1,1,2,1,1,1],"Surakarta":[-7.5755,110.8243,1,1,2,1,1,1],"Magelang":[-7.4667,110.2167,1,1,2,1,1,1],"Yogyakarta":[-7.7956,110.3695,1,1,2,1,1,1],"Surabaya":[-7.2500,112.7500,1,1,2,1,1,1],"Malang":[-8.0167,112.7500,1,1,2,1,1,1],"Denpasar":[-8.6500,115.2167,1,1,2,1,1,1],"Balikpapan":[-1.2654,116.8311,1,1,2,1,1,1],"Samarinda":[-0.4948,117.1436,1,1,2,1,1,1],"Banjarmasin":[-3.3167,114.5833,1,1,2,1,1,1],"Palangka Raya":[-1.6833,113.9333,1,1,2,1,1,1],"Manado":[1.4748,124.8421,1,1,2,1,1,1],"Gorontalo":[0.5333,123.0667,1,1,2,1,1,1],"Palu":[-0.8917,121.4328,1,1,2,1,1,1],"Kendari":[-3.9769,122.9986,1,1,2,1,1,1],"Makassar":[-5.1477,119.4327,1,1,2,1,1,1],"Kupang":[-10.1667,123.6167,1,1,2,1,1,1],"Sorong":[-0.8833,131.2500,1,1,2,1,1,1],"Jayapura":[-2.5916,140.6690,1,1,2,1,1,1],"Ambon":[-3.6954,128.1814,1,1,2,1,1,1],"Ternate":[0.7833,127.3667,1,1,2,1,1,1]};
 let locList=Object.keys(KEMENAG_DB).sort().map(n=>({name:n,data:KEMENAG_DB[n]}));
-let selectedLoc=null;
 
 const DEF={masjidName:"Masjid Agung Rejang Lebong",masjidLocation:"Kab. Rejang Lebong, Bengkulu",latitude:-3.3969,longitude:102.5434,timezone:7,source:"kemenag",slideImages:["https://picsum.photos/seed/masjid1/1280/720","https://picsum.photos/seed/masjid2/1280/720","https://picsum.photos/seed/masjid3/1280/720"],slideInterval:8,lowThirdInterval:8,runningText:"Selamat datang \u2666 Tingkatkan iman \u2666",kasInfo:"Saldo Rp 42.350.000",pembangunanInfo:"Renovasi tahap 2 | Saldo Rp 85.000.000",petugasJumat:"Imam: Ust. Ahmad Fauzi",customInfo:"Kajian Ahad 08.00 WIB",adjustMinutes:{Subuh:0,Terbit:0,Dzuhur:0,Ashar:0,Maghrib:0,Isya:0},iqomahMinutes:{Subuh:2,Dzuhur:3,Ashar:2,Maghrib:2,Isya:3},azanInfoText:"Marilah memenuhi seruan Allah SWT",iqomahInfoText:"Tegakkan shaf, rapatkan barisan",sholatInfoText:"Diamikan handphone",murotalEnabled:true,murotalMinutesBefore:{Subuh:15,Dzuhur:10,Ashar:10,Maghrib:10,Isya:10},murotalUrl:"",jumatMode:true,jumatAzanInfo:"Sholat Jumat setelah khutbah.",jumatIqomahInfo:"Luruskan shaf.",jumatSholatInfo:"Sholat Jumat berlangsung.",jumatTimeDisplay:"12:30 WIB",jumatDurationMinutes:35,sholatDurationMinutes:15,spreadsheetId:"",sheetName:"Config",deployUrl:"",refreshInterval:60,islamicEvents:[{name:"Idul Fitri",date:"2026-04-01"},{name:"Idul Adha",date:"2026-05-08"}]};
 let C={};
 
 document.addEventListener('DOMContentLoaded',()=>{loadCfg();initTabs();initSrcToggle();initLocDropdown();testCon()});
 
+// ========== TOGGLE OPSI TULIS ==========
+function toggleWrite(){
+    const box=$('writeBox'), btn=$('toggleWriteBtn'), icon=btn.querySelector('i');
+    box.classList.toggle('show');
+    if(box.classList.contains('show')){
+        btn.innerHTML='<i class="fas fa-chevron-down" style="margin-right:4px;font-size:10px"></i> Sembunyikan opsi kirim data';
+    } else {
+        btn.innerHTML='<i class="fas fa-chevron-right" style="margin-right:4px;font-size:10px"></i> Tampilkan opsi kirim data ke Spreadsheet';
+    }
+}
+
 // ========== LOKASI ==========
 function initLocDropdown(){const sel=$('locSelect');sel.innerHTML='<option value="">-- Pilih Kota/Kabupaten --</option>';locList.forEach((l,i)=>{const o=document.createElement('option');o.value=i;o.textContent=l.name;sel.appendChild(o)});sel.addEventListener('change',onLocSelect)}
 function filterLoc(){const q=$('locSearch').value.toLowerCase(),sel=$('locSelect');sel.innerHTML='<option value="">-- Pilih --</option>';locList.forEach((l,i)=>{if(l.name.toLowerCase().includes(q)){const o=document.createElement('option');o.value=i;o.textContent=l.name;sel.appendChild(o)}})}
-function onLocSelect(){const idx=$('locSelect').value;if(idx===''){$('locHint').classList.remove('show');selectedLoc=null;return}const loc=locList[parseInt(idx)];selectedLoc=loc.data;$('c-latitude').value=loc.data[0];$('c-longitude').value=loc.data[1];['Subuh','Terbit','Dzuhur','Ashar','Maghrib','Isya'].forEach((k,i)=>{$('c-adj-'+k).value=loc.data[i+2]});$('locHintTxt').textContent=`"${loc.name}" dipilih. Koordinat & adjust otomatis disesuaikan.`;$('locHint').classList.add('show');updPrev()}
+function onLocSelect(){const idx=$('locSelect').value;if(idx===''){$('locHint').classList.remove('show');return}const loc=locList[parseInt(idx)];$('c-latitude').value=loc.data[0];$('c-longitude').value=loc.data[1];['Subuh','Terbit','Dzuhur','Ashar','Maghrib','Isya'].forEach((k,i)=>{$('c-adj-'+k).value=loc.data[i+2]});$('locHintTxt').textContent=`"${loc.name}" dipilih. Koordinat & adjust otomatis disesuaikan.`;$('locHint').classList.add('show');updPrev()}
 
 // ========== LOAD & SAVE ==========
 function loadCfg(){try{const s=localStorage.getItem('sholatConfig');C=s?{...DEF,...JSON.parse(s)}:{...DEF}}catch(e){C={...DEF}}populateForm();updPrev()}
@@ -188,46 +217,18 @@ function collectCfg(){
     if(C.source==='manual'){C.manualTimes={};['Subuh','Terbit','Dzuhur','Ashar','Maghrib','Isya'].forEach(k=>{const e=$('c-m'+k);C.manualTimes[k]=e?e.value:''})}
 }
 
-function saveCfg(){collectCfg();localStorage.setItem('sholatConfig',JSON.stringify(C));localStorage.setItem('sholatConfigForceRefresh',Date.now().toString());setTimeout(()=>localStorage.removeItem('sholatConfigForceRefresh'),500);toast('Berhasil disimpan! Display diperbarui.');updPrev();testCon()}
+function saveCfg(){collectCfg();localStorage.setItem('sholatConfig',JSON.stringify(C));localStorage.setItem('sholatConfigForceRefresh',Date.now().toString());setTimeout(()=>localStorage.removeItem('sholatConfigForceRefresh'),500);toast('Berhasil disimpan!');updPrev();testCon()}
 function resetCfg(){if(!confirm('Reset ke default?'))return;C={...DEF};localStorage.setItem('sholatConfig',JSON.stringify(C));populateForm();updPrev();toast('Direset')}
 
 // ========== TULIS KE SPREADSHEET ==========
 function saveToSheet(){
     collectCfg();
-    const log = $('writeLog');
-    const btn = $('btnWriteSheet');
-    
-    if(!C.spreadsheetId){log.innerHTML='<span style="color:var(--danger)"><i class="fas fa-times-circle"></i> Gagal: Spreadsheet ID masih kosong.</span>';return}
-    if(!C.deployUrl){log.innerHTML='<span style="color:var(--danger)"><i class="fas fa-exclamation-triangle"></i> URL Deploy masih kosong. Lihat panduan di bawah untuk cara mendapatkannya.</span>';return}
-
-    log.innerHTML='<span style="color:var(--blue)"><i class="fas fa-spinner fa-spin"></i> Mengirim data ke Spreadsheet...</span>';
-    btn.disabled=true;btn.style.opacity='0.6';
-
-    const payload = [];
-    for(let key in C) {
-        if(key==='manualTimes' && C.source!=='manual') continue;
-        let val = C[key];
-        if(typeof val==='object'&&val!==null){
-            if(key==='slideImages') val=val.join('|');
-            else val=JSON.stringify(val);
-        }
-        payload.push({key, value:val, sheet:C.sheetName||'Config'});
-    }
-
-    fetch(C.deployUrl, {
-        method:'POST',
-        mode:'no-cors',
-        headers:{'Content-Type':'application/json'},
-        body:JSON.stringify(payload)
-    }).then(()=>{
-        log.innerHTML='<span style="color:var(--success)"><i class="fas fa-check-circle"></i> Berhasil! Data berhasil dikirim ke Spreadsheet. Halaman display akan ter-update otomatis.</span>';
-        btn.disabled=false;btn.style.opacity='1';
-        toast('Data berhasil ditulis ke Spreadsheet!');
-    }).catch(()=>{
-        // mode:'no-cors' selalu return opaque response, jadi jika sampai sini berarti ada error sebelum fetch
-        log.innerHTML='<span style="color:var(--danger)"><i class="fas fa-times-circle"></i> Gagal mengirim. Pastikan URL Deploy benar dan Apps Script sudah di-deploy dengan akses "Anyone".</span>';
-        btn.disabled=false;btn.style.opacity='1';
-    });
+    const log=$('writeLog'),btn=$('btnWrite');
+    if(!C.spreadsheetId){log.innerHTML='<span style="color:var(--danger)"><i class="fas fa-times-circle"></i> Spreadsheet ID kosong.</span>';return}
+    if(!C.deployUrl){log.innerHTML='<span style="color:var(--danger)"><i class="fas fa-exclamation-triangle"></i> URL Deploy kosong. Lihat panduan di bawah.</span>';return}
+    log.innerHTML='<span style="color:var(--blue)"><i class="fas fa-spinner fa-spin"></i> Mengirim data...</span>';btn.disabled=true;
+    const payload=[];for(let key in C){if(key==='manualTimes'&&C.source!=='manual')continue;let val=C[key];if(typeof val==='object'&&val!==null){if(key==='slideImages')val=val.join('|');else val=JSON.stringify(val)}payload.push({key,value:val,sheet:C.sheetName||'Config'})}
+    fetch(C.deployUrl,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}).then(()=>{log.innerHTML='<span style="color:var(--success)"><i class="fas fa-check-circle"></i> Berhasil dikirim ke Spreadsheet!</span>';btn.disabled=false;toast('Berhasil ditulis ke Spreadsheet!')}).catch(()=>{log.innerHTML='<span style="color:var(--danger)"><i class="fas fa-times-circle"></i> Gagal. Pastikan URL benar dan Apps Script sudah di-deploy.</span>';btn.disabled=false})
 }
 
 // ========== NOTIFIKASI & PREVIEW ==========
@@ -237,7 +238,6 @@ function testCon(){collectCfg();const n=$('ssNotif'),ic=n.querySelector('.ss-ico
 
 function updPrev(){collectCfg();const n=new Date(),dy=Math.floor((n-new Date(n.getFullYear(),0,0))/86400000),dc=23.45*Math.sin((360/365*(dy-81))*Math.PI/180),eq=9.87*Math.sin(2*(360/365*(dy-81))*Math.PI/180)-7.53*Math.cos((360/365*(dy-81))*Math.PI/180)-1.5*Math.sin((360/365*(dy-81))*Math.PI/180);const la=C.latitude,ln=C.longitude,noon=12-(ln/15)+C.timezone+(eq/60);const cHA=(l,d,a)=>{const c=(Math.sin(a*Math.PI/180)-Math.sin(l*Math.PI/180)*Math.sin(d*Math.PI/180))/(Math.cos(l*Math.PI/180)*Math.cos(d*Math.PI/180));return(c>=-1&&c<=1)?Math.acos(c)*180/Math.PI/15:null};const ft=h=>{h=((h%24)+24)%24;return`${String(Math.floor(h)).padStart(2,'0')}:${String(Math.round((h-Math.floor(h))*60)).padStart(2,'0')}`};const t2m=t=>{if(!t||!t.includes(':'))return 0;const[h,m]=t.split(':').map(Number);return h*60+(m||0)};const m2t=m=>{m=((Math.round(m)%1440)+1440)%1440;return`${String(Math.floor(m/60)).padStart(2,'0')}:${String(m%60).padStart(2,'0')}`};let t={};const hS=cHA(la,dc,-20),hT=cHA(la,dc,-0.833),tA=Math.abs(Math.tan((la-dc)*Math.PI/180)),sA=1/(1+1/Math.max(.001,tA)),c2=(sA-Math.sin(la*Math.PI/180)*Math.sin(dc*Math.PI/180))/(Math.cos(la*Math.PI/180)*Math.cos(dc*Math.PI/180)),hAsh=(c2>=-1&&c2<=1)?Math.acos(c2)*180/Math.PI/15:null;t.Subuh=hS?ft(noon-hS):'05:00';t.Terbit=hT?ft(noon-hT):'06:00';t.Dzuhur=ft(noon+3/60);t.Ashar=hAsh?ft(noon+hAsh):'15:30';t.Maghrib=hT?ft(noon+hT):'18:00';t.Isya=cHA(la,dc,-18)?ft(noon+cHA(la,dc,-18)):'19:15';['Subuh','Terbit','Dzuhur','Ashar','Maghrib','Isya'].forEach(k=>{if(t[k])t[k]=m2t(t2m(t[k])+(C.adjustMinutes?.[k]||0))});$('schedPrev').innerHTML=['Subuh','Terbit','Dzuhur','Ashar','Maghrib','Isya'].map(k=>`<div class="sp-item"><span class="sp-name">${k}</span><span class="sp-time">${t[k]||'-'}</span></div>`).join('')}
 
-// ========== UI ==========
 function buildImgs(){const l=$('imgList');l.innerHTML='';(C.slideImages||[]).forEach((u,i)=>{const d=document.createElement('div');d.className='img-item';d.innerHTML=`<span style="font-size:11px;color:var(--text3);min-width:20px">${i+1}.</span><input value="${u}"><button class="btn btn-sm btn-danger" onclick="this.parentElement.remove()"><i class="fas fa-trash"></i></button>`;l.appendChild(d)})}
 function addImg(){const l=$('imgList');const d=document.createElement('div');d.className='img-item';d.innerHTML=`<span style="font-size:11px;color:var(--text3);min-width:20px">${l.children.length+1}.</span><input value=""><button class="btn btn-sm btn-danger" onclick="this.parentElement.remove()"><i class="fas fa-trash"></i></button>`;l.appendChild(d)}
 function buildEvs(){const l=$('evList');l.innerHTML='';(C.islamicEvents||[]).forEach(ev=>{const d=document.createElement('div');d.className='event-item';d.innerHTML=`<input value="${ev.name}"><input type="date" value="${ev.date}"><button class="btn btn-sm btn-danger" onclick="this.parentElement.remove()"><i class="fas fa-trash"></i></button>`;l.appendChild(d)})}
