@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Admin - TV Jadwal Sholat</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root{
+  --deep:#020617;--main:#0a1128;--card:#111c3a;--card2:#162040;
+  --bdk:#1a3a6c;--bm:#2563eb;--bb:#3b82f6;--bl:#60a5fa;--bp:#93c5fd;
+  --gld:#c9a84c;--gll:#e0c068;--glw:rgba(201,168,76,.3);
+  --t1:#f0f4ff;--t2:#94a3b8;--t3:#64748b;
+  --bd:rgba(59,130,246,.15);--bg:rgba(201,168,76,.25);
+  --r:10px;--rs:6px
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{height:100%}
+body{min-height:100%;font-family:'Inter',sans-serif;background:var(--deep);color:var(--t1);margin:0;padding:16px}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-thumb{background:var(--bdk);border-radius:3px}
+.wrap{max-width:880px;margin:0 auto}
+.wrap h1{font-family:'Playfair Display',serif;font-size:clamp(20px,3.5vw,32px);color:var(--gld);text-align:center;margin-bottom:4px}
+.wrap .sub{text-align:center;color:var(--t2);font-size:12px;margin-bottom:20px}
+.stabs{display:flex;gap:3px;margin-bottom:16px;flex-wrap:wrap;justify-content:center}
+.stab{padding:7px 11px;border-radius:var(--rs);font-size:11px;cursor:pointer;background:var(--card);border:1px solid var(--bd);color:var(--t2);transition:.2s;user-select:none}
+.stab:hover{color:var(--t1)}.stab.on{background:var(--bm);color:#fff;border-color:transparent}
+.tbc{display:none}.tbc.on{display:block}
+.sec{background:var(--card);border:1px solid var(--bd);border-radius:var(--r);padding:14px 16px;margin-bottom:14px}
+.sec h3{font-family:'Playfair Display',serif;font-size:14px;color:var(--gld);margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.sr{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;align-items:end}
+.sf{flex:1;min-width:130px}
+.sf label{display:block;font-size:10px;color:var(--t3);margin-bottom:2px;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+.sf input,.sf select,.sf textarea{width:100%;background:var(--deep);border:1px solid var(--bd);border-radius:var(--rs);padding:8px 10px;color:var(--t1);font-size:12px;font-family:inherit;outline:none;transition:border .2s}
+.sf input:focus,.sf select:focus,.sf textarea:focus{border-color:var(--bm)}
+.sf textarea{resize:vertical;min-height:44px}
+.btn{display:inline-flex;align-items:center;gap:5px;padding:8px 16px;border:none;border-radius:var(--rs);font-size:11px;font-weight:600;cursor:pointer;transition:.2s;font-family:inherit;color:#fff}
+.btn-p{background:var(--bm)}.btn-p:hover{background:var(--bb)}
+.btn-g{background:linear-gradient(135deg,var(--gld),#a08030)}.btn-g:hover{background:var(--gll)}
+.btn-d{background:#dc2626}.btn-d:hover{background:#b91c1c}
+.btn-o{background:var(--card);color:var(--t2);border:1px solid var(--bd)}.btn-o:hover{color:var(--t1)}
+.lti{background:var(--deep);border:1px solid var(--bd);border-radius:var(--rs);padding:8px 10px;margin-bottom:6px}
+.lti label{display:block;font-size:9px;color:var(--t3);margin-bottom:2px;text-transform:uppercase;letter-spacing:.5px;font-weight:600}
+.lti input{width:100%;background:var(--card);border:1px solid var(--bd);border-radius:4px;padding:6px 8px;color:var(--t1);font-size:11px;outline:none;font-family:inherit}
+.lti input:focus{border-color:var(--bm)}
+.ig{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:6px}
+.iu{border:2px dashed var(--bd);border-radius:var(--r);padding:24px;text-align:center;cursor:pointer;color:var(--t3);font-size:12px;transition:.2s}
+.iu:hover{border-color:var(--bm);color:var(--bl)}
+.ipg{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.ipg .pi{position:relative;width:72px;height:46px;cursor:pointer}
+.ipg .pi img{width:100%;height:100%;object-fit:cover;border-radius:4px;border:1px solid var(--bd)}
+.ipg .pi::after{content:'\00d7';position:absolute;top:-5px;right:-5px;background:#dc2626;color:#fff;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;cursor:pointer;font-weight:700}
+.sfoot{text-align:center;padding:24px 0 40px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.fih{display:none}
+.note{font-size:10px;color:var(--t3);margin-top:6px}
+.tc{position:fixed;top:12px;right:12px;z-index:9999;display:flex;flex-direction:column;gap:5px}
+.tst{padding:8px 14px;border-radius:var(--rs);font-size:11px;color:#fff;animation:ti .3s;box-shadow:0 4px 20px rgba(0,0,0,.5)}
+.tst-s{background:#15803d}.tst-e{background:#dc2626}.tst-i{background:var(--bdk)}
+@keyframes ti{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
+</style>
+</head>
+<body>
+<div class="tc" id="tc"></div>
+<div class="wrap">
+  <h1><i class="fas fa-cog"></i> Admin TV Sholat</h1>
+  <p class="sub">Konfigurasi tampilan TV Jadwal Sholat Masjid</p>
+
+  <div class="stabs" id="stabs">
+    <div class="stab on" data-t="t1">Wilayah</div>
+    <div class="stab" data-t="t2">Masjid</div>
+    <div class="stab" data-t="t3">Jadwal</div>
+    <div class="stab" data-t="t4">Iqamah</div>
+    <div class="stab" data-t="t5">Info Bar</div>
+    <div class="stab" data-t="t6">Slide</div>
+    <div class="stab" data-t="t7">Azan</div>
+    <div class="stab" data-t="t8">Jumat</div>
+    <div class="stab" data-t="t9">Hari Besar</div>
+    <div class="stab" data-t="t10">Lainnya</div>
+  </div>
+
+  <!-- T1 Wilayah -->
+  <div class="tbc on" id="t1">
+    <div class="sec">
+      <h3><i class="fas fa-map-marker-alt"></i> Pilih Wilayah API Kemenag</h3>
+      <div class="sr">
+        <div class="sf"><label>Provinsi</label><select id="sProv" onchange="ldKota()"><option value="">Memuat provinsi...</option></select></div>
+        <div class="sf"><label>Kab / Kota</label><select id="sKota" onchange="ldKec()"><option value="">-- Pilih --</option></select></div>
+      </div>
+      <div class="sr">
+        <div class="sf"><label>Kecamatan</label><select id="sKec" onchange="pickWil()"><option value="">-- Pilih --</option></select></div>
+        <div class="sf" style="flex:0;min-width:auto"><label>&nbsp;</label><button class="btn btn-p" onclick="applyAPI()"><i class="fas fa-check"></i> Terapkan</button></div>
+      </div>
+    </div>
+    <div class="sec">
+      <h3><i class="fas fa-sliders-h"></i> Manual Lokasi & Derajat</h3>
+      <div class="sr">
+        <div class="sf"><label>Latitude</label><input type="number" step="0.0001" id="iLat" placeholder="-3.4500"></div>
+        <div class="sf"><label>Longitude</label><input type="number" step="0.0001" id="iLng" placeholder="102.6167"></div>
+        <div class="sf"><label>Nama Wilayah</label><input id="iWil" placeholder="Rejang Lebong"></div>
+      </div>
+      <button class="btn btn-p" onclick="applyManual()"><i class="fas fa-check"></i> Terapkan Manual</button>
+    </div>
+  </div>
+
+  <!-- T2 Masjid -->
+  <div class="tbc" id="t2">
+    <div class="sec">
+      <h3><i class="fas fa-mosque"></i> Informasi Masjid</h3>
+      <div class="sr"><div class="sf"><label>Nama Masjid</label><input id="iNM"></div></div>
+      <div class="sr"><div class="sf"><label>Alamat</label><input id="iAL"></div></div>
+      <button class="btn btn-g" onclick="svMasjid()"><i class="fas fa-save"></i> Simpan</button>
+    </div>
+    <div class="sec">
+      <h3><i class="fas fa-scroll"></i> Running Teks</h3>
+      <div class="sf"><label>Teks Berjalan</label><textarea id="iRT"></textarea></div>
+      <button class="btn btn-p" onclick="svRT()" style="margin-top:6px"><i class="fas fa-save"></i> Simpan</button>
+    </div>
+  </div>
+
+  <!-- T3 Jadwal -->
+  <div class="tbc" id="t3">
+    <div class="sec">
+      <h3><i class="fas fa-clock"></i> Adjust Waktu Sholat</h3>
+      <p class="note">Positif = tambah menit, Negatif = kurangi menit dari waktu API</p>
+      <div class="ig" id="adjG"></div>
+      <button class="btn btn-g" onclick="svAdj()" style="margin-top:10px"><i class="fas fa-save"></i> Simpan</button>
+    </div>
+  </div>
+
+  <!-- T4 Iqamah -->
+  <div class="tbc" id="t4">
+    <div class="sec">
+      <h3><i class="fas fa-hourglass-half"></i> Durasi Iqamah (menit setelah azan)</h3>
+      <div class="ig" id="iqG"></div>
+      <button class="btn btn-g" onclick="svIq()" style="margin-top:10px"><i class="fas fa-save"></i> Simpan</button>
+    </div>
+  </div>
+
+  <!-- T5 Low Third -->
+  <div class="tbc" id="t5">
+    <div class="sec">
+      <h3><i class="fas fa-user-tie"></i> Petugas Jumat</h3>
+      <div class="lti"><label>Imam</label><input id="lJI"></div>
+      <div class="lti"><label>Khatib</label><input id="lJK"></div>
+      <div class="lti"><label>Muadzin</label><input id="lJM"></div>
+      <div class="lti"><label>Bilal</label><input id="lJB"></div>
+      <button class="btn btn-g" onclick="svLT()"><i class="fas fa-save"></i> Simpan</button>
+    </div>
+    <div class="sec">
+      <h3><i class="fas fa-coins"></i> Kas Keuangan</h3>
+      <div class="lti"><label>Informasi Kas</label><input id="lKI"></div>
+      <button class="btn btn-g" onclick="svLT()"><i class="fas fa-save"></i> Simpan</button>
+    </div>
+    <div class="sec">
+      <h3><i class="fas fa-building"></i> Kas Pembangunan</h3>
+      <div class="lti"><label>Informasi Pembangunan</label><input id="lPI"></div>
+      <button class="btn btn-g" onclick="svLT()"><i class="fas fa-save"></i> Simpan</button>
+    </div>
+  </div>
+
+  <!-- T6 Slide -->
+  <div class="tbc" id="t6">
+    <div class="sec">
+      <h3><i class="fas fa-images"></i> Slide Foto</h3>
+      <p class="note">Maksimal 20 foto, ukuran maks 2MB per foto. Foto akan dikompres otomatis.</p>
+      <div class="iu" onclick="$('fSl').click()"><i class="fas fa-cloud-upload-alt" style="font-size:22px;display:block;margin-bottom:4px"></i>Klik untuk upload foto</div>
+      <input type="file" class="fih" id="fSl" accept="image/*" multiple onchange="upSlide(event)">
+      <div class="ipg" id="slPrev"></div>
+      <button class="btn btn-d" onclick="clrSlide()" style="margin-top:8px"><i class="fas fa-trash"></i> Hapus Semua Slide</button>
+    </div>
+  </div>
+
+  <!-- T7 Azan/Murotal -->
+  <div class="tbc" id="t7">
+    <div class="sec">
+      <h3><i class="fas fa-volume-up"></i> Pengaturan Azan</h3>
+      <div class="sr"><div class="sf"><label>URL Audio Azan (MP3)</label><input id="iAU" placeholder="https://example.com/azan.mp3"></div></div>
+      <div class="sr">
+        <div class="sf"><label>Volume (%)</label><input type="number" min="0" max="100" id="iVA"></div>
+        <div class="sf"><label>Durasi Azan (detik)</label><input type="number" min="10" max="600" id="iDA"></div>
+      </div>
+      <button class="btn btn-p" onclick="svAzan()"><i class="fas fa-save"></i> Simpan</button>
+    </div>
+    <div class="sec">
+      <h3><i class="fas fa-music"></i> Auto Murotal per Sholat</h3>
+      <p class="note">URL murotal diputar 10 menit sebelum azan, berhenti 30 detik sebelum azan.</p>
+      <div id="mutG"></div>
+      <button class="btn btn-g" onclick="svMut()" style="margin-top:10px"><i class="fas fa-save"></i> Simpan</button>
+    </div>
+  </div>
+
+  <!-- T8 Jumat -->
+  <div class="tbc" id="t8">
+    <div class="sec">
+      <h3><i class="fas fa-calendar-week"></i> Mode Sholat Jumat</h3>
+      <div class="sr"><div class="sf"><label>Aktifkan Mode Jumat</label><select id="iJA"><option value="1">Ya (Otomatis Hari Jumat)</option><option value="0">Tidak</option></select></div></div>
+      <div class="sr"><div class="sf"><label>Teks Layar Azan Jumat</label><textarea id="iJAT"></textarea></div></div>
+      <div class="sr"><div class="sf"><label>Teks Layar Iqamah Jumat</label><textarea id="iJIT"></textarea></div></div>
+      <div class="sr">
+        <div class="sf"><label>Waktu Khutbah (HH:MM)</label><input type="time" id="iJKH"></div>
+        <div class="sf"><label>Teks Layar Khutbah</label><input id="iJKT"></div>
+      </div>
+      <button class="btn btn-g" onclick="svJum()"><i class="fas fa-save"></i> Simpan</button>
+    </div>
+  </div>
+
+  <!-- T9 Hari Besar -->
+  <div class="tbc" id="t9">
+    <div class="sec">
+      <h3><i class="fas fa-star-and-crescent"></i> Hitung Mundur Hari Besar Islam</h3>
+      <div id="hbG"></div>
+      <button class="btn btn-p" onclick="addHB()" style="margin-top:8px"><i class="fas fa-plus"></i> Tambah</button>
+      <button class="btn btn-g" onclick="svHB()" style="margin-top:8px;margin-left:4px"><i class="fas fa-save"></i> Simpan</button>
+    </div>
+  </div>
+
+  <!-- T10 Lainnya -->
+  <div class="tbc" id="t10">
+    <div class="sec">
+      <h3><i class="fas fa-cogs"></i> Pengaturan Umum</h3>
+      <div class="sr">
+        <div class="sf"><label>Refresh Data (detik)</label><input type="number" min="10" max="300" id="iRI"></div>
+        <div class="sf"><label>Beep Azan (detik)</label><input type="number" min="1" max="30" id="iBA"></div>
+        <div class="sf"><label>Beep Iqamah (detik)</label><input type="number" min="1" max="30" id="iBI"></div>
+      </div>
+      <div class="sr">
+        <div class="sf"><label>Durasi Slide (detik)</label><input type="number" min="3" max="60" id="iSD"></div>
+        <div class="sf"><label>Durasi Low Third (detik)</label><input type="number" min="3" max="60" id="iLD"></div>
+      </div>
+      <button class="btn btn-g" onclick="svLain()"><i class="fas fa-save"></i> Simpan</button>
+    </div>
+    <div class="sec">
+      <h3><i class="fas fa-database"></i> Sinkronisasi Spreadsheet</h3>
+      <button class="btn btn-p" onclick="ldSheet()"><i class="fas fa-download"></i> Muat Ulang dari Spreadsheet</button>
+      <button class="btn btn-g" onclick="svAll()" style="margin-left:6px"><i class="fas fa-upload"></i> Simpan Semua ke Spreadsheet</button>
+      <p class="note" style="margin-top:8px">Spreadsheet ID: 1m5gZS8_MoogG9q3Zi8xlQGb86IX6ujIUcf7rWsRZwEk</p>
+    </div>
+  </div>
+
+  <div class="sfoot">
+    <a href="index.html" class="btn btn-p" style="text-decoration:none;padding:10px 30px;font-size:13px"><i class="fas fa-tv"></i> Buka Tampilan TV</a>
+  </div>
+</div>
+
+<script>
+const API='https://script.google.com/macros/s/AKfycbzMe-lngR0znX_CMuD0-I9Dq4lVe-c78OwYf2Mhqa8pM_fuyFop5M5qQas2UC_Hqczd-w/exec';
+const KProv='https://api.myquran.com/v2/sholat/kota/semua';
+const KJad='https://api.myquran.com/v2/sholat/jadwal';
+const SN=['Imsak','Subuh','Terbit','Dhuha','Dzuhur','Ashar','Maghrib','Isya'];
+const SD=['Subuh','Dzuhur','Ashar','Maghrib','Isya'];
+const DI={Subuh:10,Dzuhur:5,Ashar:5,Maghrib:7,Isya:5};
+const DA={Imsak:0,Subuh:0,Terbit:0,Dhuha:0,Dzuhur:0,Ashar:0,Maghrib:0,Isya:0};
+
+let S={
+  nm:'Masjid Agung',al:'',lok:'Kabupaten Rejang Lebong',
+  lat:-3.45,lng:102.6167,kd:'0807',
+  jd:{},hij:'',mas:'',
+  iq:{...DI},adj:{...DA},
+  rt:'Selamat datang di Masjid Kami. Mari meningkatkan iman dan taqwa.',
+  lt:{ji:'Ust. Ahmad Fauzi',jk:'Ust. Muhammad Ridwan',jm:'Bpk. Ali Siddik',jb:'Bpk. Usman Hakim',ki:'Kas Masjid Bulan Ini: Rp 5.000.000',pi:'Pembangunan Menara: Terkumpul Rp 50.000.000 dari target Rp 200.000.000'},
+  sl:[],
+  au:'',va:80,da:180,
+  mu:{Subuh:'',Dzuhur:'',Ashar:'',Maghrib:'',Isya:''},
+  ja:1,
+  jat:'Marilah memenuhi seruan Allah SWT untuk menunaikan sholat Jumat.',
+  jit:'Dengan meninggalkan segala urusan dunia, marilah khusyuk menunaikan sholat Jumat.',
+  jkh:'12:15',jkt:'Khutbah Jumat sedang berlangsung, dimohon menjaga ketenangan.',
+  hb:[
+    {n:'1 Muharram 1447 H',t:'2025-06-27'},{n:'10 Muharram (Asyura)',t:'2025-07-06'},
+    {n:'12 Rabiul Awal (Maulid Nabi)',t:'2025-09-05'},{n:'27 Rajab (Isra Mi\'raj)',t:'2025-12-20'},
+    {n:'15 Sya\'ban (Nisfu Sya\'ban)',t:'2026-02-03'},{n:'1 Ramadhan 1447 H',t:'2026-02-18'},
+    {n:'17 Ramadhan (Nuzulul Quran)',t:'2026-03-06'},{n:'1 Syawal (Idul Fitri)',t:'2026-03-20'},
+    {n:'10 Dzulhijjah (Idul Adha)',t:'2026-05-27'}
+  ],
+  ri:30,ba:5,bi:3,sd:8,ld:7
+};
+
+const $=id=>document.getElementById(id);
+function toast(m,t='i'){const c=$('tc'),d=document.createElement('div');d.className='tst tst-'+t;d.textContent=m;c.appendChild(d);setTimeout(()=>d.remove(),3500)}
+function p(k,o){return o[k]!==undefined&&o[k]!==''?o[k]:null}
+function jp(v){return typeof v==='string'?JSON.parse(v):v}
+
+/* API Kemenag Wilayah */
+async function ldProv(){try{const r=await fetch(KProv),d=await r.json();const s=$('sProv');s.innerHTML='<option value="">-- Provinsi --</option>';if(d.status&&d.data){d.data.sort((a,b)=>a.lokasi.localeCompare(b.lokasi));d.data.forEach(x=>{s.innerHTML+=`<option value="${x.id}">${x.lokasi}</option>`})}}catch(e){toast('Gagal muat provinsi','e')}}
+async function ldKota(){const v=$('sProv').value,s=$('sKota');s.innerHTML='<option value="">-- Kab/Kota --</option>';$('sKec').innerHTML='<option value="">-- Kec --</option>';if(!v)return;try{const r=await fetch(`${KJad}/kota/${v}`),d=await r.json();if(d.status&&d.data){d.data.sort((a,b)=>a.lokasi.localeCompare(b.lokasi));d.data.forEach(x=>{s.innerHTML+=`<option value="${x.id}">${x.lokasi}</option>`})}}catch(e){}}
+async function ldKec(){const k=$('sKota').value,s=$('sKec');s.innerHTML='<option value="">-- Kec --</option>';if(!k)return;try{const r=await fetch(`${KJad}/kota/${$('sProv').value}`),d=await r.json();const kt=d.data?.find(x=>x.id===k);if(kt)s.innerHTML=`<option value="${kt.id}" data-la="${kt.lat}" data-lo="${kt.lng}">${kt.lokasi}</option>`}catch(e){}}
+function pickWil(){const o=$('sKec').selectedOptions[0];if(o&&o.dataset.la){$('iLat').value=o.dataset.la;$('iLng').value=o.dataset.lo;$('iWil').value=o.textContent}}
+
+async function applyAPI(){const k=$('sKota').value,n=$('sKota').selectedOptions[0]?.textContent;if(!k){toast('Pilih kab/kota dulu','e');return}S.kd=k;S.lok=n||S.lok;$('iWil').value=S.lok;await svSheet();toast('Wilayah: '+S.lok,'s')}
+async function applyManual(){const la=parseFloat($('iLat').value),lo=parseFloat($('iLng').value),n=$('iWil').value;if(isNaN(la)||isNaN(lo)){toast('Lat/Lng tidak valid','e');return}S.lat=la;S.lng=lo;S.lok=n||`${la}, ${lo}`;S.kd='';await svSheet();toast('Lokasi manual diterapkan','s')}
+
+/* Spreadsheet */
+async function ldSheet(){$('tc').innerHTML='<div class="tst tst-i">Memuat data...</div>';try{const r=await fetch(API+'?action=load'),d=await r.json();if(d.status==='success'&&d.data){const sv=d.data;const g=k=>p(k,sv);if(g('nm'))S.nm=g('nm');if(g('al'))S.al=g('al');if(g('lok'))S.lok=g('lok');if(g('lat')!==null)S.lat=parseFloat(g('lat'));if(g('lng')!==null)S.lng=parseFloat(g('lng'));if(g('kd'))S.kd=g('kd');if(g('rt'))S.rt=g('rt');if(g('sl'))S.sl=jp(g('sl'));if(g('au'))S.au=g('au');if(g('va')!==null)S.va=parseInt(g('va'))||80;if(g('da')!==null)S.da=parseInt(g('da'))||180;if(g('iq'))S.iq=jp(g('iq'));if(g('adj'))S.adj=jp(g('adj'));if(g('mu'))S.mu=jp(g('mu'));if(g('lt'))S.lt=jp(g('lt'));if(g('ja')!==null)S.ja=(g('ja')==='true'||g('ja')===true||g('ja')==='1'||g('ja')===1)?1:0;if(g('jat'))S.jat=g('jat');if(g('jit'))S.jit=g('jit');if(g('jkh'))S.jkh=g('jkh');if(g('jkt'))S.jkt=g('jkt');if(g('hb'))S.hb=jp(g('hb'));if(g('ri')!==null)S.ri=parseInt(g('ri'))||30;if(g('ba')!==null)S.ba=parseInt(g('ba'))||5;if(g('bi')!==null)S.bi=parseInt(g('bi'))||3;if(g('sd')!==null)S.sd=parseInt(g('sd'))||8;if(g('ld')!==null)S.ld=parseInt(g('ld'))||7;a2ui();toast('Data dimuat','s')}else{a2ui();toast('Data kosong, gunakan default','i')}}catch(e){console.error(e);a2ui();toast('Gagal muat data','e')};$('tc').innerHTML=''}
+
+async function svSheet(){try{const pl={action:'save',nm:S.nm,al:S.al,lok:S.lok,lat:S.lat,lng:S.lng,kd:S.kd,rt:S.rt,sl:JSON.stringify(S.sl),au:S.au,va:S.va,da:S.da,iq:JSON.stringify(S.iq),adj:JSON.stringify(S.adj),mu:JSON.stringify(S.mu),lt:JSON.stringify(S.lt),ja:S.ja?'1':'0',jat:S.jat,jit:S.jit,jkh:S.jkh,jkt:S.jkt,hb:JSON.stringify(S.hb),ri:S.ri,ba:S.ba,bi:S.bi,sd:S.sd,ld:S.ld};await fetch(API,{method:'POST',body:JSON.stringify(pl)});return true}catch(e){console.error(e);return false}}
+async function svAll(){toast('Menyimpan semua data...','i');const ok=await svSheet();toast(ok?'Semua data tersimpan ke Spreadsheet':'Gagal menyimpan',ok?'s':'e')}
+
+/* Apply state ke form */
+function a2ui(){$('iNM').value=S.nm;$('iAL').value=S.al;$('iLat').value=S.lat;$('iLng').value=S.lng;$('iWil').value=S.lok;$('iRT').value=S.rt;$('iAU').value=S.au;$('iVA').value=S.va;$('iDA').value=S.da;$('iJA').value=S.ja?'1':'0';$('iJAT').value=S.jat;$('iJIT').value=S.jit;$('iJKH').value=S.jkh;$('iJKT').value=S.jkt;$('iRI').value=S.ri;$('iBA').value=S.ba;$('iBI').value=S.bi;$('iSD').value=S.sd;$('iLD').value=S.ld;$('lJI').value=S.lt.ji;$('lJK').value=S.lt.jk;$('lJM').value=S.lt.jm;$('lJB').value=S.lt.jb;$('lKI').value=S.lt.ki;$('lPI').value=S.lt.pi;
+  $('iqG').innerHTML='';SD.forEach(s=>{$('iqG').innerHTML+=`<div class="lti"><label>${s} (menit)</label><input type="number" min="1" max="30" value="${S.iq[s]||5}" id="iq_${s}"></div>`});
+  $('adjG').innerHTML='';SN.forEach(s=>{$('adjG').innerHTML+=`<div class="lti"><label>${s} (menit)</label><input type="number" min="-30" max="30" value="${S.adj[s]||0}" id="adj_${s}"></div>`});
+  $('mutG').innerHTML='';SD.forEach(s=>{$('mutG').innerHTML+=`<div class="lti" style="margin-bottom:6px"><label>Murotal ${s}</label><input id="mut_${s}" value="${S.mu[s]||''}" placeholder="https://..."></div>`});
+  $('slPrev').innerHTML='';S.sl.forEach((u,i)=>{$('slPrev').innerHTML+=`<div class="pi" onclick="rmSl(${i})"><img src="${u}"></div>`});
+  $('hbG').innerHTML='';S.hb.forEach((h,i)=>{$('hbG').innerHTML+=`<div class="lti"><label>Hari Besar ${i+1}</label><input id="hbn_${i}" value="${h.n}" placeholder="Nama hari besar"><input type="date" id="hbt_${i}" value="${h.t}" style="margin-top:4px"></div>`});
+}
+
+/* Simpan per-section */
+async function svMasjid(){S.nm=$('iNM').value;S.al=$('iAL').value;await svSheet();toast('Tersimpan','s')}
+async function svRT(){S.rt=$('iRT').value;await svSheet();toast('Tersimpan','s')}
+async function svIq(){SD.forEach(s=>{S.iq[s]=parseInt($('iq_'+s).value)||5});await svSheet();toast('Tersimpan','s')}
+async function svAdj(){SN.forEach(s=>{S.adj[s]=parseInt($('adj_'+s).value)||0});await svSheet();toast('Tersimpan','s')}
+async function svLT(){S.lt.ji=$('lJI').value;S.lt.jk=$('lJK').value;S.lt.jm=$('lJM').value;S.lt.jb=$('lJB').value;S.lt.ki=$('lKI').value;S.lt.pi=$('lPI').value;await svSheet();toast('Tersimpan','s')}
+async function svAzan(){S.au=$('iAU').value;S.va=parseInt($('iVA').value)||80;S.da=parseInt($('iDA').value)||180;await svSheet();toast('Tersimpan','s')}
+async function svMut(){SD.forEach(s=>{S.mu[s]=$('mut_'+s).value});await svSheet();toast('Tersimpan','s')}
+async function svJum(){S.ja=$('iJA').value==='1'?1:0;S.jat=$('iJAT').value;S.jit=$('iJIT').value;S.jkh=$('iJKH').value;S.jkt=$('iJKT').value;await svSheet();toast('Tersimpan','s')}
+function addHB(){S.hb.push({n:'',t:''});a2ui()}
+async function svHB(){const a=[];let i=0;while($('hbn_'+i)){const n=$('hbn_'+i).value,t=$('hbt_'+i).value;if(n&&t)a.push({n,t});i++}S.hb=a;await svSheet();toast('Tersimpan','s')}
+async function svLain(){S.ri=parseInt($('iRI').value)||30;S.ba=parseInt($('iBA').value)||5;S.bi=parseInt($('iBI').value)||3;S.sd=parseInt($('iSD').value)||8;S.ld=parseInt($('iLD').value)||7;await svSheet();toast('Tersimpan','s')}
+
+/* Slide */
+function upSlide(e){const fs=e.target.files;if(!fs.length)return;let cnt=0;Array.from(fs).forEach(f=>{if(f.size>2*1024*1024){toast(f.name+' terlalu besar (maks 2MB)','e');return}if(S.sl.length>=20){toast('Maksimal 20 slide','e');return}const r=new FileReader();r.onload=function(ev){const img=new Image();img.onload=function(){const cv=document.createElement('canvas');let w=img.width,h=img.height;if(w>1280){h=h*1280/w;w=1280}cv.width=w;cv.height=h;cv.getContext('2d').drawImage(img,0,0,w,h);S.sl.push(cv.toDataURL('image/jpeg',.7));cnt++;if(cnt>=fs.length||S.sl.length>=20){a2ui();svSheet();toast('Slide ditambahkan','s')}};img.src=ev.target.result};r.readAsDataURL(f)});e.target.value=''}
+function rmSl(i){S.sl.splice(i,1);a2ui();svSheet()}
+function clrSl(){S.sl=[];a2ui();svSheet();toast('Semua slide dihapus','s')}
+
+/* Tabs */
+document.addEventListener('DOMContentLoaded',()=>{document.querySelectorAll('.stab').forEach(t=>{t.addEventListener('click',()=>{document.querySelectorAll('.stab').forEach(x=>x.classList.remove('on'));document.querySelectorAll('.tbc').forEach(x=>x.classList.remove('on'));t.classList.add('on');$(t.dataset.t).classList.add('on')})})});
+
+/* Init */
+(async function(){await ldProv();await ldSheet()})();
+</script>
+</body>
+</html>
