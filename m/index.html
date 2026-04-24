@@ -8,8 +8,8 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
 :root{
-  --deep:#020617;--main:#0a1128;--card:#111c3a;--card2:#162040;
-  --bdk:#1a3a6c;--bm:#2563eb;--bb:#3b82f6;--bl:#60a5fa;--bp:#93c5fd;
+  --deep:#020617;--main:#0a1128;--card:#111c3a;
+  --bdk:#1a3a6c;--bm:#2563eb;--bb:#3b82f6;--bl:#60a5fa;
   --gld:#c9a84c;--gll:#e0c068;--glw:rgba(201,168,76,.3);
   --t1:#f0f4ff;--t2:#94a3b8;--t3:#64748b;
   --bd:rgba(59,130,246,.15);--bg:rgba(201,168,76,.25);
@@ -19,366 +19,137 @@
 html,body{height:100%;overflow:hidden;font-family:'Inter',sans-serif;background:var(--deep);color:var(--t1)}
 ::-webkit-scrollbar{width:3px}::-webkit-scrollbar-thumb{background:var(--bdk);border-radius:3px}
 
-.page{display:none;position:absolute;inset:0}.page.on{display:flex;flex-direction:column}
-
-/* ===== SETTINGS ===== */
-.pg-set{background:var(--deep);overflow-y:auto;align-items:center;padding:2vh 2vw}
-.set-wrap{max-width:860px;width:100%}
-.set-wrap h1{font-family:'Playfair Display',serif;font-size:clamp(20px,3vw,32px);color:var(--gld);text-align:center;margin-bottom:.5vh}
-.set-wrap .sub{text-align:center;color:var(--t2);font-size:12px;margin-bottom:2vh}
-.stabs{display:flex;gap:3px;margin-bottom:2vh;flex-wrap:wrap;justify-content:center}
-.stab{padding:6px 10px;border-radius:var(--rs);font-size:11px;cursor:pointer;background:var(--card);border:1px solid var(--bd);color:var(--t2);transition:.2s}
-.stab:hover{color:var(--t1)}.stab.on{background:var(--bm);color:#fff;border-color:transparent}
-.tbc{display:none}.tbc.on{display:block}
-.sec{background:var(--card);border:1px solid var(--bd);border-radius:var(--r);padding:1.5vh 1.2vw;margin-bottom:1.5vh}
-.sec h3{font-family:'Playfair Display',serif;font-size:14px;color:var(--gld);margin-bottom:1vh;display:flex;align-items:center;gap:6px}
-.sr{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:.8vh;align-items:end}
-.sf{flex:1;min-width:120px}
-.sf label{display:block;font-size:10px;color:var(--t3);margin-bottom:2px;font-weight:500}
-.sf input,.sf select,.sf textarea{width:100%;background:var(--deep);border:1px solid var(--bd);border-radius:var(--rs);padding:7px 8px;color:var(--t1);font-size:12px;font-family:inherit;outline:none}
-.sf textarea{resize:vertical;min-height:40px}
-.sf input:focus,.sf select:focus{border-color:var(--bm)}
-.btn{display:inline-flex;align-items:center;gap:5px;padding:7px 14px;border:none;border-radius:var(--rs);font-size:11px;font-weight:600;cursor:pointer;transition:.2s;font-family:inherit;color:#fff}
-.btn-p{background:var(--bm)}.btn-p:hover{background:var(--bb)}
-.btn-g{background:var(--gld)}.btn-g:hover{background:var(--gll)}
-.btn-d{background:#dc2626}.btn-d:hover{background:#b91c1c}
-.btn-o{background:var(--card);color:var(--t2);border:1px solid var(--bd)}.btn-o:hover{color:var(--t1)}
-.btn-f{width:100%;justify-content:center}
-.lti{background:var(--deep);border:1px solid var(--bd);border-radius:var(--rs);padding:8px;margin-bottom:6px}
-.lti label{display:block;font-size:9px;color:var(--t3);margin-bottom:2px}
-.lti input{width:100%;background:var(--card);border:1px solid var(--bd);border-radius:4px;padding:6px;color:var(--t1);font-size:11px;outline:none}
-.ig{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:6px}
-.iu{border:2px dashed var(--bd);border-radius:var(--r);padding:2vh;text-align:center;cursor:pointer;color:var(--t3);font-size:12px;transition:.2s}
-.iu:hover{border-color:var(--bm);color:var(--bl)}
-.ipg{display:flex;flex-wrap:wrap;gap:6px;margin-top:1vh}
-.ipg .pi{position:relative;width:70px;height:44px}
-.ipg .pi img{width:100%;height:100%;object-fit:cover;border-radius:4px;border:1px solid var(--bd)}
-.ipg .pi::after{content:'×';position:absolute;top:-5px;right:-5px;background:#dc2626;color:#fff;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;cursor:pointer}
-.sfoot{text-align:center;padding:2vh 0}
-.fih{display:none}
-
-/* ===== TV LAYOUT (viewport-based grid) ===== */
-.pg-tv{
-  display:none;
-  grid-template-rows:7vh 1fr 6vh;
-  grid-template-columns:32vw 1fr;
+/* ===== TV GRID LAYOUT ===== */
+.tv{
+  display:grid;
+  grid-template-rows:6.5vh 1fr 5.5vh;
+  grid-template-columns:30vw 1fr;
   height:100vh;width:100vw;overflow:hidden;background:var(--deep)
 }
-.pg-tv.on{display:grid}
-
-/* Header spans full width */
-.tv-hd{grid-column:1/-1;display:flex;justify-content:space-between;align-items:center;padding:0 2vw;background:linear-gradient(90deg,var(--card),var(--main));border-bottom:1px solid var(--bg)}
-.mn{font-family:'Playfair Display',serif;font-size:clamp(14px,2.2vw,26px);font-weight:700;color:var(--gld);display:flex;align-items:center;gap:8px}
-.mn i{color:var(--gll);font-size:.85em}
-.jb{display:none;background:#15803d;color:#fff;font-size:9px;font-weight:700;padding:2px 8px;border-radius:10px;letter-spacing:1px}
+/* Header */
+.hd{grid-column:1/-1;display:flex;justify-content:space-between;align-items:center;padding:0 2vw;background:linear-gradient(90deg,var(--card) 0%,var(--main) 100%);border-bottom:1px solid var(--bg)}
+.mn{font-family:'Playfair Display',serif;font-size:clamp(13px,2vw,24px);font-weight:700;color:var(--gld);display:flex;align-items:center;gap:clamp(5px,.7vw,10px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mn i{color:var(--gll);font-size:.85em;flex-shrink:0}
+.jb{display:none;background:#15803d;color:#fff;font-size:clamp(7px,.7vw,10px);font-weight:700;padding:1px 7px;border-radius:10px;letter-spacing:1px;flex-shrink:0}
 .jb.on{display:inline-flex;align-items:center;gap:3px}
-.hd-dt{text-align:right}
-.hd-tm{font-size:clamp(18px,3vw,38px);font-weight:700;letter-spacing:1px;font-variant-numeric:tabular-nums}
-.hd-dt2{font-size:clamp(9px,1vw,13px);color:var(--t2)}
-.hd-hj{font-size:clamp(8px,.9vw,11px);color:var(--gld)}
+.hd-r{text-align:right;flex-shrink:0}
+.hd-tm{font-size:clamp(16px,2.8vw,36px);font-weight:700;letter-spacing:1px;font-variant-numeric:tabular-nums;line-height:1.1}
+.hd-dt{font-size:clamp(8px,.9vw,12px);color:var(--t2);line-height:1.2}
+.hd-hj{font-size:clamp(7px,.75vw,10px);color:var(--gld);line-height:1.2}
 
-/* Kiri: Jadwal */
-.tv-lf{grid-row:2;grid-column:1;display:flex;flex-direction:column;background:var(--main);border-right:1px solid var(--bd);padding:1.2vh .8vw;overflow:hidden}
-.loc-b{font-size:clamp(8px,.8vw,11px);color:var(--t3);text-align:center;padding:.5vh;background:var(--card);border-radius:var(--rs);margin-bottom:1vh;border:1px solid var(--bd)}
-.loc-b i{color:var(--bl)}
-.pl{display:flex;flex-direction:column;gap:clamp(3px,.5vh,6px);flex:1;overflow-y:auto}
-.pi-row{display:flex;align-items:center;gap:clamp(6px,.8vw,12px);padding:clamp(5px,.7vh,10px) clamp(6px,.8vw,12px);border-radius:var(--rs);transition:.3s;border:1px solid transparent;position:relative}
-.pi-row.act{background:linear-gradient(135deg,rgba(37,99,235,.12),rgba(201,168,76,.06));border-color:var(--bg);box-shadow:0 0 15px rgba(37,99,235,.1),0 0 10px var(--glw)}
-.pi-row.pst{opacity:.35}
-.pi-ic{width:clamp(28px,2.5vw,36px);height:clamp(28px,2.5vw,36px);display:flex;align-items:center;justify-content:center;border-radius:50%;background:var(--card);color:var(--t3);font-size:clamp(11px,1vw,14px);flex-shrink:0}
-.pi-row.act .pi-ic{background:linear-gradient(135deg,var(--bm),var(--bdk));color:var(--gld);box-shadow:0 0 10px rgba(37,99,235,.3)}
-.pi-nm{flex:1;font-size:clamp(11px,1.1vw,14px);font-weight:500;color:var(--t2)}
-.pi-row.act .pi-nm{color:var(--t1);font-weight:600}
-.pi-tm{font-size:clamp(13px,1.4vw,19px);font-weight:700;font-variant-numeric:tabular-nums}
-.pi-row.act .pi-tm{color:var(--gld)}
-.pulse{position:absolute;left:clamp(4px,.5vw,8px);top:50%;transform:translateY(-50%);width:6px;height:6px;background:var(--gld);border-radius:50%;animation:pg 2s ease-in-out infinite}
-@keyframes pg{0%,100%{box-shadow:0 0 3px var(--gld),0 0 6px var(--glw)}50%{box-shadow:0 0 6px var(--gld),0 0 14px var(--glw);opacity:.6}}
+/* Kiri Jadwal */
+.lf{grid-row:2;grid-column:1;display:flex;flex-direction:column;background:var(--main);border-right:1px solid var(--bd);padding:clamp(6px,.8vh,12px) clamp(5px,.7vw,12px);overflow:hidden}
+.loc{font-size:clamp(7px,.7vw,10px);color:var(--t3);text-align:center;padding:clamp(3px,.4vh,6px) 0;background:var(--card);border-radius:var(--rs);margin-bottom:clamp(4px,.5vh,8px);border:1px solid var(--bd);flex-shrink:0}
+.loc i{color:var(--bl)}
+.pl{display:flex;flex-direction:column;gap:clamp(2px,.35vh,5px);flex:1;overflow-y:auto}
+.pr{display:flex;align-items:center;gap:clamp(5px,.7vw,10px);padding:clamp(4px,.55vh,9px) clamp(5px,.6vw,10px);border-radius:var(--rs);transition:.3s;border:1px solid transparent;position:relative}
+.pr.act{background:linear-gradient(135deg,rgba(37,99,235,.12),rgba(201,168,76,.06));border-color:var(--bg);box-shadow:0 0 12px rgba(37,99,235,.1),0 0 8px var(--glw)}
+.pr.pst{opacity:.3}
+.p-ic{width:clamp(24px,2.2vw,34px);height:clamp(24px,2.2vw,34px);display:flex;align-items:center;justify-content:center;border-radius:50%;background:var(--card);color:var(--t3);font-size:clamp(10px,.9vw,13px);flex-shrink:0}
+.pr.act .p-ic{background:linear-gradient(135deg,var(--bm),var(--bdk));color:var(--gld);box-shadow:0 0 8px rgba(37,99,235,.3)}
+.p-nm{flex:1;font-size:clamp(10px,1vw,13px);font-weight:500;color:var(--t2);white-space:nowrap}
+.pr.act .p-nm{color:var(--t1);font-weight:600}
+.p-tm{font-size:clamp(12px,1.3vw,18px);font-weight:700;font-variant-numeric:tabular-nums;flex-shrink:0}
+.pr.act .p-tm{color:var(--gld)}
+.pul{position:absolute;left:clamp(3px,.4vw,7px);top:50%;transform:translateY(-50%);width:5px;height:5px;background:var(--gld);border-radius:50%;animation:pg 2s ease-in-out infinite}
+@keyframes pg{0%,100%{box-shadow:0 0 3px var(--gld),0 0 5px var(--glw)}50%{box-shadow:0 0 5px var(--gld),0 0 12px var(--glw);opacity:.5}}
 
-/* Kanan: Slide + Low Third */
-.tv-rt{grid-row:2;grid-column:2;display:flex;flex-direction:column;position:relative;overflow:hidden;background:#000}
+/* Kanan Slide+LT */
+.rt{grid-row:2;grid-column:2;display:flex;flex-direction:column;position:relative;overflow:hidden;background:#000}
 .sl-c{flex:1;position:relative;overflow:hidden}
 .sl-c img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 1.5s}
 .sl-c img.on{opacity:1}
-.sl-ov{position:absolute;inset:0;background:linear-gradient(180deg,transparent 50%,rgba(2,6,23,.6) 100%);pointer-events:none}
-.sl-def{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(ellipse at center,rgba(10,17,40,.6),var(--deep));gap:1.5vh}
-.sl-def i{font-size:clamp(30px,5vw,60px);color:var(--bdk)}
-.sl-def span{font-size:clamp(10px,1vw,14px);color:var(--t3)}
+.sl-ov{position:absolute;inset:0;background:linear-gradient(180deg,transparent 50%,rgba(2,6,23,.55) 100%);pointer-events:none}
+.sl-df{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(ellipse at center,rgba(10,17,40,.5),var(--deep));gap:1.5vh}
+.sl-df i{font-size:clamp(28px,5vw,56px);color:var(--bdk);opacity:.6}
+.sl-df span{font-size:clamp(9px,.9vw,13px);color:var(--t3)}
 .lt-c{position:absolute;bottom:0;left:0;right:0;z-index:2}
-.lt-b{padding:clamp(8px,1vh,14px) clamp(10px,1.5vw,24px);background:linear-gradient(90deg,rgba(17,28,58,.95),rgba(10,17,40,.85));backdrop-filter:blur(8px);border-top:2px solid var(--gld);display:flex;align-items:center;gap:clamp(8px,1vw,14px);transform:translateY(100%);transition:transform .5s;min-height:clamp(42px,5vh,58px)}
+.lt-b{padding:clamp(7px,.8vh,12px) clamp(8px,1.2vw,20px);background:linear-gradient(90deg,rgba(17,28,58,.94),rgba(10,17,40,.84));backdrop-filter:blur(8px);border-top:2px solid var(--gld);display:flex;align-items:center;gap:clamp(6px,.8vw,12px);transform:translateY(100%);transition:transform .5s;min-height:clamp(36px,4.5vh,52px)}
 .lt-b.vis{transform:translateY(0)}
-.lt-ic{width:clamp(30px,2.8vw,38px);height:clamp(30px,2.8vw,38px);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:clamp(12px,1.1vw,15px);flex-shrink:0;background:linear-gradient(135deg,var(--gld),#a08030)}
-.lt-b.tk .lt-ic{background:linear-gradient(135deg,#22c55e,#15803d)}
-.lt-b.tp .lt-ic{background:linear-gradient(135deg,var(--bm),var(--bdk))}
-.lt-lb{font-size:clamp(7px,.7vw,10px);text-transform:uppercase;letter-spacing:2px;color:var(--gld);font-weight:600}
-.lt-vl{font-size:clamp(11px,1.2vw,16px);color:var(--t1);font-weight:500}
+.lt-i{width:clamp(26px,2.5vw,36px);height:clamp(26px,2.5vw,36px);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:clamp(10px,1vw,14px);flex-shrink:0;background:linear-gradient(135deg,var(--gld),#a08030)}
+.lt-b.tk .lt-i{background:linear-gradient(135deg,#22c55e,#15803d)}
+.lt-b.tp .lt-i{background:linear-gradient(135deg,var(--bm),var(--bdk))}
+.lt-l{font-size:clamp(6px,.6vw,9px);text-transform:uppercase;letter-spacing:2px;color:var(--gld);font-weight:600;line-height:1.2}
+.lt-v{font-size:clamp(10px,1.1vw,15px);color:var(--t1);font-weight:500;line-height:1.3}
 
-/* Footer spans full width */
-.tv-ft{grid-column:1/-1;display:flex;align-items:center;border-top:1px solid var(--bg);background:linear-gradient(90deg,var(--card),var(--main));overflow:hidden}
-.cd-f{padding:0 clamp(8px,1vw,16px);font-size:clamp(12px,1.6vw,20px);font-weight:700;color:var(--gld);white-space:nowrap;min-width:clamp(100px,14vw,180px);text-align:center;border-right:1px solid var(--bg);display:flex;align-items:center;gap:6px;height:100%;flex-shrink:0}
+/* Footer */
+.ft{grid-column:1/-1;display:flex;align-items:center;border-top:1px solid var(--bg);background:linear-gradient(90deg,var(--card),var(--main));overflow:hidden}
+.cd-f{padding:0 clamp(6px,.8vw,14px);font-size:clamp(11px,1.4vw,18px);font-weight:700;color:var(--gld);white-space:nowrap;min-width:clamp(80px,12vw,160px);text-align:center;border-right:1px solid var(--bg);display:flex;align-items:center;gap:5px;height:100%;flex-shrink:0}
 .cd-f i{font-size:.8em}
 .rt-w{flex:1;overflow:hidden;height:100%;display:flex;align-items:center}
-.rt-t{white-space:nowrap;animation:mq 35s linear infinite;color:var(--t1);font-size:clamp(11px,1.2vw,15px);padding-left:2vw}
+.rt-t{white-space:nowrap;animation:mq 40s linear infinite;color:var(--t1);font-size:clamp(10px,1.1vw,14px);padding-left:2vw}
 @keyframes mq{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
-.ib-b{padding:0 clamp(6px,.8vw,12px);font-size:clamp(8px,.8vw,11px);color:var(--gll);white-space:nowrap;border-left:1px solid var(--bg);flex-shrink:0;height:100%;display:flex;align-items:center;gap:4px}
+.ib-b{padding:0 clamp(5px,.6vw,10px);font-size:clamp(7px,.7vw,10px);color:var(--gll);white-space:nowrap;border-left:1px solid var(--bg);flex-shrink:0;height:100%;display:flex;align-items:center;gap:3px;overflow:hidden}
 
-/* ===== FULLSCREEN AZAN/IQAMAH ===== */
-.pg-fs{background:#000;z-index:100;justify-content:center;align-items:center;text-align:center}
+/* ===== FULLSCREEN ===== */
+.fs{display:none;position:fixed;inset:0;z-index:100;background:#000;justify-content:center;align-items:center;text-align:center}
+.fs.on{display:flex}
 .fs-bg{position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(10,17,40,.8),rgba(2,6,23,.97))}
-.fs-sh{position:absolute;inset:-50%;width:200%;height:200%;background:conic-gradient(from 0deg,transparent,rgba(201,168,76,.03),transparent,rgba(37,99,235,.03),transparent);animation:rot 20s linear infinite}
+.fs-sh{position:absolute;inset:-50%;width:200%;height:200%;background:conic-gradient(from 0deg,transparent,rgba(201,168,76,.03),transparent,rgba(37,99,235,.03),transparent);animation:rot 20s linear infinite;pointer-events:none}
 @keyframes rot{to{transform:rotate(360deg)}}
-.fs-c{position:relative;z-index:1;max-width:650px;padding:3vh 2vw}
-.fs-ic{font-size:clamp(36px,8vw,72px);color:var(--gld);margin-bottom:2vh;animation:br 3s ease-in-out infinite}
+.fs-c{position:relative;z-index:1;max-width:600px;padding:3vh 2vw}
+.fs-ic{font-size:clamp(32px,7vw,64px);color:var(--gld);margin-bottom:2vh;animation:br 3s ease-in-out infinite}
 @keyframes br{0%,100%{transform:scale(1);opacity:.8}50%{transform:scale(1.08);opacity:1}}
-.fs-tt{font-family:'Playfair Display',serif;font-size:clamp(32px,8vw,64px);font-weight:800;text-shadow:0 0 30px rgba(37,99,235,.3)}
-.fs-st{font-size:clamp(14px,3vw,26px);color:var(--gld);font-weight:600;margin-bottom:2vh}
-.aw{display:flex;align-items:center;justify-content:center;gap:3px;height:3vh;margin:1.5vh 0}
+.fs-tt{font-family:'Playfair Display',serif;font-size:clamp(28px,7vw,56px);font-weight:800;text-shadow:0 0 25px rgba(37,99,235,.3)}
+.fs-st{font-size:clamp(13px,2.5vw,24px);color:var(--gld);font-weight:600;margin-bottom:1.5vh}
+.aw{display:flex;align-items:center;justify-content:center;gap:3px;height:3vh;margin:1vh 0}
 .aw span{width:3px;background:var(--gld);border-radius:2px;animation:wv 1s ease-in-out infinite}
-.aw span:nth-child(1){height:30%;animation-delay:0s}.aw span:nth-child(2){height:60%;animation-delay:.1s}
-.aw span:nth-child(3){height:90%;animation-delay:.2s}.aw span:nth-child(4){height:60%;animation-delay:.3s}
-.aw span:nth-child(5){height:100%;animation-delay:.4s}.aw span:nth-child(6){height:40%;animation-delay:.5s}
-.aw span:nth-child(7){height:70%;animation-delay:.6s}
+.aw span:nth-child(1){height:30%;animation-delay:0s}.aw span:nth-child(2){height:60%;animation-delay:.1s}.aw span:nth-child(3){height:90%;animation-delay:.2s}.aw span:nth-child(4){height:60%;animation-delay:.3s}.aw span:nth-child(5){height:100%;animation-delay:.4s}.aw span:nth-child(6){height:40%;animation-delay:.5s}.aw span:nth-child(7){height:70%;animation-delay:.6s}
 @keyframes wv{0%,100%{transform:scaleY(.3)}50%{transform:scaleY(1)}}
-.fs-msg{font-size:clamp(11px,1.6vw,16px);color:var(--t2);line-height:1.6;padding:1.5vh 2vw;background:rgba(255,255,255,.03);border-radius:var(--r);border:1px solid var(--bd);margin-bottom:3vh}
-.fs-cd{font-size:clamp(40px,12vw,100px);font-weight:800;color:var(--gld);font-variant-numeric:tabular-nums;text-shadow:0 0 50px var(--glw);line-height:1}
-.fs-cl{font-size:clamp(10px,1.2vw,14px);color:var(--t3);margin-top:1vh;text-transform:uppercase;letter-spacing:3px}
-.fs-ex{position:absolute;bottom:2vh;right:2vw;z-index:10}
-.fs-ex .btn{opacity:.25;font-size:10px}.fs-ex .btn:hover{opacity:1}
+.fs-msg{font-size:clamp(10px,1.4vw,15px);color:var(--t2);line-height:1.6;padding:1.2vh 1.5vw;background:rgba(255,255,255,.03);border-radius:var(--r);border:1px solid var(--bd);margin-bottom:2.5vh}
+.fs-cd{font-size:clamp(36px,10vw,90px);font-weight:800;color:var(--gld);font-variant-numeric:tabular-nums;text-shadow:0 0 40px var(--glw);line-height:1}
+.fs-cl{font-size:clamp(9px,1vw,13px);color:var(--t3);margin-top:1vh;text-transform:uppercase;letter-spacing:3px}
+.fs-ex{position:absolute;bottom:1.5vh;right:1.5vw;z-index:10}
+.fs-ex button{opacity:.2;font-size:10px;padding:5px 12px;border:1px solid rgba(255,255,255,.1);border-radius:4px;background:rgba(0,0,0,.5);color:#fff;cursor:pointer;transition:.2s}
+.fs-ex button:hover{opacity:1}
 
 /* Mute */
-.mu{position:fixed;bottom:7vh;right:1vw;z-index:200;width:32px;height:32px;border-radius:50%;background:var(--card);border:1px solid var(--bd);color:var(--t2);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:12px;transition:.2s}
+.mu{position:fixed;bottom:6.5vh;right:.8vw;z-index:200;width:28px;height:28px;border-radius:50%;background:var(--card);border:1px solid var(--bd);color:var(--t2);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:11px;transition:.2s}
 .mu:hover{color:var(--gld);border-color:var(--bg)}
 
-/* Loading */
-.ld{position:fixed;inset:0;background:var(--deep);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;transition:opacity .4s}
-.ld.hid{opacity:0;pointer-events:none}
-.ld-sp{width:32px;height:32px;border:3px solid var(--bd);border-top-color:var(--gld);border-radius:50%;animation:sp 1s linear infinite}
-@keyframes sp{to{transform:rotate(360deg)}}
-.ld-tx{color:var(--t2);font-size:12px}
+/* Link admin */
+.adm{position:fixed;bottom:6.5vh;left:.8vw;z-index:200;font-size:9px;color:var(--t3);opacity:0;transition:.3s;text-decoration:none}
+.adm:hover{opacity:1;color:var(--bl)}
 
-/* Toast */
-.tc{position:fixed;top:10px;right:10px;z-index:10000;display:flex;flex-direction:column;gap:5px}
-.tst{padding:8px 14px;border-radius:var(--rs);font-size:11px;color:#fff;animation:ti .3s;box-shadow:0 4px 20px rgba(0,0,0,.4)}
-.tst-s{background:#15803d}.tst-e{background:#dc2626}.tst-i{background:var(--bdk)}
-@keyframes ti{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
+/* Loading */
+.ld{position:fixed;inset:0;background:var(--deep);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;transition:opacity .5s}
+.ld.hid{opacity:0;pointer-events:none}
+.ld-sp{width:28px;height:28px;border:3px solid var(--bd);border-top-color:var(--gld);border-radius:50%;animation:sp 1s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.ld-t{color:var(--t2);font-size:11px}
 </style>
 </head>
 <body>
 
-<div class="ld" id="ld"><div class="ld-sp"></div><div class="ld-tx">Memuat sistem...</div></div>
-<div class="tc" id="tc"></div>
+<div class="ld" id="ld"><div class="ld-sp"></div><div class="ld-t">Memuat sistem jadwal sholat...</div></div>
 
-<!-- ==================== SETTINGS ==================== -->
-<div class="page pg-set" id="pgSet">
-<div class="set-wrap">
-  <h1><i class="fas fa-cog"></i> Pengaturan TV Sholat</h1>
-  <p class="sub">Konfigurasi lengkap tampilan TV Jadwal Sholat Masjid</p>
-  <div class="stabs" id="stabs">
-    <div class="stab on" data-t="t1">Wilayah</div>
-    <div class="stab" data-t="t2">Masjid</div>
-    <div class="stab" data-t="t3">Jadwal</div>
-    <div class="stab" data-t="t4">Iqamah</div>
-    <div class="stab" data-t="t5">Info Bar</div>
-    <div class="stab" data-t="t6">Slide</div>
-    <div class="stab" data-t="t7">Azan</div>
-    <div class="stab" data-t="t8">Jumat</div>
-    <div class="stab" data-t="t9">Hari Besar</div>
-    <div class="stab" data-t="t10">Lainnya</div>
+<!-- TV Layout -->
+<div class="tv" id="tvGrid">
+  <div class="hd">
+    <div class="mn"><i class="fas fa-mosque"></i><span id="tvNM">Masjid</span><span class="jb" id="tvJB"><i class="fas fa-star"></i> JUMAT</span></div>
+    <div class="hd-r"><div class="hd-tm" id="tvTM">00:00:00</div><div class="hd-dt" id="tvDT">-</div><div class="hd-hj" id="tvHJ"></div></div>
   </div>
-
-  <!-- T1 Wilayah -->
-  <div class="tbc on" id="t1">
-    <div class="sec">
-      <h3><i class="fas fa-map-marker-alt"></i> Pilih Wilayah API Kemenag</h3>
-      <div class="sr">
-        <div class="sf"><label>Provinsi</label><select id="sProv" onchange="ldKota()"><option value="">Muat Provinsi...</option></select></div>
-        <div class="sf"><label>Kab/Kota</label><select id="sKota" onchange="ldKec()"><option value="">Pilih Kab/Kota</option></select></div>
-      </div>
-      <div class="sr">
-        <div class="sf"><label>Kecamatan</label><select id="sKec" onchange="pickWil()"><option value="">Pilih Kecamatan</option></select></div>
-        <div class="sf" style="flex:0;min-width:auto"><label>&nbsp;</label><button class="btn btn-p" onclick="applyAPI()"><i class="fas fa-check"></i> Terapkan</button></div>
-      </div>
-    </div>
-    <div class="sec">
-      <h3><i class="fas fa-sliders-h"></i> Manual Lokasi & Derajat</h3>
-      <div class="sr">
-        <div class="sf"><label>Latitude</label><input type="number" step="0.0001" id="iLat" placeholder="-3.4500"></div>
-        <div class="sf"><label>Longitude</label><input type="number" step="0.0001" id="iLng" placeholder="102.6167"></div>
-        <div class="sf"><label>Nama Wilayah</label><input id="iWil" placeholder="Rejang Lebong"></div>
-      </div>
-      <button class="btn btn-p" onclick="applyManual()"><i class="fas fa-check"></i> Terapkan Manual</button>
-    </div>
-  </div>
-
-  <!-- T2 Masjid -->
-  <div class="tbc" id="t2">
-    <div class="sec">
-      <h3><i class="fas fa-mosque"></i> Informasi Masjid</h3>
-      <div class="sr"><div class="sf"><label>Nama Masjid</label><input id="iNM"></div></div>
-      <div class="sr"><div class="sf"><label>Alamat</label><input id="iAL"></div></div>
-      <button class="btn btn-g" onclick="svMasjid()"><i class="fas fa-save"></i> Simpan</button>
-    </div>
-    <div class="sec">
-      <h3><i class="fas fa-scroll"></i> Running Teks</h3>
-      <div class="sf"><label>Teks Berjalan</label><textarea id="iRT"></textarea></div>
-      <button class="btn btn-p" onclick="svRT()" style="margin-top:6px"><i class="fas fa-save"></i> Simpan</button>
-    </div>
-  </div>
-
-  <!-- T3 Jadwal -->
-  <div class="tbc" id="t3">
-    <div class="sec">
-      <h3><i class="fas fa-clock"></i> Adjust Waktu Sholat (menit)</h3>
-      <p style="font-size:10px;color:var(--t3);margin-bottom:1vh">Positif=tambah, Negatif=kurangi dari waktu API</p>
-      <div class="ig" id="adjG"></div>
-      <button class="btn btn-g" onclick="svAdj()" style="margin-top:1vh"><i class="fas fa-save"></i> Simpan</button>
-    </div>
-  </div>
-
-  <!-- T4 Iqamah -->
-  <div class="tbc" id="t4">
-    <div class="sec">
-      <h3><i class="fas fa-hourglass-half"></i> Durasi Iqamah (menit setelah azan)</h3>
-      <div class="ig" id="iqG"></div>
-      <button class="btn btn-g" onclick="svIq()" style="margin-top:1vh"><i class="fas fa-save"></i> Simpan</button>
-    </div>
-  </div>
-
-  <!-- T5 Low Third -->
-  <div class="tbc" id="t5">
-    <div class="sec">
-      <h3><i class="fas fa-user-tie"></i> Petugas Jumat</h3>
-      <div class="lti"><label>Imam</label><input id="lJI"></div>
-      <div class="lti"><label>Khatib</label><input id="lJK"></div>
-      <div class="lti"><label>Muadzin</label><input id="lJM"></div>
-      <div class="lti"><label>Bilal</label><input id="lJB"></div>
-      <button class="btn btn-g" onclick="svLT()"><i class="fas fa-save"></i> Simpan</button>
-    </div>
-    <div class="sec">
-      <h3><i class="fas fa-coins"></i> Kas Keuangan</h3>
-      <div class="lti"><label>Informasi Kas</label><input id="lKI"></div>
-      <button class="btn btn-g" onclick="svLT()"><i class="fas fa-save"></i> Simpan</button>
-    </div>
-    <div class="sec">
-      <h3><i class="fas fa-building"></i> Kas Pembangunan</h3>
-      <div class="lti"><label>Informasi Pembangunan</label><input id="lPI"></div>
-      <button class="btn btn-g" onclick="svLT()"><i class="fas fa-save"></i> Simpan</button>
-    </div>
-  </div>
-
-  <!-- T6 Slide -->
-  <div class="tbc" id="t6">
-    <div class="sec">
-      <h3><i class="fas fa-images"></i> Slide Foto (maks 20, maks 2MB/foto)</h3>
-      <div class="iu" onclick="$('fSl').click()"><i class="fas fa-cloud-upload-alt" style="font-size:24px;display:block;margin-bottom:4px"></i>Klik untuk upload foto</div>
-      <input type="file" class="fih" id="fSl" accept="image/*" multiple onchange="upSlide(event)">
-      <div class="ipg" id="slPrev"></div>
-      <button class="btn btn-d" onclick="clrSlide()" style="margin-top:6px"><i class="fas fa-trash"></i> Hapus Semua</button>
-    </div>
-  </div>
-
-  <!-- T7 Azan/Murotal -->
-  <div class="tbc" id="t7">
-    <div class="sec">
-      <h3><i class="fas fa-volume-up"></i> Pengaturan Azan</h3>
-      <div class="sr"><div class="sf"><label>URL Audio Azan (MP3)</label><input id="iAU"></div></div>
-      <div class="sr">
-        <div class="sf"><label>Volume (%)</label><input type="number" min="0" max="100" id="iVA"></div>
-        <div class="sf"><label>Durasi Azan (detik)</label><input type="number" min="10" max="600" id="iDA"></div>
-      </div>
-      <button class="btn btn-p" onclick="svAzan()"><i class="fas fa-save"></i> Simpan</button>
-      <button class="btn btn-o" onclick="tstAudio()" style="margin-left:4px"><i class="fas fa-play"></i> Test Beep</button>
-    </div>
-    <div class="sec">
-      <h3><i class="fas fa-music"></i> Auto Murotal per Sholat</h3>
-      <p style="font-size:10px;color:var(--t3);margin-bottom:1vh">Diputar 10 menit sebelum azan, berhenti 30 detik sebelum azan</p>
-      <div id="mutG"></div>
-      <button class="btn btn-g" onclick="svMut()" style="margin-top:1vh"><i class="fas fa-save"></i> Simpan</button>
-    </div>
-  </div>
-
-  <!-- T8 Jumat -->
-  <div class="tbc" id="t8">
-    <div class="sec">
-      <h3><i class="fas fa-calendar-week"></i> Mode Sholat Jumat</h3>
-      <div class="sr"><div class="sf"><label>Aktifkan</label><select id="iJA"><option value="1">Ya (Otomatis Hari Jumat)</option><option value="0">Tidak</option></select></div></div>
-      <div class="sr"><div class="sf"><label>Teks Layar Azan Jumat</label><textarea id="iJAT"></textarea></div></div>
-      <div class="sr"><div class="sf"><label>Teks Layar Iqamah Jumat</label><textarea id="iJIT"></textarea></div></div>
-      <div class="sr">
-        <div class="sf"><label>Waktu Khutbah (HH:MM)</label><input type="time" id="iJKH"></div>
-        <div class="sf"><label>Teks Layar Khutbah</label><input id="iJKT"></div>
-      </div>
-      <button class="btn btn-g" onclick="svJum()"><i class="fas fa-save"></i> Simpan</button>
-    </div>
-  </div>
-
-  <!-- T9 Hari Besar -->
-  <div class="tbc" id="t9">
-    <div class="sec">
-      <h3><i class="fas fa-star-and-crescent"></i> Hitung Mundur Hari Besar Islam</h3>
-      <div id="hbG"></div>
-      <button class="btn btn-p" onclick="addHB()" style="margin-top:6px"><i class="fas fa-plus"></i> Tambah</button>
-      <button class="btn btn-g" onclick="svHB()" style="margin-top:6px;margin-left:4px"><i class="fas fa-save"></i> Simpan</button>
-    </div>
-  </div>
-
-  <!-- T10 Lainnya -->
-  <div class="tbc" id="t10">
-    <div class="sec">
-      <h3><i class="fas fa-cogs"></i> Pengaturan Umum</h3>
-      <div class="sr">
-        <div class="sf"><label>Refresh Data (detik)</label><input type="number" min="10" max="300" id="iRI"></div>
-        <div class="sf"><label>Beep Azan (detik)</label><input type="number" min="1" max="30" id="iBA"></div>
-        <div class="sf"><label>Beep Iqamah (detik)</label><input type="number" min="1" max="30" id="iBI"></div>
-      </div>
-      <div class="sr">
-        <div class="sf"><label>Durasi Slide (detik)</label><input type="number" min="3" max="60" id="iSD"></div>
-        <div class="sf"><label>Durasi Low Third (detik)</label><input type="number" min="3" max="60" id="iLD"></div>
-      </div>
-      <button class="btn btn-g" onclick="svLain()"><i class="fas fa-save"></i> Simpan</button>
-    </div>
-    <div class="sec">
-      <h3><i class="fas fa-database"></i> Spreadsheet</h3>
-      <button class="btn btn-p" onclick="ldSheet()"><i class="fas fa-download"></i> Muat Ulang</button>
-      <button class="btn btn-g" onclick="svAll()" style="margin-left:4px"><i class="fas fa-upload"></i> Simpan Semua</button>
-      <p style="font-size:9px;color:var(--t3);margin-top:4px">ID: 1m5gZS8_MoogG9q3Zi8xlQGb86IX6ujIUcf7rWsRZwEk</p>
-    </div>
-  </div>
-
-  <div class="sfoot"><button class="btn btn-p" onclick="goTV()" style="padding:10px 30px;font-size:14px"><i class="fas fa-tv"></i> Buka Tampilan TV</button></div>
-</div>
-</div>
-
-<!-- ==================== TV ==================== -->
-<div class="pg-tv" id="pgTV">
-  <div class="tv-hd">
-    <div class="mn"><i class="fas fa-mosque"></i><span id="tvNM">Masjid Agung</span><span class="jb" id="tvJB"><i class="fas fa-star"></i> JUMAT</span></div>
-    <div class="hd-dt"><div class="hd-tm" id="tvTM">00:00:00</div><div class="hd-dt2" id="tvDT">-</div><div class="hd-hj" id="tvHJ">-</div></div>
-  </div>
-  <div class="tv-lf">
-    <div class="loc-b"><i class="fas fa-map-marker-alt"></i> <span id="tvLK">Rejang Lebong</span></div>
+  <div class="lf">
+    <div class="loc"><i class="fas fa-map-marker-alt"></i> <span id="tvLK">-</span></div>
     <div class="pl" id="pList"></div>
   </div>
-  <div class="tv-rt">
+  <div class="rt">
     <div class="sl-c" id="slC">
-      <div class="sl-def" id="slDef"><i class="fas fa-mosque"></i><span>Masjid Kami</span></div>
+      <div class="sl-df" id="slDf"><i class="fas fa-mosque"></i><span>Masjid Kami</span></div>
+      <div class="sl-ov"></div>
     </div>
-    <div class="lt-c">
-      <div class="lt-b" id="ltB">
-        <div class="lt-ic"><i class="fas fa-info"></i></div>
-        <div><div class="lt-lb">INFO</div><div class="lt-vl" id="ltV">-</div></div>
-      </div>
-    </div>
+    <div class="lt-c"><div class="lt-b" id="ltB"><div class="lt-i"><i class="fas fa-info"></i></div><div><div class="lt-l">INFO</div><div class="lt-v" id="ltV">-</div></div></div></div>
   </div>
-  <div class="tv-ft">
+  <div class="ft">
     <div class="cd-f"><i class="fas fa-hourglass-half"></i><span id="cdT">--:--:--</span></div>
     <div class="rt-w"><div class="rt-t" id="rtT">Selamat datang</div></div>
-    <div class="ib-b"><i class="fas fa-star-and-crescent"></i><span id="ibT">-</span></div>
+    <div class="ib-b"><i class="fas fa-star-and-crescent"></i><span id="ibT"></span></div>
   </div>
 </div>
 
-<!-- ==================== AZAN FULLSCREEN ==================== -->
-<div class="page pg-fs" id="pgAz">
-  <div class="fs-sh"></div><div class="fs-bg"></div><div class="fs-sh"></div>
+<!-- Fullscreen Azan -->
+<div class="fs" id="fsAz">
+  <div class="fs-bg"></div><div class="fs-sh"></div>
   <div class="fs-c">
     <div class="fs-ic"><i class="fas fa-mosque"></i></div>
     <div class="fs-tt" id="azTT">AZAN</div>
@@ -388,12 +159,12 @@ html,body{height:100%;overflow:hidden;font-family:'Inter',sans-serif;background:
     <div class="fs-cd" id="azCD">03:00</div>
     <div class="fs-cl" id="azCL">Sisa Waktu Azan</div>
   </div>
-  <div class="fs-ex"><button class="btn btn-d" onclick="closeFS()"><i class="fas fa-times"></i> Tutup</button></div>
+  <div class="fs-ex"><button onclick="closeFS()"><i class="fas fa-times"></i> Tutup</button></div>
 </div>
 
-<!-- ==================== IQAMAH FULLSCREEN ==================== -->
-<div class="page pg-fs" id="pgIq">
-  <div class="fs-sh"></div><div class="fs-bg"></div><div class="fs-sh"></div>
+<!-- Fullscreen Iqamah -->
+<div class="fs" id="fsIq">
+  <div class="fs-bg"></div><div class="fs-sh"></div>
   <div class="fs-c">
     <div class="fs-ic"><i class="fas fa-person-praying"></i></div>
     <div class="fs-tt">IQAMAH</div>
@@ -403,16 +174,16 @@ html,body{height:100%;overflow:hidden;font-family:'Inter',sans-serif;background:
     <div class="fs-cd" id="iqCD">00:10</div>
     <div class="fs-cl">Sholat Segera Dimulai</div>
   </div>
-  <div class="fs-ex"><button class="btn btn-d" onclick="closeFS()"><i class="fas fa-times"></i> Tutup</button></div>
+  <div class="fs-ex"><button onclick="closeFS()"><i class="fas fa-times"></i> Tutup</button></div>
 </div>
 
 <button class="mu" id="muB" onclick="togMute()"><i class="fas fa-volume-up"></i></button>
+<a href="admin.html" class="adm"><i class="fas fa-cog"></i> Admin</a>
 <audio id="aAz" preload="none"></audio>
 <audio id="aMu" preload="none" loop></audio>
 
 <script>
 const API='https://script.google.com/macros/s/AKfycbzMe-lngR0znX_CMuD0-I9Dq4lVe-c78OwYf2Mhqa8pM_fuyFop5M5qQas2UC_Hqczd-w/exec';
-const KProv='https://api.myquran.com/v2/sholat/kota/semua';
 const KJad='https://api.myquran.com/v2/sholat/jadwal';
 const SN=['Imsak','Subuh','Terbit','Dhuha','Dzuhur','Ashar','Maghrib','Isya'];
 const SI={Imsak:'fa-moon',Subuh:'fa-cloud-sun',Terbit:'fa-sun',Dhuha:'fa-sun',Dzuhur:'fa-sun',Ashar:'fa-cloud-sun',Maghrib:'fa-moon',Isya:'fa-star'};
@@ -420,39 +191,30 @@ const SD=['Subuh','Dzuhur','Ashar','Maghrib','Isya'];
 const DI={Subuh:10,Dzuhur:5,Ashar:5,Maghrib:7,Isya:5};
 const DA={Imsak:0,Subuh:0,Terbit:0,Dhuha:0,Dzuhur:0,Ashar:0,Maghrib:0,Isya:0};
 
+/* State default */
 let S={
   nm:'Masjid Agung',al:'',lok:'Kabupaten Rejang Lebong',
   lat:-3.45,lng:102.6167,kd:'0807',
   jd:{},hij:'',mas:'',
   iq:{...DI},adj:{...DA},
-  rt:'Selamat datang di Masjid Kami. Mari meningkatkan iman dan taqwa.',
-  lt:{ji:'Ust. Ahmad Fauzi',jk:'Ust. Muhammad Ridwan',jm:'Bpk. Ali Siddik',jb:'Bpk. Usman Hakim',ki:'Kas Masjid Bulan Ini: Rp 5.000.000',pi:'Pembangunan Menara: Terkumpul Rp 50.000.000 dari target Rp 200.000.000'},
+  rt:'Selamat datang di Masjid Kami.',
+  lt:{ji:'',jk:'',jm:'',jb:'',ki:'',pi:''},
   sl:[],
   au:'',va:80,da:180,
   mu:{Subuh:'',Dzuhur:'',Ashar:'',Maghrib:'',Isya:''},
-  ja:1,
-  jat:'Marilah memenuhi seruan Allah SWT untuk menunaikan sholat Jumat.',
-  jit:'Dengan meninggalkan segala urusan dunia, marilah khusyuk menunaikan sholat Jumat.',
-  jkh:'12:15',jkt:'Khutbah Jumat sedang berlangsung, dimohon menjaga ketenangan.',
-  hb:[
-    {n:'1 Muharram 1447 H',t:'2025-06-27'},{n:'10 Muharram (Asyura)',t:'2025-07-06'},
-    {n:'12 Rabiul Awal (Maulid Nabi)',t:'2025-09-05'},{n:'27 Rajab (Isra Mi\'raj)',t:'2025-12-20'},
-    {n:'15 Sya\'ban (Nisfu Sya\'ban)',t:'2026-02-03'},{n:'1 Ramadhan 1447 H',t:'2026-02-18'},
-    {n:'17 Ramadhan (Nuzulul Quran)',t:'2026-03-06'},{n:'1 Syawal (Idul Fitri)',t:'2026-03-20'},
-    {n:'10 Dzulhijjah (Idul Adha)',t:'2026-05-27'}
-  ],
-  ri:30,ba:5,bi:3,sd:8,ld:7
+  ja:1,jat:'',jit:'',jkh:'',jkt:'',
+  hb:[],ri:30,ba:5,bi:3,sd:8,ld:7
 };
+
 let jf=false,aCtx=null,muted=false,curFS=null,fsTmr=null;
 let slI=0,slT=null,ltI=0,ltT=null,lastAC='',rfTmr=null,muPlay=false,muTmr=null,lastHash='';
 
 const $=id=>document.getElementById(id);
-function toast(m,t='i'){const c=$('tc'),d=document.createElement('div');d.className='tst tst-'+t;d.textContent=m;c.appendChild(d);setTimeout(()=>d.remove(),3500)}
-function fmtS(s){s=Math.max(0,Math.floor(s));const m=Math.floor(s/60),h=Math.floor(m/60);if(h>0)return`${String(h).padStart(2,'0')}:${String(m%60).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;return`${String(m).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`}
+function fmtS(s){s=Math.max(0,Math.floor(s));const m=Math.floor(s/60),h=Math.floor(m/60);return h>0?`${String(h).padStart(2,'0')}:${String(m%60).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`:`${String(m).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`}
 function today(){const d=new Date();return`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
 function nowS(){const d=new Date();return d.getHours()*3600+d.getMinutes()*60+d.getSeconds()}
 function t2s(t){if(!t||!t.includes(':'))return 0;const[h,m]=t.split(':').map(Number);return h*3600+m*60}
-function adjT(t,k){const a=S.adj[k]||0;const s=t2s(t)+a*60;const h=Math.floor(s/3600)%24;const m=Math.floor((s%3600)/60);return`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`}
+function adjT(t,k){const a=S.adj[k]||0,s=t2s(t)+a*60,h=Math.floor(s/3600)%24,m=Math.floor((s%3600)/60);return`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`}
 function isJum(){return new Date().getDay()===5}
 
 /* Audio */
@@ -460,103 +222,229 @@ function gAC(){if(!aCtx)aCtx=new(window.AudioContext||window.webkitAudioContext)
 function beep(dur){if(muted)return;try{const c=gAC(),o=c.createOscillator(),g=c.createGain();o.type='sine';o.frequency.value=880;g.gain.value=.12;o.connect(g);g.connect(c.destination);const t=c.currentTime;for(let i=0;i<Math.floor(dur);i++){g.gain.setValueAtTime(.12,t+i);g.gain.setValueAtTime(0,t+i+.5)}o.start(t);o.stop(t+dur)}catch(e){}}
 function playAzA(){if(muted||!S.au)return;const a=$('aAz');a.src=S.au;a.volume=(S.va||80)/100;a.play().catch(()=>{})}
 function stopAzA(){$('aAz').pause();$('aAz').currentTime=0}
-function playMut(s){if(muted)return;const u=S.mu[s];if(!u)return;stopMut();const a=$('aMu');a.src=u;a.volume=.35;a.play().catch(()=>{});muPlay=true}
+function playMut(s){if(muted)return;const u=S.mu[s];if(!u)return;stopMut();const a=$('aMu');a.src=u;a.volume=.3;a.play().catch(()=>{});muPlay=true}
 function stopMut(){$('aMu').pause();$('aMu').currentTime=0;muPlay=false;if(muTmr){clearTimeout(muTmr);muTmr=null}}
 function togMute(){muted=!muted;$('muB').innerHTML=muted?'<i class="fas fa-volume-mute"></i>':'<i class="fas fa-volume-up"></i>';$('aAz').muted=muted;$('aMu').muted=muted;if(muted)stopMut()}
-function tstAudio(){beep(2);toast('Beep test','i')}
 
-/* API Kemenag */
-async function ldProv(){try{const r=await fetch(KProv),d=await r.json();const s=$('sProv');s.innerHTML='<option value="">-- Provinsi --</option>';if(d.status&&d.data){d.data.sort((a,b)=>a.lokasi.localeCompare(b.lokasi));d.data.forEach(p=>{s.innerHTML+=`<option value="${p.id}">${p.lokasi}</option>`})}}catch(e){toast('Gagal muat provinsi','e')}}
-async function ldKota(){const p=$('sProv').value,s=$('sKota');s.innerHTML='<option value="">-- Kab/Kota --</option>';$('sKec').innerHTML='<option value="">-- Kecamatan --</option>';if(!p)return;try{const r=await fetch(`${KJad}/kota/${p}`),d=await r.json();if(d.status&&d.data){d.data.sort((a,b)=>a.lokasi.localeCompare(b.lokasi));d.data.forEach(k=>{s.innerHTML+=`<option value="${k.id}">${k.lokasi}</option>`})}}catch(e){}}
-async function ldKec(){const k=$('sKota').value,s=$('sKec');s.innerHTML='<option value="">-- Kecamatan --</option>';if(!k)return;try{const r=await fetch(`${KJad}/kota/${$('sProv').value}`),d=await r.json();const kt=d.data?.find(x=>x.id===k);if(kt)s.innerHTML=`<option value="${kt.id}" data-la="${kt.lat}" data-lo="${kt.lng}">${kt.lokasi}</option>`}catch(e){}}
-function pickWil(){const o=$('sKec').selectedOptions[0];if(o&&o.dataset.la){$('iLat').value=o.dataset.la;$('iLng').value=o.dataset.lo;$('iWil').value=o.textContent}}
-async function applyAPI(){const k=$('sKota').value,n=$('sKota').selectedOptions[0]?.textContent;if(!k){toast('Pilih kab/kota','e');return}S.kd=k;S.lok=n;$('iWil').value=n;toast('Wilayah: '+n,'s');await svSheet();await fJad()}
-function applyManual(){const la=parseFloat($('iLat').value),lo=parseFloat($('iLng').value),n=$('iWil').value;if(isNaN(la)||isNaN(lo)){toast('Lat/Lng tidak valid','e');return}S.lat=la;S.lng=lo;S.lok=n||`${la}, ${lo}`;S.kd='';toast('Lokasi manual diterapkan','s');svSheet();fJad()}
+/* Fetch jadwal */
+async function fJad(){
+  if(S.kd){
+    try{
+      const r=await fetch(`${KJad}/${S.kd}/${today()}`),d=await r.json();
+      if(d.status&&d.data){
+        const j=d.data.jadwal;
+        S.jd={Imsak:j.imsak,Subuh:j.subuh,Terbit:j.terbit,Dhuha:j.dhuha,Dzuhur:j.dzuhur,Ashar:j.ashar,Maghrib:j.maghrib,Isya:j.isya};
+        S.hij=d.data.tanggal+' '+(d.data.hijri?.tanggal||'');
+        S.mas=d.data.tanggal;
+        jf=true;rPL();return;
+      }
+    }catch(e){console.warn('API jadwal gagal:',e)}
+  }
+  hitLokal();rPL();
+}
 
-/* Jadwal */
-async function fJad(){if(S.kd){try{const r=await fetch(`${KJad}/${S.kd}/${today()}`),d=await r.json();if(d.status&&d.data){S.jd={Imsak:d.data.jadwal.imsak,Subuh:d.data.jadwal.subuh,Terbit:d.data.jadwal.terbit,Dhuha:d.data.jadwal.dhuha,Dzuhur:d.data.jadwal.dzuhur,Ashar:d.data.jadwal.ashar,Maghrib:d.data.jadwal.maghrib,Isya:d.data.jadwal.isya};S.hij=d.data.tanggal+' '+(d.data.hijri?.tanggal||'');S.mas=d.data.tanggal;jf=true;rPL();return}}catch(e){toast('API gagal, hitung lokal','e')}}hitLokal();rPL()}
-function hitLokal(){const d=new Date(),dy=Math.floor((d-new Date(d.getFullYear(),0,0))/864e5),dc=-23.45*Math.cos(2*Math.PI/365*(dy+10)),lr=S.lat*Math.PI/180,dr=dc*Math.PI/180,ch=(-.833-Math.sin(lr)*Math.sin(dr))/(Math.cos(lr)*Math.cos(dr)),HA=(ch>1||ch<-1)?12:Math.acos(ch)*180/Math.PI/15,n=12-(S.lng+105)/15,f=h=>{h=((h%24)+24)%24;return`${String(Math.floor(h)).padStart(2,'0')}:${String(Math.round((h%1)*60)).padStart(2,'0')}`};S.jd={Imsak:f(n-HA-.133),Subuh:f(n-HA-.833),Terbit:f(n-HA),Dhuha:f(n-HA+.5),Dzuhur:f(n+.017),Ashar:f(n+HA),Maghrib:f(n+HA),Isya:f(n+HA+.833)};S.mas=new Date().toLocaleDateString('id-ID',{weekday:'long',year:'numeric',month:'long',day:'numeric'});S.hij='';jf=true}
+function hitLokal(){
+  const d=new Date(),dy=Math.floor((d-new Date(d.getFullYear(),0,0))/864e5);
+  const dc=-23.45*Math.cos(2*Math.PI/365*(dy+10)),lr=S.lat*Math.PI/180,dr=dc*Math.PI/180;
+  const ch=(-.833-Math.sin(lr)*Math.sin(dr))/(Math.cos(lr)*Math.cos(dr));
+  const HA=(ch>1||ch<-1)?12:Math.acos(ch)*180/Math.PI/15;
+  const n=12-(S.lng+105)/15;
+  const f=h=>{h=((h%24)+24)%24;return`${String(Math.floor(h)).padStart(2,'0')}:${String(Math.round((h%1)*60)).padStart(2,'0')}`};
+  S.jd={Imsak:f(n-HA-.133),Subuh:f(n-HA-.833),Terbit:f(n-HA),Dhuha:f(n-HA+.5),Dzuhur:f(n+.017),Ashar:f(n+HA),Maghrib:f(n+HA),Isya:f(n+HA+.833)};
+  S.mas=new Date().toLocaleDateString('id-ID',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  S.hij='';jf=true;
+}
 
-/* Render Prayer List */
-function rPL(){const c=$('pList');c.innerHTML='';const ns=nowS();let nx=null;SN.forEach(nm=>{const raw=S.jd[nm];if(!raw)return;const tm=adjT(raw,nm),sc=t2s(tm),isN=!nx&&sc>ns;if(isN)nx={nm,tm,sc};const p=sc<=ns&&!isN;const d=document.createElement('div');d.className='pi-row'+(isN?' act':'')+(p?' pst':'');d.innerHTML=`${isN?'<div class="pulse"></div>':''}<div class="pi-ic"><i class="fas ${SI[nm]}"></i></div><div class="pi-nm">${nm}</div><div class="pi-tm">${tm}</div>`;c.appendChild(d)});updCD(nx)}
+/* Render jadwal */
+function rPL(){
+  const c=$('pList');c.innerHTML='';const ns=nowS();let nx=null;
+  SN.forEach(nm=>{
+    const raw=S.jd[nm];if(!raw)return;
+    const tm=adjT(raw,nm),sc=t2s(tm),isN=!nx&&sc>ns;
+    if(isN)nx={nm,tm,sc};
+    const p=sc<=ns&&!isN;
+    const d=document.createElement('div');
+    d.className='pr'+(isN?' act':'')+(p?' pst':'');
+    d.innerHTML=`${isN?'<div class="pul"></div>':''}<div class="p-ic"><i class="fas ${SI[nm]}"></i></div><div class="p-nm">${nm}</div><div class="p-tm">${tm}</div>`;
+    c.appendChild(d);
+  });
+  updCD(nx);
+}
 
-function updCD(nx){const e=$('cdT');if(!nx){const n=SN.find(n=>S.jd[n]);if(n){const s=86400-nowS()+t2s(adjT(S.jd[n],n));e.textContent=fmtS(s)}else e.textContent='--:--:--';return}e.textContent=fmtS(nx.sc-nowS());cekAI(nx)}
+function updCD(nx){
+  const e=$('cdT');
+  if(!nx){
+    const n=SN.find(x=>S.jd[x]);
+    if(n){e.textContent=fmtS(86400-nowS()+t2s(adjT(S.jd[n],n)))}else{e.textContent='--:--:--'}
+    return;
+  }
+  e.textContent=fmtS(nx.sc-nowS());
+  cekAI(nx);
+}
 
-/* Cek Azan/Iqamah */
-function cekAI(nx){if(!nx||!SD.includes(nx.nm))return;const ns=nowS(),df=nx.sc-ns,ck=nx.nm+'-'+Math.floor(ns/4);if(ck===lastAC)return;if(df<=0&&df>-3){lastAC=ck;startAz(nx.nm)}}
+/* Cek azan/iqamah */
+function cekAI(nx){
+  if(!nx||!SD.includes(nx.nm))return;
+  const ns=nowS(),df=nx.sc-ns;
+  const ck=nx.nm+'-'+Math.floor(ns/4);
+  if(ck===lastAC)return;
+  if(df<=0&&df>-3){lastAC=ck;startAz(nx.nm)}
+}
 
-function startAz(nm){if(curFS)return;const j=isJum()&&S.ja&&nm==='Dzuhur',dur=S.da||180;$('azTT').textContent=j?'SHOLAT JUMAT':'AZAN';$('azSN').textContent=j?'Jumat':nm;$('azMG').textContent=j?(S.jat||'Marilah menunaikan sholat Jumat'):'Marilah menunaikan sholat '+nm+' berjamaah';$('azCD').textContent=fmtS(dur);$('azCL').textContent=j?'Menuju Waktu Khutbah':'Sisa Waktu Azan';showFS('pgAz');beep(S.ba||5);setTimeout(()=>playAzA(),400);let s=dur;clearInterval(fsTmr);fsTmr=setInterval(()=>{s--;$('azCD').textContent=fmtS(s);if(s<=0){clearInterval(fsTmr);stopAzA();startIq(nm)}},1000)}
+function startAz(nm){
+  if(curFS)return;
+  const j=isJum()&&S.ja&&nm==='Dzuhur',dur=S.da||180;
+  $('azTT').textContent=j?'SHOLAT JUMAT':'AZAN';
+  $('azSN').textContent=j?'Jumat':nm;
+  $('azMG').textContent=j?(S.jat||'Marilah menunaikan sholat Jumat'):'Marilah menunaikan sholat '+nm+' berjamaah';
+  $('azCD').textContent=fmtS(dur);
+  $('azCL').textContent=j?'Menuju Waktu Khutbah':'Sisa Waktu Azan';
+  showFS('fsAz');beep(S.ba||5);setTimeout(()=>playAzA(),300);
+  let s=dur;clearInterval(fsTmr);
+  fsTmr=setInterval(()=>{s--;$('azCD').textContent=fmtS(s);if(s<=0){clearInterval(fsTmr);stopAzA();startIq(nm)}},1000);
+}
 
-function startIq(nm){const j=isJum()&&S.ja&&nm==='Dzuhur',dur=S.iq[nm]||5;$('iqSN').textContent=j?'Jumat':nm;$('iqMG').textContent=j?(S.jit||'Dengan meninggalkan segala urusan dunia...'):'Luruskan shaf, rapatkan barisan. Sholat '+nm+' segera dimulai.';$('iqCD').textContent=fmtS(dur);showFS('pgIq');beep(S.bi||3);let s=dur;clearInterval(fsTmr);fsTmr=setInterval(()=>{s--;$('iqCD').textContent=fmtS(s);if(s<=0){clearInterval(fsTmr);closeFS();lastAC=nm+'-done-'+Math.floor(nowS()/4)}},1000)}
+function startIq(nm){
+  const j=isJum()&&S.ja&&nm==='Dzuhur',dur=S.iq[nm]||5;
+  $('iqSN').textContent=j?'Jumat':nm;
+  $('iqMG').textContent=j?(S.jit||'Dengan meninggalkan segala urusan dunia...'):'Luruskan shaf, rapatkan barisan. Sholat '+nm+' segera dimulai.';
+  $('iqCD').textContent=fmtS(dur);
+  showFS('fsIq');beep(S.bi||3);
+  let s=dur;clearInterval(fsTmr);
+  fsTmr=setInterval(()=>{s--;$('iqCD').textContent=fmtS(s);if(s<=0){clearInterval(fsTmr);closeFS();lastAC=nm+'-done-'+Math.floor(nowS()/4)}},1000);
+}
 
-function showFS(id){document.querySelectorAll('.page,.pg-tv').forEach(p=>p.classList.remove('on'));$(id).classList.add('on');curFS=id}
-function closeFS(){clearInterval(fsTmr);stopAzA();stopMut();curFS=null;showPage('pgTV')}
+function showFS(id){$('tvGrid').style.display='none';document.querySelectorAll('.fs').forEach(p=>p.classList.remove('on'));$(id).classList.add('on');curFS=id}
+function closeFS(){clearInterval(fsTmr);stopAzA();stopMut();curFS=null;document.querySelectorAll('.fs').forEach(p=>p.classList.remove('on'));$('tvGrid').style.display='grid'}
 
 /* Murotal */
-function cekMut(){if(muPlay||muted)return;const ns=nowS();const f=SD.find(n=>{const t=S.jd[n];if(!t)return false;const sc=t2s(adjT(t,n));return ns>=sc-600&&ns<sc-30&&S.mu[n]});if(f){playMut(f);const sc=t2s(adjT(S.jd[f],f));muTmr=setTimeout(()=>stopMut(),Math.max(0,sc-30-ns)*1000)}}
+function cekMut(){
+  if(muPlay||muted)return;const ns=nowS();
+  const f=SD.find(n=>{const t=S.jd[n];if(!t)return false;const sc=t2s(adjT(t,n));return ns>=sc-600&&ns<sc-30&&S.mu[n]});
+  if(f){playMut(f);const sc=t2s(adjT(S.jd[f],f));muTmr=setTimeout(()=>stopMut(),Math.max(0,sc-30-ns)*1000)}
+}
 
 /* Clock */
-function updClk(){const n=new Date();$('tvTM').textContent=n.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit',second:'2-digit'});$('tvDT').textContent=S.mas||n.toLocaleDateString('id-ID',{weekday:'long',year:'numeric',month:'long',day:'numeric'});$('tvHJ').textContent=S.hij||'';$('tvNM').textContent=S.nm||'Masjid';$('tvLK').textContent=S.lok||'-';const b=$('tvJB');if(isJum()&&S.ja)b.classList.add('on');else b.classList.remove('on')}
+function updClk(){
+  const n=new Date();
+  $('tvTM').textContent=n.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  $('tvDT').textContent=S.mas||n.toLocaleDateString('id-ID',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  $('tvHJ').textContent=S.hij||'';
+  $('tvNM').textContent=S.nm||'Masjid';
+  $('tvLK').textContent=S.lok||'-';
+  const b=$('tvJB');
+  if(isJum()&&S.ja)b.classList.add('on');else b.classList.remove('on');
+}
 
 /* Slide */
-function rSl(){const c=$('slC');c.querySelectorAll('img').forEach(i=>i.remove());const def=$('slDef');if(!S.sl.length){def.style.display='flex';c.style.background='radial-gradient(ellipse at center,rgba(10,17,40,.6),var(--deep))';return}def.style.display='none';c.style.background='#000';S.sl.forEach((u,i)=>{const img=document.createElement('img');img.className='slide-img'+(i===0?' on':'');img.src=u;img.onerror=function(){this.remove()};c.insertBefore(img,def)});startSl()}
-function startSl(){clearInterval(slT);const imgs=$('slC').querySelectorAll('img');if(imgs.length<=1)return;slI=0;slT=setInterval(()=>{imgs.forEach(i=>i.classList.remove('on'));slI=(slI+1)%imgs.length;if(imgs[slI])imgs[slI].classList.add('on')},(S.sd||8)*1000)}
+function rSl(){
+  const c=$('slC');c.querySelectorAll('img').forEach(i=>i.remove());
+  const df=$('slDf');
+  if(!S.sl||!S.sl.length){df.style.display='flex';return}
+  df.style.display='none';
+  S.sl.forEach((u,i)=>{const img=document.createElement('img');img.className=i===0?'on':'';img.src=u;img.onerror=function(){this.remove()};c.insertBefore(img,df)});
+  startSl();
+}
+function startSl(){
+  clearInterval(slT);const imgs=$('slC').querySelectorAll('img');
+  if(imgs.length<=1)return;slI=0;
+  slT=setInterval(()=>{imgs.forEach(i=>i.classList.remove('on'));slI=(slI+1)%imgs.length;if(imgs[slI])imgs[slI].classList.add('on')},(S.sd||8)*1000);
+}
 
 /* Low Third */
-function startLT(){clearInterval(ltT);const items=[];if(isJum()&&S.ja)items.push({l:'IMAM JUMAT',v:S.lt.ji,ic:'fa-user-tie',c:''},{l:'KHATIB',v:S.lt.jk,ic:'fa-book-open',c:''},{l:'MUADZIN',v:S.lt.jm,ic:'fa-bullhorn',c:''},{l:'BILAL',v:S.lt.jb,ic:'fa-hand',c:''});items.push({l:'KAS KEUANGAN',v:S.lt.ki,ic:'fa-coins',c:'tk'},{l:'PEMBANGUNAN',v:S.lt.pi,ic:'fa-building',c:'tp'});ltI=-1;const bar=$('ltB'),dur=(S.ld||7)*1000;function nxt(){ltI=(ltI+1)%items.length;const it=items[ltI];bar.className='lt-b vis '+it.c;bar.querySelector('.lt-ic').innerHTML=`<i class="fas ${it.ic}"></i>`;bar.querySelector('.lt-lb').textContent=it.l;$('ltV').textContent=it.v}ltT=setInterval(()=>{bar.classList.remove('vis');setTimeout(nxt,500)},dur+1000);nxt()}
+function startLT(){
+  clearInterval(ltT);const items=[];
+  if(isJum()&&S.ja){
+    if(S.lt.ji)items.push({l:'IMAM JUMAT',v:S.lt.ji,ic:'fa-user-tie',c:''});
+    if(S.lt.jk)items.push({l:'KHATIB',v:S.lt.jk,ic:'fa-book-open',c:''});
+    if(S.lt.jm)items.push({l:'MUADZIN',v:S.lt.jm,ic:'fa-bullhorn',c:''});
+    if(S.lt.jb)items.push({l:'BILAL',v:S.lt.jb,ic:'fa-hand',c:''});
+  }
+  if(S.lt.ki)items.push({l:'KAS KEUANGAN',v:S.lt.ki,ic:'fa-coins',c:'tk'});
+  if(S.lt.pi)items.push({l:'PEMBANGUNAN',v:S.lt.pi,ic:'fa-building',c:'tp'});
+  if(!items.length)return;
+  ltI=-1;const bar=$('ltB'),dur=(S.ld||7)*1000;
+  function nxt(){ltI=(ltI+1)%items.length;const it=items[ltI];bar.className='lt-b vis '+it.c;bar.querySelector('.lt-i').innerHTML=`<i class="fas ${it.ic}"></i>`;bar.querySelector('.lt-l').textContent=it.l;$('ltV').textContent=it.v}
+  ltT=setInterval(()=>{bar.classList.remove('vis');setTimeout(nxt,500)},dur+1000);nxt();
+}
 
 /* Hari Besar */
-function updHB(){const td=today();let nx=null;S.hb.forEach(h=>{if(h.t>=td&&(!nx||h.t<nx.t))nx=h});const e=$('ibT');if(!nx){e.textContent='';return}const d=Math.ceil((new Date(nx.t)-new Date(td))/864e5);e.textContent=`${nx.n}: ${d} hari lagi`}
+function updHB(){
+  const td=today();let nx=null;
+  (S.hb||[]).forEach(h=>{if(h.t>=td&&(!nx||h.t<nx.t))nx=h});
+  const e=$('ibT');if(!nx){e.textContent='';return}
+  e.textContent=`${nx.n}: ${Math.ceil((new Date(nx.t)-new Date(td))/864e5)} hari`;
+}
 
-/* Running Text */
+/* Running text */
 function updRT(){$('rtT').textContent=S.rt||'Selamat datang di Masjid Kami'}
 
-/* Spreadsheet */
-async function ldSheet(){try{const r=await fetch(API+'?action=load'),d=await r.json();if(d.status==='success'&&d.data){const sv=d.data;const p=k=>sv[k];if(p('nm'))S.nm=p('nm');if(p('al'))S.al=p('al');if(p('lok'))S.lok=p('lok');if(p('lat')!==undefined&&p('lat')!=='')S.lat=parseFloat(p('lat'));if(p('lng')!==undefined&&p('lng')!=='')S.lng=parseFloat(p('lng'));if(p('kd'))S.kd=p('kd');if(p('rt'))S.rt=p('rt');if(p('sl'))S.sl=typeof p('sl')==='string'?JSON.parse(p('sl')):p('sl');if(p('au'))S.au=p('au');if(p('va')!==undefined)S.va=parseInt(p('va'))||80;if(p('da')!==undefined)S.da=parseInt(p('da'))||180;if(p('iq'))S.iq=typeof p('iq')==='string'?JSON.parse(p('iq')):p('iq');if(p('adj'))S.adj=typeof p('adj')==='string'?JSON.parse(p('adj')):p('adj');if(p('mu'))S.mu=typeof p('mu')==='string'?JSON.parse(p('mu')):p('mu');if(p('lt'))S.lt=typeof p('lt')==='string'?JSON.parse(p('lt')):p('lt');if(p('ja')!==undefined)S.ja=p('ja')==='true'||p('ja')===true||p('ja')==='1'||p('ja')===1;if(p('jat'))S.jat=p('jat');if(p('jit'))S.jit=p('jit');if(p('jkh'))S.jkh=p('jkh');if(p('jkt'))S.jkt=p('jkt');if(p('hb'))S.hb=typeof p('hb')==='string'?JSON.parse(p('hb')):p('hb');if(p('ri'))S.ri=parseInt(p('ri'))||30;if(p('ba'))S.ba=parseInt(p('ba'))||5;if(p('bi'))S.bi=parseInt(p('bi'))||3;if(p('sd'))S.sd=parseInt(p('sd'))||8;if(p('ld'))S.ld=parseInt(p('ld'))||7;lastHash=JSON.stringify(sv);a2ui()}}catch(e){console.error(e)}await fJad();rSl();updRT();startLT();updHB()}
-async function svSheet(){try{const pl={action:'save',nm:S.nm,al:S.al,lok:S.lok,lat:S.lat,lng:S.lng,kd:S.kd,rt:S.rt,sl:JSON.stringify(S.sl),au:S.au,va:S.va,da:S.da,iq:JSON.stringify(S.iq),adj:JSON.stringify(S.adj),mu:JSON.stringify(S.mu),lt:JSON.stringify(S.lt),ja:S.ja?'1':'0',jat:S.jat,jit:S.jit,jkh:S.jkh,jkt:S.jkt,hb:JSON.stringify(S.hb),ri:S.ri,ba:S.ba,bi:S.bi,sd:S.sd,ld:S.ld};const r=await fetch(API,{method:'POST',body:JSON.stringify(pl)});const d=await r.json();if(d.status==='success')lastHash=JSON.stringify(pl);return d.status==='success'}catch(e){return false}}
-async function svAll(){toast('Menyimpan...','i');const ok=await svSheet();toast(ok?'Tersimpan':'Gagal',ok?'s':'e')}
+/* Load dari spreadsheet */
+async function ldSheet(){
+  try{
+    const r=await fetch(API+'?action=load'),d=await r.json();
+    if(d.status==='success'&&d.data){
+      const sv=d.data;
+      const g=k=>sv[k];const jp=v=>typeof v==='string'?JSON.parse(v):v;
+      if(g('nm'))S.nm=g('nm');
+      if(g('al'))S.al=g('al');
+      if(g('lok'))S.lok=g('lok');
+      if(g('lat')!==undefined&&g('lat')!=='')S.lat=parseFloat(g('lat'));
+      if(g('lng')!==undefined&&g('lng')!=='')S.lng=parseFloat(g('lng'));
+      if(g('kd'))S.kd=g('kd');
+      if(g('rt'))S.rt=g('rt');
+      if(g('sl'))S.sl=jp(g('sl'));
+      if(g('au'))S.au=g('au');
+      if(g('va')!==undefined)S.va=parseInt(g('va'))||80;
+      if(g('da')!==undefined)S.da=parseInt(g('da'))||180;
+      if(g('iq'))S.iq=jp(g('iq'));
+      if(g('adj'))S.adj=jp(g('adj'));
+      if(g('mu'))S.mu=jp(g('mu'));
+      if(g('lt'))S.lt=jp(g('lt'));
+      if(g('ja')!==undefined)S.ja=(g('ja')==='true'||g('ja')===true||g('ja')==='1'||g('ja')===1)?1:0;
+      if(g('jat'))S.jat=g('jat');
+      if(g('jit'))S.jit=g('jit');
+      if(g('jkh'))S.jkh=g('jkh');
+      if(g('jkt'))S.jkt=g('jkt');
+      if(g('hb'))S.hb=jp(g('hb'));
+      if(g('ri')!==undefined)S.ri=parseInt(g('ri'))||30;
+      if(g('ba')!==undefined)S.ba=parseInt(g('ba'))||5;
+      if(g('bi')!==undefined)S.bi=parseInt(g('bi'))||3;
+      if(g('sd')!==undefined)S.sd=parseInt(g('sd'))||8;
+      if(g('ld')!==undefined)S.ld=parseInt(g('ld'))||7;
+      lastHash=JSON.stringify(sv);
+    }
+  }catch(e){console.error('Load sheet error:',e)}
+}
 
-async function cekChg(){try{const r=await fetch(API+'?action=load'),d=await r.json();if(d.status==='success'&&d.data){const h=JSON.stringify(d.data);if(h!==lastHash&&lastHash){lastHash=h;toast('Data diperbarui, memuat ulang...','i');setTimeout(()=>ldSheet().then(()=>$('ld').classList.add('hid')),500)}}}catch(e){}}
+/* Cek perubahan data */
+async function cekChg(){
+  try{
+    const r=await fetch(API+'?action=load'),d=await r.json();
+    if(d.status==='success'&&d.data){
+      const h=JSON.stringify(d.data);
+      if(h!==lastHash&&lastHash){
+        lastHash=h;
+        /* Reload halaman saat data berubah */
+        window.location.reload();
+      }
+    }
+  }catch(e){}
+}
 
-/* Apply state ke UI settings */
-function a2ui(){$('iNM').value=S.nm;$('iAL').value=S.al;$('iLat').value=S.lat;$('iLng').value=S.lng;$('iWil').value=S.lok;$('iRT').value=S.rt;$('iAU').value=S.au;$('iVA').value=S.va;$('iDA').value=S.da;$('iJA').value=S.ja?'1':'0';$('iJAT').value=S.jat;$('iJIT').value=S.jit;$('iJKH').value=S.jkh;$('iJKT').value=S.jkt;$('iRI').value=S.ri;$('iBA').value=S.ba;$('iBI').value=S.bi;$('iSD').value=S.sd;$('iLD').value=S.ld;$('lJI').value=S.lt.ji;$('lJK').value=S.lt.jk;$('lJM').value=S.lt.jm;$('lJB').value=S.lt.jb;$('lKI').value=S.lt.ki;$('lPI').value=S.lt.pi;
-const ig=$('iqG');ig.innerHTML='';SD.forEach(s=>{ig.innerHTML+=`<div class="lti"><label>${s} (menit)</label><input type="number" min="1" max="30" value="${S.iq[s]||5}" id="iq_${s}"></div>`});
-const ag=$('adjG');ag.innerHTML='';SN.forEach(s=>{ag.innerHTML+=`<div class="lti"><label>${s} (menit)</label><input type="number" min="-30" max="30" value="${S.adj[s]||0}" id="adj_${s}"></div>`});
-const mg=$('mutG');mg.innerHTML='';SD.forEach(s=>{mg.innerHTML+=`<div class="lti" style="margin-bottom:6px"><label>Murotal ${s}</label><input id="mut_${s}" value="${S.mu[s]||''}" placeholder="URL MP3"></div>`});
-const sp=$('slPrev');sp.innerHTML='';S.sl.forEach((u,i)=>{sp.innerHTML+=`<div class="pi" onclick="rmSl(${i})"><img src="${u}" alt="S"></div>`});
-const hg=$('hbG');hg.innerHTML='';S.hb.forEach((h,i)=>{hg.innerHTML+=`<div class="lti"><label>Hari Besar ${i+1}</label><input id="hbn_${i}" value="${h.n}" placeholder="Nama"><input type="date" id="hbt_${i}" value="${h.t}" style="margin-top:3px"></div>`})}
-
-/* Simpan functions */
-async function svMasjid(){S.nm=$('iNM').value;S.al=$('iAL').value;await svSheet();toast('Tersimpan','s')}
-async function svRT(){S.rt=$('iRT').value;updRT();await svSheet();toast('Tersimpan','s')}
-async function svIq(){SD.forEach(s=>{S.iq[s]=parseInt($('iq_'+s).value)||5});await svSheet();toast('Tersimpan','s')}
-async function svAdj(){SN.forEach(s=>{S.adj[s]=parseInt($('adj_'+s).value)||0});rPL();await svSheet();toast('Tersimpan','s')}
-async function svLT(){S.lt.ji=$('lJI').value;S.lt.jk=$('lJK').value;S.lt.jm=$('lJM').value;S.lt.jb=$('lJB').value;S.lt.ki=$('lKI').value;S.lt.pi=$('lPI').value;startLT();await svSheet();toast('Tersimpan','s')}
-async function svAzan(){S.au=$('iAU').value;S.va=parseInt($('iVA').value)||80;S.da=parseInt($('iDA').value)||180;await svSheet();toast('Tersimpan','s')}
-async function svMut(){SD.forEach(s=>{S.mu[s]=$('mut_'+s).value});await svSheet();toast('Tersimpan','s')}
-async function svJum(){S.ja=$('iJA').value==='1';S.jat=$('iJAT').value;S.jit=$('iJIT').value;S.jkh=$('iJKH').value;S.jkt=$('iJKT').value;await svSheet();toast('Tersimpan','s')}
-function addHB(){S.hb.push({n:'',t:''});a2ui()}
-async function svHB(){const a=[];let i=0;while($('hbn_'+i)){const n=$('hbn_'+i).value,t=$('hbt_'+i).value;if(n&&t)a.push({n,t});i++}S.hb=a;updHB();await svSheet();toast('Tersimpan','s')}
-async function svLain(){S.ri=parseInt($('iRI').value)||30;S.ba=parseInt($('iBA').value)||5;S.bi=parseInt($('iBI').value)||3;S.sd=parseInt($('iSD').value)||8;S.ld=parseInt($('iLD').value)||7;clearInterval(rfTmr);rfTmr=setInterval(cekChg,S.ri*1000);rSl();startLT();await svSheet();toast('Tersimpan','s')}
-
-/* Slide upload */
-function upSlide(e){const fs=e.target.files;if(!fs.length)return;let cnt=0;Array.from(fs).forEach(f=>{if(f.size>2*1024*1024){toast(f.name+' terlalu besar','e');return}if(S.sl.length>=20){toast('Maks 20 slide','e');return}const r=new FileReader();r.onload=function(ev){const img=new Image();img.onload=function(){const cv=document.createElement('canvas');let w=img.width,h=img.height;if(w>1280){h=h*1280/w;w=1280}cv.width=w;cv.height=h;cv.getContext('2d').drawImage(img,0,0,w,h);S.sl.push(cv.toDataURL('image/jpeg',.7));cnt++;if(cnt===fs.length||cnt===20){rSl();a2ui();svSheet();toast('Slide ditambahkan','s')}};img.src=ev.target.result};r.readAsDataURL(f)});e.target.value=''}
-function rmSl(i){S.sl.splice(i,1);rSl();a2ui();svSheet()}
-function clrSl(){S.sl=[];rSl();a2ui();svSheet();toast('Slide dihapus','s')}
-
-/* Navigasi */
-function showPage(id){document.querySelectorAll('.page,.pg-tv').forEach(p=>p.classList.remove('on'));$(id).classList.add('on')}
-function goTV(){showPage('pgTV');rPL();rSl();startLT();updHB();updRT()}
-
-/* Tabs */
-document.addEventListener('DOMContentLoaded',()=>{document.querySelectorAll('.stab').forEach(t=>{t.addEventListener('click',()=>{document.querySelectorAll('.stab').forEach(x=>x.classList.remove('on'));document.querySelectorAll('.tbc').forEach(x=>x.classList.remove('on'));t.classList.add('on');$(t.dataset.t).classList.add('on')})})});
-
-/* Main Loop */
+/* Main loop */
 function loop(){updClk();if(jf){rPL();cekMut()}}
 
 /* Init */
-async function init(){await ldProv();a2ui();await ldSheet();$('ld').classList.add('hid');setInterval(loop,1000);loop();rfTmr=setInterval(cekChg,(S.ri||30)*1000);setInterval(updHB,36e5)}
-init();
+(async function(){
+  await ldSheet();
+  await fJad();
+  rSl();updRT();startLT();updHB();
+  $('ld').classList.add('hid');
+  setInterval(loop,1000);loop();
+  rfTmr=setInterval(cekChg,(S.ri||30)*1000);
+  setInterval(updHB,36e5);
+})();
 </script>
 </body>
 </html>
