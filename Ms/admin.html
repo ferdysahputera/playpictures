@@ -19,7 +19,6 @@
         .hdr h1 i{margin-right:8px;color:var(--gold)}
         .hdr-actions{display:flex;gap:8px}
 
-        /* NOTIFIKASI */
         .ss-notif{display:flex;align-items:center;gap:12px;padding:14px 18px;border-radius:10px;margin-bottom:20px;border:1px solid;backdrop-filter:blur(10px);transition:all .3s}
         .ss-notif.ok{background:rgba(46,213,115,0.06);border-color:rgba(46,213,115,0.2)}
         .ss-notif.fail{background:rgba(255,71,87,0.06);border-color:rgba(255,71,87,0.2)}
@@ -41,8 +40,11 @@
         .btn:hover{border-color:var(--border-glow);background:rgba(18,36,66,0.95)}
         .btn-primary{background:linear-gradient(135deg,var(--blue),var(--blue-light));color:#000;border-color:var(--blue)}
         .btn-primary:hover{filter:brightness(1.1)}
+        .btn-success{border-color:rgba(46,213,115,0.3);color:var(--success)}
+        .btn-success:hover{background:rgba(46,213,115,0.1)}
         .btn-danger{border-color:rgba(255,71,87,0.3);color:var(--danger)}
         .btn-sm{padding:5px 10px;font-size:11px}
+        .btn:disabled{opacity:0.5;cursor:not-allowed}
 
         .card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:18px;margin-bottom:14px;backdrop-filter:blur(10px)}
         .card-title{font-size:14px;font-weight:700;color:var(--blue-light);margin-bottom:12px;display:flex;align-items:center;gap:7px}
@@ -84,14 +86,10 @@
         .toast.show{transform:translateY(0);opacity:1}
 
         .sticky-save{position:sticky;bottom:0;padding:14px 0;display:flex;gap:8px;justify-content:flex-end;background:linear-gradient(transparent,var(--bg) 30%)}
+        .highlight-box{background:rgba(255,165,2,0.08);border:1px solid rgba(255,165,2,0.2);border-radius:8px;padding:12px;margin-bottom:12px}
+        .highlight-box p{font-size:12px;color:var(--warn);line-height:1.5}
 
-        @media(max-width:640px){
-            .form-grid{grid-template-columns:1fr}
-            .schedule-preview{grid-template-columns:1fr}
-            .hdr{flex-direction:column;align-items:flex-start;gap:10px}
-            .ss-notif{flex-direction:column;align-items:flex-start}
-            .ss-notif .ss-btn{align-self:flex-start}
-        }
+        @media(max-width:640px){.form-grid{grid-template-columns:1fr}.schedule-preview{grid-template-columns:1fr}.hdr{flex-direction:column;align-items:flex-start;gap:10px}.ss-notif{flex-direction:column;align-items:flex-start}.ss-notif .ss-btn{align-self:flex-start}.sticky-save{flex-direction:column}.sticky-save .btn{width:100%;justify-content:center}}
         @media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
     </style>
 </head>
@@ -105,12 +103,11 @@
         </div>
     </div>
 
-    <!-- NOTIFIKASI KONEKSI -->
     <div class="ss-notif loading" id="ssNotif">
         <div class="ss-icon"><i class="fas fa-spinner fa-spin"></i></div>
         <div class="ss-text">
             <div class="ss-title" id="ssTitle">Mengecek koneksi Spreadsheet...</div>
-            <div class="ss-desc" id="ssDesc">Pastikan Spreadsheet ID dan Nama Sheet sudah benar lalu klik "Cek Ulang".</div>
+            <div class="ss-desc" id="ssDesc">Memastikan data bisa dibaca dan ditulis.</div>
         </div>
         <button class="ss-btn" onclick="testConnection()"><i class="fas fa-sync-alt"></i> Cek Ulang</button>
     </div>
@@ -189,38 +186,39 @@
 
     <!-- SPREADSHEET -->
     <div class="tab-content" id="tab-spreadsheet">
-        <div class="card"><div class="card-title"><i class="fas fa-table"></i> Koneksi Google Spreadsheet</div><p style="font-size:11px;color:var(--text3);margin-bottom:10px">Masukkan Spreadsheet ID dari URL Google Sheets.</p><div class="form-grid"><div class="form-group full"><label>Spreadsheet ID</label><input id="c-spreadsheetId" placeholder="1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgVE2upms"></div><div class="form-group"><label>Nama Sheet</label><input id="c-sheetName" value="Config"></div><div class="form-group"><label>Refresh (detik)</label><input type="number" id="c-refreshInterval" value="60" min="10"></div></div></div>
-        <div class="card"><div class="card-title"><i class="fas fa-code"></i> Panduan Apps Script</div><pre style="background:rgba(0,0,0,0.3);padding:10px;border-radius:7px;font-size:10px;color:var(--text2);overflow-x:auto;white-space:pre-wrap;line-height:1.5">1. Buka Google Spreadsheet
-2. Klik Extensions > Apps Script
-3. Hapus kode default, paste kode ini:
+        <div class="card">
+            <div class="card-title"><i class="fas fa-table"></i> Koneksi Google Spreadsheet</div>
+            
+            <div class="highlight-box">
+                <p><i class="fas fa-exclamation-triangle"></i> <strong>PENTING:</strong> Untuk bisa menulis data dari form ini ke Spreadsheet, Anda <strong>wajib</strong> mengisi "URL Web App" dari hasil Deploy Apps Script.</p>
+            </div>
 
-function doGet(e) {
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
-  var sheetName = e.parameter.sheet || 'Config';
-  var sheet = ss.getSheetByName(sheetName);
-  if (!sheet) return ContentService.createTextOutput(
-    JSON.stringify({error:'Sheet not found'})
-  ).setMimeType(ContentService.MimeType.JSON);
-  var data = sheet.getDataRange().getValues();
-  var result = [];
-  for (var i = 1; i < data.length; i++) {
-    if (data[i][0] !== undefined && data[i][0] !== '')
-      result.push({
-        key: String(data[i][0]).trim(), 
-        value: data[i][1] !== undefined ? data[i][1] : ''
-      });
-  }
-  return ContentService.createTextOutput(JSON.stringify(result))
-    .setMimeType(ContentService.MimeType.JSON);
-}
-
+            <div class="form-grid">
+                <div class="form-group full"><label>Spreadsheet ID</label><input id="c-spreadsheetId" placeholder="1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgVE2upms"></div>
+                <div class="form-group full"><label>URL Web App (Dari Deploy Apps Script)</label><input id="c-webAppUrl" placeholder="https://script.google.com/macros/s/AKfycb.../exec" style="border-color:rgba(255,165,2,0.3)"></div>
+                <div class="form-group"><label>Nama Sheet</label><input id="c-sheetName" value="Config"></div>
+                <div class="form-group"><label>Refresh (detik)</label><input type="number" id="c-refreshInterval" value="60" min="10"></div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-title"><i class="fas fa-code"></i> Panduan Lengkap</div>
+            <pre style="background:rgba(0,0,0,0.3);padding:10px;border-radius:7px;font-size:10px;color:var(--text2);overflow-x:auto;white-space:pre-wrap;line-height:1.5">1. Buka Google Spreadsheet Anda
+2. Extensions > Apps Script
+3. Hapus kode default, paste kode yang disediakan
 4. Klik Deploy > New Deployment
-5. Type: Web app | Execute as: Me | Access: Anyone
-6. Klik Deploy, izinkan akses</pre></div>
+5. Klik ikon roda gigi > pilih "Web app"
+6. Execute as: Me | Who has access: Anyone
+7. Klik Deploy, izinkan akses
+8. SALIN URL yang muncul
+9. Paste URL tersebut ke kolom "URL Web App" di atas
+10. Sekarang tombol "Simpan ke Spreadsheet" akan berfungsi</pre>
+        </div>
     </div>
 
     <div class="sticky-save">
-        <button class="btn btn-primary" onclick="saveCfg()"><i class="fas fa-save"></i> Simpan & Terapkan</button>
+        <button class="btn btn-success" id="btnSaveSS" onclick="saveToSpreadsheet()"><i class="fas fa-cloud-upload-alt"></i> Simpan ke Spreadsheet</button>
+        <button class="btn btn-primary" onclick="saveCfg()"><i class="fas fa-save"></i> Simpan Lokal (Display)</button>
     </div>
 </div>
 <div class="toast" id="toast"></div>
@@ -229,7 +227,7 @@ function doGet(e) {
 /* ========================
    DEFAULT CONFIG
    ======================== */
-const DEF = {
+var DEF = {
     masjidName:"Masjid Agung Rejang Lebong", masjidLocation:"Kab. Rejang Lebong, Bengkulu",
     latitude:-3.3969, longitude:102.5434, timezone:7, source:"kemenag",
     slideImages:["https://picsum.photos/seed/masjid1/1280/720","https://picsum.photos/seed/masjid2/1280/720","https://picsum.photos/seed/masjid3/1280/720","https://picsum.photos/seed/masjid4/1280/720"],
@@ -246,11 +244,11 @@ const DEF = {
     jumatAzanInfo:"Sholat Jumat setelah khutbah.", jumatIqomahInfo:"Luruskan shaf.",
     jumatSholatInfo:"Sholat Jumat berlangsung.", jumatTimeDisplay:"12:30 WIB",
     jumatDurationMinutes:35, sholatDurationMinutes:15,
-    spreadsheetId:"", sheetName:"Config", refreshInterval:60,
+    spreadsheetId:"", webAppUrl:"", sheetName:"Config", refreshInterval:60,
     islamicEvents:[{name:"Idul Fitri",date:"2026-04-01"},{name:"Idul Adha",date:"2026-05-08"}]
 };
 
-let C = {};
+var C = {};
 
 document.addEventListener('DOMContentLoaded', function() {
     loadCfg();
@@ -260,40 +258,31 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 /* ========================
-   UTILITAS DASAR
+   UTILITAS
    ======================== */
-// Fungsi pembantu untuk mengambil elemen (mengganti shortcut $$ yang error)
-function getEl(id) {
-    return document.getElementById(id);
-}
-
-function getAll(sel) {
-    return document.querySelectorAll(sel);
-}
+function getEl(id) { return document.getElementById(id); }
+function getAll(sel) { return document.querySelectorAll(sel); }
 
 /* ========================
-   LOAD & SAVE CONFIG
+   LOAD & POPULATE
    ======================== */
 function loadCfg() {
     try {
         var s = localStorage.getItem('sholatConfig');
         C = s ? Object.assign({}, DEF, JSON.parse(s)) : Object.assign({}, DEF);
-    } catch(e) {
-        C = Object.assign({}, DEF);
-    }
+    } catch(e) { C = Object.assign({}, DEF); }
     populateForm();
     updPrev();
 }
 
 function populateForm() {
-    var tx = ['masjidName','masjidLocation','runningText','kasInfo','pembangunanInfo','petugasJumat','customInfo','azanInfoText','iqomahInfoText','sholatInfoText','murotalUrl','jumatAzanInfo','jumatIqomahInfo','jumatSholatInfo','jumatTimeDisplay','spreadsheetId','sheetName'];
+    var tx = ['masjidName','masjidLocation','runningText','kasInfo','pembangunanInfo','petugasJumat','customInfo','azanInfoText','iqomahInfoText','sholatInfoText','murotalUrl','jumatAzanInfo','jumatIqomahInfo','jumatSholatInfo','jumatTimeDisplay','spreadsheetId','webAppUrl','sheetName'];
     tx.forEach(function(k) { var e = getEl('c-'+k); if(e) e.value = C[k] || ''; });
     
     var nm = {latitude:'latitude',longitude:'longitude',timezone:'timezone',slideInterval:'slideInterval',lowThirdInterval:'lowThirdInterval',refreshInterval:'refreshInterval',jumatDurationMinutes:'jumatDurationMinutes',sholatDurationMinutes:'sholatDurationMinutes'};
     for (var id in nm) { var e = getEl('c-'+id); if(e) e.value = C[nm[id]] || 0; }
     
     getEl('c-source').value = C.source || 'kemenag';
-    
     ['Subuh','Terbit','Dzuhur','Ashar','Maghrib','Isya'].forEach(function(k) { var e = getEl('c-adj-'+k); if(e) e.value = C.adjustMinutes?.[k] || 0; });
     ['Subuh','Dzuhur','Ashar','Maghrib','Isya'].forEach(function(k) { var e = getEl('c-iq-'+k); if(e) e.value = C.iqomahMinutes?.[k] || 0; });
     ['Subuh','Dzuhur','Ashar','Maghrib','Isya'].forEach(function(k) { var e = getEl('c-mur-'+k); if(e) e.value = C.murotalMinutesBefore?.[k] || 0; });
@@ -304,26 +293,24 @@ function populateForm() {
     if(C.manualTimes) {
         ['Subuh','Terbit','Dzuhur','Ashar','Maghrib','Isya'].forEach(function(k) { var e = getEl('c-m'+k); if(e) e.value = C.manualTimes[k] || ''; });
     }
-    
-    buildImgs();
-    buildEvs();
+    buildImgs(); buildEvs();
 }
 
+/* ========================
+   COLLECT CONFIG DARI FORM
+   ======================== */
 function collectCfg() {
-    var tx = ['masjidName','masjidLocation','runningText','kasInfo','pembangunanInfo','petugasJumat','customInfo','azanInfoText','iqomahInfoText','sholatInfoText','murotalUrl','jumatAzanInfo','jumatIqomahInfo','jumatSholatInfo','jumatTimeDisplay','spreadsheetId','sheetName'];
+    var tx = ['masjidName','masjidLocation','runningText','kasInfo','pembangunanInfo','petugasJumat','customInfo','azanInfoText','iqomahInfoText','sholatInfoText','murotalUrl','jumatAzanInfo','jumatIqomahInfo','jumatSholatInfo','jumatTimeDisplay','spreadsheetId','webAppUrl','sheetName'];
     tx.forEach(function(k) { var e = getEl('c-'+k); if(e) C[k] = e.value; });
     
     var nm = {latitude:'latitude',longitude:'longitude',timezone:'timezone',slideInterval:'slideInterval',lowThirdInterval:'lowThirdInterval',refreshInterval:'refreshInterval',jumatDurationMinutes:'jumatDurationMinutes',sholatDurationMinutes:'sholatDurationMinutes'};
     for (var id in nm) { var e = getEl('c-'+id); if(e) C[nm[id]] = parseFloat(e.value) || 0; }
     
     C.source = getEl('c-source').value;
-    
     C.adjustMinutes = {};
     ['Subuh','Terbit','Dzuhur','Ashar','Maghrib','Isya'].forEach(function(k) { var e = getEl('c-adj-'+k); C.adjustMinutes[k] = e ? (parseInt(e.value)||0) : 0; });
-    
     C.iqomahMinutes = {};
     ['Subuh','Dzuhur','Ashar','Maghrib','Isya'].forEach(function(k) { var e = getEl('c-iq-'+k); C.iqomahMinutes[k] = e ? (parseInt(e.value)||0) : 0; });
-    
     C.murotalMinutesBefore = {};
     ['Subuh','Dzuhur','Ashar','Maghrib','Isya'].forEach(function(k) { var e = getEl('c-mur-'+k); C.murotalMinutesBefore[k] = e ? (parseInt(e.value)||0) : 0; });
     
@@ -345,37 +332,98 @@ function collectCfg() {
     }
 }
 
+/* ========================
+   SIMPAN LOKAL (DISPLAY)
+   ======================== */
 function saveCfg() {
     collectCfg();
     localStorage.setItem('sholatConfig', JSON.stringify(C));
     localStorage.setItem('sholatConfigForceRefresh', Date.now().toString());
     setTimeout(function() { localStorage.removeItem('sholatConfigForceRefresh'); }, 500);
-    toast('Pengaturan disimpan! Display akan diperbarui.');
+    toast('Berhasil disimpan di lokal! Display TV akan terbarui.');
     updPrev();
-    testConnection();
+}
+
+/* ========================
+   SIMPAN KE SPREADSHEET (FIX)
+   ======================== */
+function saveToSpreadsheet() {
+    collectCfg();
+    
+    var webUrl = C.webAppUrl || getEl('c-webAppUrl').value;
+    if (!webUrl) {
+        toast('URL Web App kosong! Isi URL dari hasil Deploy Apps Script di tab Spreadsheet.');
+        return;
+    }
+
+    // Siapkan payload (abaikan key yang tidak perlu dikirim)
+    var payload = [];
+    var skipKeys = ['webAppUrl', 'manualTimes']; // Tidak perlu disimpan di sheet
+    
+    for (var key in C) {
+        if (skipKeys.indexOf(key) !== -1) continue;
+        var val = C[key];
+        
+        // Konversi objek dan array ke string JSON
+        if (typeof val === 'object' && val !== null) {
+            if (key === 'slideImages') {
+                val = val.join('|');
+            } else {
+                val = JSON.stringify(val);
+            }
+        }
+        payload.push({ key: key, value: val });
+    }
+
+    var btn = getEl('btnSaveSS');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mengirim...';
+
+    // Kirim ke Google Apps Script via POST
+    fetch(webUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload)
+    })
+    .then(function(response) {
+        if (!response.ok) throw new Error('HTTP Error ' + response.status);
+        return response.json();
+    })
+    .then(function(data) {
+        if (data.status === 'ok') {
+            toast('Sukses! ' + (data.updated||0) + ' data diupdate, ' + (data.added||0) + ' data baru ditambahkan ke Spreadsheet.');
+            // Juga simpan ke lokal agar display langsung update
+            saveCfg();
+        } else {
+            throw new Error(data.message || 'Gagal menyimpan');
+        }
+    })
+    .catch(function(err) {
+        console.error('Spreadsheet POST Error:', err);
+        toast('Gagal mengirim ke Spreadsheet: ' + err.message);
+    })
+    .finally(function() {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> Simpan ke Spreadsheet';
+    });
 }
 
 function resetCfg() {
     if(!confirm('Reset semua pengaturan ke default?')) return;
     C = Object.assign({}, DEF);
     localStorage.setItem('sholatConfig', JSON.stringify(C));
-    populateForm();
-    updPrev();
+    populateForm(); updPrev();
     toast('Direset ke default');
 }
 
 /* ========================
-   TABS NAVIGASI (FIX)
+   TABS NAVIGASI
    ======================== */
 function initTabs() {
-    var tabs = getAll('.tab');
-    tabs.forEach(function(tab) {
+    getAll('.tab').forEach(function(tab) {
         tab.addEventListener('click', function() {
-            // Hapus class active di semua tab dan konten
             getAll('.tab').forEach(function(t) { t.classList.remove('active'); });
             getAll('.tab-content').forEach(function(c) { c.classList.remove('active'); });
-            
-            // Aktifkan tab yang diklik
             tab.classList.add('active');
             var target = getEl('tab-' + tab.dataset.tab);
             if(target) target.classList.add('active');
@@ -390,27 +438,20 @@ function initSrcToggle() {
 }
 
 /* ========================
-   NOTIFIKASI SPREADSHEET
+   NOTIFIKASI KONEKSI
    ======================== */
 function testConnection() {
-    collectCfg(); // Ambil data terbaru dari form
-    
-    var notif = getEl('ssNotif');
-    var icon = notif.querySelector('.ss-icon');
-    var title = getEl('ssTitle');
-    var desc = getEl('ssDesc');
-    
+    collectCfg();
+    var notif = getEl('ssNotif'), icon = notif.querySelector('.ss-icon'), title = getEl('ssTitle'), desc = getEl('ssDesc');
     notif.className = 'ss-notif loading';
     icon.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
     title.textContent = 'Mengecek koneksi Spreadsheet...';
     desc.textContent = 'Menghubungkan ke Google Sheets...';
 
     if(!C.spreadsheetId) {
-        notif.className = 'ss-notif fail';
-        icon.innerHTML = '<i class="fas fa-times-circle"></i>';
+        notif.className = 'ss-notif fail'; icon.innerHTML = '<i class="fas fa-times-circle"></i>';
         title.textContent = 'Spreadsheet ID kosong';
-        desc.textContent = 'Masukkan Spreadsheet ID di tab "Spreadsheet", lalu klik "Cek Ulang".';
-        return;
+        desc.textContent = 'Masukkan Spreadsheet ID di tab "Spreadsheet".'; return;
     }
 
     var url = 'https://docs.google.com/spreadsheets/d/' + C.spreadsheetId + '/gviz/tq?tqx=out:json&sheet=' + encodeURIComponent(C.sheetName || 'Config');
@@ -425,31 +466,27 @@ function testConnection() {
         var rows = data.table.rows;
         if(!rows || !rows.length) throw new Error('SHEET_KOSONG');
         
-        // BERHASIL
-        notif.className = 'ss-notif ok';
-        icon.innerHTML = '<i class="fas fa-check-circle"></i>';
-        title.textContent = 'Koneksi Berhasil!';
-        desc.textContent = 'Berhasil membaca ' + rows.length + ' baris data dari sheet "' + (C.sheetName||'Config') + '". Halaman display akan otomatis menyinkronkan data ini.';
-    }).catch(function(err) {
-        notif.className = 'ss-notif fail';
-        icon.innerHTML = '<i class="fas fa-exclamation-triangle"></i>';
-        title.textContent = 'Koneksi Gagal';
+        notif.className = 'ss-notif ok'; icon.innerHTML = '<i class="fas fa-check-circle"></i>';
+        title.textContent = 'Koneksi Baca Berhasil (' + rows.length + ' data)';
         
-        var msg = err.message;
-        if(msg.includes('HTTP_404') || msg.includes('Failed to fetch')) {
-            desc.textContent = 'Spreadsheet tidak ditemukan atau tidak publik. Pastikan: (1) ID benar, (2) Buka Spreadsheet > Share > Anyone with the link > Viewer.';
-        } else if(msg === 'SHEET_KOSONG') {
-            desc.textContent = 'Sheet "' + (C.sheetName||'Config') + '" ditemukan tapi kosong. Isi baris pertama: Kolom A="Key", Kolom B="Value", lalu isi data mulai baris kedua.';
-        } else if(msg === 'FORMAT_SALAH') {
-            desc.textContent = 'Format respons tidak dikenali. Pastikan tidak ada error di dalam script Apps Script.';
+        // Cek juga apakah URL Web App diisi untuk fitur tulis
+        if (C.webAppUrl) {
+            desc.textContent = 'Fitur membaca dan menulis ke Spreadsheet siap digunakan.';
         } else {
-            desc.textContent = 'Tidak dapat terhubung. Periksa koneksi internet, Spreadsheet ID, dan pastikan akses "Anyone with the link" sudah aktif.';
+            desc.textContent = 'Fitur membaca siap. Untuk menulis data, isi "URL Web App" di tab Spreadsheet.';
         }
+    }).catch(function(err) {
+        notif.className = 'ss-notif fail'; icon.innerHTML = '<i class="fas fa-exclamation-triangle"></i>';
+        title.textContent = 'Koneksi Gagal';
+        var msg = err.message;
+        if(msg.includes('HTTP_404') || msg.includes('Failed to fetch')) desc.textContent = 'Spreadsheet tidak ditemukan atau tidak publik. Pastikan: (1) ID benar, (2) Buka Spreadsheet > Share > Anyone with the link > Viewer.';
+        else if(msg === 'SHEET_KOSONG') desc.textContent = 'Sheet "' + (C.sheetName||'Config') + '" kosong. Isi baris pertama: A="Key", B="Value".';
+        else desc.textContent = 'Gagal terhubung. Periksa koneksi internet, ID, dan pastikan akses "Anyone" aktif.';
     });
 }
 
 /* ========================
-   IMAGE & EVENT LIST
+   DYNAMIC LISTS
    ======================== */
 function buildImgs() {
     var l = getEl('imgList'); l.innerHTML = '';
@@ -460,8 +497,7 @@ function buildImgs() {
     });
 }
 function addImg() {
-    var l = getEl('imgList');
-    var d = document.createElement('div'); d.className = 'img-item';
+    var l = getEl('imgList'); var d = document.createElement('div'); d.className = 'img-item';
     d.innerHTML = '<span style="font-size:11px;color:var(--text3);min-width:20px">'+(l.children.length+1)+'.</span><input value=""><button class="btn btn-sm btn-danger" onclick="this.parentElement.remove()"><i class="fas fa-trash"></i></button>';
     l.appendChild(d);
 }
@@ -474,67 +510,42 @@ function buildEvs() {
     });
 }
 function addEv() {
-    var l = getEl('evList');
-    var d = document.createElement('div'); d.className = 'event-item';
+    var l = getEl('evList'); var d = document.createElement('div'); d.className = 'event-item';
     d.innerHTML = '<input value=""><input type="date" value=""><button class="btn btn-sm btn-danger" onclick="this.parentElement.remove()"><i class="fas fa-trash"></i></button>';
     l.appendChild(d);
 }
 
 /* ========================
-   PREVIEW JADWAL SHOLAT
+   PREVIEW JADWAL
    ======================== */
 function updPrev() {
     collectCfg();
     var n = new Date(), dy = getDoy(n), dc = getSDec(dy), eq = getEot(dy);
     var la = C.latitude, ln = C.longitude, tz = C.timezone;
     var noon = 12 - (ln/15) + tz + (eq/60);
-    
-    function cHA(l, d, a) {
-        var c = (Math.sin(a*Math.PI/180) - Math.sin(l*Math.PI/180)*Math.sin(d*Math.PI/180)) / (Math.cos(l*Math.PI/180)*Math.cos(d*Math.PI/180));
-        if(c<-1||c>1) return null;
-        return Math.acos(c)*180/Math.PI/15;
-    }
+    function cHA(l, d, a) { var c = (Math.sin(a*Math.PI/180) - Math.sin(l*Math.PI/180)*Math.sin(d*Math.PI/180)) / (Math.cos(l*Math.PI/180)*Math.cos(d*Math.PI/180)); if(c<-1||c>1) return null; return Math.acos(c)*180/Math.PI/15; }
     function ft(h) { h=((h%24)+24)%24; return String(Math.floor(h)).padStart(2,'0')+':'+String(Math.round((h-Math.floor(h))*60)).padStart(2,'0'); }
     function t2m(t) { if(!t||!t.includes(':'))return 0; var p=t.split(':').map(Number); return p[0]*60+(p[1]||0); }
     function m2t(m) { m=((Math.round(m)%1440)+1440)%1440; return String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0'); }
-    
     var t = {};
     if(C.source==='manual' && C.manualTimes) { t = Object.assign({}, C.manualTimes); } else {
         var hS=cHA(la,dc,-20), hT=cHA(la,dc,-0.833), hIK=cHA(la,dc,-18), hIM=cHA(la,dc,-20);
         var tA=Math.abs(Math.tan((la-dc)*Math.PI/180)), sA=1/(1+1/Math.max(.001,tA));
         var c2=(sA-Math.sin(la*Math.PI/180)*Math.sin(dc*Math.PI/180))/(Math.cos(la*Math.PI/180)*Math.cos(dc*Math.PI/180));
         var hAsh=(c2>=-1&&c2<=1)?Math.acos(c2)*180/Math.PI/15:null;
-        
         if(C.source==='kemenag'||C.source==='muhammadiyah') t.Subuh=hS?ft(noon-hS):'05:00'; else t.Subuh=cHA(la,dc,-18)?ft(noon-cHA(la,dc,-18)):'05:00';
-        t.Terbit=hT?ft(noon-hT):'06:00'; 
-        var dA=C.source==='kemenag'?3/60:(C.source==='muhammadiyah'?2/60:0); 
-        t.Dzuhur=ft(noon+dA);
+        t.Terbit=hT?ft(noon-hT):'06:00'; var dA=C.source==='kemenag'?3/60:(C.source==='muhammadiyah'?2/60:0); t.Dzuhur=ft(noon+dA);
         t.Ashar=hAsh?ft(noon+hAsh):'15:30'; t.Maghrib=hT?ft(noon+hT):'18:00';
-        if(C.source==='kemenag') t.Isya=hIK?ft(noon+hIK):'19:15';
-        else if(C.source==='muhammadiyah') t.Isya=hIM?ft(noon+hIM):'19:15';
-        else t.Isya=cHA(la,dc,-17)?ft(noon+cHA(la,dc,-17)):'19:15';
+        if(C.source==='kemenag') t.Isya=hIK?ft(noon+hIK):'19:15'; else if(C.source==='muhammadiyah') t.Isya=hIM?ft(noon+hIM):'19:15'; else t.Isya=cHA(la,dc,-17)?ft(noon+cHA(la,dc,-17)):'19:15';
     }
-    
     ['Subuh','Terbit','Dzuhur','Ashar','Maghrib','Isya'].forEach(function(k) { if(t[k]) t[k]=m2t(t2m(t[k])+(C.adjustMinutes?.[k]||0)); });
-    
-    getEl('schedPrev').innerHTML = ['Subuh','Terbit','Dzuhur','Ashar','Maghrib','Isya'].map(function(k) {
-        return '<div class="sp-item"><span class="sp-name">'+k+'</span><span class="sp-time">'+(t[k]||'-')+'</span></div>';
-    }).join('');
+    getEl('schedPrev').innerHTML = ['Subuh','Terbit','Dzuhur','Ashar','Maghrib','Isya'].map(function(k) { return '<div class="sp-item"><span class="sp-name">'+k+'</span><span class="sp-time">'+(t[k]||'-')+'</span></div>'; }).join('');
 }
-
 function getDoy(d) { var s=new Date(d.getFullYear(),0,0); return Math.floor((d-s)/86400000); }
 function getSDec(dy) { return 23.45*Math.sin((360/365*(dy-81))*Math.PI/180); }
 function getEot(dy) { var B=(360/365*(dy-81))*Math.PI/180; return 9.87*Math.sin(2*B)-7.53*Math.cos(B)-1.5*Math.sin(B); }
 
-/* ========================
-   TOAST NOTIFICATION
-   ======================== */
-function toast(m) {
-    var t = getEl('toast');
-    t.textContent = m;
-    t.classList.add('show');
-    setTimeout(function() { t.classList.remove('show'); }, 3500);
-}
+function toast(m) { var t = getEl('toast'); t.textContent = m; t.classList.add('show'); setTimeout(function() { t.classList.remove('show'); }, 4000); }
 </script>
 </body>
 </html>
