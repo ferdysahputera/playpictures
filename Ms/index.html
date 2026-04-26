@@ -9,7 +9,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
 :root{
-  --bg:#04070e;--bg2:#080e1c;--glass:rgba(10,18,38,.72);
+  --bg:#04070e;--glass:rgba(10,18,38,.72);
   --gold:#c9a84c;--gold-l:#e8d48b;--gold-d:#8b7534;--gold-faint:rgba(201,168,76,.06);
   --text:#eae3d5;--text2:#b5ad9e;--muted:#6b7590;
   --dim:#1e2740;--border:rgba(201,168,76,.1);
@@ -19,43 +19,34 @@ html,body{height:100%;overflow:hidden}
 body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text)}
 .lx{font-family:'Playfair Display',serif}
 .num{font-family:'Cormorant Garamond',serif;font-variant-numeric:tabular-nums}
-.mono{font-family:'JetBrains Mono',monospace}
 
-/* Background */
 #bgL{position:fixed;inset:0;z-index:0;pointer-events:none}
 #bgL::before{content:'';position:absolute;top:-20%;left:-10%;width:60%;height:60%;background:radial-gradient(ellipse,rgba(26,95,168,.06),transparent 70%);animation:dr1 20s ease-in-out infinite alternate}
 #bgL::after{content:'';position:absolute;bottom:-15%;right:-10%;width:55%;height:55%;background:radial-gradient(ellipse,rgba(201,168,76,.04),transparent 70%);animation:dr2 25s ease-in-out infinite alternate}
 @keyframes dr1{to{transform:translate(5%,8%)}}
 @keyframes dr2{to{transform:translate(-6%,-5%)}}
 
-/* Main Grid */
 #app{position:relative;z-index:1;height:100vh;display:grid;grid-template-rows:auto 1fr auto}
 
-/* Header */
 .hdr{padding:2vh 3vw;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);background:linear-gradient(180deg,rgba(8,14,28,.92),rgba(4,7,14,.7));backdrop-filter:blur(12px);position:relative}
 .hdr::after{content:'';position:absolute;bottom:0;left:15%;right:15%;height:1px;background:linear-gradient(90deg,transparent,var(--gold-d),transparent)}
 .hdr-left{display:flex;align-items:center;gap:1.2vw}
-/* Logo Masjid */
 .hdr-logo{width:clamp(42px,3.5vw,56px);height:clamp(42px,3.5vw,56px);border-radius:12px;background:linear-gradient(135deg,rgba(201,168,76,.12),rgba(201,168,76,.04));border:1px solid rgba(201,168,76,.18);display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:clamp(1.1rem,1.6vw,1.5rem);flex-shrink:0;box-shadow:0 4px 20px rgba(201,168,76,.08);position:relative;overflow:hidden}
 .hdr-logo::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at 30% 30%,rgba(201,168,76,.15),transparent 60%);pointer-events:none}
-.hdr-info{display:flex;flex-direction:column;gap:2px}
 .hdr-name{font-size:clamp(1.2rem,2vw,1.75rem);font-weight:700;color:var(--gold-l);letter-spacing:.02em;line-height:1.2}
-.hdr-addr{font-size:clamp(.6rem,.78vw,.8rem);color:var(--muted);font-weight:300;letter-spacing:.03em}
+.hdr-addr{font-size:clamp(.6rem,.78vw,.8rem);color:var(--muted);font-weight:300;letter-spacing:.03em;margin-top:2px}
 .hdr-clock{font-size:clamp(2.4rem,4.2vw,3.6rem);font-weight:400;color:var(--gold);letter-spacing:.06em;line-height:1;text-shadow:0 0 40px rgba(201,168,76,.18)}
 .hdr-hijri{font-size:clamp(.6rem,.74vw,.78rem);color:var(--gold-d);font-weight:400;letter-spacing:.08em;margin-top:2px}
 .hdr-greg{font-size:clamp(.55rem,.68vw,.72rem);color:var(--muted);font-weight:300;margin-top:1px}
 
-/* Content */
 .ctn{display:grid;grid-template-columns:minmax(250px,30%) 1fr;overflow:hidden}
 
-/* Prayer Panel */
 .pp{padding:3vh 2vw;display:flex;flex-direction:column;justify-content:center;border-right:1px solid var(--border);position:relative}
 .pp::after{content:'';position:absolute;top:8%;bottom:8%;right:0;width:1px;background:linear-gradient(180deg,transparent,var(--gold-d),transparent)}
 .pp-lbl{font-size:clamp(.54rem,.62vw,.68rem);text-transform:uppercase;letter-spacing:.22em;color:var(--gold-d);font-weight:500;margin-bottom:3vh;padding-left:.3vw;display:flex;align-items:center;gap:8px}
 .pp-lbl::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--gold-d),transparent)}
 .pp-list{display:flex;flex-direction:column;gap:1.6vh}
 
-/* Prayer Card dengan border */
 .pc{display:grid;grid-template-columns:46px 1fr auto;align-items:center;padding:2vh 1.4vw;border-radius:12px;transition:all .5s cubic-bezier(.23,1,.32,1);border:1px solid var(--dim);position:relative;gap:.8vw;background:rgba(10,16,30,.3)}
 .pc::before{content:'';position:absolute;inset:0;border-radius:12px;background:linear-gradient(90deg,var(--gold-faint),transparent);opacity:0;transition:opacity .5s}
 .pc:hover::before{opacity:.5}
@@ -65,8 +56,6 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text)}
 .pc-nm{font-size:clamp(.82rem,1vw,1.08rem);font-weight:500;color:var(--text2);transition:color .5s;letter-spacing:.01em}
 .pc-iq{font-size:clamp(.52rem,.6vw,.65rem);color:var(--dim);font-weight:300;transition:color .5s}
 .pc-tm{font-size:clamp(1.2rem,1.5vw,1.65rem);font-weight:500;color:var(--text);text-align:right;transition:all .5s;letter-spacing:.04em}
-
-/* Next Prayer */
 .pc.nx{border-color:rgba(201,168,76,.22);background:linear-gradient(90deg,rgba(201,168,76,.08),rgba(201,168,76,.02));box-shadow:0 0 30px rgba(201,168,76,.06),inset 0 0 30px rgba(201,168,76,.03)}
 .pc.nx::before{opacity:1}
 .pc.nx .pc-ico{background:rgba(201,168,76,.16);color:var(--gold);box-shadow:0 0 20px rgba(201,168,76,.12)}
@@ -75,20 +64,17 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text)}
 .pc.nx .pc-tm{color:var(--gold-l);font-weight:600;font-size:clamp(1.35rem,1.7vw,1.85rem)}
 .pc.past{opacity:.3}
 
-/* Media */
 .md{position:relative;overflow:hidden;background:#030610}
 .sl{position:absolute;inset:0;opacity:0;transition:opacity 2s ease-in-out,transform 8s ease-out;object-fit:cover;width:100%;height:100%;transform:scale(1.03)}
 .sl.on{opacity:1;transform:scale(1)}
 .md-grad{position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(170deg,rgba(4,7,14,.2) 0%,transparent 25%,transparent 50%,rgba(4,7,14,.55) 100%)}
 
-/* PHBI */
 .phbi{position:absolute;top:3vh;right:2.5vw;z-index:5;background:var(--glass);border:1px solid rgba(201,168,76,.15);border-radius:14px;padding:1.8vh 1.8vw;backdrop-filter:blur(18px);max-width:250px;box-shadow:0 10px 40px rgba(0,0,0,.35)}
 .phbi-tag{font-size:clamp(.5rem,.56vw,.62rem);text-transform:uppercase;letter-spacing:.16em;color:var(--gold);font-weight:600;margin-bottom:.5vh;display:flex;align-items:center;gap:5px}
 .phbi-nm{font-size:clamp(.82rem,.95vw,1rem);font-weight:600;color:var(--gold-l);line-height:1.35}
 .phbi-cd{font-size:clamp(.68rem,.78vw,.82rem);color:var(--text2);margin-top:.5vh}
 .phbi-cd b{color:var(--gold);font-weight:600}
 
-/* ===== LOW THIRD MELAYANG + SMOOTH EXIT ===== */
 .lt-wrap{position:absolute;bottom:3.5vh;left:2.5vw;right:2.5vw;z-index:5}
 .lt{background:linear-gradient(105deg,rgba(6,12,26,.88),rgba(12,22,44,.75));border:1px solid rgba(201,168,76,.18);border-radius:16px;padding:2.4vh 3vw;display:flex;align-items:center;gap:2.2vw;backdrop-filter:blur(24px);box-shadow:0 12px 50px rgba(0,0,0,.4),inset 0 0 0 1px rgba(201,168,76,.05);transform:translateY(120%);opacity:0;transition:transform .8s cubic-bezier(.23,1,.32,1),opacity .7s ease}
 .lt.on{transform:translateY(0);opacity:1}
@@ -99,11 +85,10 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text)}
 .lt-val{font-size:clamp(.78rem,.88vw,.94rem);font-weight:300;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.4}
 .lt-line{width:1px;height:40px;background:linear-gradient(180deg,transparent,rgba(201,168,76,.3),transparent);flex-shrink:0}
 
-/* Footer */
 .ftr{padding:1.8vh 3vw;display:flex;align-items:center;border-top:1px solid var(--border);background:linear-gradient(0deg,rgba(8,14,28,.92),rgba(4,7,14,.7));backdrop-filter:blur(12px);position:relative;gap:2.5vw}
 .ftr::before{content:'';position:absolute;top:0;left:15%;right:15%;height:1px;background:linear-gradient(90deg,transparent,var(--gold-d),transparent)}
 .cd-box{display:flex;align-items:center;gap:1vw;flex-shrink:0;border-right:1px solid var(--border);padding-right:2.5vw}
-.cd-lbl{font-size:clamp(.55rem,.64vw(.7rem);color:var(--muted);font-weight:300;white-space:nowrap}
+.cd-lbl{font-size:clamp(.55rem,.64vw,.7rem);color:var(--muted);font-weight:300;white-space:nowrap}
 .cd-row{display:flex;align-items:baseline;gap:.5vw}
 .cd-nm{font-size:clamp(.82rem,.98vw,1.05rem);color:var(--gold);font-weight:500}
 .cd-tm{font-size:clamp(1.5rem,2.1vw,2.4rem);font-weight:400;color:var(--gold-l);letter-spacing:.06em;text-shadow:0 0 25px rgba(201,168,76,.18)}
@@ -111,7 +96,6 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text)}
 .mq span{white-space:nowrap;animation:sx var(--dur,45s) linear infinite;font-size:clamp(.8rem,.9vw,.96rem);color:var(--text2);font-weight:300}
 @keyframes sx{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
 
-/* ===== OVERLAYS ===== */
 .ov{position:fixed;inset:0;z-index:100;display:none;flex-direction:column;align-items:center;justify-content:center}
 .ov.on{display:flex}
 .ov-bg{position:absolute;inset:0}
@@ -153,13 +137,12 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text)}
 .fi{animation:fi .9s ease}
 @keyframes fi{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 
-/* Error */
 #errScr{position:fixed;inset:0;z-index:9999;background:var(--bg);display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:2vw}
 #errScr.on{display:flex}
-#errScr .ei{font-size:3rem;color:var(--gold-d);margin-bottom:1.5vh}
-#errScr .et{font-size:1.4rem;color:var(--gold);font-weight:600;margin-bottom:1vh}
-#errScr .em{font-size:.9rem;color:var(--muted);max-width:500px;line-height:1.6}
-#errScr .eb{margin-top:2vh;padding:10px 28px;border-radius:8px;background:linear-gradient(135deg,var(--gold-d),var(--gold));color:#04070e;font-weight:600;font-size:.85rem;cursor:pointer;border:none}
+.ei{font-size:3rem;color:var(--gold-d);margin-bottom:1.5vh}
+.et{font-size:1.4rem;color:var(--gold);font-weight:600;margin-bottom:1vh}
+.em{font-size:.9rem;color:var(--muted);max-width:500px;line-height:1.6}
+.eb{margin-top:2vh;padding:10px 28px;border-radius:8px;background:linear-gradient(135deg,var(--gold-d),var(--gold));color:#04070e;font-weight:600;font-size:.85rem;cursor:pointer;border:none}
 </style>
 </head>
 <body>
@@ -167,7 +150,7 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text)}
 <div id="errScr">
   <div class="ei"><i class="fa-solid fa-triangle-exclamation"></i></div>
   <div class="et lx">Terjadi Kesalahan</div>
-  <div class="em" id="errMsg">Sistem mengalami error. Silakan refresh halaman.</div>
+  <div class="em" id="errMsg">Sistem mengalami error.</div>
   <button class="eb" onclick="location.reload()"><i class="fa-solid fa-rotate-right" style="margin-right:6px"></i> Refresh Halaman</button>
 </div>
 
@@ -177,7 +160,7 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text)}
   <header class="hdr">
     <div class="hdr-left">
       <div class="hdr-logo"><i class="fa-solid fa-mosque"></i></div>
-      <div class="hdr-info">
+      <div>
         <div class="hdr-name lx" id="hName"></div>
         <div class="hdr-addr" id="hAddr"></div>
       </div>
@@ -188,13 +171,11 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text)}
       <div class="hdr-greg" id="hGre"></div>
     </div>
   </header>
-
   <div class="ctn">
     <aside class="pp">
       <div class="pp-lbl"><i class="fa-solid fa-mosque" style="font-size:.8em"></i> Jadwal Sholat</div>
       <div class="pp-list" id="pLst"></div>
     </aside>
-
     <section class="md">
       <div id="slBox"></div>
       <div class="md-grad"></div>
@@ -215,7 +196,6 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text)}
       </div>
     </section>
   </div>
-
   <footer class="ftr">
     <div class="cd-box">
       <div>
@@ -230,8 +210,7 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text)}
   </footer>
 </div>
 
-<div id="ovAz" class="ov">
-  <div class="ov-bg"></div><div class="ip"></div><div class="of"></div>
+<div id="ovAz" class="ov"><div class="ov-bg"></div><div class="ip"></div><div class="of"></div>
   <div class="ov-c fi">
     <div style="font-size:clamp(.68rem,.82vw,.88rem);color:var(--gold-d);letter-spacing:.4em;font-weight:300;text-transform:uppercase;margin-bottom:2vh">Masuk Waktu</div>
     <div class="az-txt lx num">ALLAHU AKBAR</div>
@@ -240,18 +219,14 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text)}
     <div class="az-hint">Segera dirikan sholat dalam jamah</div>
   </div>
 </div>
-
-<div id="ovIq" class="ov">
-  <div class="ov-bg"></div><div class="ip"></div><div class="of"></div>
+<div id="ovIq" class="ov"><div class="ov-bg"></div><div class="ip"></div><div class="of"></div>
   <div class="ov-c fi">
     <div class="iq-lbl lx">Tunggu Iqomah</div>
     <div class="iq-num lx num" id="iqNm">00:00</div>
     <div class="iq-inf" id="iqInf"></div>
   </div>
 </div>
-
-<div id="ovJu" class="ov">
-  <div class="ov-bg"></div><div class="ip"></div><div class="of"></div>
+<div id="ovJu" class="ov"><div class="ov-bg"></div><div class="ip"></div><div class="of"></div>
   <div class="ov-c fi">
     <div class="ju-ttl lx num">Jum'at Mubarak</div>
     <div class="ju-sub">Mari memakmurkan masjid dengan sholat berjamaah</div>
@@ -259,14 +234,8 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text)}
     <div class="ju-ck lx num" id="juCk"></div>
   </div>
 </div>
-
-<div id="ovBk" class="ov">
-  <div class="ov-bg"></div>
-  <div class="bk-ck lx num" id="bkCk"></div>
-</div>
-
-<div id="ovCu" class="ov">
-  <div class="ov-bg"></div><div class="ip"></div><div class="of"></div>
+<div id="ovBk" class="ov"><div class="ov-bg"></div><div class="bk-ck lx num" id="bkCk"></div></div>
+<div id="ovCu" class="ov"><div class="ov-bg"></div><div class="ip"></div><div class="of"></div>
   <div class="ov-c fi">
     <div class="cu-ttl lx num" id="cuTtl"></div>
     <div class="cu-bd" id="cuBd"></div>
@@ -274,18 +243,37 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text)}
 </div>
 
 <script>
-window.onerror=function(m,s,l){document.getElementById('errMsg').textContent='Error baris '+l+': '+m;document.getElementById('errScr').classList.add('on');document.getElementById('app').style.display='none';return true};
-window.onunhandledrejection=function(e){console.warn('Rejected:',e.reason)};
+/* =========================================
+   ERROR HANDLER
+   ========================================= */
+window.onerror = function(msg, src, line) {
+  try {
+    document.getElementById('errMsg').textContent = 'Error baris ' + line + ': ' + msg;
+    document.getElementById('errScr').classList.add('on');
+    var app = document.getElementById('app');
+    if (app) app.style.display = 'none';
+  } catch(e) {}
+  return true;
+};
+window.onunhandledrejection = function(e) {
+  if (e && e.reason) console.warn('Promise:', e.reason);
+};
 
-const DG=Math.PI/180;
-const HM=['Muharram','Safar','Rabiul Awal','Rabiul Akhir','Jumadil Awal','Jumadil Akhir','Rajab','Sya\'ban','Ramadhan','Syawal','Dzulqa\'dah','Dzulhijjah'];
-const DY=['Minggu','Senin','Selasa','Rabu','Kamis','Jum\'at','Sabtu'];
-const MN=['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
-const ICO={subuh:'fa-cloud-moon',dzuhur:'fa-sun',asr:'fa-cloud-sun',maghrib:'fa-cloud-moon',isya:'fa-moon'};
-const LB={subuh:'Subuh',dzuhur:'Dzuhur',asr:'Ashar',maghrib:'Maghrib',isya:'Isya'};
-const OD=['subuh','dzuhur','asr','maghrib','isya'];
+/* =========================================
+   CONSTANTS
+   ========================================= */
+var DG = Math.PI / 180;
+var HM = ['Muharram','Safar','Rabiul Awal','Rabiul Akhir','Jumadil Awal','Jumadil Akhir','Rajab','Sya\'ban','Ramadhan','Syawal','Dzulqa\'dah','Dzulhijjah'];
+var DY = ['Minggu','Senin','Selasa','Rabu','Kamis','Jum\'at','Sabtu'];
+var MN = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+var ICO = {subuh:'fa-cloud-moon',dzuhur:'fa-sun',asr:'fa-cloud-sun',maghrib:'fa-cloud-moon',isya:'fa-moon'};
+var LB = {subuh:'Subuh',dzuhur:'Dzuhur',asr:'Ashar',maghrib:'Maghrib',isya:'Isya'};
+var OD = ['subuh','dzuhur','asr','maghrib','isya'];
 
-const DEF={
+/* =========================================
+   DEFAULTS
+   ========================================= */
+var DEF = {
   mosque:{name:'Masjid Agung Rejang Lebong',address:'Jl. R. Sukamto, Pasar Baru, Kab. Rejang Lebong, Bengkulu'},
   location:{latitude:-3.4567,longitude:102.5211,timezone:7,city:'Rejang Lebong'},
   calc:{fajrAngle:20,ishaAngle:18,asrMethod:'shafii'},
@@ -295,65 +283,640 @@ const DEF={
   jumat:{imam:'Ust. Ahmad Fauzi, Lc.',khatib:'Ust. Muhammad Rizki, M.Pd.',muadzin:'H. Hasan Basri',bilal:'Bpk. Syamsul Bahri'},
   finance:{kasMasjid:'Rp 15.750.000',kasPembangunan:'Rp 45.200.000',infakJumat:'Rp 2.350.000',lastUpdate:'-'},
   slideshow:{images:['https://picsum.photos/seed/masjidBl1/1920/1080','https://picsum.photos/seed/masjidBl2/1920/1080','https://picsum.photos/seed/masjidBl3/1920/1080','https://picsum.photos/seed/masjidBl4/1920/1080'],interval:8},
-  runningText:'Selamat datang di Masjid Agung Rejang Lebong. Mari kita tingkatkan keimanan dan ketaqwaan dengan memperbanyak ibadah. Jaga kebersihan dan ketenangan masjid.',
+  runningText:'Selamat datang di Masjid Agung Rejang Lebong. Mari kita tingkatkan keimanan dan ketaqwaan dengan memperbanyak ibadah.',
   phbi:[{name:'Isra Mi\'raj 1446 H',date:'2025-01-27'},{name:'Nuzulul Quran 1446 H',date:'2025-03-01'},{name:'Idul Fitri 1446 H',date:'2025-03-30'},{name:'Idul Adha 1446 H',date:'2025-06-07'}],
   customMessages:[],
   display:{showBlackScreen:true,blackScreenMinutes:15,autoAzan:true,jumatWelcomeMinutes:10},
   password:'admin123',
   spreadsheetUrl:''
 };
-let S;
 
-function dM(t,s){for(var k in s){if(!s.hasOwnProperty(k))continue;if(s[k]&&typeof s[k]==='object'&&!Array.isArray(s[k])&&t[k]&&typeof t[k]==='object'&&!Array.isArray(t[k])){dM(t[k],s[k])}else{t[k]=s[k]}}return t}
-function ld(){try{var r=localStorage.getItem('mosque_settings');S=r?dM(JSON.parse(JSON.stringify(DEF)),JSON.parse(r)):JSON.parse(JSON.stringify(DEF))}catch(e){S=JSON.parse(JSON.stringify(DEF))}if(!Array.isArray(S.phbi))S.phbi=[];if(!Array.isArray(S.customMessages))S.customMessages=[];if(!S.slideshow||!Array.isArray(S.slideshow.images))S.slideshow=JSON.parse(JSON.stringify(DEF.slideshow));if(!S.display)S.display=JSON.parse(JSON.stringify(DEF.display));if(!S.adjust)S.adjust=JSON.parse(JSON.stringify(DEF.adjust));if(!S.iqomah)S.iqomah=JSON.parse(JSON.stringify(DEF.iqomah));if(!S.calc)S.calc=JSON.parse(JSON.stringify(DEF.calc));if(!S.location)S.location=JSON.parse(JSON.stringify(DEF.location));if(!S.mosque)S.mosque=JSON.parse(JSON.stringify(DEF.mosque));if(!S.jumat)S.jumat=JSON.parse(JSON.stringify(DEF.jumat));if(!S.finance)S.finance=JSON.parse(JSON.stringify(DEF.finance));if(typeof S.spreadsheetUrl!=='string')S.spreadsheetUrl=''}
-function sv(){try{localStorage.setItem('mosque_settings',JSON.stringify(S))}catch(e){}}
-function st(o,k,f){try{var v=o[k];return(v!==undefined&&v!==null)?String(v):f}catch(e){return f}}
+var S = null;
 
-function sunP(jd){var D=jd-2451545.0,g=((D*.98560028)%360+357.529+360)%360,q=((D*.98564736)%360+280.459+360)%360,L=((q+1.915*Math.sin(g*DG)+.02*Math.sin(2*g*DG))%360+360)%360,e=23.439-.00000036*D,RA=Math.atan2(Math.cos(e*DG)*Math.sin(L*DG),Math.cos(L*DG))/DG,dec=Math.asin(Math.sin(e*DG)*Math.sin(L*DG))/DG;return{dec:dec,eqt:(q-(((RA%360)+360)%360))/15}}
-function hA(alt,lat,dec){var c=(Math.sin(alt*DG)-Math.sin(lat*DG)*Math.sin(dec*DG))/(Math.cos(lat*DG)*Math.cos(dec*DG));return(c<-1||c>1)?0:Math.acos(c)/DG}
-function cT(date){try{var jd=date.getTime()/864e5+2440587.5,p=sunP(jd),lat=S.location.latitude,tz=S.location.timezone,lng=S.location.longitude,dh=12+tz-lng/15-p.eqt,af=S.calc.asrMethod==='hanafi'?2:1,asa=Math.atan2(1,af+Math.tan(Math.abs(lat-p.dec)*DG))/DG,fj=S.calc.fajrAngle||20,is=S.calc.ishaAngle||18,t={subuh:dh-hA(-fj,lat,p.dec)/15,dzuhur:dh,asr:dh+hA(asa,lat,p.dec)/15,maghrib:dh+hA(-.8333,lat,p.dec)/15,isya:dh+hA(-is,lat,p.dec)/15},adj=S.adjust||{},r={};for(var k in t){var v=t[k]+(parseInt(adj[k])||0)/60,h=Math.floor(v),m=Math.round((v-h)*60);if(m>=60){h++;m-=60}if(m<0){h--;m+=60}h=((h%24)+24)%24;r[k]=String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')}return r}catch(e){return{subuh:'05:00',dzuhur:'12:00',asr:'15:15',maghrib:'18:00',isya:'19:15'}}}
-function toH(y,m,d){try{var jd=Math.floor(Date.UTC(y,m-1,d)/864e5)+2440587.5,l=Math.floor(jd-1948439.5)+10632,n=Math.floor((l-1)/10631),l2=l-10631*n+354,j=Math.floor((10985-l2)/5316)*Math.floor((50*l2)/17719)+Math.floor(l2/5670)*Math.floor((43*l2)/15238),l3=l2-Math.floor((30-j)/15)*Math.floor((17719*j)/50)-Math.floor(j/16)*Math.floor((15238*j)/43)+29,hm=Math.floor((24*l3)/709);return{year:30*n+j-30,month:hm,day:l3-Math.floor((709*hm)/24)}}catch(e){return{year:1446,month:1,day:1}}}
-function tM(t){try{var p=String(t).split(':');return parseInt(p[0])*60+parseInt(p[1])}catch(e){return 0}}
-function fC(s){if(!s||s<=0)return'00:00';var h=Math.floor(s/3600),m=Math.floor((s%3600)/60),sc=s%60;return h>0?String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(sc).padStart(2,'0'):String(m).padStart(2,'0')+':'+String(sc).padStart(2,'0')}
+/* =========================================
+   HELPERS
+   ========================================= */
+function cloneDef() {
+  return JSON.parse(JSON.stringify(DEF));
+}
 
-var PT={},mode='norm',trig=new Set(),dStr='',sI=0,sT=null,lI=0,lT=null,iqE=0,mE=0,aK='';
+function deepMerge(target, source) {
+  for (var k in source) {
+    if (!source.hasOwnProperty(k)) continue;
+    if (source[k] && typeof source[k] === 'object' && !Array.isArray(source[k]) &&
+        target[k] && typeof target[k] === 'object' && !Array.isArray(target[k])) {
+      deepMerge(target[k], source[k]);
+    } else {
+      target[k] = source[k];
+    }
+  }
+  return target;
+}
 
-function rP(){try{var n=new Date(),nM=n.getHours()*60+n.getMinutes(),nx=null;for(var i=0;i<OD.length;i++){if(tM(PT[OD[i]])>nM){nx=OD[i];break}}if(!nx)nx=OD[0];var h='';for(var i=0;i<OD.length;i++){var k=OD[i],isN=k===nx,isP=tM(PT[k])<nM,iq=S.iqomah[k]!==undefined?S.iqomah[k]:3;h+='<div class="pc '+(isN?'nx':'')+(isP&&!isN?' past':'')+'"><div class="pc-ico"><i class="fa-solid '+ICO[k]+'"></i></div><div class="pc-body"><div class="pc-nm">'+LB[k]+'</div><div class="pc-iq">Iqomah +'+iq+' menit</div></div><div class="pc-tm num">'+(PT[k]||'--:--')+'</div></div>'}document.getElementById('pLst').innerHTML=h}catch(e){}}
+function safeGet(obj, key, fallback) {
+  try {
+    var v = obj[key];
+    return (v !== undefined && v !== null) ? String(v) : fallback;
+  } catch(e) { return fallback; }
+}
 
-function rC(){try{var n=new Date(),ts=String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0')+':'+String(n.getSeconds()).padStart(2,'0');document.getElementById('hClk').textContent=ts;document.getElementById('hGre').textContent=DY[n.getDay()]+', '+n.getDate()+' '+MN[n.getMonth()]+' '+n.getFullYear();var hj=toH(n.getFullYear(),n.getMonth()+1,n.getDate());document.getElementById('hHij').textContent=hj.day+' '+HM[hj.month-1]+' '+hj.year+' H';document.getElementById('hName').textContent=st(S.mosque,'name','Masjid');document.getElementById('hAddr').textContent=st(S.mosque,'address','');document.getElementById('bkCk').textContent=ts;document.getElementById('juCk').textContent=ts}catch(e){}}
+function pad2(n) { return String(n).padStart(2, '0'); }
 
-function rCd(){try{var n=new Date(),ns=n.getHours()*3600+n.getMinutes()*60+n.getSeconds(),np=null,nm=1/0;for(var i=0;i<OD.length;i++){var pt=tM(PT[OD[i]])*60;if(pt>ns&&pt<nm){nm=pt;np=OD[i]}}if(!np){np=OD[0];nm=tM(PT[np])*60+86400}document.getElementById('cdNm').textContent=LB[np];document.getElementById('cdTm').textContent=fC(Math.max(0,Math.floor(nm-ns)))}catch(e){}}
+function toMin(t) {
+  try { var p = String(t).split(':'); return parseInt(p[0]) * 60 + parseInt(p[1]); }
+  catch(e) { return 0; }
+}
 
-function iS(){try{var b=document.getElementById('slBox');b.innerHTML='';var imgs=S.slideshow&&S.slideshow.images?S.slideshow.images:[];if(!imgs.length){b.innerHTML='<div style="position:absolute;inset:0;background:linear-gradient(135deg,#060c1a,#0a1428,#080e1c)"></div>';return}for(var i=0;i<imgs.length;i++){var img=document.createElement('img');img.className='sl'+(i===0?' on':'');img.src=imgs[i];img.onerror=function(){this.remove()};b.appendChild(img)}sI=0;clearInterval(sT);sT=setInterval(nS,Math.max(3000,(S.slideshow.interval||8)*1000))}catch(e){}}
-function nS(){try{var imgs=document.querySelectorAll('.sl');if(imgs.length<2)return;imgs[sI].classList.remove('on');sI=(sI+1)%imgs.length;if(imgs[sI])imgs[sI].classList.add('on')}catch(e){}}
+function fmtCountdown(s) {
+  if (!s || s <= 0) return '00:00';
+  var h = Math.floor(s / 3600);
+  var m = Math.floor((s % 3600) / 60);
+  var sc = s % 60;
+  if (h > 0) return pad2(h) + ':' + pad2(m) + ':' + pad2(sc);
+  return pad2(m) + ':' + pad2(sc);
+}
 
-function gLI(){try{var items=[],n=new Date();if(n.getDay()===5&&S.jumat)items.push({badge:"Petugas Jum'at",title:'Imam: '+st(S.jumat,'imam','-'),value:'Khatib: '+st(S.jumat,'khatib','-')+'  •  Muadzin: '+st(S.jumat,'muadzin','-')+'  •  Bilal: '+st(S.jumat,'bilal','-')});if(S.finance){items.push({badge:'Kas Masjid',title:'Kas Masjid',value:st(S.finance,'kasMasjid','-')});items.push({badge:'Pembangunan',title:'Kas Pembangunan',value:st(S.finance,'kasPembangunan','-')});items.push({badge:"Infak Jum'at",title:'Infak Terakhir',value:st(S.finance,'infakJumat','-')})}var ph=nPH();if(ph){var d=Math.ceil((ph.d-new Date())/864e5);items.push({badge:'PHBI',title:ph.name,value:d>0?d+' hari lagi':'Hari ini'})}return items}catch(e){return[]}}
+/* =========================================
+   LOAD / SAVE
+   ========================================= */
+function loadSettings() {
+  try {
+    var raw = localStorage.getItem('mosque_settings');
+    if (raw) {
+      S = deepMerge(cloneDef(), JSON.parse(raw));
+    } else {
+      S = cloneDef();
+    }
+  } catch(e) {
+    console.warn('Load error:', e);
+    S = cloneDef();
+  }
+  /* Pastikan semua properti ada */
+  if (!Array.isArray(S.phbi)) S.phbi = [];
+  if (!Array.isArray(S.customMessages)) S.customMessages = [];
+  if (!S.slideshow || !Array.isArray(S.slideshow.images)) S.slideshow = cloneDef().slideshow;
+  if (!S.display) S.display = cloneDef().display;
+  if (!S.adjust) S.adjust = cloneDef().adjust;
+  if (!S.iqomah) S.iqomah = cloneDef().iqomah;
+  if (!S.calc) S.calc = cloneDef().calc;
+  if (!S.location) S.location = cloneDef().location;
+  if (!S.mosque) S.mosque = cloneDef().mosque;
+  if (!S.jumat) S.jumat = cloneDef().jumat;
+  if (!S.finance) S.finance = cloneDef().finance;
+  if (typeof S.spreadsheetUrl !== 'string') S.spreadsheetUrl = '';
+}
 
-/* Low third dengan smooth exit */
-function sL(){try{var items=gLI();if(!items.length)return;var el=document.getElementById('ltBox'),it=items[lI%items.length];document.getElementById('ltBdg').textContent=it.badge;document.getElementById('ltTtl').textContent=it.title;document.getElementById('ltVal').textContent=it.value;el.classList.remove('out');el.classList.add('on');clearTimeout(lT);lT=setTimeout(function(){el.classList.remove('on');el.classList.add('out');setTimeout(function(){el.classList.remove('out');lI++;sL()},1000)},6500)}catch(e){}}
+function saveSettings() {
+  try { localStorage.setItem('mosque_settings', JSON.stringify(S)); }
+  catch(e) { console.warn('Save error:', e); }
+}
 
-function nPH(){try{var n=new Date(),best=null,bd=1/0;if(!Array.isArray(S.phbi))return null;for(var i=0;i<S.phbi.length;i++){var p=S.phbi[i];if(!p.name||!p.date)continue;var d=new Date(p.date+'T00:00:00'),df=d-n;if(df>=0&&df<bd){bd=df;best={name:p.name,d:d}}}return best}catch(e){return null}}
-function rPh(){try{var ph=nPH(),box=document.getElementById('phbiBox');if(!ph){box.style.display='none';return}box.style.display='block';document.getElementById('phbiNm').textContent=ph.name;var d=Math.ceil((ph.d-new Date())/864e5);document.getElementById('phbiCd').innerHTML=d>0?'<b>'+d+'</b> hari lagi':d===0?'<b>Hari ini</b>':'<b>Baru saja</b>'}catch(e){}}
+/* =========================================
+   PRAYER CALCULATION
+   ========================================= */
+function sunPosition(jd) {
+  var D = jd - 2451545.0;
+  var g = ((D * 0.98560028) % 360 + 357.529 + 360) % 360;
+  var q = ((D * 0.98564736) % 360 + 280.459 + 360) % 360;
+  var L = ((q + 1.915 * Math.sin(g * DG) + 0.02 * Math.sin(2 * g * DG)) % 360 + 360) % 360;
+  var e = 23.439 - 0.00000036 * D;
+  var RA = Math.atan2(Math.cos(e * DG) * Math.sin(L * DG), Math.cos(L * DG)) / DG;
+  var dec = Math.asin(Math.sin(e * DG) * Math.sin(L * DG)) / DG;
+  var eqt = (q - (((RA % 360) + 360) % 360)) / 15;
+  return { dec: dec, eqt: eqt };
+}
 
-function rMq(){try{var el=document.getElementById('mqTx'),txt=st(S,'runningText','');if(!txt){el.parentElement.style.display='none';return}el.parentElement.style.display='flex';el.textContent=txt;el.style.setProperty('--dur',Math.max(25,txt.length*.15)+'s')}catch(e){}}
+function hourAngle(alt, lat, dec) {
+  var cosH = (Math.sin(alt * DG) - Math.sin(lat * DG) * Math.sin(dec * DG)) / (Math.cos(lat * DG) * Math.cos(dec * DG));
+  if (cosH < -1 || cosH > 1) return 0;
+  return Math.acos(cosH) / DG;
+}
 
-function hOv(){try{document.querySelectorAll('.ov').forEach(function(o){o.classList.remove('on')})}catch(e){}}
-function sOv(id){try{hOv();document.getElementById(id).classList.add('on')}catch(e){}}
-function sNm(){try{hOv();document.getElementById('app').style.display='grid';document.getElementById('errScr').classList.remove('on')}catch(e){}}
-function hNm(){try{document.getElementById('app').style.display='none'}catch(e){}}
+function calcPrayerTimes(date) {
+  try {
+    var jd = date.getTime() / 86400000 + 2440587.5;
+    var pos = sunPosition(jd);
+    var lat = S.location.latitude;
+    var tz = S.location.timezone;
+    var lng = S.location.longitude;
+    var dhuhr = 12 + tz - lng / 15 - pos.eqt;
+    var asrFactor = (S.calc.asrMethod === 'hanafi') ? 2 : 1;
+    var asrShadow = Math.atan2(1, asrFactor + Math.tan(Math.abs(lat - pos.dec) * DG)) / DG;
+    var fajrAngle = S.calc.fajrAngle || 20;
+    var ishaAngle = S.calc.ishaAngle || 18;
+    var adj = S.adjust || {};
 
-function tAz(k){try{aK=k;hNm();sOv('ovAz');document.getElementById('azNm').textContent=LB[k]||k;document.getElementById('azTm').textContent=PT[k]||'';mode='azan';mE=Date.now()+(S.azanDuration||180)*1000}catch(e){sNm()}}
-function tIq(k){try{hNm();sOv('ovIq');document.getElementById('iqInf').textContent=(LB[k]||'')+' — '+st(S.mosque,'name','');iqE=Date.now()+((S.iqomah&&S.iqomah[k])||3)*6e4;mode='iqo'}catch(e){sNm()}}
-function tBk(){try{hNm();sOv('ovBk');mode='black';mE=Date.now()+(S.display.blackScreenMinutes||15)*6e4}catch(e){sNm()}}
-function tJu(){try{hNm();var j=S.jumat||{};document.getElementById('juGr').innerHTML='<div class="ju-c"><div class="ju-cl">Imam</div><div class="ju-cv">'+st(j,'imam','-')+'</div></div><div class="ju-c"><div class="ju-cl">Khatib</div><div class="ju-cv">'+st(j,'khatib','-')+'</div></div><div class="ju-c"><div class="ju-cl">Muadzin</div><div class="ju-cv">'+st(j,'muadzin','-')+'</div></div><div class="ju-c"><div class="ju-cl">Bilal</div><div class="ju-cv">'+st(j,'bilal','-')+'</div></div>';sOv('ovJu');mode='jum'}catch(e){sNm()}}
-function cCu(){try{if(!Array.isArray(S.customMessages))return false;var n=new Date();for(var i=0;i<S.customMessages.length;i++){var m=S.customMessages[i];if(!m.active)continue;if(m.schedule&&m.scheduleStart&&m.scheduleEnd){try{if(n>=new Date(m.scheduleStart)&&n<=new Date(m.scheduleEnd)){hNm();document.getElementById('cuTtl').textContent=m.title||'';document.getElementById('cuBd').textContent=m.body||'';sOv('ovCu');mode='cust';return true}}catch(e){}}if(m.manual){hNm();document.getElementById('cuTtl').textContent=m.title||'';document.getElementById('cuBd').textContent=m.body||'';sOv('ovCu');mode='cust';return true}}return false}catch(e){return false}}
+    var raw = {
+      subuh: dhuhr - hourAngle(-fajrAngle, lat, pos.dec) / 15,
+      dzuhur: dhuhr,
+      asr: dhuhr + hourAngle(asrShadow, lat, pos.dec) / 15,
+      maghrib: dhuhr + hourAngle(-0.8333, lat, pos.dec) / 15,
+      isya: dhuhr + hourAngle(-ishaAngle, lat, pos.dec) / 15
+    };
 
-function cM(){try{if(cCu())return;var n=new Date(),ds=n.toDateString();if(dStr!==ds){trig.clear();dStr=ds}var ns=n.getHours()*3600+n.getMinutes()*60+n.getSeconds(),isJ=n.getDay()===5;if(mode==='azan'){if(Date.now()>=mE)tIq(aK);else return}if(mode==='iqo'){var r=Math.max(0,Math.ceil((iqE-Date.now())/1000));document.getElementById('iqNm').textContent=fC(r);if(Date.now()>=iqE){(S.display&&S.display.showBlackScreen)?tBk():sNm()}else return}if(mode==='black'){if(Date.now()>=mE)sNm();else return}if(mode==='jum'){var dS=tM(PT.dzuhur)*60;if(ns>=dS-30&&!trig.has('j_a')){trig.add('j_a');tAz('dzuhur');return}return}if(mode!=='norm')return;if(isJ&&!trig.has('j_w')){var wS=tM(PT.dzuhur)*60-(S.display.jumatWelcomeMinutes||10)*60;if(ns>=wS){trig.add('j_w');tJu();return}}if(S.display&&S.display.autoAzan){for(var i=0;i<OD.length;i++){var k=OD[i];if(trig.has(k))continue;var pt=tM(PT[k])*60;if(ns>=pt&&ns<pt+30){trig.add(k);tAz(k);return}}}}catch(e){}}
+    var result = {};
+    for (var k in raw) {
+      var v = raw[k] + (parseInt(adj[k]) || 0) / 60;
+      var h = Math.floor(v);
+      var m = Math.round((v - h) * 60);
+      if (m >= 60) { h++; m -= 60; }
+      if (m < 0) { h--; m += 60; }
+      h = ((h % 24) + 24) % 24;
+      result[k] = pad2(h) + ':' + pad2(m);
+    }
+    return result;
+  } catch(e) {
+    console.warn('Calc error:', e);
+    return { subuh:'05:00', dzuhur:'12:00', asr:'15:15', maghrib:'18:00', isya:'19:15' };
+  }
+}
 
-function tick(){try{rC();rCd();cM();if(mode==='norm'){rP();rPh()}}catch(e){}}
-function sF(){try{var url=S.spreadsheetUrl;if(!url||!url.trim())return;fetch(url,{mode:'cors'}).then(function(r){if(!r.ok)throw 0;return r.json()}).then(function(d){if(d&&typeof d==='object'){S=dM(JSON.parse(JSON.stringify(DEF)),d);if(!Array.isArray(S.phbi))S.phbi=[];if(!Array.isArray(S.customMessages))S.customMessages=[];sv();PT=cT(new Date());iS();rMq()}}).catch(function(){})}catch(e){}}
+/* =========================================
+   HIJRI CALENDAR
+   ========================================= */
+function toHijri(y, m, d) {
+  try {
+    var jd = Math.floor(Date.UTC(y, m - 1, d) / 86400000) + 2440587.5;
+    var l = Math.floor(jd - 1948439.5) + 10632;
+    var n = Math.floor((l - 1) / 10631);
+    var l2 = l - 10631 * n + 354;
+    var j = Math.floor((10985 - l2) / 5316) * Math.floor((50 * l2) / 17719) + Math.floor(l2 / 5670) * Math.floor((43 * l2) / 15238);
+    var l3 = l2 - Math.floor((30 - j) / 15) * Math.floor((17719 * j) / 50) - Math.floor(j / 16) * Math.floor((15238 * j) / 43) + 29;
+    var hm = Math.floor((24 * l3) / 709);
+    var hd = l3 - Math.floor((709 * hm) / 24);
+    return { year: 30 * n + j - 30, month: hm, day: hd };
+  } catch(e) { return { year: 1446, month: 1, day: 1 }; }
+}
 
-function init(){try{ld();PT=cT(new Date());setInterval(function(){try{PT=cT(new Date())}catch(e){}},6e4);rC();rP();rCd();rPh();iS();rMq();setTimeout(sL,2800);sNm();setInterval(tick,1000);setInterval(sF,3e4);sF()}catch(e){document.getElementById('errMsg').textContent='Gagal memuat: '+e.message;document.getElementById('errScr').classList.add('on');document.getElementById('app').style.display='none'}}
+/* =========================================
+   STATE
+   ========================================= */
+var PT = {};
+var currentMode = 'normal';
+var triggeredSet = new Set();
+var todayStr = '';
+var slideIndex = 0;
+var slideTimer = null;
+var ltIndex = 0;
+var ltTimer = null;
+var iqomahEndTime = 0;
+var modeEndTime = 0;
+var azanPrayerKey = '';
+
+/* =========================================
+   RENDER: PRAYER LIST
+   ========================================= */
+function renderPrayers() {
+  try {
+    var now = new Date();
+    var nowMin = now.getHours() * 60 + now.getMinutes();
+    var nextKey = null;
+    for (var i = 0; i < OD.length; i++) {
+      if (toMin(PT[OD[i]]) > nowMin) { nextKey = OD[i]; break; }
+    }
+    if (!nextKey) nextKey = OD[0];
+
+    var html = '';
+    for (var i = 0; i < OD.length; i++) {
+      var k = OD[i];
+      var isNext = (k === nextKey);
+      var isPast = (toMin(PT[k]) < nowMin);
+      var iq = (S.iqomah[k] !== undefined) ? S.iqomah[k] : 3;
+      var cls = 'pc';
+      if (isNext) cls += ' nx';
+      else if (isPast) cls += ' past';
+      html += '<div class="' + cls + '">' +
+        '<div class="pc-ico"><i class="fa-solid ' + ICO[k] + '"></i></div>' +
+        '<div class="pc-body"><div class="pc-nm">' + LB[k] + '</div>' +
+        '<div class="pc-iq">Iqomah +' + iq + ' menit</div></div>' +
+        '<div class="pc-tm num">' + (PT[k] || '--:--') + '</div></div>';
+    }
+    document.getElementById('pLst').innerHTML = html;
+  } catch(e) { console.warn('renderPrayers:', e); }
+}
+
+/* =========================================
+   RENDER: CLOCK
+   ========================================= */
+function renderClock() {
+  try {
+    var now = new Date();
+    var ts = pad2(now.getHours()) + ':' + pad2(now.getMinutes()) + ':' + pad2(now.getSeconds());
+    document.getElementById('hClk').textContent = ts;
+    document.getElementById('hGre').textContent = DY[now.getDay()] + ', ' + now.getDate() + ' ' + MN[now.getMonth()] + ' ' + now.getFullYear();
+    var hj = toHijri(now.getFullYear(), now.getMonth() + 1, now.getDate());
+    document.getElementById('hHij').textContent = hj.day + ' ' + HM[hj.month - 1] + ' ' + hj.year + ' H';
+    document.getElementById('hName').textContent = safeGet(S.mosque, 'name', 'Masjid');
+    document.getElementById('hAddr').textContent = safeGet(S.mosque, 'address', '');
+    document.getElementById('bkCk').textContent = ts;
+    document.getElementById('juCk').textContent = ts;
+  } catch(e) { console.warn('renderClock:', e); }
+}
+
+/* =========================================
+   RENDER: COUNTDOWN
+   ========================================= */
+function renderCountdown() {
+  try {
+    var now = new Date();
+    var nowSec = now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
+    var nextP = null;
+    var nextSec = Infinity;
+    for (var i = 0; i < OD.length; i++) {
+      var pt = toMin(PT[OD[i]]) * 60;
+      if (pt > nowSec && pt < nextSec) { nextSec = pt; nextP = OD[i]; }
+    }
+    if (!nextP) { nextP = OD[0]; nextSec = toMin(PT[nextP]) * 60 + 86400; }
+    document.getElementById('cdNm').textContent = LB[nextP];
+    document.getElementById('cdTm').textContent = fmtCountdown(Math.max(0, Math.floor(nextSec - nowSec)));
+  } catch(e) { console.warn('renderCountdown:', e); }
+}
+
+/* =========================================
+   RENDER: SLIDESHOW
+   ========================================= */
+function initSlideshow() {
+  try {
+    var box = document.getElementById('slBox');
+    box.innerHTML = '';
+    var imgs = (S.slideshow && S.slideshow.images) ? S.slideshow.images : [];
+    if (!imgs.length) {
+      box.innerHTML = '<div style="position:absolute;inset:0;background:linear-gradient(135deg,#060c1a,#0a1428,#080e1c)"></div>';
+      return;
+    }
+    for (var i = 0; i < imgs.length; i++) {
+      var img = document.createElement('img');
+      img.className = 'sl' + (i === 0 ? ' on' : '');
+      img.src = imgs[i];
+      img.onerror = function() { this.remove(); };
+      box.appendChild(img);
+    }
+    slideIndex = 0;
+    clearInterval(slideTimer);
+    slideTimer = setInterval(nextSlide, Math.max(3000, (S.slideshow.interval || 8) * 1000));
+  } catch(e) { console.warn('initSlideshow:', e); }
+}
+
+function nextSlide() {
+  try {
+    var imgs = document.querySelectorAll('.sl');
+    if (imgs.length < 2) return;
+    if (imgs[slideIndex]) imgs[slideIndex].classList.remove('on');
+    slideIndex = (slideIndex + 1) % imgs.length;
+    if (imgs[slideIndex]) imgs[slideIndex].classList.add('on');
+  } catch(e) {}
+}
+
+/* =========================================
+   RENDER: LOW THIRD (smooth exit)
+   ========================================= */
+function getLowThirdItems() {
+  try {
+    var items = [];
+    var now = new Date();
+    if (now.getDay() === 5 && S.jumat) {
+      items.push({
+        badge: "Petugas Jum'at",
+        title: 'Imam: ' + safeGet(S.jumat, 'imam', '-'),
+        value: 'Khatib: ' + safeGet(S.jumat, 'khatib', '-') + '  \u2022  Muadzin: ' + safeGet(S.jumat, 'muadzin', '-') + '  \u2022  Bilal: ' + safeGet(S.jumat, 'bilal', '-')
+      });
+    }
+    if (S.finance) {
+      items.push({ badge: 'Kas Masjid', title: 'Kas Masjid', value: safeGet(S.finance, 'kasMasjid', '-') });
+      items.push({ badge: 'Pembangunan', title: 'Kas Pembangunan', value: safeGet(S.finance, 'kasPembangunan', '-') });
+      items.push({ badge: "Infak Jum'at", title: 'Infak Terakhir', value: safeGet(S.finance, 'infakJumat', '-') });
+    }
+    var ph = getNextPHBI();
+    if (ph) {
+      var d = Math.ceil((ph.dateObj - new Date()) / 86400000);
+      items.push({ badge: 'PHBI', title: ph.name, value: d > 0 ? d + ' hari lagi' : 'Hari ini' });
+    }
+    return items;
+  } catch(e) { return []; }
+}
+
+function showLowThird() {
+  try {
+    var items = getLowThirdItems();
+    if (!items.length) return;
+    var el = document.getElementById('ltBox');
+    var item = items[ltIndex % items.length];
+    document.getElementById('ltBdg').textContent = item.badge;
+    document.getElementById('ltTtl').textContent = item.title;
+    document.getElementById('ltVal').textContent = item.value;
+    /* Hapus class out jika masih ada, lalu tampilkan */
+    el.classList.remove('out');
+    el.classList.add('on');
+    clearTimeout(ltTimer);
+    ltTimer = setTimeout(function() {
+      /* Smooth exit: tambah class out (fade + turun pelan) */
+      el.classList.remove('on');
+      el.classList.add('out');
+      /* Tunggu animasi selesai, baru ganti konten & tampilkan berikutnya */
+      setTimeout(function() {
+        el.classList.remove('out');
+        ltIndex++;
+        showLowThird();
+      }, 1050);
+    }, 6500);
+  } catch(e) { console.warn('showLowThird:', e); }
+}
+
+/* =========================================
+   RENDER: PHBI
+   ========================================= */
+function getNextPHBI() {
+  try {
+    var now = new Date();
+    var best = null;
+    var bestDiff = Infinity;
+    if (!Array.isArray(S.phbi)) return null;
+    for (var i = 0; i < S.phbi.length; i++) {
+      var p = S.phbi[i];
+      if (!p.name || !p.date) continue;
+      var d = new Date(p.date + 'T00:00:00');
+      var diff = d - now;
+      if (diff >= 0 && diff < bestDiff) { bestDiff = diff; best = { name: p.name, dateObj: d }; }
+    }
+    return best;
+  } catch(e) { return null; }
+}
+
+function renderPHBI() {
+  try {
+    var ph = getNextPHBI();
+    var box = document.getElementById('phbiBox');
+    if (!ph) { box.style.display = 'none'; return; }
+    box.style.display = 'block';
+    document.getElementById('phbiNm').textContent = ph.name;
+    var d = Math.ceil((ph.dateObj - new Date()) / 86400000);
+    if (d > 0) document.getElementById('phbiCd').innerHTML = '<b>' + d + '</b> hari lagi';
+    else if (d === 0) document.getElementById('phbiCd').innerHTML = '<b>Hari ini</b>';
+    else document.getElementById('phbiCd').innerHTML = '<b>Baru saja</b>';
+  } catch(e) { console.warn('renderPHBI:', e); }
+}
+
+/* =========================================
+   RENDER: MARQUEE
+   ========================================= */
+function renderMarquee() {
+  try {
+    var el = document.getElementById('mqTx');
+    var txt = safeGet(S, 'runningText', '');
+    if (!txt) { el.parentElement.style.display = 'none'; return; }
+    el.parentElement.style.display = 'flex';
+    el.textContent = txt;
+    el.style.setProperty('--dur', Math.max(25, txt.length * 0.15) + 's');
+  } catch(e) {}
+}
+
+/* =========================================
+   OVERLAY HELPERS
+   ========================================= */
+function hideAllOverlays() {
+  try { document.querySelectorAll('.ov').forEach(function(o) { o.classList.remove('on'); }); } catch(e) {}
+}
+function showOverlay(id) {
+  try { hideAllOverlays(); document.getElementById(id).classList.add('on'); } catch(e) {}
+}
+function showNormal() {
+  try {
+    hideAllOverlays();
+    document.getElementById('app').style.display = 'grid';
+    document.getElementById('errScr').classList.remove('on');
+  } catch(e) {}
+}
+function hideNormal() {
+  try { document.getElementById('app').style.display = 'none'; } catch(e) {}
+}
+
+/* =========================================
+   TRIGGER FUNCTIONS
+   ========================================= */
+function triggerAzan(k) {
+  try {
+    azanPrayerKey = k;
+    hideNormal();
+    showOverlay('ovAz');
+    document.getElementById('azNm').textContent = LB[k] || k;
+    document.getElementById('azTm').textContent = PT[k] || '';
+    currentMode = 'azan';
+    modeEndTime = Date.now() + (S.azanDuration || 180) * 1000;
+  } catch(e) { showNormal(); }
+}
+
+function triggerIqomah(k) {
+  try {
+    hideNormal();
+    showOverlay('ovIq');
+    document.getElementById('iqInf').textContent = (LB[k] || '') + ' \u2014 ' + safeGet(S.mosque, 'name', '');
+    iqomahEndTime = Date.now() + ((S.iqomah && S.iqomah[k]) || 3) * 60000;
+    currentMode = 'iqomah';
+  } catch(e) { showNormal(); }
+}
+
+function triggerBlack() {
+  try {
+    hideNormal();
+    showOverlay('ovBk');
+    currentMode = 'black';
+    modeEndTime = Date.now() + (S.display.blackScreenMinutes || 15) * 60000;
+  } catch(e) { showNormal(); }
+}
+
+function triggerJumat() {
+  try {
+    hideNormal();
+    var j = S.jumat || {};
+    document.getElementById('juGr').innerHTML =
+      '<div class="ju-c"><div class="ju-cl">Imam</div><div class="ju-cv">' + safeGet(j,'imam','-') + '</div></div>' +
+      '<div class="ju-c"><div class="ju-cl">Khatib</div><div class="ju-cv">' + safeGet(j,'khatib','-') + '</div></div>' +
+      '<div class="ju-c"><div class="ju-cl">Muadzin</div><div class="ju-cv">' + safeGet(j,'muadzin','-') + '</div></div>' +
+      '<div class="ju-c"><div class="ju-cl">Bilal</div><div class="ju-cv">' + safeGet(j,'bilal','-') + '</div></div>';
+    showOverlay('ovJu');
+    currentMode = 'jumat';
+  } catch(e) { showNormal(); }
+}
+
+function checkCustomMessage() {
+  try {
+    if (!Array.isArray(S.customMessages)) return false;
+    var now = new Date();
+    for (var i = 0; i < S.customMessages.length; i++) {
+      var m = S.customMessages[i];
+      if (!m.active) continue;
+      if (m.schedule && m.scheduleStart && m.scheduleEnd) {
+        try {
+          if (now >= new Date(m.scheduleStart) && now <= new Date(m.scheduleEnd)) {
+            hideNormal();
+            document.getElementById('cuTtl').textContent = m.title || '';
+            document.getElementById('cuBd').textContent = m.body || '';
+            showOverlay('ovCu');
+            currentMode = 'custom';
+            return true;
+          }
+        } catch(e) {}
+      }
+      if (m.manual) {
+        hideNormal();
+        document.getElementById('cuTtl').textContent = m.title || '';
+        document.getElementById('cuBd').textContent = m.body || '';
+        showOverlay('ovCu');
+        currentMode = 'custom';
+        return true;
+      }
+    }
+  } catch(e) { console.warn('checkCustomMsg:', e); }
+  return false;
+}
+
+/* =========================================
+   MODE CHECKER
+   ========================================= */
+function checkMode() {
+  try {
+    if (checkCustomMessage()) return;
+
+    var now = new Date();
+    var ds = now.toDateString();
+    if (todayStr !== ds) { triggeredSet.clear(); todayStr = ds; }
+    var nowSec = now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
+    var isJumat = (now.getDay() === 5);
+
+    /* Azan -> tunggu durasi habis */
+    if (currentMode === 'azan') {
+      if (Date.now() >= modeEndTime) triggerIqomah(azanPrayerKey);
+      return;
+    }
+    /* Iqomah -> hitung mundur */
+    if (currentMode === 'iqomah') {
+      var remain = Math.max(0, Math.ceil((iqomahEndTime - Date.now()) / 1000));
+      document.getElementById('iqNm').textContent = fmtCountdown(remain);
+      if (Date.now() >= iqomahEndTime) {
+        if (S.display && S.display.showBlackScreen) triggerBlack();
+        else showNormal();
+      }
+      return;
+    }
+    /* Black screen */
+    if (currentMode === 'black') {
+      if (Date.now() >= modeEndTime) showNormal();
+      return;
+    }
+    /* Jumat screen */
+    if (currentMode === 'jumat') {
+      var dzuhurSec = toMin(PT.dzuhur) * 60;
+      if (nowSec >= dzuhurSec - 30 && !triggeredSet.has('jum_azan')) {
+        triggeredSet.add('jum_azan');
+        triggerAzan('dzuhur');
+      }
+      return;
+    }
+    /* Hanya cek trigger jika mode normal */
+    if (currentMode !== 'normal') return;
+
+    /* Welcome Jumat */
+    if (isJumat && !triggeredSet.has('jum_welcome')) {
+      var welSec = toMin(PT.dzuhur) * 60 - (S.display.jumatWelcomeMinutes || 10) * 60;
+      if (nowSec >= welSec) {
+        triggeredSet.add('jum_welcome');
+        triggerJumat();
+        return;
+      }
+    }
+    /* Auto azan */
+    if (S.display && S.display.autoAzan) {
+      for (var i = 0; i < OD.length; i++) {
+        var k = OD[i];
+        if (triggeredSet.has(k)) continue;
+        var pt = toMin(PT[k]) * 60;
+        if (nowSec >= pt && nowSec < pt + 30) {
+          triggeredSet.add(k);
+          triggerAzan(k);
+          return;
+        }
+      }
+    }
+  } catch(e) { console.warn('checkMode:', e); }
+}
+
+/* =========================================
+   MAIN TICK
+   ========================================= */
+function tick() {
+  try {
+    renderClock();
+    renderCountdown();
+    checkMode();
+    if (currentMode === 'normal') {
+      renderPrayers();
+      renderPHBI();
+    }
+  } catch(e) { console.warn('tick:', e); }
+}
+
+/* =========================================
+   SPREADSHEET SYNC
+   ========================================= */
+function syncFromSheet() {
+  try {
+    var url = S.spreadsheetUrl;
+    if (!url || !url.trim()) return;
+    fetch(url, { mode: 'cors' })
+      .then(function(r) {
+        if (!r.ok) throw new Error(r.status);
+        return r.json();
+      })
+      .then(function(d) {
+        if (d && typeof d === 'object') {
+          S = deepMerge(cloneDef(), d);
+          if (!Array.isArray(S.phbi)) S.phbi = [];
+          if (!Array.isArray(S.customMessages)) S.customMessages = [];
+          saveSettings();
+          PT = calcPrayerTimes(new Date());
+          initSlideshow();
+          renderMarquee();
+        }
+      })
+      .catch(function() { /* gagal diam-diam */ });
+  } catch(e) {}
+}
+
+/* =========================================
+   INIT
+   ========================================= */
+function init() {
+  try {
+    loadSettings();
+    PT = calcPrayerTimes(new Date());
+    /* Recalc setiap menit */
+    setInterval(function() {
+      try { PT = calcPrayerTimes(new Date()); } catch(e) {}
+    }, 60000);
+
+    renderClock();
+    renderPrayers();
+    renderCountdown();
+    renderPHBI();
+    initSlideshow();
+    renderMarquee();
+    setTimeout(showLowThird, 2800);
+    showNormal();
+
+    setInterval(tick, 1000);
+    setInterval(syncFromSheet, 30000);
+    syncFromSheet();
+
+  } catch(e) {
+    console.error('Init fatal:', e);
+    try {
+      document.getElementById('errMsg').textContent = 'Gagal memuat: ' + e.message;
+      document.getElementById('errScr').classList.add('on');
+      document.getElementById('app').style.display = 'none';
+    } catch(e2) {}
+  }
+}
+
 init();
 </script>
 </body>
