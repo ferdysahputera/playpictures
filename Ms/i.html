@@ -24,25 +24,26 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);-web
 .nm{font-family:'Cinzel',serif;font-variant-numeric:tabular-nums;letter-spacing:.04em}
 
 #app{position:relative;z-index:1;height:100vh;display:flex;flex-direction:column;min-height:0}
-
-/* ===== HEADER ===== */
 .hdr{flex-shrink:0;padding:1.8vh 3vw;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);background:linear-gradient(180deg,rgba(10,18,38,.96),rgba(4,10,24,.82));backdrop-filter:blur(14px);position:relative}
 .hdr::after{content:'';position:absolute;bottom:0;left:10%;right:10%;height:1px;background:linear-gradient(90deg,transparent,var(--blue-d),transparent)}
 .hdr-left{display:flex;align-items:center;gap:1.4vw}
-.hdr-logo{width:clamp(44px,3.4vw,60px);height:clamp(44px,3.4vw,60px);border-radius:13px;background:linear-gradient(135deg,rgba(26,95,180,.16),rgba(26,95,180,.05));border:1px solid rgba(26,95,180,.28);display:flex;align-items:center;justify-content:center;color:var(--blue-l);font-size:clamp(1rem,1.6vw,1.5rem);flex-shrink:0;box-shadow:0 4px 20px rgba(26,95,180,.1)}
+
+/* ===== LOGO — bisa diklik ===== */
+.hdr-logo{width:clamp(44px,3.4vw,60px);height:clamp(44px,3.4vw,60px);border-radius:13px;background:linear-gradient(135deg,rgba(26,95,180,.16),rgba(26,95,180,.05));border:1px solid rgba(26,95,180,.28);display:flex;align-items:center;justify-content:center;color:var(--blue-l);font-size:clamp(1rem,1.6vw,1.5rem);flex-shrink:0;box-shadow:0 4px 20px rgba(26,95,180,.1);text-decoration:none;cursor:pointer;transition:all .3s ease}
+.hdr-logo:hover{background:linear-gradient(135deg,rgba(26,95,180,.28),rgba(26,95,180,.1));border-color:rgba(74,142,230,.45);box-shadow:0 4px 24px rgba(26,95,180,.2);transform:scale(1.05)}
+.hdr-logo:active{transform:scale(.96)}
+
 .hdr-name{font-size:clamp(1.15rem,2vw,1.8rem);font-weight:700;color:var(--gold-l);letter-spacing:.02em;line-height:1.2;text-shadow:0 2px 8px rgba(0,0,0,.5)}
 .hdr-addr{font-size:clamp(.62rem,.8vw,.88rem);color:var(--muted);font-weight:500;margin-top:2px}
 .hdr-clock{font-size:clamp(2.4rem,4.4vw,3.8rem);font-weight:700;color:var(--gold);letter-spacing:.06em;line-height:1;text-shadow:0 2px 12px rgba(212,175,78,.25),0 0 40px rgba(212,175,78,.1)}
 .hdr-hijri{font-size:clamp(.64rem,.82vw,.9rem);color:var(--blue-l);font-weight:600;letter-spacing:.1em;margin-top:3px}
 .hdr-greg{font-size:clamp(.56rem,.72vw,.78rem);color:var(--muted);font-weight:500;margin-top:1px}
 
-/* ===== CONTENT ===== */
 .ctn{flex:1;min-height:0;display:flex;overflow:hidden}
 .pp{flex:0 0 30%;max-width:30%;padding:2.8vh 2vw;display:flex;flex-direction:column;justify-content:center;border-right:1px solid var(--border);position:relative;overflow:hidden;background:linear-gradient(180deg,rgba(6,12,28,.4),rgba(4,10,24,.2))}
 .pp::after{content:'';position:absolute;top:8%;bottom:8%;right:0;width:1px;background:linear-gradient(180deg,transparent,var(--blue-d),transparent);pointer-events:none}
 .md{flex:1;min-width:0;position:relative;overflow:hidden;background:#020814}
 
-/* ===== PRAYER LIST ===== */
 .pp-lbl{font-size:clamp(.54rem,.66vw,.72rem);text-transform:uppercase;letter-spacing:.26em;color:var(--blue-l);font-weight:700;margin-bottom:2.8vh;padding-left:.2vw;display:flex;align-items:center;gap:10px;flex-shrink:0}
 .pp-lbl::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--blue-d),transparent)}
 .pp-list{display:flex;flex-direction:column;gap:1.1vh}
@@ -50,14 +51,12 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);-web
 .pc{display:grid;grid-template-columns:50px 1fr auto;align-items:center;padding:1.6vh 1.4vw;border-radius:13px;transition:all .5s cubic-bezier(.23,1,.32,1);border:1.5px solid rgba(28,38,62,.55);background:rgba(6,14,28,.45);gap:.7vw;flex-shrink:0;position:relative;box-shadow:inset 0 1px 3px rgba(0,0,0,.25)}
 .pc::before{content:'';position:absolute;inset:0;border-radius:13px;background:linear-gradient(90deg,var(--blue-f),transparent);opacity:0;transition:opacity .5s}
 .pc:hover{border-color:rgba(26,95,180,.22);background:rgba(8,16,32,.55)}.pc:hover::before{opacity:.5}
-
 .pc-ico{width:50px;height:50px;display:flex;align-items:center;justify-content:center;border-radius:11px;background:rgba(26,95,180,.09);border:1px solid rgba(26,95,180,.18);color:#6aa8f0;font-size:1.15rem;transition:all .5s}
 .pc-body{display:flex;flex-direction:column;gap:2px;padding-left:.4vw;min-width:0}
 .pc-nm{font-size:clamp(.92rem,1.15vw,1.28rem);font-weight:700;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .pc-iq{font-size:clamp(.52rem,.62vw,.7rem);color:var(--muted);font-weight:500}
 .pc-tm{font-size:clamp(1.35rem,1.75vw,1.95rem);font-weight:700;color:var(--text);text-align:right;letter-spacing:.04em}
 
-/* Next prayer highlight */
 .pc.nx{border:1.5px solid rgba(212,175,78,.42);background:linear-gradient(90deg,rgba(212,175,78,.12),rgba(212,175,78,.03));box-shadow:0 0 36px rgba(212,175,78,.09),inset 0 1px 3px rgba(0,0,0,.25),0 0 0 1px rgba(212,175,78,.07)}
 .pc.nx::before{opacity:1;background:linear-gradient(90deg,var(--gold-g),transparent)}
 .pc.nx .pc-ico{background:rgba(212,175,78,.18);border-color:rgba(212,175,78,.3);color:#ffd980;box-shadow:0 0 18px rgba(212,175,78,.18)}
@@ -66,19 +65,16 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);-web
 .pc.nx .pc-tm{color:var(--gold-l);font-weight:800;font-size:clamp(1.55rem,2vw,2.2rem);text-shadow:0 2px 10px rgba(212,175,78,.16)}
 .pc.past{opacity:.22}
 
-/* ===== SLIDESHOW ===== */
 .sl{position:absolute;inset:0;opacity:0;transition:opacity 2s ease-in-out,transform 8s ease-out;object-fit:cover;width:100%;height:100%;transform:scale(1.03)}
 .sl.on{opacity:1;transform:scale(1)}
 .md-grad{position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(170deg,rgba(4,8,20,.12) 0%,transparent 22%,transparent 52%,rgba(4,8,20,.6) 100%)}
 
-/* ===== PHBI ===== */
 .phbi{position:absolute;top:2.2vh;right:2vw;z-index:5;background:var(--glass);border:1px solid rgba(26,95,180,.16);border-radius:13px;padding:1.4vh 1.6vw;backdrop-filter:blur(16px);max-width:240px;box-shadow:0 8px 28px rgba(0,0,0,.4)}
 .phbi-tag{font-size:clamp(.48rem,.58vw,.64rem);text-transform:uppercase;letter-spacing:.18em;color:var(--blue-l);font-weight:700;margin-bottom:.3vh}
 .phbi-nm{font-size:clamp(.78rem,.95vw,1.04rem);font-weight:700;color:var(--text);line-height:1.3}
 .phbi-cd{font-size:clamp(.62rem,.74vw,.8rem);color:var(--text2);margin-top:.3vh}
 .phbi-cd b{color:var(--gold);font-weight:800}
 
-/* ===== LOW THIRD ===== */
 .lt-wrap{position:absolute;bottom:2.2vh;left:2vw;right:2vw;z-index:5}
 .lt{background:linear-gradient(105deg,rgba(4,10,24,.94),rgba(14,24,44,.86));border:1.5px solid rgba(212,175,78,.28);border-radius:14px;padding:2.8vh 3vw;display:flex;align-items:center;gap:2vw;backdrop-filter:blur(20px);box-shadow:0 10px 36px rgba(0,0,0,.5);transform:translateY(120%);opacity:0;transition:transform .8s cubic-bezier(.23,1,.32,1),opacity .7s ease}
 .lt.on{transform:translateY(0);opacity:1}
@@ -89,7 +85,6 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);-web
 .lt-val{font-size:clamp(.88rem,1.05vw,1.15rem);font-weight:500;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.4}
 .lt-line{width:1px;height:36px;flex-shrink:0;background:linear-gradient(180deg,transparent,rgba(212,175,78,.3),transparent)}
 
-/* ===== FOOTER ===== */
 .ftr{flex-shrink:0;padding:1.4vh 3vw;display:flex;align-items:center;border-top:1px solid var(--border);background:linear-gradient(0deg,rgba(10,18,38,.96),rgba(4,10,24,.82));backdrop-filter:blur(14px);position:relative}
 .ftr::before{content:'';position:absolute;top:0;left:10%;right:10%;height:1px;background:linear-gradient(90deg,transparent,var(--blue-d),transparent)}
 .cd-box{display:flex;align-items:center;gap:.7vw;flex-shrink:0;border-right:1px solid var(--border);padding-right:2vw}
@@ -101,7 +96,6 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);-web
 .mq span{white-space:nowrap;animation:sx var(--dur,45s) linear infinite;font-size:clamp(1.1rem,1.4vw,1.5rem);color:var(--text2);font-weight:600;letter-spacing:.02em}
 @keyframes sx{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
 
-/* ===== OVERLAYS ===== */
 .ov{position:fixed;inset:0;z-index:100;display:none;flex-direction:column;align-items:center;justify-content:center}
 .ov.on{display:flex}
 .ov-bg{position:absolute;inset:0}
@@ -150,11 +144,6 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);-web
 .em{font-size:1rem;color:var(--muted);max-width:500px;line-height:1.6}
 .eb{margin-top:2vh;padding:12px 32px;border-radius:10px;background:linear-gradient(135deg,var(--blue-d),var(--blue));color:#fff;font-weight:800;font-size:.95rem;cursor:pointer;border:none}
 
-/* ========================================================
-   RESPONSIF — LANDSCAPE HP TETAP TERJAGA, LEBIH PROFESIONAL
-   ======================================================== */
-
-/* Tablet kecil & HP landscape */
 @media(max-width:1024px){
   .pp{flex:0 0 28%;max-width:28%;padding:2.2vh 1.6vw}
   .pc{grid-template-columns:42px 1fr auto;padding:1.3vh 1.1vw;gap:.5vw;border-radius:11px}
@@ -166,8 +155,6 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);-web
   .pc.nx .pc-tm{font-size:clamp(1.4rem,1.8vw,1.95rem)}
   .pp-lbl{margin-bottom:2vh;font-size:clamp(.48rem,.58vw,.64rem);letter-spacing:.2em}
 }
-
-/* HP landscape utama */
 @media(max-width:768px){
   .hdr{padding:1vh 2.5vw}
   .hdr-logo{width:28px;height:28px;font-size:.68rem;border-radius:7px;box-shadow:0 2px 10px rgba(26,95,180,.08)}
@@ -177,12 +164,10 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);-web
   .hdr-clock{font-size:1.45rem;letter-spacing:.04em}
   .hdr-hijri{font-size:.38rem;margin-top:1px;letter-spacing:.06em}
   .hdr-greg{font-size:.34rem;margin-top:0}
-
   .pp{flex:0 0 27%;max-width:27%;padding:1.5vh 1vw}
   .pp::after{top:5%;bottom:5%}
   .pp-lbl{margin-bottom:1.4vh;font-size:.36rem;letter-spacing:.14em;gap:6px}
   .pp-list{gap:.8vh}
-
   .pc{grid-template-columns:30px 1fr auto;padding:.9vh .7vw;gap:.35vw;border-radius:8px;border-width:1px}
   .pc::before{border-radius:8px}
   .pc-ico{width:30px;height:30px;font-size:.65rem;border-radius:6px}
@@ -194,7 +179,6 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);-web
   .pc.nx .pc-tm{font-size:.96rem}
   .pc.nx .pc-nm{font-size:.64rem}
   .pc.nx .pc-ico{width:30px;height:30px;box-shadow:0 0 12px rgba(212,175,78,.15)}
-
   .ftr{padding:.8vh 2.5vw}
   .cd-box{padding-right:1.5vw;gap:.4vw}
   .cd-lbl{font-size:.32rem;letter-spacing:.04em}
@@ -203,19 +187,16 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);-web
   .cd-tm{font-size:.88rem}
   .mq{padding-left:.6vw}
   .mq span{font-size:.72rem}
-
   .phbi{top:1vh;right:1.5vw;padding:.6vh .9vw;max-width:130px;border-radius:8px}
   .phbi-tag{font-size:.3rem;margin-bottom:.15vh;letter-spacing:.12em}
   .phbi-nm{font-size:.52rem;line-height:1.2}
   .phbi-cd{font-size:.4rem;margin-top:.15vh}
-
   .lt-wrap{bottom:1vh;left:1.5vw;right:1.5vw}
   .lt{padding:1.2vh 1.8vw;gap:1.2vw;border-radius:10px;border-width:1px}
   .lt-badge{font-size:.38rem;padding:.4vh .8vw;border-radius:5px;letter-spacing:.06em}
   .lt-title{font-size:.58rem;margin-bottom:.15vh}
   .lt-val{font-size:.48rem}
   .lt-line{height:22px}
-
   .az-txt{font-size:2.2rem}
   .az-sub{font-size:.7rem;margin-top:1.2vh;letter-spacing:.14em}
   .az-tm{font-size:.56rem;margin-top:.8vh}
@@ -237,8 +218,6 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);-web
   .of::before,.of::after{width:24px;height:24px}
   .ov-c{padding:5vw}
 }
-
-/* HP landscape sangat kecil (< 580px lebar) */
 @media(max-width:580px){
   .hdr{padding:.8vh 2vw}
   .hdr-logo{width:22px;height:22px;font-size:.55rem;border-radius:5px}
@@ -247,11 +226,9 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);-web
   .hdr-clock{font-size:1.15rem}
   .hdr-hijri{font-size:.3rem}
   .hdr-greg{font-size:.28rem}
-
   .pp{flex:0 0 26%;max-width:26%;padding:1vh .6vw}
   .pp-lbl{margin-bottom:1vh;font-size:.3rem;letter-spacing:.1em;gap:4px}
   .pp-list{gap:.6vh}
-
   .pc{grid-template-columns:24px 1fr auto;padding:.7vh .5vw;gap:.25vw;border-radius:6px}
   .pc-ico{width:24px;height:24px;font-size:.5rem;border-radius:5px}
   .pc-nm{font-size:.48rem}
@@ -259,17 +236,14 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);-web
   .pc-tm{font-size:.68rem}
   .pc.nx .pc-tm{font-size:.8rem}
   .pc.nx .pc-ico{width:24px;height:24px}
-
   .ftr{padding:.6vh 2vw}
   .cd-tm{font-size:.72rem}
   .cd-nm{font-size:.42rem}
   .cd-lbl{font-size:.26rem}
   .mq span{font-size:.58rem}
-
   .phbi{max-width:95px;padding:.4vh .6vw}
   .phbi-nm{font-size:.42rem}
   .phbi-cd{font-size:.32rem}
-
   .lt{padding:.8vh 1.2vw;gap:.8vw}
   .lt-badge{font-size:.3rem;padding:.3vh .5vw}
   .lt-title{font-size:.46rem}
@@ -289,7 +263,8 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);-web
 <div id="app">
   <header class="hdr">
     <div class="hdr-left">
-      <div class="hdr-logo"><a href="./admin.html"><i class="fa-solid fa-mosque"></i></a></div>
+      <!-- LOGO DIUBAH: div → a dengan href ke admin -->
+      <a class="hdr-logo" href="./admin.html" title="Menu Admin"><i class="fa-solid fa-mosque"></i></a>
       <div>
         <div class="hdr-name lx" id="hName"></div>
         <div class="hdr-addr" id="hAddr"></div>
@@ -311,7 +286,7 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);-web
       <div id="slBox"></div>
       <div class="md-grad"></div>
       <div class="phbi" id="phbiBox" style="display:none">
-        <div class="phbi-tag"><i class="fa-regular fa-star"></i> Peringatan Hari Besar Islam</div>
+        <div class="phbi-tag"><i class="fa-regular fa-star"></i> PHBI</div>
         <div class="phbi-nm" id="phbiNm"></div>
         <div class="phbi-cd" id="phbiCd"></div>
       </div>
@@ -344,8 +319,8 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);-web
 
 <div id="ovAz" class="ov"><div class="ov-bg"></div><div class="ip"></div><div class="of"></div>
   <div class="ov-c fi">
-    <div style="font-size:clamp(.7rem,.85vw,.95rem);color:var(--gold-d);letter-spacing:.35em;font-weight:600;text-transform:uppercase;margin-bottom:2vh">MASUK</div>
-    <div class="az-txt lx nm">WAKTU ADZAN</div>
+    <div style="font-size:clamp(.7rem,.85vw,.95rem);color:var(--gold-d);letter-spacing:.35em;font-weight:600;text-transform:uppercase;margin-bottom:2vh">Masuk Waktu</div>
+    <div class="az-txt lx nm">ALLAHU AKBAR</div>
     <div class="az-sub nm" id="azNm"></div>
     <div class="az-tm nm" id="azTm"></div>
     <div class="az-hint">Segera dirikan sholat dalam jamah</div>
@@ -354,7 +329,7 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);-web
 
 <div id="ovIq" class="ov"><div class="ov-bg"></div><div class="ip"></div><div class="of"></div>
   <div class="ov-c fi">
-    <div class="iq-lbl lx">Iqomah</div>
+    <div class="iq-lbl lx">Tunggu Iqomah</div>
     <div class="iq-num lx nm" id="iqNm">00:00</div>
     <div class="iq-inf" id="iqInf"></div>
   </div>
