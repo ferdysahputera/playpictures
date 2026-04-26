@@ -1,1 +1,355 @@
 
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Display Masjid - Rejang Lebong</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Playfair+Display:wght@600;700;800;900&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/all.min.css">
+<style>
+:root{
+  --bg:#040a18;--glass:rgba(8,16,36,.85);
+  --blue:#1a5fb4;--blue-l:#4a8ee6;--blue-d:#154c8a;
+  --blue-g:rgba(26,95,180,.08);--blue-f:rgba(26,95,180,.04);
+  --gold:#d4af4e;--gold-l:#f2e4b0;--gold-d:#a08530;
+  --gold-g:rgba(212,175,78,.08);
+  --text:#eef2f8;--text2:#c0ccda;--muted:#7e8da6;
+  --dim:#1a2842;--border:rgba(26,95,180,.12);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;overflow:hidden}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased}
+.lx{font-family:'Playfair Display',serif}
+.nm{font-family:'Cinzel',serif;font-variant-numeric:tabular-nums;letter-spacing:.04em}
+
+#app{position:relative;z-index:1;height:100vh;display:flex;flex-direction:column;min-height:0}
+.hdr{flex-shrink:0;padding:2vh 3vw;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);background:linear-gradient(180deg,rgba(10,18,38,.95),rgba(4,10,24,.8));backdrop-filter:blur(12px);position:relative}
+.hdr::after{content:'';position:absolute;bottom:0;left:12%;right:12%;height:1px;background:linear-gradient(90deg,transparent,var(--blue-d),transparent)}
+.ctn{flex:1;min-height:0;display:flex;overflow:hidden}
+.pp{flex:0 0 32%;max-width:32%;padding:3vh 2.2vw;display:flex;flex-direction:column;justify-content:center;border-right:1px solid var(--border);position:relative;overflow:hidden}
+.pp::after{content:'';position:absolute;top:6%;bottom:6%;right:0;width:1px;background:linear-gradient(180deg,transparent,var(--blue-d),transparent);pointer-events:none}
+.md{flex:1;min-width:0;position:relative;overflow:hidden;background:#020814}
+.ftr{flex-shrink:0;padding:1.6vh 3vw;display:flex;align-items:center;border-top:1px solid var(--border);background:linear-gradient(0deg,rgba(10,18,38,.95),rgba(4,10,24,.8));backdrop-filter:blur(12px);position:relative}
+.ftr::before{content:'';position:absolute;top:0;left:12%;right:12%;height:1px;background:linear-gradient(90deg,transparent,var(--blue-d),transparent)}
+
+.hdr-left{display:flex;align-items:center;gap:1.4vw}
+.hdr-logo{width:clamp(48px,3.6vw,62px);height:clamp(48px,3.6vw,62px);border-radius:14px;background:linear-gradient(135deg,rgba(26,95,180,.16),rgba(26,95,180,.05));border:1px solid rgba(26,95,180,.28);display:flex;align-items:center;justify-content:center;color:var(--blue-l);font-size:clamp(1.1rem,1.7vw,1.6rem);flex-shrink:0;box-shadow:0 4px 20px rgba(26,95,180,.1)}
+.hdr-name{font-size:clamp(1.25rem,2.1vw,1.85rem);font-weight:700;color:var(--gold-l);letter-spacing:.02em;line-height:1.2;text-shadow:0 2px 8px rgba(0,0,0,.5)}
+.hdr-addr{font-size:clamp(.68rem,.85vw,.92rem);color:var(--muted);font-weight:500;margin-top:2px}
+.hdr-clock{font-size:clamp(2.6rem,4.6vw,3.9rem);font-weight:700;color:var(--gold);letter-spacing:.06em;line-height:1;text-shadow:0 2px 12px rgba(212,175,78,.25),0 0 40px rgba(212,175,78,.1)}
+.hdr-hijri{font-size:clamp(.7rem,.88vw,.94rem);color:var(--blue-l);font-weight:600;letter-spacing:.1em;margin-top:3px}
+.hdr-greg{font-size:clamp(.62rem,.76vw,.82rem);color:var(--muted);font-weight:500;margin-top:1px}
+
+.pp-lbl{font-size:clamp(.58rem,.7vw,.76rem);text-transform:uppercase;letter-spacing:.28em;color:var(--blue-l);font-weight:700;margin-bottom:3vh;padding-left:.3vw;display:flex;align-items:center;gap:10px;flex-shrink:0}
+.pp-lbl::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--blue-d),transparent)}
+.pp-list{display:flex;flex-direction:column;gap:1.5vh}
+
+/* ===== PRAYER CARD ===== */
+.pc{display:grid;grid-template-columns:46px 1fr auto;align-items:center;padding:1.8vh 1.4vw;border-radius:12px;transition:all .5s cubic-bezier(.23,1,.32,1);border:1px solid rgba(26,95,180,.12);background:rgba(8,16,32,.35);gap:.7vw;flex-shrink:0;position:relative}
+.pc::before{content:'';position:absolute;inset:0;border-radius:12px;opacity:0;transition:opacity .5s}
+.pc:hover::before{opacity:.4}
+
+/* Normal (past) prayer card */
+.pc.past{opacity:.5}
+.pc.past .pc-nm{color:var(--text2)}
+.pc.past .pc-tm{color:var(--text2)}
+
+/* Highlighted prayer */
+.pc.nx{border-color:rgba(212,175,78,.28);background:linear-gradient(90deg,rgba(212,175,78,.1),rgba(212,175,78,.02));box-shadow:0 0 35px rgba(212,175,78,.08),inset 0 0 35px rgba(212,175,78,.03)}
+.pc.nx::before{opacity:1;background:linear-gradient(90deg,var(--gold-g),transparent)}
+.pc.nx .pc-ico{background:rgba(212,175,78,.18);color:var(--gold);box-shadow:0 0 18px rgba(212,175,78,.15)}
+.pc.nx .pc-nm{color:var(--gold-l);font-weight:800}
+.pc.nx .pc-iq{color:var(--gold-d)}
+.pc.nx .pc-tm{color:var(--gold-l);font-weight:800;font-size:clamp(1.6rem,2.1vw,2.3rem);text-shadow:0 2px 10px rgba(212,175,78,.18)}
+
+.pc-ico{width:46px;height:46px;display:flex;align-items:center;justify-content:center;border-radius:10px;background:rgba(26,95,180,.08);color:var(--blue-d);font-size:.95rem;transition:all .5s}
+.pc-body{display:flex;flex-direction:column;gap:3px;padding-left:.4vw;min-width:0}
+.pc-nm{font-size:clamp(.95rem,1.18vw,1.28rem);font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:color .5s}
+.pc-iq{font-size:clamp(.56rem,.66vw,.72rem);color:var(--muted);font-weight:500;transition:color .5s}
+.pc-tm{font-size:clamp(1.4rem,1.8vw,1.95rem);font-weight:700;color:var(--text);text-align:right;letter-spacing:.04em;transition:color .5s}
+
+/* Slideshow */
+.sl{position:absolute;inset:0;opacity:0;transition:opacity 2s ease-in-out,transform 8s ease-out;object-fit:cover;width:100%;height:100%;transform:scale(1.03)}
+.sl.on{opacity:1;transform:scale(1)}
+.md-grad{position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(170deg,rgba(4,8,20,.15) 0%,transparent 25%,transparent 50%,rgba(4,8,20,.6) 100%)}
+
+/* PHBI */
+.phbi{position:absolute;top:2.5vh;right:2vw;z-index:5;background:var(--glass);border:1px solid rgba(26,95,180,.18);border-radius:14px;padding:1.8vh 2vw;backdrop-filter:blur(16px);max-width:260px;box-shadow:0 8px 28px rgba(0,0,0,.4)}
+.phbi-tag{font-size:clamp(.54rem,.64vw,.7rem);text-transform:uppercase;letter-spacing:.2em;color:var(--blue-l);font-weight:700;margin-bottom:.5vh}
+.phbi-nm{font-size:clamp(.88rem,1.05vw,1.12rem);font-weight:700;color:var(--text);line-height:1.35}
+.phbi-cd{font-size:clamp(.72rem,.82vw,.88rem);color:var(--text2);margin-top:.4vh}
+.phbi-cd b{color:var(--gold);font-weight:800}
+
+/* ===== LOW THIRD BESAR ===== */
+.lt-wrap{position:absolute;bottom:3vh;left:2vw;right:2vw;z-index:5}
+.lt{background:linear-gradient(105deg,rgba(6,12,28,.94),rgba(12,22,44,.84));border:1px solid rgba(212,175,78,.22);border-radius:16px;padding:2.8vh 3.2vw;display:flex;align-items:center;gap:2.2vw;backdrop-filter:blur(22px);box-shadow:0 14px 50px rgba(0,0,0,.5);transform:translateY(120%);opacity:0;transition:transform .8s cubic-bezier(.23,1,.32,1),opacity .7s ease}
+.lt.on{transform:translateY(0);opacity:1}
+.lt.out{transform:translateY(12px);opacity:0;transition:transform 1s cubic-bezier(.4,0,1,1),opacity .9s ease .05s}
+.lt-badge{background:linear-gradient(135deg,var(--gold-d),var(--gold));color:#0a0e14;font-weight:800;font-size:clamp(.68rem,.8vw,.88rem);padding:.9vh 1.5vw;border-radius:7px;white-space:nowrap;text-transform:uppercase;letter-spacing:.12em;flex-shrink:0}
+.lt-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:.4vh}
+.lt-title{font-size:clamp(1.05rem,1.28vw,1.38rem);font-weight:700;color:var(--gold-l);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lt-val{font-size:clamp(.95rem,1.12vw,1.22rem);font-weight:500;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.3}
+.lt-line{width:1px;height:42px;flex-shrink:0;background:linear-gradient(180deg,transparent,rgba(212,175,78,.3),transparent)}
+
+/* Footer */
+.cd-box{display:flex;align-items:center;gap:.8vw;flex-shrink:0;border-right:1px solid var(--border);padding-right:2.2vw}
+.cd-lbl{font-size:clamp(.55rem,.66vw,.72rem);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.06em}
+.cd-row{display:flex;align-items:center;gap:.5vw}
+.cd-nm{font-size:clamp(.82rem,.96vw,1.04rem);color:var(--gold);font-weight:700}
+.cd-tm{font-size:clamp(1.3rem,1.8vw,2rem);font-weight:700;color:var(--gold-l);text-shadow:0 2px 10px rgba(212,175,78,.18)}
+.mq{flex:1;overflow:hidden;height:100%;display:flex;align-items:center;padding-left:1vw}
+.mq span{white-space:nowrap;animation:sx var(--dur,45s) linear infinite;font-size:clamp(1.15rem,1.4vw,1.52rem);color:var(--text2);font-weight:600;letter-spacing:.02em;line-height:1.3}
+@keyframes sx{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
+
+/* ===== OVERLAYS ===== */
+.ov{position:fixed;inset:0;z-index:100;display:none;flex-direction:column;align-items:center;justify-content:center}
+.ov.on{display:flex}
+.ov-bg{position:absolute;inset:0}
+.ov-c{position:relative;z-index:2;text-align:center;padding:3vw;max-width:80vw}
+.ip{position:absolute;inset:0;opacity:.035;background-image:url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40 0L80 40L40 80L0 40Z' fill='none' stroke='%23d4af4e' stroke-width='.4'/%3E%3Cpath d='M40 12L68 40L40 68L12 40Z' fill='none' stroke='%23d4af4e' stroke-width='.25'/%3E%3Ccircle cx='40' cy='40' r='8' fill='none' stroke='%23d4af4e' stroke-width='.25'/%3E%3C/svg%3E");background-size:80px 80px}
+.of{position:absolute;inset:6vh 6vw;border:1px solid rgba(212,175,78,.08);border-radius:24px;pointer-events:none}
+.of::before,.of::after{content:'';position:absolute;width:40px;height:40px;border-color:rgba(212,175,78,.2);border-style:solid}
+.of::before{top:-1px;left:-1px;border-width:1px 0 0 1px;border-radius:24px 0 0 0}
+.of::after{bottom:-1px;right:-1px;border-width:0 1px 1px 0;border-radius:0 0 24px 0}
+
+#ovAz .ov-bg{background:radial-gradient(ellipse at 50% 45%,#0c1830,#040a18 65%)}
+.az-txt{font-size:clamp(4rem,7vw,6.5rem);font-weight:800;color:var(--gold);line-height:1;letter-spacing:.06em;text-shadow:0 3px 15px rgba(0,0,0,.5),0 0 60px rgba(212,175,78,.3),0 0 120px rgba(212,175,78,.1);animation:ap 3s ease-in-out infinite alternate}
+@keyframes ap{0%{text-shadow:0 3px 15px rgba(0,0,0,.5),0 0 50px rgba(212,175,78,.25),0 0 80px rgba(212,175,78,.08)}100%{text-shadow:0 3px 15px rgba(0,0,0,.5),0 0 70px rgba(212,175,78,.4),0 0 150px rgba(212,175,78,.15)}}
+.az-sub{font-size:clamp(1.2rem,1.6vw,1.7rem);color:var(--gold-l);letter-spacing:.28em;text-transform:uppercase;font-weight:700;margin-top:2vh}
+.az-tm{font-size:clamp(1rem,1.2vw,1.3rem);color:var(--muted);margin-top:1.5vh;font-weight:600}
+.az-hint{font-size:clamp(.8rem,.95vw,1.02rem);color:var(--dim);margin-top:5vh;font-weight:500}
+
+#ovIq .ov-bg{background:radial-gradient(ellipse at 50% 45%,#0a1428,#040a18)}
+.iq-lbl{font-size:clamp(1.6rem,2.6vw,2.6rem);font-weight:700;color:var(--gold-l);letter-spacing:.3em;text-transform:uppercase}
+.iq-num{font-size:clamp(6rem,10vw,10rem);font-weight:600;color:var(--gold);line-height:1;margin-top:3vh;text-shadow:0 3px 15px rgba(0,0,0,.5),0 0 50px rgba(212,175,78,.2)}
+.iq-inf{font-size:clamp(1rem,1.2vw,1.3rem);color:var(--text2);margin-top:3vh;font-weight:600}
+
+#ovJu .ov-bg{background:radial-gradient(ellipse at 50% 40%,#0a1425,#040a18)}
+.ju-ttl{font-size:clamp(3rem,5.5vw,5rem);font-weight:800;color:var(--gold);letter-spacing:.1em;text-shadow:0 3px 12px rgba(0,0,0,.5),0 0 40px rgba(212,175,78,.25)}
+.ju-sub{font-size:clamp(1rem,1.3vw,1.4rem);color:var(--text2);font-weight:600;margin-top:1.5vh}
+.ju-g{display:flex;gap:2.5vw;justify-content:center;margin-top:5vh;flex-wrap:wrap}
+.ju-c{text-align:center;padding:2.8vh 3vw;background:var(--glass);border:1px solid rgba(212,175,78,.16);border-radius:14px;min-width:170px;backdrop-filter:blur(12px)}
+.ju-cl{font-size:clamp(.6rem,.7vw,.76rem);text-transform:uppercase;letter-spacing:.2em;color:var(--gold);margin-bottom:.8vh;font-weight:700}
+.ju-cv{font-size:clamp(.95rem,1.1vw,1.18rem);font-weight:600;color:var(--text)}
+.ju-ck{font-size:clamp(1.6rem,2vw,2.2rem);color:var(--gold);margin-top:4vh;font-weight:600}
+
+#ovBk .ov-bg{background:#010306}
+.bk-ck{font-size:clamp(4rem,7vw,7.5rem);font-weight:600;color:rgba(212,175,78,.15)}
+
+#ovCu .ov-bg{background:radial-gradient(ellipse at 50% 45%,#0a1428,#040a18)}
+.cu-ttl{font-size:clamp(2.4rem,4vw,3.8rem);font-weight:800;color:var(--gold-l);margin-bottom:2.5vh}
+.cu-bd{font-size:clamp(1.15rem,1.7vw,1.7rem);font-weight:600;color:var(--text);max-width:65vw;line-height:1.7}
+
+.fi{animation:fi .9s ease}
+@keyframes fi{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+#errScr{position:fixed;inset:0;z-index:9999;background:var(--bg);display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:2vw}
+#errScr.on{display:flex}
+.ei{font-size:3rem;color:var(--blue);margin-bottom:1.5vh}
+.et{font-size:1.5rem;color:var(--blue-l);font-weight:700;margin-bottom:1vh}
+.em{font-size:1rem;color:var(--muted);max-width:500px;line-height:1.6}
+.eb{margin-top:2vh;padding:12px 32px;border-radius:10px;background:linear-gradient(135deg,var(--blue-d),var(--blue));color:#fff;font-weight:800;font-size:.95rem;cursor:pointer;border:none}
+</style>
+</head>
+<body>
+
+<div id="errScr">
+  <div class="ei"><i class="fa-solid fa-triangle-exclamation"></i></div>
+  <div class="et">Terjadi Kesalahan</div>
+  <div class="em" id="errMsg">Sistem mengalami error. Silakan refresh halaman.</div>
+  <button class="eb" onclick="location.reload()"><i class="fa-solid fa-rotate-right" style="margin-right:6px"></i> Refresh</button>
+</div>
+
+<div id="bgL"></div>
+
+<div id="app">
+  <header class="hdr">
+    <div class="hdr-left">
+      <div class="hdr-logo"><i class="fa-solid fa-mosque"></i></div>
+      <div>
+        <div class="hdr-name lx" id="hName"></div>
+        <div class="hdr-addr" id="hAddr"></div>
+      </div>
+    </div>
+    <div style="text-align:right">
+      <div class="hdr-clock lx nm" id="hClk"></div>
+      <div class="hdr-hijri nm" id="hHij"></div>
+      <div class="hdr-greg" id="hGre"></div>
+    </div>
+  </header>
+
+  <div class="ctn">
+    <aside class="pp">
+      <div class="pp-lbl"><i class="fa-solid fa-mosque" style="font-size:.85em"></i> Jadwal Sholat</div>
+      <div class="pp-list" id="pLst"></div>
+    </aside>
+    <section class="md">
+      <div id="slBox"></div>
+      <div class="md-grad"></div>
+      <div class="phbi" id="phbiBox" style="display:none">
+        <div class="phbi-tag"><i class="fa-regular fa-star"></i> PHBI</div>
+        <div class="phbi-nm" id="phbiNm"></div>
+        <div class="phbi-cd" id="phbiCd"></div>
+      </div>
+      <div class="lt-wrap">
+        <div class="lt" id="ltBox">
+          <div class="lt-badge" id="ltBdg"></div>
+          <div class="lt-line"></div>
+          <div class="lt-body">
+            <div class="lt-title" id="ltTtl"></div>
+            <div class="lt-val" id="ltVal"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <footer class="ftr">
+    <div class="cd-box">
+      <div>
+        <div class="cd-lbl">Sholat berikutnya</div>
+        <div class="cd-row">
+          <span class="cd-nm" id="cdNm"></span>
+          <span class="cd-tm nm" id="cdTm"></span>
+        </div>
+      </div>
+    </div>
+    <div class="mq"><span id="mqTx"></span></div>
+  </footer>
+</div>
+
+<div id="ovAz" class="ov"><div class="ov-bg"></div><div class="ip"></div><div class="of"></div>
+  <div class="ov-c fi">
+    <div style="font-size:clamp(.75rem,.92vw,1rem);color:var(--gold-d);letter-spacing:.4em;font-weight:600;text-transform:uppercase;margin-bottom:2vh">Masuk Waktu</div>
+    <div class="az-txt lx nm">ALLAHU AKBAR</div>
+    <div class="az-sub nm" id="azNm"></div>
+    <div class="az-tm nm" id="azTm"></div>
+    <div class="az-hint">Segera dirikan sholat dalam jamah</div>
+  </div>
+</div>
+
+<div id="ovIq" class="ov"><div class="ov-bg"></div><div class="ip"></div><div class="of"></div>
+  <div class="ov-c fi">
+    <div class="iq-lbl lx">Tunggu Iqomah</div>
+    <div class="iq-num lx nm" id="iqNm">00:00</div>
+    <div class="iq-inf" id="iqInf"></div>
+  </div>
+</div>
+
+<div id="ovJu" class="ov"><div class="ov-bg"></div><div class="ip"></div><div class="of"></div>
+  <div class="ov-c fi">
+    <div class="ju-ttl lx nm">Jum'at Mubarak</div>
+    <div class="ju-sub">Mari memakmurkan masjid dengan sholat berjamaah</div>
+    <div class="ju-g" id="juGr"></div>
+    <div class="ju-ck lx nm" id="juCk"></div>
+  </div>
+</div>
+
+<div id="ovBk" class="ov"><div class="ov-bg"></div><div class="bk-ck lx nm" id="bkCk"></div></div>
+
+<div id="ovCu" class="ov"><div class="ov-bg"></div><div class="ip"></div><div class="of"></div>
+  <div class="ov-c fi">
+    <div class="cu-ttl lx" id="cuTtl"></div>
+    <div class="cu-bd" id="cuBd"></div>
+  </div>
+</div>
+
+<script>
+window.onerror=function(m,s,l){document.getElementById('errMsg').textContent='Error baris '+l+': '+m;document.getElementById('errScr').classList.add('on');document.getElementById('app').style.display='none';return true};
+window.onunhandledrejection=function(e){console.warn('Rejected:',e.reason)};
+
+var DG=Math.PI/180;
+var HM=['Muharram','Safar','Rabiul Awal','Rabiul Akhir','Jumadil Awal','Jumadil Akhir','Rajab','Sya\'ban','Ramadhan','Syawal','Dzulqa\'dah','Dzulhijjah'];
+var DY=['Minggu','Senin','Selasa','Rabu','Kamis','Jum\'at','Sabtu'];
+var MN=['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+var ICO={subuh:'fa-cloud-moon',dzuhur:'fa-sun',asr:'fa-cloud-sun',maghrib:'fa-cloud-moon',isya:'fa-moon'};
+var LB={subuh:'Subuh',dzuhur:'Dzuhur',asr:'Ashar',maghrib:'Maghrib',isya:'Isya'};
+var OD=['subuh','dzuhur','asr','maghrib','isya'];
+
+var DEF={
+  mosque:{name:'Masjid Agung Rejang Lebong',address:'Jl. R. Sukamto, Pasar Baru, Kab. Rejang Lebong, Bengkulu'},
+  location:{latitude:-3.4567,longitude:102.5211,timezone:7,city:'Rejang Lebong'},
+  calc:{fajrAngle:20,ishaAngle:18,asrMethod:'shafii'},
+  adjust:{subuh:0,terbit:0,dhuha:0,dzuhur:0,asr:0,maghrib:0,isya:0},
+  iqomah:{subuh:2,dzuhur:3,asr:3,maghrib:2,isya:3},
+  azanDuration:180,
+  jumat:{imam:'Ust. Ahmad Fauzi, Lc.',khatib:'Ust. Muhammad Rizki, M.Pd.',muadzin:'H. Hasan Basri',bilal:'Bpk. Syamsul Bahri'},
+  finance:{kasMasjid:'Rp 15.750.000',kasPembangunan:'Rp 45.200.000',infakJumat:'Rp 2.350.000',lastUpdate:'-'},
+  slideshow:{images:['https://picsum.photos/seed/masjidBlue1/1920/1080','https://picsum.photos/seed/masjidBlue2/1920/1080','https://picsum.photos/seed/masjidBlue3/1920/1080','https://picsum.photos/seed/masjidBlue4/1920/1080'],interval:8},
+  runningText:'Selamat datang di Masjid Agung Rejang Lebong. Mari kita tingkatkan keimanan dan ketaqwaan dengan memperbanyak ibadah. Jaga kebersihan dan ketenangan masjid.',
+  phbi:[{name:'Isra Mi\'raj 1446 H',date:'2025-01-27'},{name:'Nuzulul Quran 1446 H',date:'2025-03-01'},{name:'Idul Fitri 1446 H',date:'2025-03-30'},{name:'Idul Adha 1446 H',date:'2025-06-07'}],
+  customMessages:[],
+  display:{showBlackScreen:true,blackScreenMinutes:15,autoAzan:true,jumatWelcomeMinutes:10},
+  password:'admin123',
+  spreadsheetUrl:''
+};
+
+var S=null;
+
+function sC(o){try{return JSON.parse(JSON.stringify(o))}catch(e){return sC(DEF)}}
+function dM(t,s){if(!s||typeof s!=='object')return t;for(var k in s){if(!s.hasOwnProperty(k))continue;if(s[k]&&typeof s[k]==='object'&&!Array.isArray(s[k])&&t[k]&&typeof t[k]==='object'&&!Array.isArray(t[k])){dM(t[k],s[k])}else{t[k]=s[k]}}return t}
+function gT(o,k,f){try{var v=o[k];return(v!==undefined&&v!==null)?String(v):f}catch(e){return f}}
+
+function ld(){
+  try{var r=localStorage.getItem('mosque_settings');S=r?dM(sC(DEF),JSON.parse(r)):sC(DEF)}
+  catch(e){S=sC(DEF)}
+  if(!Array.isArray(S.phbi))S.phbi=[];if(!Array.isArray(S.customMessages))S.customMessages=[];
+  if(!S.slideshow||!Array.isArray(S.slideshow.images))S.slideshow=sC(DEF.slideshow);
+  ['display','adjust','iqomah','calc','location','mosque','jumat','finance'].forEach(function(k){if(!S[k])S[k]=sC(DEF[k])});
+  if(typeof S.spreadsheetUrl!=='string')S.spreadsheetUrl='';
+}
+function sv(){try{localStorage.setItem('mosque_settings',JSON.stringify(S))}catch(e){}}
+
+function sP(jd){var D=jd-2451545.0,g=((D*.98560028)%360+357.529+360)%360,q=((D*.98564736)%360+280.459+360)%360,L=((q+1.915*Math.sin(g*DG)+.02*Math.sin(2*g*DG))%360+360)%600,e=23.439-.00000036*D,RA=Math.atan2(Math.cos(e*DG)*Math.sin(L*DG),Math.cos(L*DG))/DG,dc=Math.asin(Math.sin(e*DG)*Math.sin(L*DG))/DG;return{dec:dc,eqt:(q-(((RA%360)+360)%360))/15}}
+function hA(a,la,dc){var c=(Math.sin(a*DG)-Math.sin(la*DG)*Math.sin(dc*DG))/(Math.cos(la*DG)*Math.cos(dc*DG));return(c<-1||c>1)?0:Math.acos(c)/DG}
+function cT(d){try{var jd=d.getTime()/864e5+2440587.5,p=sP(jd),la=S.location.latitude,tz=S.location.timezone,ln=S.location.longitude,dh=12+tz-ln/15-p.eqt,af=S.calc.asrMethod==='hanafi'?2:1,aa=Math.atan2(1,af+Math.tan(Math.abs(la-p.dec)*DG))/DG,fa=S.calc.fajrAngle||20,ia=S.calc.ishaAngle||18,ad=S.adjust||{},t={subuh:dh-hA(-fa,la,p.dec)/15,dzuhur:dh,asr:dh+hA(aa,la,p.dec)/15,maghrib:dh+hA(-.8333,la,p.dec)/15,isya:dh+hA(-ia,la,p.dec)/15},r={};for(var k in t){var v=t[k]+(parseInt(ad[k])||0)/60,h=Math.floor(v),m=Math.round((v-h)*60);if(m>=60){h++;m-=60}if(m<0){h--;m+=60}h=((h%24)+24)%24;r[k]=String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')}return r}catch(e){return{subuh:'05:00',dzuhur:'12:00',asr:'15:15',maghrib:'18:00',isya:'19:15'}}}
+
+function tH(y,m,d){try{var jd=Math.floor(Date.UTC(y,m-1,d)/864e5)+2440587.5,l=Math.floor(jd-1948439.5)+10632,n=Math.floor((l-1)/10631),l2=l-10631*n+354,j=Math.floor((10985-l2)/5316)*Math.floor((50*l2)/17719)+Math.floor(l2/5670)*Math.floor((43*l2)/15238),l3=l2-Math.floor((30-j)/15)*Math.floor((17719*j)/50)-Math.floor(j/16)*Math.floor((15238*j)/43)+29,hm=Math.floor((24*l3)/709);return{year:30*n+j-30,month:hm,day:l3-Math.floor((709*hm)/24)}}catch(e){return{year:1446,month:1,day:1}}}
+function tM(t){try{var p=String(t).split(':');return parseInt(p[0])*60+parseInt(p[1])}catch(e){return 0}}
+function fC(s){if(!s||s<=0)return'00:00';var h=Math.floor(s/3600),m=Math.floor((s%3600)/60),sc=s%60;return h>0?String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(sc).padStart(2,'0'):String(m).padStart(2,'0')+':'+String(sc).padStart(2,'0')}
+
+var PT={},mode='norm',trig=new Set(),dStr='',sI=0,sT=null,lI=0,lT=null,iE=0,mE=0,aK='';
+
+function rP(){try{var n=new Date(),nM=n.getHours()*60+n.getMinutes(),nx=null;for(var i=0;i<OD.length;i++){if(tM(PT[OD[i]])>nM){nx=OD[i];break}}if(!nx)nx=OD[0];var h='';for(var i=0;i<OD.length;i++){var k=OD[i],iN=k===nx,iP=tM(PT[k])<nM,iq=S.iqomah[k]!==undefined?S.iqomah[k]:3;h+='<div class="pc '+(iN?'nx':'past')+'"><div class="pc-ico"><i class="fa-solid '+ICO[k]+'"></i></div><div class="pc-body"><div class="pc-nm">'+LB[k]+'</div><div class="pc-iq">Iqomah +'+iq+' menit</div></div><div class="pc-tm nm">'+(PT[k]||'--:--')+'</div></div>'}document.getElementById('pLst').innerHTML=h}catch(e){}}
+
+function rC(){try{var n=new Date(),ts=String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0')+':'+String(n.getSeconds()).padStart(2,'0');document.getElementById('hClk').textContent=ts;document.getElementById('hGre').textContent=DY[n.getDay()]+', '+n.getDate()+' '+MN[n.getMonth()]+' '+n.getFullYear();var hj=tH(n.getFullYear(),n.getMonth()+1,n.getDate());document.getElementById('hHij').textContent=hj.day+' '+HM[hj.month-1]+' '+hj.year+' H';document.getElementById('hName').textContent=gT(S.mosque,'name','Masjid');document.getElementById('hAddr').textContent=gT(S.mosque,'address','');document.getElementById('bkCk').textContent=ts;document.getElementById('juCk').textContent=ts}catch(e){}}
+
+function rCd(){try{var n=new Date(),ns=n.getHours()*3600+n.getMinutes()*60+n.getSeconds(),np=null,nm=1/0;for(var i=0;i<OD.length;i++){var pt=tM(PT[OD[i]])*60;if(pt>ns&&pt<nm){nm=pt;np=OD[i]}}if(!np){np=OD[0];nm=tM(PT[np])*60+86400}document.getElementById('cdNm').textContent=LB[np];document.getElementById('cdTm').textContent=fC(Math.max(0,Math.floor(nm-ns)))}catch(e){}}
+
+function iS(){try{var b=document.getElementById('slBox');b.innerHTML='';var imgs=S.slideshow&&S.slideshow.images?S.slideshow.images:[];if(!imgs.length){b.innerHTML='<div style="position:absolute;inset:0;background:linear-gradient(135deg,#060c1a,#0a1428,#080e1c)"></div>';return}for(var i=0;i<imgs.length;i++){var img=document.createElement('img');img.className='sl'+(i===0?' on':'');img.src=imgs[i];img.onerror=function(){this.remove()};b.appendChild(img)}sI=0;clearInterval(sT);sT=setInterval(nS,Math.max(3000,(S.slideshow.interval||8)*1000))}catch(e){}}
+function nS(){try{var imgs=document.querySelectorAll('.sl');if(imgs.length<2)return;imgs[sI].classList.remove('on');sI=(sI+1)%imgs.length;if(imgs[sI])imgs[sI].classList.add('on')}catch(e){}}
+
+function gLI(){try{var items=[],n=new Date();if(n.getDay()===5&&S.jumat)items.push({badge:"Petugas Jum'at",title:'Imam: '+gT(S.jumat,'imam','-'),value:'Khatib: '+gT(S.jumat,'khatib','-')+'  \u2022  Muadzin: '+gT(S.jumat,'muadzin','-')+'  \u2022  Bilal: '+gT(S.jumat,'bilal','-')});if(S.finance){items.push({badge:'Kas Masjid',title:'Kas Masjid',value:gT(S.finance,'kasMasjid','-')});items.push({badge:'Pembangunan',title:'Kas Pembangunan',value:gT(S.finance,'kasPembangunan','-')});items.push({badge:"Infak Jum'at",title:'Infak Terakhir',value:gT(S.finance,'infakJumat','-')})}var ph=nPH();if(ph){var d=Math.ceil((ph.d-new Date())/864e5);items.push({badge:'PHBI',title:ph.name,value:d>0?d+' hari lagi':'Hari ini'})}return items}catch(e){return[]}}
+
+function sL(){try{var items=gLI();if(!items.length)return;var el=document.getElementById('ltBox'),it=items[lI%items.length];document.getElementById('ltBdg').textContent=it.badge;document.getElementById('ltTtl').textContent=it.title;document.getElementById('ltVal').textContent=it.value;el.classList.remove('out');el.classList.add('on');clearTimeout(lT);lT=setTimeout(function(){el.classList.remove('on');el.classList.add('out');setTimeout(function(){el.classList.remove('out');lI++;sL()},1000)},6500)}catch(e){}}
+
+function nPH(){try{var n=new Date(),best=null,bd=1/0;if(!Array.isArray(S.phbi))return null;for(var i=0;i<S.phbi.length;i++){var p=S.phbi[i];if(!p.name||!p.date)continue;var d=new Date(p.date+'T00:00:00'),df=d-n;if(df>=0&&df<bd){bd=df;best={name:p.name,d:d}}}return best}catch(e){return null}}
+function rPh(){try{var ph=nPH(),box=document.getElementById('phbiBox');if(!ph){box.style.display='none';return}box.style.display='block';document.getElementById('phbiNm').textContent=ph.name;var d=Math.ceil((ph.d-new Date())/864e5);document.getElementById('phbiCd').innerHTML=d>0?'<b>'+d+'</b> hari lagi':d===0?'<b>Hari ini</b>':'<b>Baru saja</b>'}catch(e){}}
+
+function rMq(){try{var el=document.getElementById('mqTx'),txt=gT(S,'runningText','');if(!txt){el.parentElement.style.display='none';return}el.parentElement.style.display='flex';el.textContent=txt;el.style.setProperty('--dur',Math.max(25,txt.length*.12)+'s')}catch(e){}}
+
+function hOv(){try{document.querySelectorAll('.ov').forEach(function(o){o.classList.remove('on')})}catch(e){}}
+function sOv(id){try{hOv();document.getElementById(id).classList.add('on')}catch(e){}}
+function sNm(){try{hOv();document.getElementById('app').style.display='flex';document.getElementById('errScr').classList.remove('on')}catch(e){}}
+function hNm(){try{document.getElementById('app').style.display='none'}catch(e){}}
+
+function tAz(k){try{aK=k;hNm();sOv('ovAz');document.getElementById('azNm').textContent=LB[k]||k;document.getElementById('azTm').textContent=PT[k]||'';mode='azan';mE=Date.now()+(S.azanDuration||180)*1000}catch(e){sNm()}}
+function tIq(k){try{hNm();sOv('ovIq');document.getElementById('iqInf').textContent=(LB[k]||'')+' \u2014 '+gT(S.mosque,'name','');iE=Date.now()+((S.iqomah&&S.iqomah[k])||3)*6e4;mode='iqo'}catch(e){sNm()}}
+function tBk(){try{hNm();sOv('ovBk');mode='black';mE=Date.now()+(S.display.blackScreenMinutes||15)*6e4}catch(e){sNm()}}
+function tJu(){try{hNm();var j=S.jumat||{};document.getElementById('juGr').innerHTML='<div class="ju-c"><div class="ju-cl">Imam</div><div class="ju-cv">'+gT(j,'imam','-')+'</div></div><div class="ju-c"><div class="ju-cl">Khatib</div><div class="ju-cv">'+gT(j,'khatib','-')+'</div></div><div class="ju-c"><div class="ju-cl">Muadzin</div><div class="ju-cv">'+gT(j,'muadzin','-')+'</div></div><div class="ju-c"><div class="ju-cl">Bilal</div><div class="ju-cv">'+gT(j,'bilal','-')+'</div></div>';sOv('ovJu');mode='jum'}catch(e){sNm()}}
+
+function cCu(){try{if(!Array.isArray(S.customMessages))return false;var n=new Date();for(var i=0;i<S.customMessages.length;i++){var m=S.customMessages[i];if(!m.active)continue;if(m.schedule&&m.scheduleStart&&m.scheduleEnd){try{if(n>=new Date(m.scheduleStart)&&n<=new Date(m.scheduleEnd)){hNm();document.getElementById('cuTtl').textContent=m.title||'';document.getElementById('cuBd').textContent=m.body||'';sOv('ovCu');mode='cust';return true}}catch(e){}}if(m.manual){hNm();document.getElementById('cuTtl').textContent=m.title||'';document.getElementById('cuBd').textContent=m.body||'';sOv('ovCu');mode='cust';return true}}return false}catch(e){return false}}
+
+function chkM(){try{if(cCu())return;var n=new Date(),ds=n.toDateString();if(dStr!==ds){trig.clear();dStr=ds}var ns=n.getHours()*3600+n.getMinutes()*60+n.getSeconds(),iJ=n.getDay()===5;if(mode==='azan'){if(Date.now()>=mE)tIq(aK);return}if(mode==='iqo'){var r=Math.max(0,Math.ceil((iE-Date.now())/1000));document.getElementById('iqNm').textContent=fC(r);if(Date.now()>=iE){(S.display&&S.display.showBlackScreen)?tBk():sNm()}return}if(mode==='black'){if(Date.now()>=mE)sNm();return}if(mode==='jum'){var dS=tM(PT.dzuhur)*60;if(ns>=dS-30&&!trig.has('ja')){trig.add('ja');tAz('dzuhur');return}return}if(mode!=='norm')return;if(iJ&&!trig.has('jw')){var wS=tM(PT.dzuhur)*60-(S.display.jumatWelcomeMinutes||10)*60;if(ns>=wS){trig.add('jw');tJu();return}}if(S.display&&S.display.autoAzan){for(var i=0;i<OD.length;i++){var k=OD[i];if(trig.has(k))continue;var pt=tM(PT[k])*60;if(ns>=pt&&ns<pt+30){trig.add(k);tAz(k);return}}}}catch(e){}}
+
+function tick(){try{rC();rCd();chkM();if(mode==='norm'){rP();rPh()}}catch(e){}}
+
+function sF(){try{var url=S.spreadsheetUrl;if(!url||!url.trim())return;fetch(url,{mode:'cors'}).then(function(r){if(!r.ok)throw 0;return r.json()}).then(function(d){if(d&&typeof d==='object'){S=dM(sC(DEF),d);if(!Array.isArray(S.phbi))S.phbi=[];if(!Array.isArray(S.customMessages))S.customMessages=[];sv();PT=cT(new Date());iS();rMq()}}).catch(function(){})}catch(e){}}
+
+function init(){try{ld();PT=cT(new Date());setInterval(function(){try{PT=cT(new Date())}catch(e){}},6e4);rC();rP();rCd();rPh();iS();rMq();setTimeout(sL,2800);sNm();setInterval(tick,1000);setInterval(sF,3e4);sF()}catch(e){document.getElementById('errMsg').textContent='Gagal memuat: '+e.message;document.getElementById('errScr').classList.add('on');document.getElementById('app').style.display='none'}}
+init();
+</script>
+</body>
+</html>
