@@ -1,840 +1,662 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Masjid Digital TV</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-<style>
-:root {
-  --bg-deep:#040b18; --bg-primary:#081428; --bg-card:#0c1e3e;
-  --bg-card2:#102a52; --blue:#1a3f78; --blue-mid:#2563b0;
-  --blue-light:#3d85d4; --blue-glow:rgba(37,99,176,.35);
-  --gold:#c9a84c; --gold-light:#e0c872; --gold-dim:rgba(201,168,76,.15);
-  --text:#e4eaf4; --text-light:#8fa4c8; --text-muted:#4d6a90;
-  --danger:#e05555; --success:#38b060; --border:#153060;
-}
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Poppins',sans-serif;background:var(--bg-deep);color:var(--text);overflow:hidden;height:100vh;width:100vw}
-.app{display:grid;grid-template-rows:auto 1fr auto;height:100vh;position:relative}
+import React, { useState, useEffect, useRef } from 'react';
+import { 
+  Clock, MapPin, Settings, Save, Image as ImageIcon, 
+  Volume2, Calendar, Edit3, MonitorPlay, ChevronRight,
+  Sun, Sunset, Moon, Sunrise
+} from 'lucide-react';
 
-/* ====== HEADER ====== */
-.header{display:flex;align-items:center;justify-content:space-between;padding:1vh 2vw;
-  background:linear-gradient(135deg,var(--bg-primary),var(--bg-card));border-bottom:1px solid var(--border);position:relative;z-index:10}
-.header::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
-.mosque-info{display:flex;align-items:center;gap:1.2vw}
-.mosque-icon{width:5.5vh;height:5.5vh;background:var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2.8vh;color:var(--bg-deep)}
-.mosque-name{font-size:2.4vh;font-weight:700;color:var(--gold);letter-spacing:.05em}
-.mosque-addr{font-size:1.2vh;color:var(--text-light);font-weight:400}
-.clock-area{text-align:right}
-.clock-time{font-size:4.5vh;font-weight:800;color:var(--text);letter-spacing:.08em;line-height:1}
-.clock-date{font-size:1.4vh;color:var(--text-light);margin-top:.3vh}
-.clock-hijri{font-size:1.3vh;color:var(--gold);margin-top:.1vh}
+// --- KONFIGURASI DEFAULT & STATE AWAL ---
+const defaultSettings = {
+  mosqueName: "MASJID AGUNG BAITUL MAKMUR",
+  address: "Kabupaten Rejang Lebong, Bengkulu",
+  lat: -3.4653,
+  lng: 102.5333,
+  calcMethod: 20, // Kemenag RI (Aladhan API)
+  offsets: { Imsak: 0, Fajr: 0, Sunrise: 0, Dhuhr: 0, Asr: 0, Maghrib: 0, Isha: 0 },
+  iqomahTimes: { Fajr: 10, Dhuhr: 5, Asr: 5, Maghrib: 5, Isha: 5 },
+  sholatDuration: 10, // Menit layar mati/fokus sholat
+  murottal: { Fajr: 10, Dhuhr: 0, Asr: 0, Maghrib: 10, Isha: 0 }, // Menit sebelum azan
+  slides: [
+    "https://images.unsplash.com/photo-1564683214964-b31b92d7b876?q=80&w=1080&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1542816417-0983c9c9ad53?q=80&w=1080&auto=format&fit=crop"
+  ],
+  runningText: "Selamat datang di Masjid Agung Baitul Makmur. Lurus dan rapatkan shaf sebelum sholat dimulai. Mohon nonaktifkan telepon genggam Anda.",
+  kas: {
+    saldo: "Rp 15.500.000",
+    pembangunan: "Rp 45.000.000"
+  },
+  jumat: {
+    khatib: "Ust. H. Abdul Somad, Lc., D.E.S.A., Ph.D.",
+    imam: "Ust. Fulan Al-Hafidz",
+    muadzin: "Sdr. Ahmad"
+  },
+  customText: {
+    azan: "SAATNYA MENGUMANDANGKAN AZAN",
+    iqomah: "IQOMAH AKAN DIKUMANDANGKAN DALAM",
+    sholat: "HARAP TENANG - SHOLAT SEDANG BERLANGSUNG",
+    jumat: "KHUTBAH JUMAT SEDANG BERLANGSUNG"
+  }
+};
 
-/* ====== MAIN CONTENT ====== */
-.content{display:grid;grid-template-columns:32% 1fr;gap:1.2vw;padding:1.2vh 2vw;overflow:hidden;min-height:0}
+// --- APLIKASI UTAMA ---
+export default function App() {
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [settings, setSettings] = useState(() => {
+    const saved = localStorage.getItem('masjidSettings');
+    return saved ? JSON.parse(saved) : defaultSettings;
+  });
 
-/* Prayer Panel */
-.prayer-panel{display:flex;flex-direction:column;gap:1vh}
-.prayer-title{font-size:1.6vh;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.15em;text-align:center;padding:.8vh 0;border-bottom:1px solid var(--border)}
-.method-badge{font-size:1vh;font-weight:500;color:var(--blue-light);text-transform:uppercase;letter-spacing:.1em;text-align:center;padding:.3vh 0;background:rgba(37,99,176,.1);border-radius:.5vh;margin-bottom:.5vh}
-.prayer-list{display:flex;flex-direction:column;gap:.6vh;flex:1}
-.prayer-item{display:grid;grid-template-columns:auto 1fr auto;padding:.9vh 1.2vw;border-radius:.8vh;background:var(--bg-card);border:1px solid var(--border);transition:all .4s ease;align-items:center}
-.prayer-item.active{background:linear-gradient(135deg,var(--bg-card2),var(--blue));border-color:var(--gold);box-shadow:0 0 2vh var(--blue-glow),0 0 4vh var(--gold-dim)}
-.prayer-item.active .prayer-name{color:var(--gold)}
-.prayer-item.active .prayer-time{color:var(--gold-light);font-weight:700}
-.prayer-item.active .prayer-icon{color:var(--gold)}
-.prayer-icon{font-size:2vh;color:var(--blue-light);width:3.5vh;text-align:center}
-.prayer-name{font-size:1.5vh;font-weight:600;color:var(--text);padding:0 .8vw}
-.prayer-time-col{text-align:right}
-.prayer-time{font-size:1.7vh;font-weight:600;color:var(--text-light);font-variant-numeric:tabular-nums}
-.prayer-iqamah{font-size:1.1vh;color:var(--text-muted);font-weight:400}
-.prayer-badge{font-size:.9vh;background:var(--gold);color:var(--bg-deep);padding:.15vh .6vh;border-radius:.3vh;font-weight:600;margin-left:.5vw;display:none}
-.prayer-item.active .prayer-badge{display:inline}
-
-/* Holiday Countdown */
-.holiday-section{margin-top:auto;background:var(--bg-card);border-radius:.8vh;padding:1vh 1vw;border:1px solid var(--border)}
-.holiday-title{font-size:1.1vh;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.5vh}
-.holiday-item{display:flex;justify-content:space-between;align-items:center;padding:.4vh 0;font-size:1.2vh}
-.holiday-name{color:var(--text-light)}
-.holiday-countdown{color:var(--gold);font-weight:600}
-
-/* Right Panel */
-.right-panel{display:flex;flex-direction:column;gap:1vh;min-height:0}
-.slideshow{flex:1;border-radius:1vh;overflow:hidden;position:relative;background:var(--bg-card);border:1px solid var(--border);min-height:0}
-.slide{position:absolute;inset:0;opacity:0;transition:opacity 1.2s ease}
-.slide.active{opacity:1}
-.slide img{width:100%;height:100%;object-fit:cover}
-.slide-caption{position:absolute;bottom:0;left:0;right:0;padding:1.5vh 1.5vw;background:linear-gradient(transparent,rgba(4,11,24,.9));font-size:1.5vh;color:var(--text-light)}
-
-/* Low Third */
-.low-third-container{height:7.5vh;position:relative;overflow:hidden;border-radius:.8vh;border:1px solid var(--border);background:linear-gradient(135deg,var(--bg-card),var(--bg-card2))}
-.low-third{position:absolute;bottom:0;left:0;right:0;padding:1vh 1.5vw;display:flex;align-items:center;gap:1.5vw;opacity:0;transform:translateY(100%);transition:all .6s ease}
-.low-third.active{opacity:1;transform:translateY(0)}
-.lt-accent{width:.5vh;height:4vh;background:var(--gold);border-radius:.3vh;flex-shrink:0}
-.lt-icon{font-size:2.2vh;color:var(--gold);width:3.5vh;text-align:center;flex-shrink:0}
-.lt-content{flex:1;min-width:0}
-.lt-title{font-size:1.1vh;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.08em}
-.lt-text{font-size:1.3vh;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-
-/* ====== FOOTER ====== */
-.footer{display:flex;align-items:center;padding:0 2vw;height:5.5vh;background:linear-gradient(135deg,var(--bg-primary),var(--bg-card));border-top:1px solid var(--border);position:relative;gap:2vw}
-.footer::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
-.running-text{flex:1;overflow:hidden;position:relative;height:100%;display:flex;align-items:center}
-.running-text-content{white-space:nowrap;font-size:1.4vh;color:var(--text-light);animation:marquee var(--marquee-dur,30s) linear infinite}
-@keyframes marquee{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
-.footer-countdown{display:flex;align-items:center;gap:.8vw;flex-shrink:0;background:var(--bg-card);padding:.6vh 1.2vw;border-radius:.6vh;border:1px solid var(--border)}
-.fc-label{font-size:1.1vh;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:.08em}
-.fc-time{font-size:2vh;font-weight:700;color:var(--gold);font-variant-numeric:tabular-nums}
-
-/* ====== OVERLAY FULLSCREEN ====== */
-.overlay{position:fixed;inset:0;z-index:1000;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .8s ease}
-.overlay.show{opacity:1;pointer-events:auto}
-.overlay-azan{background:radial-gradient(ellipse at center,rgba(12,30,62,.97),rgba(4,11,24,.99))}
-.overlay-azan .ov-icon{font-size:12vh;color:var(--gold);margin-bottom:2vh;animation:pulse-glow 2s ease-in-out infinite}
-.overlay-azan .ov-title{font-size:3.5vh;font-weight:300;color:var(--text-light);text-transform:uppercase;letter-spacing:.2em;margin-bottom:1vh}
-.overlay-azan .ov-prayer{font-size:7vh;font-weight:800;color:var(--gold);margin-bottom:1vh}
-.overlay-azan .ov-time-big{font-size:9vh;font-weight:900;color:var(--text);margin-bottom:2vh;font-variant-numeric:tabular-nums}
-.overlay-azan .ov-arabic{font-family:'Amiri',serif;font-size:5vh;color:var(--gold-light);margin-bottom:2vh;direction:rtl}
-.overlay-azan .ov-custom{font-size:2vh;color:var(--text-light);max-width:60vw;text-align:center;line-height:1.6}
-.overlay-azan .ov-countdown-ring{margin-top:3vh}
-.countdown-circle{width:18vh;height:18vh;border-radius:50%;border:.6vh solid var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative}
-.countdown-circle svg{position:absolute;inset:-.3vh;transform:rotate(-90deg)}
-.countdown-circle circle{fill:none;stroke-width:.5vh;stroke:var(--gold);stroke-dasharray:565;stroke-dashoffset:0;transition:stroke-dashoffset 1s linear}
-.cd-number{font-size:4.5vh;font-weight:800;color:var(--gold);font-variant-numeric:tabular-nums}
-.cd-label{font-size:1.3vh;color:var(--text-muted);text-transform:uppercase;letter-spacing:.1em}
-
-@keyframes pulse-glow{0%,100%{filter:drop-shadow(0 0 1vh rgba(201,168,76,.3))}50%{filter:drop-shadow(0 0 3vh rgba(201,168,76,.7))}}
-
-/* Start Overlay */
-.start-overlay{position:fixed;inset:0;z-index:2000;background:var(--bg-deep);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:opacity .5s}
-.start-overlay.hidden{opacity:0;pointer-events:none}
-.start-btn{width:14vh;height:14vh;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-light));display:flex;align-items:center;justify-content:center;font-size:5vh;color:var(--bg-deep);cursor:pointer;transition:transform .3s;box-shadow:0 0 4vh var(--gold-dim)}
-.start-btn:hover{transform:scale(1.1)}
-.start-text{font-size:2vh;color:var(--text-light);margin-top:2vh}
-
-/* Friday Mode Overlay */
-.friday-overlay{background:radial-gradient(ellipse at center,rgba(12,30,62,.98),rgba(4,11,24,.99))}
-.friday-info{display:grid;grid-template-columns:1fr 1fr;gap:2vw 4vw;margin-top:3vh;text-align:left}
-.friday-info-item{display:flex;align-items:center;gap:1.5vw;padding:1.5vh 2vw;background:rgba(12,30,62,.6);border-radius:.8vh;border:1px solid var(--border)}
-.friday-info-item i{color:var(--gold);font-size:2.5vh;width:4vh;text-align:center}
-.friday-info-item div .fi-label{font-size:1.1vh;color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em}
-.friday-info-item div .fi-value{font-size:2vh;font-weight:600;color:var(--text)}
-
-/* Responsive */
-@media(max-width:900px){
-  .content{grid-template-columns:38% 1fr}
-  .prayer-name{font-size:1.3vh}.prayer-time{font-size:1.5vh}
-}
-@media(max-aspect-ratio:4/3){
-  .content{grid-template-columns:40% 1fr}
-}
-</style>
-</head>
-<body>
-
-<!-- Start Overlay (diperlukan untuk inisialisasi audio) -->
-<div class="start-overlay" id="startOverlay" onclick="startApp()">
-  <div class="start-btn"><i class="fas fa-play"></i></div>
-  <div class="start-text">Klik untuk memulai</div>
-</div>
-
-<!-- Main App -->
-<div class="app" id="app">
-  <!-- Header -->
-  <header class="header">
-    <div class="mosque-info">
-      <div class="mosque-icon"><i class="fas fa-mosque"></i></div>
-      <div>
-        <div class="mosque-name" id="mosqueName">Masjid Al-Ikhlas</div>
-        <div class="mosque-addr" id="mosqueAddr">Curup, Rejang Lebong</div>
-      </div>
-    </div>
-    <div class="clock-area">
-      <div class="clock-time" id="clockTime">00:00:00</div>
-      <div class="clock-date" id="clockDate">-</div>
-      <div class="clock-hijri" id="clockHijri">-</div>
-    </div>
-  </header>
-
-  <!-- Content -->
-  <main class="content">
-    <!-- Left: Prayer Schedule -->
-    <aside class="prayer-panel">
-      <div class="prayer-title"><i class="fas fa-clock" style="margin-right:.5em"></i>Jadwal Sholat</div>
-      <div class="method-badge" id="methodBadge">Metode: Kemenag RI</div>
-      <div class="prayer-list" id="prayerList"></div>
-      <div class="holiday-section" id="holidaySection">
-        <div class="holiday-title"><i class="fas fa-star-and-crescent" style="margin-right:.5em"></i>Hari Besar Islam</div>
-        <div id="holidayList"></div>
-      </div>
-    </aside>
-
-    <!-- Right: Slideshow + Low Third -->
-    <div class="right-panel">
-      <div class="slideshow" id="slideshow"></div>
-      <div class="low-third-container" id="lowThirdContainer"></div>
-    </div>
-  </main>
-
-  <!-- Footer -->
-  <footer class="footer">
-    <div class="running-text">
-      <div class="running-text-content" id="runningText">Memuat...</div>
-    </div>
-    <div class="footer-countdown">
-      <div class="fc-label" id="fcLabel">Berikutnya</div>
-      <div class="fc-time" id="fcTime">--:--</div>
-    </div>
-  </footer>
-</div>
-
-<!-- Overlay: Azan -->
-<div class="overlay overlay-azan" id="overlayAzan">
-  <div class="ov-icon"><i class="fas fa-mosque"></i></div>
-  <div class="ov-title" id="ovAzanTitle">Waktu Azan</div>
-  <div class="ov-prayer" id="ovAzanPrayer">Subuh</div>
-  <div class="ov-time-big" id="ovAzanTime">04:30</div>
-  <div class="ov-arabic" id="ovAzanArabic">اَللهُ اَكْبَرُ</div>
-  <div class="ov-custom" id="ovAzanCustom"></div>
-</div>
-
-<!-- Overlay: Iqamah Countdown -->
-<div class="overlay overlay-azan" id="overlayIqamah">
-  <div class="ov-title" id="ovIqamahTitle">Waktu Iqamah</div>
-  <div class="ov-prayer" id="ovIqamahPrayer">Subuh</div>
-  <div class="ov-countdown-ring">
-    <div class="countdown-circle">
-      <svg viewBox="0 0 200 200"><circle cx="100" cy="100" r="90" id="iqamahRing"/></svg>
-      <div class="cd-number" id="iqamahCdNum">00:00</div>
-      <div class="cd-label">Iqamah</div>
-    </div>
-  </div>
-  <div class="ov-arabic" id="ovIqamahArabic" style="margin-top:2vh"></div>
-  <div class="ov-custom" id="ovIqamahCustom"></div>
-</div>
-
-<!-- Overlay: Prayer in Progress -->
-<div class="overlay overlay-azan" id="overlayPrayer">
-  <div class="ov-icon"><i class="fas fa-hands-praying"></i></div>
-  <div class="ov-title" id="ovPrayerTitle">Shalat Berlangsung</div>
-  <div class="ov-prayer" id="ovPrayerName">Subuh</div>
-  <div class="ov-custom" id="ovPrayerCustom"></div>
-</div>
-
-<!-- Overlay: Jumat -->
-<div class="overlay overlay-azan friday-overlay" id="overlayJumat">
-  <div class="ov-icon"><i class="fas fa-mosque"></i></div>
-  <div class="ov-title">Shalat Jumat</div>
-  <div class="ov-prayer" id="ovJumatTime">12:30</div>
-  <div class="ov-arabic" style="font-size:3vh;margin-bottom:1vh">اَللَّهُمَّ صَلِّ عَلَى مُحَمَّدٍ</div>
-  <div class="ov-custom" id="ovJumatCustom"></div>
-  <div class="friday-info" id="fridayInfo"></div>
-</div>
-
-<!-- Audio -->
-<audio id="murottalPlayer" preload="none"></audio>
-
-<script>
-// ============================
-// KONFIGURASI
-// ============================
-const SCRIPT_URL = 'GANTI_DENGAN_URL_APPS_SCRIPT_ANDA';
-
-const PRAYERS = [
-  {key:'Fajr',name:'Subuh',icon:'fa-cloud-moon'},
-  {key:'Sunrise',name:'Syuruq',icon:'fa-sun'},
-  {key:'Dhuhr',name:'Dzuhur',icon:'fa-sun'},
-  {key:'Asr',name:'Ashar',icon:'fa-cloud-sun'},
-  {key:'Maghrib',name:'Maghrib',icon:'fa-mountain-sun'},
-  {key:'Isha',name:'Isya',icon:'fa-moon'}
-];
-
-const METHOD_MAP = {20:'Kemenag RI',3:'Muhammadiyah/MWL',2:'PrayerTimes.org/ISNA',1:'Univ. Islamic Sciences'};
-
-// ============================
-// STATE GLOBAL
-// ============================
-let cfg = {}, prayerAdjust=[], iqamahCfg=[], slides=[], lowThirds=[],
-    runningTexts=[], murottalCfg=[], azanTextCfg={}, holidays=[],
-    customCountdown=[], version=0;
-let prayerTimes={}, iqamahTimes={};
-let currentSlide=0, currentLT=0, nextPrayer=null;
-let audioCtx=null, murottalPlayer=null;
-let overlayState='none'; // none, azan, iqamah, prayer, jumat
-let iqamahCountdownInterval=null, prayerEndTimeout=null;
-let triggeredAzanToday={}, triggeredIqamahToday={};
-let lastDataFetch=0;
-
-// ============================
-// INISIALISASI
-// ============================
-function startApp(){
-  document.getElementById('startOverlay').classList.add('hidden');
-  audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  murottalPlayer = document.getElementById('murottalPlayer');
-  initApp();
-}
-
-async function initApp(){
-  await loadAllData();
-  await fetchPrayerTimes();
-  renderAll();
-  startClock();
-  startSlideshow();
-  startLowThird();
-  setInterval(mainLoop, 1000);
-  setInterval(autoRefreshCheck, 5000);
-}
-
-// ============================
-// LOAD DATA DARI APPS SCRIPT
-// ============================
-async function loadAllData(){
-  try{
-    const res = await fetch(SCRIPT_URL+'?action=getAll');
-    const json = await res.json();
-    if(json.success){
-      const d = json.data;
-      cfg = d.config || {};
-      prayerAdjust = d.prayerAdjust || [];
-      iqamahCfg = d.iqamahTimes || [];
-      slides = (d.slides||[]).filter(s=>s.active===true||s.active==='TRUE');
-      lowThirds = (d.lowThird||[]).filter(l=>l.active===true||l.active==='TRUE');
-      runningTexts = (d.runningText||[]).filter(r=>r.active===true||r.active==='TRUE');
-      murottalCfg = d.murottal || [];
-      azanTextCfg = d.azanText || {};
-      holidays = d.islamicHolidays || [];
-      customCountdown = d.customCountdown || [];
-      version = d.version || 0;
-      lastDataFetch = Date.now();
+  // Routing sederhana berdasarkan query parameter
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('view') === 'admin') {
+      setIsAdmin(true);
     }
-  }catch(e){console.error('Load data error:',e)}
+  }, []);
+
+  const saveSettings = (newSettings) => {
+    setSettings(newSettings);
+    localStorage.setItem('masjidSettings', JSON.stringify(newSettings));
+    // DI SINI ANDA BISA MENAMBAHKAN KODE FETCH KE GOOGLE APPS SCRIPT
+    // fetch('URL_WEB_APP_ANDA', { method: 'POST', body: JSON.stringify(newSettings) });
+    alert("Pengaturan Berhasil Disimpan!");
+  };
+
+  return (
+    <div className="min-h-screen bg-slate-900 text-white font-sans overflow-hidden">
+      {isAdmin ? (
+        <AdminPanel settings={settings} onSave={saveSettings} />
+      ) : (
+        <TVScreen settings={settings} />
+      )}
+    </div>
+  );
 }
 
-async function autoRefreshCheck(){
-  try{
-    const res = await fetch(SCRIPT_URL+'?action=getVersion');
-    const json = await res.json();
-    if(json.success && json.data.version !== version){
-      console.log('Data berubah, refresh...');
-      await loadAllData();
-      await fetchPrayerTimes();
-      renderAll();
-    }
-  }catch(e){}
-}
+// --- KOMPONEN LAYAR TV ---
+function TVScreen({ settings }) {
+  const [currentTime, setCurrentTime] = useState(new Date());
+  const [jadwal, setJadwal] = useState(null);
+  const [hijriDate, setHijriDate] = useState("");
+  const [nextPrayer, setNextPrayer] = useState({ name: '', time: '', diffMs: 0 });
+  const [appState, setAppState] = useState('NORMAL'); // NORMAL, MUROTTAL, AZAN, IQOMAH_COUNT, SHOLAT, JUMAT
+  const [audioUnlocked, setAudioUnlocked] = useState(false);
+  const [activeThird, setActiveThird] = useState(0);
 
-// ============================
-// FETCH JADWAL SHOLAT (ALADHAN API)
-// ============================
-async function fetchPrayerTimes(){
-  const lat = parseFloat(cfg.latitude)||-3.4604;
-  const lng = parseFloat(cfg.longitude)||102.8617;
-  const method = parseInt(cfg.calcMethod)||20;
-  const ts = Math.floor(Date.now()/1000);
-  const url = `https://api.aladhan.com/v1/timings/${ts}?latitude=${lat}&longitude=${lng}&method=${method}&school=0`;
+  // Audio Refs
+  const beepAudio = useRef(new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3'));
+  const murottalAudio = useRef(new Audio('https://server8.mp3quran.net/afs/001.mp3')); // Contoh Al-Fatihah
 
-  try{
-    const res = await fetch(url);
-    const json = await res.json();
-    if(json.code===200){
-      const t = json.data.timings;
-      const h = json.data.date.hijri;
-      PRAYERS.forEach(p=>{
-        let time = t[p.key];
-        if(!time) return;
-        // Bersihkan (kadang ada offset seperti "04:30 (+03)")
-        time = time.split(' ')[0];
-        const adj = prayerAdjust.find(a=>a.prayer===p.key);
-        if(adj && parseInt(adj.adjustMinutes)){
-          time = addMinutesToTime(time, parseInt(adj.adjustMinutes));
+  // Waktu saat ini
+  useEffect(() => {
+    const timer = setInterval(() => setCurrentTime(new Date()), 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  // Rotasi Lower Third
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setActiveThird((prev) => (prev + 1) % 3);
+    }, 10000); // Ganti setiap 10 detik
+    return () => clearInterval(timer);
+  }, []);
+
+  // Fetch Jadwal Aladhan API
+  useEffect(() => {
+    const fetchJadwalSholat = async () => {
+      const date = new Date();
+      const day = date.getDate();
+      const month = date.getMonth() + 1;
+      const year = date.getFullYear();
+      
+      try {
+        const res = await fetch(`https://api.aladhan.com/v1/timings/${day}-${month}-${year}?latitude=${settings.lat}&longitude=${settings.lng}&method=${settings.calcMethod}`);
+        const data = await res.json();
+        
+        // Terapkan Offset Manual
+        const rawTimings = data.data.timings;
+        const adjustedTimings = {};
+        for (const [key, value] of Object.entries(rawTimings)) {
+          if (settings.offsets[key] !== undefined) {
+            const [hours, mins] = value.split(':').map(Number);
+            const dateObj = new Date();
+            dateObj.setHours(hours, mins + parseInt(settings.offsets[key]), 0);
+            adjustedTimings[key] = `${String(dateObj.getHours()).padStart(2, '0')}:${String(dateObj.getMinutes()).padStart(2, '0')}`;
+          } else {
+            adjustedTimings[key] = value;
+          }
         }
-        prayerTimes[p.key] = time;
-      });
-      // Hitung iqamah
-      PRAYERS.forEach(p=>{
-        if(p.key==='Sunrise'){iqamahTimes[p.key]=null;return;}
-        const iq = iqamahCfg.find(i=>i.prayer===p.key);
-        if(iq && (iq.enabled===true||iq.enabled==='TRUE') && prayerTimes[p.key]){
-          iqamahTimes[p.key] = addMinutesToTime(prayerTimes[p.key], parseInt(iq.minutesAfterAzan)||0);
+        
+        setJadwal(adjustedTimings);
+        setHijriDate(`${data.data.date.hijri.day} ${data.data.date.hijri.month.en} ${data.data.date.hijri.year} H`);
+      } catch (err) {
+        console.error("Gagal mengambil jadwal", err);
+      }
+    };
+    
+    fetchJadwalSholat();
+    // Refresh jadwal jam 1 malam
+    const timer = setInterval(fetchJadwalSholat, 3600000); 
+    return () => clearInterval(timer);
+  }, [settings.lat, settings.lng, settings.calcMethod, settings.offsets]);
+
+  // ENGINE LOGIKA WAKTU (Azan, Iqomah, Sholat)
+  useEffect(() => {
+    if (!jadwal) return;
+
+    const now = currentTime;
+    const currentH = now.getHours();
+    const currentM = now.getMinutes();
+    const currentS = now.getSeconds();
+    const nowStr = `${String(currentH).padStart(2, '0')}:${String(currentM).padStart(2, '0')}`;
+    const today = now.getDay(); // 0 = Minggu, 5 = Jumat
+
+    const prayerKeys = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'];
+    let nextP = null;
+    let minDiff = Infinity;
+
+    // Cari sholat berikutnya
+    prayerKeys.forEach(key => {
+      const timeStr = jadwal[key];
+      const [h, m] = timeStr.split(':').map(Number);
+      let prayerDate = new Date();
+      prayerDate.setHours(h, m, 0, 0);
+
+      if (prayerDate < now) {
+        prayerDate.setDate(prayerDate.getDate() + 1); // Sholat besok
+      }
+
+      const diff = prayerDate - now;
+      if (diff < minDiff) {
+        minDiff = diff;
+        nextP = { name: key, time: timeStr, diffMs: diff, prayerDate };
+      }
+    });
+
+    setNextPrayer(nextP);
+
+    // LOGIKA PERUBAHAN STATE
+    if (nextP) {
+      const diffMinutes = Math.floor(nextP.diffMs / 60000);
+      const isJumat = today === 5 && nextP.name === 'Dhuhr';
+
+      if (appState === 'NORMAL') {
+        // Cek Murottal
+        const murottalTime = settings.murottal[nextP.name];
+        if (murottalTime > 0 && diffMinutes <= murottalTime && diffMinutes > 0) {
+          setAppState('MUROTTAL');
+          if (audioUnlocked) murottalAudio.current.play();
         }
-      });
-      // Simpan hijri
-      if(h){
-        cfg._hijriDate = `${h.day} ${h.month.en} ${h.year} H`;
+        // Cek Masuk Waktu
+        else if (diffMinutes === 0 && currentS === 0) {
+          if (audioUnlocked) beepAudio.current.play();
+          if (isJumat) {
+            setAppState('JUMAT');
+          } else {
+            setAppState('AZAN');
+          }
+        }
+      } 
+      else if (appState === 'MUROTTAL') {
+        if (diffMinutes === 0 && currentS === 0) {
+          murottalAudio.current.pause();
+          if (audioUnlocked) beepAudio.current.play();
+          setAppState(isJumat ? 'JUMAT' : 'AZAN');
+        }
       }
-      // Cek ganti hari → reset trigger
-      const today = new Date().toDateString();
-      if(cfg._lastDate !== today){
-        triggeredAzanToday={};triggeredIqamahToday={};
-        cfg._lastDate=today;
+      else if (appState === 'AZAN') {
+        // Anggap azan 4 menit
+        if (now - nextP.prayerDate >= 4 * 60000) {
+          setAppState('IQOMAH_COUNT');
+        }
+      }
+      else if (appState === 'IQOMAH_COUNT') {
+        const iqomahWait = settings.iqomahTimes[nextP.name] * 60000;
+        // Azan 4 menit + Iqomah wait
+        if (now - nextP.prayerDate >= (4 * 60000) + iqomahWait) {
+          if (audioUnlocked) beepAudio.current.play();
+          setAppState('SHOLAT');
+        }
+      }
+      else if (appState === 'SHOLAT') {
+        const totalDuration = (4 * 60000) + (settings.iqomahTimes[nextP.name] * 60000) + (settings.sholatDuration * 60000);
+        if (now - nextP.prayerDate >= totalDuration) {
+          setAppState('NORMAL');
+        }
+      }
+      else if (appState === 'JUMAT') {
+        // Mode jumat nyala selama durasi sholat + 30 menit (khutbah)
+        const jumatDuration = (settings.sholatDuration + 40) * 60000;
+        if (now - nextP.prayerDate >= jumatDuration) {
+          setAppState('NORMAL');
+        }
       }
     }
-  }catch(e){console.error('Prayer API error:',e)}
-}
 
-function addMinutesToTime(timeStr, mins){
-  const [h,m] = timeStr.split(':').map(Number);
-  const d = new Date(2000,0,1,h,m+mins);
-  return `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
-}
+  }, [currentTime, jadwal, appState, settings, audioUnlocked]);
 
-// ============================
-// RENDER SEMUA UI
-// ============================
-function renderAll(){
-  renderHeader();
-  renderPrayerList();
-  renderSlideshow();
-  renderLowThirds();
-  renderRunningText();
-  renderHolidays();
-  updateNextPrayer();
-}
-
-function renderHeader(){
-  document.getElementById('mosqueName').textContent = cfg.mosqueName||'Masjid Al-Ikhlas';
-  document.getElementById('mosqueAddr').textContent = cfg.mosqueAddress||'Curup, Rejang Lebong';
-  const method = parseInt(cfg.calcMethod)||20;
-  document.getElementById('methodBadge').textContent = 'Metode: '+(METHOD_MAP[method]||'Kemenag RI');
-}
-
-function renderPrayerList(){
-  const list = document.getElementById('prayerList');
-  list.innerHTML = '';
-  PRAYERS.forEach(p=>{
-    const time = prayerTimes[p.key]||'--:--';
-    const iq = iqamahTimes[p.key];
-    const item = document.createElement('div');
-    item.className = 'prayer-item';
-    item.id = 'prayer-'+p.key;
-    item.innerHTML = `
-      <div class="prayer-icon"><i class="fas ${p.icon}"></i></div>
-      <div class="prayer-name">${p.name}</div>
-      <div class="prayer-time-col">
-        <span class="prayer-time">${time}</span>
-        ${iq?`<span class="prayer-iqamah">Iqamah: ${iq}</span>`:''}
-        <span class="prayer-badge">Berikutnya</span>
+  // UNLOCK AUDIO BROWSER
+  if (!audioUnlocked) {
+    return (
+      <div 
+        className="h-screen w-screen flex flex-col items-center justify-center bg-blue-900 cursor-pointer"
+        onClick={() => setAudioUnlocked(true)}
+      >
+        <MonitorPlay className="w-24 h-24 text-yellow-400 mb-6 animate-pulse" />
+        <h1 className="text-4xl font-bold text-white mb-2">SISTEM DISPLAY MASJID</h1>
+        <p className="text-xl text-blue-200">Klik di mana saja pada layar untuk memulai sistem (Unlock Audio)</p>
       </div>
-    `;
-    list.appendChild(item);
-  });
-  highlightNextPrayer();
+    );
+  }
+
+  // RENDER LAYAR PENUH (FULLSCREEN OVERLAYS)
+  if (appState === 'AZAN') return <FullScreenAlert title={settings.customText.azan} subtitle={`Waktu ${nextPrayer?.name}`} bgColor="bg-blue-900" time={currentTime} />;
+  if (appState === 'IQOMAH_COUNT') return <IqomahScreen targetTime={new Date(currentTime.getTime() + nextPrayer?.diffMs)} sholatName={nextPrayer?.name} settings={settings} />;
+  if (appState === 'SHOLAT') return <FullScreenAlert title={settings.customText.sholat} subtitle="Mohon matikan HP dan rapatkan shaf" bgColor="bg-black" time={currentTime} />;
+  if (appState === 'JUMAT') return <FullScreenAlert title={settings.customText.jumat} subtitle={settings.mosqueName} bgColor="bg-slate-900" time={currentTime} />;
+
+  // RENDER LAYAR NORMAL (TAMPILAN UTAMA)
+  return (
+    <div className="h-screen w-screen flex flex-col bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 overflow-hidden">
+      {/* HEADER */}
+      <header className="h-24 px-8 flex justify-between items-center bg-white/5 backdrop-blur-md border-b border-white/10 shadow-lg relative z-10">
+        <div className="flex items-center gap-4">
+          <div className="w-14 h-14 bg-gradient-to-tr from-yellow-500 to-yellow-300 rounded-full flex items-center justify-center shadow-lg shadow-yellow-500/20">
+            <Moon className="w-8 h-8 text-slate-900" />
+          </div>
+          <div>
+            <h1 className="text-3xl font-extrabold tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-yellow-500 uppercase">
+              {settings.mosqueName}
+            </h1>
+            <p className="text-blue-200 text-sm tracking-widest">{settings.address}</p>
+          </div>
+        </div>
+        <div className="text-right flex items-center gap-6">
+          <div className="text-right">
+            <div className="text-lg text-yellow-400 font-medium">{hijriDate}</div>
+            <div className="text-sm text-blue-200">{currentTime.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}</div>
+          </div>
+          <div className="text-5xl font-bold font-mono tracking-tighter text-white tabular-nums drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]">
+            {currentTime.toLocaleTimeString('id-ID', { hour12: false })}
+          </div>
+        </div>
+      </header>
+
+      {/* MAIN CONTENT */}
+      <main className="flex-1 flex px-8 py-6 gap-8 h-[calc(100vh-8rem)] relative z-0">
+        
+        {/* LEFT COLUMN: JADWAL */}
+        <div className="w-1/3 flex flex-col gap-3">
+          <div className="bg-gradient-to-r from-blue-800 to-blue-900 rounded-xl p-3 border border-blue-700/50 shadow-xl flex items-center justify-center mb-2">
+            <h2 className="text-xl font-bold text-yellow-400 tracking-widest">JADWAL SHOLAT</h2>
+          </div>
+          
+          {jadwal ? (
+            ['Imsak', 'Fajr', 'Sunrise', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'].map((key) => {
+              const isNext = nextPrayer?.name === key;
+              const names = { Imsak: 'IMSAK', Fajr: 'SHUBUH', Sunrise: 'TERBIT', Dhuhr: 'DZUHUR', Asr: 'ASHAR', Maghrib: 'MAGHRIB', Isha: 'ISYA' };
+              const icons = { Imsak: Moon, Fajr: Sunrise, Sunrise: Sun, Dhuhr: Sun, Asr: Sun, Maghrib: Sunset, Isha: Moon };
+              const Icon = icons[key];
+
+              return (
+                <div key={key} className={`flex-1 flex justify-between items-center px-6 py-2 rounded-2xl border transition-all duration-500 ${
+                  isNext 
+                  ? 'bg-gradient-to-r from-yellow-500 to-yellow-600 border-yellow-400 scale-105 shadow-[0_0_30px_rgba(234,179,8,0.4)]' 
+                  : 'bg-white/5 border-white/10 hover:bg-white/10'
+                }`}>
+                  <div className="flex items-center gap-4">
+                    <Icon className={`w-8 h-8 ${isNext ? 'text-slate-900' : 'text-yellow-500'}`} />
+                    <span className={`text-2xl font-bold ${isNext ? 'text-slate-900' : 'text-gray-100'}`}>{names[key]}</span>
+                  </div>
+                  <span className={`text-4xl font-bold font-mono ${isNext ? 'text-slate-900' : 'text-yellow-400'}`}>
+                    {jadwal[key]}
+                  </span>
+                </div>
+              );
+            })
+          ) : (
+            <div className="flex-1 flex items-center justify-center">Memuat Jadwal...</div>
+          )}
+        </div>
+
+        {/* RIGHT COLUMN: SLIDER & INFO */}
+        <div className="w-2/3 flex flex-col gap-6 relative">
+          
+          {/* Slider */}
+          <div className="flex-1 rounded-3xl overflow-hidden shadow-2xl relative border border-white/10 group">
+            <SlideShow images={settings.slides} />
+            
+            {/* Overlay Gradient for readability */}
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-transparent to-transparent"></div>
+          </div>
+
+          {/* LOWER THIRD INFO (Rotasi) */}
+          <div className="h-32 bg-white/10 backdrop-blur-lg rounded-2xl border border-white/20 flex items-center px-8 relative overflow-hidden shadow-xl">
+            <div className="absolute top-0 left-0 w-2 h-full bg-yellow-500"></div>
+            
+            <div className={`transition-opacity duration-500 absolute w-full pr-16 ${activeThird === 0 ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}>
+              <h3 className="text-yellow-400 text-sm font-bold tracking-widest uppercase mb-1 flex items-center gap-2"><Calendar className="w-4 h-4"/> PETUGAS JUMAT MINGGU INI</h3>
+              <div className="grid grid-cols-3 gap-4">
+                <div><span className="text-blue-200 text-sm">Khatib:</span><p className="font-bold text-xl truncate">{settings.jumat.khatib}</p></div>
+                <div><span className="text-blue-200 text-sm">Imam:</span><p className="font-bold text-xl truncate">{settings.jumat.imam}</p></div>
+                <div><span className="text-blue-200 text-sm">Muadzin:</span><p className="font-bold text-xl truncate">{settings.jumat.muadzin}</p></div>
+              </div>
+            </div>
+
+            <div className={`transition-opacity duration-500 absolute w-full pr-16 ${activeThird === 1 ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}>
+              <h3 className="text-yellow-400 text-sm font-bold tracking-widest uppercase mb-1 flex items-center gap-2"><Settings className="w-4 h-4"/> LAPORAN KEUANGAN MASJID</h3>
+              <div className="flex gap-16">
+                <div><span className="text-blue-200 text-sm">Saldo Kas Operasional:</span><p className="font-bold text-3xl text-emerald-400">{settings.kas.saldo}</p></div>
+              </div>
+            </div>
+
+            <div className={`transition-opacity duration-500 absolute w-full pr-16 ${activeThird === 2 ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}>
+               <h3 className="text-yellow-400 text-sm font-bold tracking-widest uppercase mb-1 flex items-center gap-2"><MapPin className="w-4 h-4"/> KAS PEMBANGUNAN</h3>
+              <div className="flex gap-16">
+                <div><span className="text-blue-200 text-sm">Saldo Kas Pembangunan:</span><p className="font-bold text-3xl text-blue-400">{settings.kas.pembangunan}</p></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      {/* FOOTER: RUNNING TEXT & COUNTDOWN */}
+      <footer className="h-16 bg-gradient-to-r from-blue-900 to-slate-900 flex items-center border-t border-white/10 relative z-10">
+        <div className="w-48 bg-yellow-500 h-full flex items-center justify-center font-bold text-slate-900 shadow-[10px_0_20px_rgba(0,0,0,0.3)] z-20">
+          INFORMASI
+        </div>
+        <div className="flex-1 overflow-hidden h-full flex items-center px-4">
+          <marquee className="text-xl font-medium tracking-wide text-gray-100" scrollamount="6">
+            {settings.runningText}
+          </marquee>
+        </div>
+        <div className="w-72 bg-blue-950 h-full flex flex-col items-center justify-center border-l border-white/10 px-4">
+          <span className="text-xs text-blue-300">Menuju {nextPrayer?.name.replace('Fajr','Shubuh').replace('Dhuhr','Dzuhur').replace('Asr','Ashar').replace('Maghrib','Maghrib').replace('Isha','Isya')}</span>
+          <span className="text-2xl font-bold font-mono text-yellow-400">
+             {nextPrayer ? formatDiff(nextPrayer.diffMs) : '--:--:--'}
+          </span>
+        </div>
+      </footer>
+    </div>
+  );
 }
 
-function highlightNextPrayer(){
-  document.querySelectorAll('.prayer-item').forEach(el=>el.classList.remove('active'));
-  if(nextPrayer){
-    const el = document.getElementById('prayer-'+nextPrayer.key);
-    if(el) el.classList.add('active');
-  }
+// --- KOMPONEN PENDUKUNG TV ---
+
+function SlideShow({ images }) {
+  const [idx, setIdx] = useState(0);
+  useEffect(() => {
+    const timer = setInterval(() => setIdx((p) => (p + 1) % images.length), 8000);
+    return () => clearInterval(timer);
+  }, [images]);
+
+  return (
+    <>
+      {images.map((img, i) => (
+        <img 
+          key={i} src={img} alt={`Slide ${i}`} 
+          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${i === idx ? 'opacity-100' : 'opacity-0'}`}
+        />
+      ))}
+    </>
+  );
 }
 
-function renderSlideshow(){
-  const container = document.getElementById('slideshow');
-  container.innerHTML = '';
-  if(slides.length===0){
-    container.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--text-muted);font-size:2vh"><i class="fas fa-image" style="margin-right:1vw;font-size:4vh"></i>Tidak ada slide</div>';
-    return;
-  }
-  slides.forEach((s,i)=>{
-    const div = document.createElement('div');
-    div.className = 'slide'+(i===0?' active':'');
-    div.innerHTML = `<img src="${s.url}" alt="${s.caption||''}" onerror="this.src='https://picsum.photos/seed/fallback${i}/800/450'">${s.caption?`<div class="slide-caption">${s.caption}</div>`:''}`;
-    container.appendChild(div);
-  });
+function formatDiff(ms) {
+  if(ms < 0) return "00:00:00";
+  const h = Math.floor(ms / 3600000);
+  const m = Math.floor((ms % 3600000) / 60000);
+  const s = Math.floor((ms % 60000) / 1000);
+  return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
 }
 
-function renderLowThirds(){
-  const container = document.getElementById('lowThirdContainer');
-  container.innerHTML = '';
-  if(lowThirds.length===0){
-    container.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--text-muted);font-size:1.5vh">Tidak ada info</div>';
-    return;
-  }
-  const icons = {petugas:'fa-users',keuangan:'fa-wallet',pembangunan:'fa-hammer'};
-  lowThirds.forEach((lt,i)=>{
-    const div = document.createElement('div');
-    div.className = 'low-third'+(i===0?' active':'');
-    div.innerHTML = `
-      <div class="lt-accent"></div>
-      <div class="lt-icon"><i class="fas ${icons[lt.type]||'fa-info-circle'}"></i></div>
-      <div class="lt-content">
-        <div class="lt-title">${lt.title||''}</div>
-        <div class="lt-text">${lt.content||''}</div>
+function FullScreenAlert({ title, subtitle, bgColor, time }) {
+  return (
+    <div className={`h-screen w-screen flex flex-col items-center justify-center ${bgColor} text-white p-8 text-center`}>
+      <h1 className="text-6xl font-black mb-4 text-yellow-400 tracking-widest">{title}</h1>
+      <h2 className="text-4xl text-gray-200 mb-12">{subtitle}</h2>
+      <div className="text-8xl font-mono font-bold drop-shadow-2xl tabular-nums">
+        {time.toLocaleTimeString('id-ID', { hour12: false })}
       </div>
-    `;
-    container.appendChild(div);
-  });
-  currentLT=0;
+    </div>
+  );
 }
 
-function renderRunningText(){
-  const el = document.getElementById('runningText');
-  const texts = runningTexts.map(r=>r.text).join('  \u2726  ');
-  el.textContent = texts||'Selamat datang di Masjid';
-  const dur = Math.max(20, texts.length*0.3);
-  el.style.setProperty('--marquee-dur', dur+'s');
+function IqomahScreen({ targetTime, sholatName, settings }) {
+  const [timeLeft, setTimeLeft] = useState(0);
+  const [now, setNow] = useState(new Date());
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      const cur = new Date();
+      setNow(cur);
+      const diff = targetTime - cur;
+      setTimeLeft(diff > 0 ? diff : 0);
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [targetTime]);
+
+  const m = Math.floor(timeLeft / 60000);
+  const s = Math.floor((timeLeft % 60000) / 1000);
+
+  return (
+    <div className="h-screen w-screen flex flex-col items-center justify-center bg-red-900 text-white p-8 text-center">
+      <h1 className="text-5xl font-bold mb-4 text-red-200">{settings.customText.iqomah}</h1>
+      <div className="text-[12rem] font-mono font-black text-white drop-shadow-[0_0_40px_rgba(255,255,255,0.5)] leading-none mb-8 tabular-nums">
+        {String(m).padStart(2,'0')}:{String(s).padStart(2,'0')}
+      </div>
+      <h2 className="text-3xl text-red-200">Menuju Sholat {sholatName.replace('Fajr','Shubuh').replace('Dhuhr','Dzuhur').replace('Asr','Ashar')}</h2>
+      <div className="mt-12 text-xl bg-black/30 px-6 py-2 rounded-full">
+        Waktu saat ini: {now.toLocaleTimeString('id-ID', { hour12: false })}
+      </div>
+    </div>
+  );
 }
 
-function renderHolidays(){
-  const container = document.getElementById('holidayList');
-  container.innerHTML = '';
-  const today = new Date(); today.setHours(0,0,0,0);
-  const upcoming = holidays.filter(h=>{
-    const d = new Date(h.targetDate); return d>=today;
-  }).sort((a,b)=>new Date(a.targetDate)-new Date(b.targetDate)).slice(0,3);
+// --- KOMPONEN HALAMAN ADMIN ---
 
-  if(upcoming.length===0){
-    container.innerHTML = '<div style="font-size:1.1vh;color:var(--text-muted)">Tidak ada hari besar mendatang</div>';
-    return;
-  }
-  upcoming.forEach(h=>{
-    const d = new Date(h.targetDate);
-    const diff = Math.ceil((d-today)/(1000*60*60*24));
-    const div = document.createElement('div');
-    div.className = 'holiday-item';
-    div.innerHTML = `<span class="holiday-name">${h.name}</span><span class="holiday-countdown">${diff} hari lagi</span>`;
-    container.appendChild(div);
-  });
-}
+function AdminPanel({ settings: initialSettings, onSave }) {
+  const [form, setForm] = useState(initialSettings);
+  const [activeTab, setActiveTab] = useState('umum');
 
-// ============================
-// JAM
-// ============================
-function startClock(){
-  updateClock();
-  setInterval(updateClock, 1000);
-}
-
-function updateClock(){
-  const now = new Date();
-  const h = String(now.getHours()).padStart(2,'0');
-  const m = String(now.getMinutes()).padStart(2,'0');
-  const s = String(now.getSeconds()).padStart(2,'0');
-  document.getElementById('clockTime').textContent = `${h}:${m}:${s}`;
-
-  const days = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
-  const months = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
-  document.getElementById('clockDate').textContent = `${days[now.getDay()]}, ${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
-
-  // Hijriah
-  if(cfg._hijriDate){
-    document.getElementById('clockHijri').textContent = cfg._hijriDate;
-  } else {
-    try{
-      const hijri = new Intl.DateTimeFormat('id-ID-u-ca-islamic-umalqura',{day:'numeric',month:'long',year:'numeric'}).format(now);
-      document.getElementById('clockHijri').textContent = hijri;
-    }catch(e){}
-  }
-}
-
-// ============================
-// SLIDESHOW
-// ============================
-let slideInterval;
-function startSlideshow(){
-  if(slideInterval) clearInterval(slideInterval);
-  slideInterval = setInterval(()=>{
-    if(slides.length<=1) return;
-    const allSlides = document.querySelectorAll('.slide');
-    allSlides[currentSlide]?.classList.remove('active');
-    currentSlide = (currentSlide+1)%slides.length;
-    allSlides[currentSlide]?.classList.add('active');
-  }, 8000);
-}
-
-// ============================
-// LOW THIRD ROTASI
-// ============================
-let ltInterval;
-function startLowThird(){
-  if(ltInterval) clearInterval(ltInterval);
-  ltInterval = setInterval(()=>{
-    if(lowThirds.length<=1) return;
-    const allLT = document.querySelectorAll('.low-third');
-    allLT[currentLT]?.classList.remove('active');
-    currentLT = (currentLT+1)%lowThirds.length;
-    allLT[currentLT]?.classList.add('active');
-  }, 10000);
-}
-
-// ============================
-// LOOP UTAMA (setiap detik)
-// ============================
-function mainLoop(){
-  if(overlayState!=='none') return; // Jangan cek jika overlay aktif
-  const now = new Date();
-  const currentTime = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
-
-  updateNextPrayer();
-  updateFooterCountdown(now);
-
-  // Cek trigger azan
-  PRAYERS.forEach(p=>{
-    if(p.key==='Sunrise') return;
-    if(prayerTimes[p.key]===currentTime && !triggeredAzanToday[p.key]){
-      triggeredAzanToday[p.key]=true;
-      showAzanOverlay(p);
+  const handleChange = (e, section = null, field = null) => {
+    const { name, value } = e.target;
+    if (section) {
+      setForm(prev => ({ ...prev, [section]: { ...prev[section], [field || name]: value } }));
+    } else {
+      setForm(prev => ({ ...prev, [name]: value }));
     }
-  });
+  };
 
-  // Cek Jumat
-  if(now.getDay()===5 && cfg.fridayMode==='true'){
-    const jumatTime = cfg.jumatTime||azanTextCfg.jumatTime||'12:30';
-    if(currentTime===jumatTime && !triggeredAzanToday['Jumat']){
-      triggeredAzanToday['Jumat']=true;
-      showJumatOverlay();
-    }
-  }
+  const handleNumberChange = (e, section, field) => {
+    setForm(prev => ({ ...prev, [section]: { ...prev[section], [field]: parseInt(e.target.value) || 0 } }));
+  };
 
-  // Cek custom countdown
-  customCountdown.forEach(cd=>{
-    if(cd.active===true||cd.active==='TRUE'){
-      if(cd.targetTime===currentTime && !(cd.triggered===true||cd.triggered==='TRUE')){
-        triggerCustomCountdown(cd);
-      }
-    }
-  });
+  const handleSlideChange = (index, value) => {
+    const newSlides = [...form.slides];
+    newSlides[index] = value;
+    setForm(prev => ({ ...prev, slides: newSlides }));
+  };
+
+  return (
+    <div className="min-h-screen bg-slate-100 text-slate-800 p-8">
+      <div className="max-w-6xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden">
+        
+        {/* Header Admin */}
+        <div className="bg-blue-900 text-white p-6 flex justify-between items-center">
+          <div>
+            <h1 className="text-2xl font-bold flex items-center gap-2"><Settings className="w-6 h-6"/> Panel Admin Sistem Masjid</h1>
+            <p className="text-blue-200 text-sm">Gunakan panel ini untuk mengubah konfigurasi layar TV</p>
+          </div>
+          <div className="flex gap-4">
+             <a href="/" className="px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg text-sm font-medium transition-colors flex items-center gap-2">
+              <MonitorPlay className="w-4 h-4" /> Lihat TV
+            </a>
+            <button onClick={() => onSave(form)} className="px-4 py-2 bg-yellow-500 hover:bg-yellow-400 text-slate-900 rounded-lg font-bold transition-colors flex items-center gap-2 shadow-lg">
+              <Save className="w-4 h-4" /> Simpan Pengaturan
+            </button>
+          </div>
+        </div>
+
+        <div className="flex min-h-[600px]">
+          {/* Sidebar Tabs */}
+          <div className="w-64 bg-slate-50 border-r border-slate-200 p-4 flex flex-col gap-2">
+            {[
+              { id: 'umum', icon: Edit3, label: 'Identitas & Umum' },
+              { id: 'jadwal', icon: MapPin, label: 'Lokasi & Jadwal' },
+              { id: 'waktu', icon: Clock, label: 'Durasi & Iqomah' },
+              { id: 'konten', icon: ImageIcon, label: 'Slide & Pengumuman' },
+              { id: 'jumat', icon: Calendar, label: 'Jumat & Kas' },
+              { id: 'teks', icon: MonitorPlay, label: 'Teks Layar Penuh' }
+            ].map(tab => (
+              <button 
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`flex items-center gap-3 w-full p-3 rounded-lg text-left font-medium transition-colors ${activeTab === tab.id ? 'bg-blue-100 text-blue-800' : 'text-slate-600 hover:bg-slate-200'}`}
+              >
+                <tab.icon className="w-5 h-5" /> {tab.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Form Content */}
+          <div className="flex-1 p-8 overflow-y-auto bg-white">
+            
+            {activeTab === 'umum' && (
+              <div className="space-y-6 animate-fadeIn">
+                <h2 className="text-xl font-bold border-b pb-2">Identitas Masjid</h2>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Nama Masjid</label>
+                  <input type="text" name="mosqueName" value={form.mosqueName} onChange={handleChange} className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 outline-none" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Alamat Pendek</label>
+                  <input type="text" name="address" value={form.address} onChange={handleChange} className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 outline-none" />
+                </div>
+              </div>
+            )}
+
+            {activeTab === 'jadwal' && (
+              <div className="space-y-6 animate-fadeIn">
+                <h2 className="text-xl font-bold border-b pb-2">Pengaturan Jadwal & Lokasi</h2>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Latitude</label>
+                    <input type="number" step="any" name="lat" value={form.lat} onChange={handleChange} className="w-full p-2 border rounded" />
+                    <span className="text-xs text-gray-500">Contoh Rejang Lebong: -3.4653</span>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Longitude</label>
+                    <input type="number" step="any" name="lng" value={form.lng} onChange={handleChange} className="w-full p-2 border rounded" />
+                    <span className="text-xs text-gray-500">Contoh Rejang Lebong: 102.5333</span>
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Metode Perhitungan</label>
+                  <select name="calcMethod" value={form.calcMethod} onChange={handleChange} className="w-full p-2 border rounded">
+                    <option value="20">Kemenag RI</option>
+                    <option value="5">Egyptian General Authority of Survey</option>
+                    <option value="3">Muslim World League</option>
+                    <option value="2">Islamic Society of North America</option>
+                  </select>
+                </div>
+                <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-200 mt-4">
+                  <h3 className="font-bold text-yellow-800 mb-2">Penyesuaian Waktu Manual (Offset / Menit)</h3>
+                  <p className="text-sm text-yellow-700 mb-4">Tambahkan atau kurangi menit pada jadwal yang didapat dari sistem untuk menyesuaikan dengan Muhammadiyah atau kalender lokal. (Gunakan angka minus untuk mengurangi).</p>
+                  <div className="grid grid-cols-3 gap-4">
+                    {['Imsak', 'Fajr', 'Sunrise', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'].map(time => (
+                      <div key={time}>
+                        <label className="block text-xs font-bold text-gray-700 uppercase mb-1">{time}</label>
+                        <input type="number" value={form.offsets[time]} onChange={(e) => handleNumberChange(e, 'offsets', time)} className="w-full p-2 border rounded" />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {activeTab === 'waktu' && (
+              <div className="space-y-6 animate-fadeIn">
+                <h2 className="text-xl font-bold border-b pb-2">Durasi & Hitung Mundur (Menit)</h2>
+                
+                <h3 className="font-bold text-gray-700">Waktu Tunggu Iqomah (Menit)</h3>
+                <div className="grid grid-cols-5 gap-4 mb-6">
+                  {['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'].map(time => (
+                    <div key={time}>
+                      <label className="block text-xs text-gray-500 uppercase">{time}</label>
+                      <input type="number" value={form.iqomahTimes[time]} onChange={(e) => handleNumberChange(e, 'iqomahTimes', time)} className="w-full p-2 border rounded" />
+                    </div>
+                  ))}
+                </div>
+
+                <h3 className="font-bold text-gray-700">Waktu Auto Murottal Sebelum Azan (Menit)</h3>
+                <p className="text-xs text-gray-500 mb-2">Isi 0 jika tidak ingin memutar murottal otomatis pada sholat tersebut.</p>
+                <div className="grid grid-cols-5 gap-4 mb-6">
+                  {['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'].map(time => (
+                    <div key={time}>
+                      <label className="block text-xs text-gray-500 uppercase">{time}</label>
+                      <input type="number" value={form.murottal[time]} onChange={(e) => handleNumberChange(e, 'murottal', time)} className="w-full p-2 border rounded" />
+                    </div>
+                  ))}
+                </div>
+
+                <div>
+                   <label className="block font-bold text-gray-700 mb-1">Durasi Layar Mati/Fokus Sholat (Menit)</label>
+                   <input type="number" name="sholatDuration" value={form.sholatDuration} onChange={handleChange} className="w-1/3 p-2 border rounded" />
+                </div>
+              </div>
+            )}
+
+            {activeTab === 'konten' && (
+              <div className="space-y-6 animate-fadeIn">
+                <h2 className="text-xl font-bold border-b pb-2">Konten Visual & Teks Berjalan</h2>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Teks Berjalan (Running Text)</label>
+                  <textarea name="runningText" value={form.runningText} onChange={handleChange} rows="3" className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"></textarea>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">URL Foto Slide (Pisahkan dengan koma atau tambah baru)</label>
+                  {form.slides.map((slide, i) => (
+                    <input key={i} type="text" value={slide} onChange={(e) => handleSlideChange(i, e.target.value)} className="w-full p-2 border rounded mb-2" placeholder={`URL Gambar ${i+1}`} />
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {activeTab === 'jumat' && (
+              <div className="space-y-6 animate-fadeIn">
+                <h2 className="text-xl font-bold border-b pb-2">Petugas Jumat & Laporan Keuangan</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-4 bg-gray-50 p-4 rounded-lg border">
+                    <h3 className="font-bold text-gray-800">Petugas Jumat Ini</h3>
+                    <div><label className="text-sm">Khatib</label><input type="text" value={form.jumat.khatib} onChange={(e) => handleChange(e, 'jumat', 'khatib')} className="w-full p-2 border rounded" /></div>
+                    <div><label className="text-sm">Imam</label><input type="text" value={form.jumat.imam} onChange={(e) => handleChange(e, 'jumat', 'imam')} className="w-full p-2 border rounded" /></div>
+                    <div><label className="text-sm">Muadzin</label><input type="text" value={form.jumat.muadzin} onChange={(e) => handleChange(e, 'jumat', 'muadzin')} className="w-full p-2 border rounded" /></div>
+                  </div>
+                  <div className="space-y-4 bg-gray-50 p-4 rounded-lg border">
+                    <h3 className="font-bold text-gray-800">Saldo Keuangan</h3>
+                    <div><label className="text-sm">Kas Operasional / Umum</label><input type="text" value={form.kas.saldo} onChange={(e) => handleChange(e, 'kas', 'saldo')} className="w-full p-2 border rounded" /></div>
+                    <div><label className="text-sm">Kas Pembangunan</label><input type="text" value={form.kas.pembangunan} onChange={(e) => handleChange(e, 'kas', 'pembangunan')} className="w-full p-2 border rounded" /></div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+             {activeTab === 'teks' && (
+              <div className="space-y-6 animate-fadeIn">
+                <h2 className="text-xl font-bold border-b pb-2">Kustomisasi Teks Layar Penuh</h2>
+                <div className="space-y-4">
+                  <div><label className="block text-sm font-medium mb-1">Teks Saat Azan</label><input type="text" value={form.customText.azan} onChange={(e) => handleChange(e, 'customText', 'azan')} className="w-full p-2 border rounded" /></div>
+                  <div><label className="block text-sm font-medium mb-1">Teks Hitung Mundur Iqomah</label><input type="text" value={form.customText.iqomah} onChange={(e) => handleChange(e, 'customText', 'iqomah')} className="w-full p-2 border rounded" /></div>
+                  <div><label className="block text-sm font-medium mb-1">Teks Saat Sholat Berlangsung</label><input type="text" value={form.customText.sholat} onChange={(e) => handleChange(e, 'customText', 'sholat')} className="w-full p-2 border rounded" /></div>
+                  <div><label className="block text-sm font-medium mb-1">Teks Saat Khutbah Jumat</label><input type="text" value={form.customText.jumat} onChange={(e) => handleChange(e, 'customText', 'jumat')} className="w-full p-2 border rounded" /></div>
+                </div>
+              </div>
+            )}
+
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }
-
-function updateNextPrayer(){
-  const now = new Date();
-  const nowMin = now.getHours()*60+now.getMinutes();
-  nextPrayer = null;
-
-  for(const p of PRAYERS){
-    if(p.key==='Sunrise') continue;
-    const t = prayerTimes[p.key];
-    if(!t) continue;
-    const [h,m] = t.split(':').map(Number);
-    const pMin = h*60+m;
-    if(pMin>nowMin){
-      nextPrayer = p;
-      break;
-    }
-  }
-  if(!nextPrayer){
-    // Besok (Subuh)
-    nextPrayer = PRAYERS[0];
-  }
-  highlightNextPrayer();
-}
-
-function updateFooterCountdown(now){
-  if(!nextPrayer || !prayerTimes[nextPrayer.key]){
-    document.getElementById('fcLabel').textContent = 'Berikutnya';
-    document.getElementById('fcTime').textContent = '--:--';
-    return;
-  }
-  const [h,m] = prayerTimes[nextPrayer.key].split(':').map(Number);
-  const target = new Date(now); target.setHours(h,m,0,0);
-  if(target<=now) target.setDate(target.getDate()+1);
-  const diff = target-now;
-  const dm = Math.floor(diff/60000);
-  const dh = Math.floor(dm/60);
-  const dmin = dm%60;
-  document.getElementById('fcLabel').textContent = nextPrayer.name;
-  document.getElementById('fcTime').textContent = `${String(dh).padStart(2,'0')}:${String(dmin).padStart(2,'0')}`;
-}
-
-// ============================
-// OVERLAY AZAN
-// ============================
-function showAzanOverlay(prayer){
-  overlayState='azan';
-  playBeep(800, 400, 3, 800);
-
-  document.getElementById('ovAzanTitle').textContent = azanTextCfg.azanTitle||'Waktu Azan';
-  document.getElementById('ovAzanPrayer').textContent = prayer.name;
-  document.getElementById('ovAzanTime').textContent = prayerTimes[prayer.key];
-  document.getElementById('ovAzanArabic').textContent = azanTextCfg.azanArabic||'اَللهُ اَكْبَرُ اَللهُ اَكْبَرُ';
-  document.getElementById('ovAzanCustom').textContent = azanTextCfg.azanCustom||'';
-  document.getElementById('overlayAzan').classList.add('show');
-
-  // Mainkan murottal
-  playMurottal(prayer.key);
-
-  // Durasi azan overlay
-  const azanDur = parseInt(cfg.azanDurationSec)||120;
-  setTimeout(()=>{
-    document.getElementById('overlayAzan').classList.remove('show');
-    // Mulai countdown iqamah
-    startIqamahCountdown(prayer);
-  }, azanDur*1000);
-}
-
-// ============================
-// OVERLAY IQAMAH COUNTDOWN
-// ============================
-function startIqamahCountdown(prayer){
-  overlayState='iqamah';
-  const iqTime = iqamahTimes[prayer.key];
-  if(!iqTime){
-    overlayState='none';
-    return;
-  }
-
-  document.getElementById('ovIqamahTitle').textContent = azanTextCfg.iqamahTitle||'Waktu Iqamah';
-  document.getElementById('ovIqamahPrayer').textContent = prayer.name;
-  document.getElementById('ovIqamahArabic').textContent = azanTextCfg.iqamahArabic||'حَيَّ عَلَى الصَّلَاةِ';
-  document.getElementById('ovIqamahCustom').textContent = azanTextCfg.iqamahCustom||'';
-  document.getElementById('overlayIqamah').classList.add('show');
-
-  const [ih,im] = iqTime.split(':').map(Number);
-  const targetMs = new Date(); targetMs.setHours(ih,im,0,0);
-  const totalSec = Math.max(0, Math.floor((targetMs-Date.now())/1000));
-
-  let remaining = totalSec;
-  const circumference = 2*Math.PI*90; // r=90 dari SVG
-
-  function tickIqamah(){
-    if(remaining<=0){
-      clearInterval(iqamahCountdownInterval);
-      document.getElementById('overlayIqamah').classList.remove('show');
-      showPrayerOverlay(prayer);
-      return;
-    }
-    const rm = Math.floor(remaining/60);
-    const rs = remaining%60;
-    document.getElementById('iqamahCdNum').textContent = `${String(rm).padStart(2,'0')}:${String(rs).padStart(2,'0')}`;
-    const progress = 1-(remaining/totalSec);
-    document.getElementById('iqamahRing').style.strokeDashoffset = circumference*(1-progress);
-    remaining--;
-  }
-  tickIqamah();
-  iqamahCountdownInterval = setInterval(tickIqamah, 1000);
-
-  // Beep saat iqamah mulai
-  playBeep(1000, 300, 2, 600);
-}
-
-// ============================
-// OVERLAY SHALAT BERLANGSUNG
-// ============================
-function showPrayerOverlay(prayer){
-  overlayState='prayer';
-  stopMurottal();
-  playBeep(600, 500, 1, 0);
-
-  document.getElementById('ovPrayerTitle').textContent = azanTextCfg.prayerTitle||'Shalat Berlangsung';
-  document.getElementById('ovPrayerName').textContent = prayer.name;
-  document.getElementById('ovPrayerCustom').textContent = azanTextCfg.prayerCustom||'';
-  document.getElementById('overlayPrayer').classList.add('show');
-
-  const dur = parseInt(cfg.prayerDurationMin)||15;
-  prayerEndTimeout = setTimeout(()=>{
-    document.getElementById('overlayPrayer').classList.remove('show');
-    overlayState='none';
-  }, dur*60*1000);
-}
-
-// ============================
-// OVERLAY JUMAT
-// ============================
-function showJumatOverlay(){
-  overlayState='jumat';
-  playBeep(800, 400, 5, 600);
-
-  document.getElementById('ovJumatTime').textContent = azanTextCfg.jumatTitle||'Shalat Jumat';
-  document.getElementById('ovJumatCustom').textContent = azanTextCfg.jumatCustom||'';
-
-  const info = document.getElementById('fridayInfo');
-  info.innerHTML = '';
-  const items = [
-    {icon:'fa-user-tie',label:'Imam',value:cfg.fridayImam||'-'},
-    {icon:'fa-microphone',label:'Khatib',value:cfg.fridayKhatib||'-'},
-    {icon:'fa-volume-high',label:'Muadzin',value:cfg.fridayMuadzin||'-'},
-    {icon:'fa-hand',label:'Bilal',value:cfg.fridayBilal||'-'}
-  ];
-  items.forEach(it=>{
-    const div = document.createElement('div');
-    div.className='friday-info-item';
-    div.innerHTML=`<i class="fas ${it.icon}"></i><div><div class="fi-label">${it.label}</div><div class="fi-value">${it.value}</div></div>`;
-    info.appendChild(div);
-  });
-
-  document.getElementById('overlayJumat').classList.add('show');
-  const dur = parseInt(azanTextCfg.jumatKhutbahDuration)||30;
-  prayerEndTimeout = setTimeout(()=>{
-    document.getElementById('overlayJumat').classList.remove('show');
-    overlayState='none';
-  }, dur*60*1000);
-}
-
-// ============================
-// CUSTOM COUNTDOWN TRIGGER
-// ============================
-function triggerCustomCountdown(cd){
-  overlayState='iqamah';
-  playBeep(900, 300, 3, 500);
-
-  document.getElementById('ovIqamahTitle').textContent = cd.title||'Countdown';
-  document.getElementById('ovIqamahPrayer').textContent = '';
-  document.getElementById('ovIqamahArabic').textContent = '';
-  document.getElementById('ovIqamahCustom').textContent = '';
-  document.getElementById('overlayIqamah').classList.add('show');
-
-  const totalSec = (parseInt(cd.durationMin)||5)*60;
-  let remaining = totalSec;
-  const circumference = 2*Math.PI*90;
-
-  function tick(){
-    if(remaining<=0){
-      clearInterval(iqamahCountdownInterval);
-      document.getElementById('overlayIqamah').classList.remove('show');
-      overlayState='none';
-      playBeep(1000,500,1,0);
-      return;
-    }
-    const rm=Math.floor(remaining/60),rs=remaining%60;
-    document.getElementById('iqamahCdNum').textContent=`${String(rm).padStart(2,'0')}:${String(rs).padStart(2,'0')}`;
-    const progress=1-(remaining/totalSec);
-    document.getElementById('iqamahRing').style.strokeDashoffset=circumference*(1-progress);
-    remaining--;
-  }
-  tick();
-  iqamahCountdownInterval=setInterval(tick,1000);
-}
-
-// ============================
-// AUDIO: BEEP
-// ============================
-function playBeep(freq, dur, count, gap){
-  if(!audioCtx) return;
-  for(let i=0;i<count;i++){
-    const osc=audioCtx.createOscillator();
-    const gain=audioCtx.createGain();
-    osc.connect(gain);gain.connect(audioCtx.destination);
-    osc.frequency.value=freq;osc.type='sine';
-    gain.gain.setValueAtTime(0,audioCtx.currentTime+i*(dur+gap)/1000);
-    gain.gain.linearRampToValueAtTime(0.3,audioCtx.currentTime+i*(dur+gap)/1000+0.02);
-    gain.gain.linearRampToValueAtTime(0,audioCtx.currentTime+i*(dur+gap)/1000+dur/1000);
-    osc.start(audioCtx.currentTime+i*(dur+gap)/1000);
-    osc.stop(audioCtx.currentTime+i*(dur+gap)/1000+dur/1000);
-  }
-}
-
-// ============================
-// AUDIO: MUROTTAL
-// ============================
-function playMurottal(prayerKey){
-  const m = murottalCfg.find(m=>m.prayer===prayerKey);
-  if(!m || !(m.enabled===true||m.enabled==='TRUE') || !m.url) return;
-  murottalPlayer.src = m.url;
-  murottalPlayer.play().catch(e=>console.log('Murottal autoplay blocked:',e));
-  const dur = (parseInt(m.durationSec)||180)*1000;
-  setTimeout(()=>stopMurottal(), dur);
-}
-
-function stopMurottal(){
-  if(murottalPlayer){
-    murottalPlayer.pause();
-    murottalPlayer.currentTime=0;
-  }
-}
-</script>
-</body>
-</html>
