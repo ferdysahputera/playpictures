@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -41,8 +40,6 @@ label{display:block;font-size:.78em;font-weight:500;color:var(--muted);margin-bo
 .chk-row input[type=checkbox]{width:18px;height:18px;accent-color:var(--gold);cursor:pointer}
 .chk-row label{margin:0;text-transform:none;font-size:.88em;color:var(--text);cursor:pointer}
 ::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--dim);border-radius:3px}
-
-/* Jadwal tahunan */
 .yr-wrap{max-height:65vh;overflow:auto;border:1px solid var(--border);border-radius:10px}
 .yr-wrap table{font-size:.82em}
 .yr-wrap th{position:sticky;top:0;background:var(--panel);z-index:2}
@@ -52,26 +49,21 @@ label{display:block;font-size:.78em;font-weight:500;color:var(--muted);margin-bo
 .yr-wrap .dy{color:var(--muted);font-size:.9em}
 .yr-filters{display:flex;gap:10px;align-items:end;flex-wrap:wrap;margin-bottom:14px}
 .yr-filters select,.yr-filters input{width:auto;min-width:120px}
-
-@media print{
-  body{background:#fff;color:#111}
-  .cd{border:1px solid #ccc;background:#fff}
-  .tbl th{color:#333;border-bottom:2px solid #333}
-  .tbl td{border-bottom:1px solid #ddd;color:#111}
-  .yr-wrap .pr{color:#1a1a1a}
-  .yr-wrap .mhdr td{background:#f0f0f0;color:#333}
-  .btn,.si,#side,#mobNav,.toast{display:none!important}
-  #main{margin-left:0!important;padding:10px!important}
-  .yr-wrap{max-height:none;overflow:visible;border:none}
-}
-@media(max-width:768px){#side{display:none}#main{margin-left:0!important}#mobNav{display:flex!important}}
+.adm-hdr{position:sticky;top:0;z-index:30;background:rgba(12,21,40,.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:12px 24px;display:flex;align-items:center;justify-content:space-between;margin:-28px -32px 20px;border-radius:0}
+.adm-hdr-l{display:flex;align-items:center;gap:8px}
+.adm-hdr-l span{font-size:.72em;color:var(--muted);font-weight:500}
+.adm-hdr-r{display:flex;align-items:center;gap:8px}
+.adm-hdr-r .btn{padding:6px 14px;font-size:.75em}
+.spinning{animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media print{body{background:#fff;color:#111}.cd{border:1px solid #ccc;background:#fff}.tbl th{color:#333;border-bottom:2px solid #333}.tbl td{border-bottom:1px solid #ddd;color:#111}.yr-wrap .pr{color:#1a1a1a}.yr-wrap .mhdr td{background:#f0f0f0;color:#333}.btn,.si,#side,#mobNav,.toast,.adm-hdr{display:none!important}#main{margin-left:0!important;padding:10px!important}.yr-wrap{max-height:none;overflow:visible;border:none}}
+@media(max-width:768px){#side{display:none}#main{margin-left:0!important}#mobNav{display:flex!important}.adm-hdr{margin:-10px -16px 16px;padding:10px 16px}}
 </style>
 </head>
 <body>
 
 <div id="toast" class="toast toast-ok"><i class="fa-solid fa-check-circle"></i><span id="toastMsg"></span></div>
 
-<!-- ========== LOGIN ========== -->
 <div id="loginScreen" class="min-h-screen flex items-center justify-center" style="background:radial-gradient(ellipse at center,#0c1528 60%,#050810)">
   <div style="position:absolute;inset:0;opacity:.04;background-image:url(&quot;data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0L60 30L30 60L0 30Z' fill='none' stroke='%23c9a84c' stroke-width='.5'/%3E%3C/svg%3E&quot;);background-size:60px 60px;pointer-events:none"></div>
   <div class="cd" style="max-width:400px;width:92%;text-align:center;position:relative">
@@ -84,7 +76,6 @@ label{display:block;font-size:.78em;font-weight:500;color:var(--muted);margin-bo
   </div>
 </div>
 
-<!-- ========== ADMIN ========== -->
 <div id="adminDash" style="display:none" class="min-h-screen flex">
 
   <div id="mobNav" style="display:none;position:fixed;top:0;left:0;right:0;z-index:50;background:var(--panel);border-bottom:1px solid var(--border);padding:10px 16px;gap:6px;overflow-x:auto">
@@ -105,7 +96,6 @@ label{display:block;font-size:.78em;font-weight:500;color:var(--muted);margin-bo
     <button class="btn btn-o" style="font-size:.75em;padding:6px 12px;white-space:nowrap" onclick="showSec('pw')">Password</button>
   </div>
 
-  <!-- Sidebar -->
   <nav id="side" style="width:255px;min-height:100vh;background:var(--panel);border-right:1px solid var(--border);padding:18px 10px;flex-shrink:0;position:fixed;left:0;top:0;bottom:0;overflow-y:auto;z-index:40">
     <div style="display:flex;align-items:center;gap:9px;padding:0 14px 18px;border-bottom:1px solid var(--border);margin-bottom:14px">
       <i class="fa-solid fa-mosque" style="color:var(--gold);font-size:1.2em"></i>
@@ -127,299 +117,63 @@ label{display:block;font-size:.78em;font-weight:500;color:var(--muted);margin-bo
     <div class="si" data-s="sync"><i class="fa-solid fa-cloud-arrow-up" style="width:16px;text-align:center"></i> Sync Spreadsheet</div>
     <div class="si" data-s="pw"><i class="fa-solid fa-key" style="width:16px;text-align:center"></i> Ubah Password</div>
     <div style="border-top:1px solid var(--border);margin-top:14px;padding-top:14px">
+      <div class="si" onclick="doRefresh()" id="btnRefreshSidebar"><i class="fa-solid fa-rotate-right" style="width:16px;text-align:center"></i> Refresh Halaman</div>
       <div class="si" onclick="window.open('index.html','_blank')"><i class="fa-solid fa-tv" style="width:16px;text-align:center"></i> Buka Display TV</div>
       <div class="si" onclick="doLogout()" style="color:#f06060"><i class="fa-solid fa-right-from-bracket" style="width:16px;text-align:center"></i> Logout</div>
     </div>
   </nav>
 
-  <!-- Main Content -->
   <main id="main" style="margin-left:255px;flex:1;padding:28px 32px;max-width:960px;padding-top:28px">
-    <div style="margin-bottom:26px">
-      <h2 class="fl text-2xl font-bold" style="color:var(--gold)">Pengaturan Display Masjid</h2>
-      <p style="color:var(--muted);font-size:.82em;margin-top:3px">Wilayah Rejang Lebong, Bengkulu</p>
-    </div>
-
-    <!-- ===== INFO MASJID ===== -->
-    <div class="sec on" id="sec-masjid">
-      <div class="cd">
-        <h3 class="fl font-bold text-base" style="color:var(--gold-l)"><i class="fa-solid fa-building-columns mr-2"></i>Informasi Masjid</h3>
-        <div style="display:grid;gap:14px">
-          <div><label>Nama Masjid</label><input type="text" id="f_name"></div>
-          <div><label>Alamat Lengkap</label><textarea id="f_addr" rows="2"></textarea></div>
-        </div>
-        <div style="margin-top:18px"><button class="btn btn-g" onclick="sv('masjid')"><i class="fa-solid fa-floppy-disk"></i> Simpan</button></div>
+    <div class="adm-hdr">
+      <div class="adm-hdr-l">
+        <h2 class="fl text-xl font-bold" style="color:var(--gold)">Pengaturan Display Masjid</h2>
+        <span>Rejang Lebong, Bengkulu</span>
+      </div>
+      <div class="adm-hdr-r">
+        <button class="btn btn-o" onclick="window.open('index.html','_blank')"><i class="fa-solid fa-tv"></i> Display</button>
+        <button class="btn btn-o" onclick="doRefresh()" id="btnRefreshTop"><i class="fa-solid fa-rotate-right" id="refreshIcon"></i> Refresh</button>
       </div>
     </div>
 
-    <!-- ===== LOKASI ===== -->
-    <div class="sec" id="sec-lokasi">
-      <div class="cd">
-        <h3 class="fl font-bold text-base" style="color:var(--gold-l)"><i class="fa-solid fa-location-dot mr-2"></i>Lokasi & Koordinat</h3>
-        <p class="hint" style="margin-bottom:14px">Koordinat untuk perhitungan waktu sholat. Default: Rejang Lebong, Bengkulu.</p>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
-          <div><label>Latitude</label><input type="number" step="0.0001" id="f_lat"></div>
-          <div><label>Longitude</label><input type="number" step="0.0001" id="f_lng"></div>
-          <div><label>Timezone (UTC+)</label><input type="number" id="f_tz" min="-12" max="14"></div>
-          <div><label>Nama Kota / Wilayah</label><input type="text" id="f_city"></div>
-        </div>
-        <div style="margin-top:18px"><button class="btn btn-g" onclick="sv('lokasi')"><i class="fa-solid fa-floppy-disk"></i> Simpan</button></div>
-      </div>
-    </div>
+    <div class="sec on" id="sec-masjid"><div class="cd"><h3 class="fl font-bold text-base" style="color:var(--gold-l)"><i class="fa-solid fa-building-columns mr-2"></i>Informasi Masjid</h3><div style="display:grid;gap:14px"><div><label>Nama Masjid</label><input type="text" id="f_name"></div><div><label>Alamat Lengkap</label><textarea id="f_addr" rows="2"></textarea></div></div><div style="margin-top:18px"><button class="btn btn-g" onclick="sv('masjid')"><i class="fa-solid fa-floppy-disk"></i> Simpan</button></div></div></div>
 
-    <!-- ===== PERHITUNGAN ===== -->
-    <div class="sec" id="sec-perhitungan">
-      <div class="cd">
-        <h3 class="fl font-bold text-base" style="color:var(--gold-l)"><i class="fa-solid fa-calculator mr-2"></i>Metode Perhitungan Sholat</h3>
-        <div style="display:grid;gap:14px">
-          <div><label>Sudut Fajr (derajat)</label><input type="number" step="0.5" id="f_fajr">
-            <p class="hint">KEMENAG/MUI: 20 | DIYANET: 18 | MWL: 18 | ISNA: 15 | Egypt: 19.5</p></div>
-          <div><label>Sudut Isha (derajat)</label><input type="number" step="0.5" id="f_isha">
-            <p class="hint">KEMENAG/MUI: 18 | DIYANET: 17 | MWL: 17 | ISNA: 15 | Egypt: 17.5</p></div>
-          <div><label>Metode Asar</label>
-            <select id="f_asr"><option value="shafii">Syafi'i (standar)</option><option value="hanafi">Hanafi (bayangan 2x)</option></select></div>
-          <div><label>Durasi Tampilan Azan (detik)</label><input type="number" id="f_azanDur" min="30" max="600">
-            <p class="hint">Layar azan full screen akan tampil selama durasi ini</p></div>
-        </div>
-        <div style="margin-top:18px"><button class="btn btn-g" onclick="sv('perhitungan')"><i class="fa-solid fa-floppy-disk"></i> Simpan</button></div>
-      </div>
-      <div class="cd">
-        <h3 class="fl font-bold text-base" style="color:var(--gold-l)"><i class="fa-solid fa-table-list mr-2"></i>Preview Jadwal Hari Ini</h3>
-        <div id="previewTbl"></div>
-      </div>
-    </div>
+    <div class="sec" id="sec-lokasi"><div class="cd"><h3 class="fl font-bold text-base" style="color:var(--gold-l)"><i class="fa-solid fa-location-dot mr-2"></i>Lokasi & Koordinat</h3><p class="hint" style="margin-bottom:14px">Koordinat untuk perhitungan waktu sholat.</p><div style="display:grid;grid-template-columns:1fr 1fr;gap:14px"><div><label>Latitude</label><input type="number" step="0.0001" id="f_lat"></div><div><label>Longitude</label><input type="number" step="0.0001" id="f_lng"></div><div><label>Timezone (UTC+)</label><input type="number" id="f_tz" min="-12" max="14"></div><div><label>Nama Kota</label><input type="text" id="f_city"></div></div><div style="margin-top:18px"><button class="btn btn-g" onclick="sv('lokasi')"><i class="fa-solid fa-floppy-disk"></i> Simpan</button></div></div></div>
 
-    <!-- ===== ADJUST ===== -->
-    <div class="sec" id="sec-adjust">
-      <div class="cd">
-        <h3 class="fl font-bold text-base" style="color:var(--gold-l)"><i class="fa-solid fa-sliders mr-2"></i>Adjust Waktu Sholat</h3>
-        <p class="hint" style="margin-bottom:14px">Koreksi dalam menit. Positif = waktu ditambah, Negatif = dikurangi. Cocokkan dengan jadwal Kemenag setempat.</p>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
-          <div><label>Subuh (menit)</label><input type="number" step="1" id="aj_subuh"></div>
-          <div><label>Syuruq (menit)</label><input type="number" step="1" id="aj_terbit"></div>
-          <div><label>Dhuha (menit)</label><input type="number" step="1" id="aj_dhuha"></div>
-          <div><label>Dzuhur (menit)</label><input type="number" step="1" id="aj_dzuhur"></div>
-          <div><label>Ashar (menit)</label><input type="number" step="1" id="aj_asr"></div>
-          <div><label>Maghrib (menit)</label><input type="number" step="1" id="aj_maghrib"></div>
-          <div><label>Isya (menit)</label><input type="number" step="1" id="aj_isya"></div>
-        </div>
-        <div style="margin-top:18px;display:flex;gap:10px">
-          <button class="btn btn-g" onclick="sv('adjust')"><i class="fa-solid fa-floppy-disk"></i> Simpan</button>
-          <button class="btn btn-o" onclick="rstAdj()"><i class="fa-solid fa-rotate-left"></i> Reset Semua ke 0</button>
-        </div>
-      </div>
-    </div>
+    <div class="sec" id="sec-perhitungan"><div class="cd"><h3 class="fl font-bold text-base" style="color:var(--gold-l)"><i class="fa-solid fa-calculator mr-2"></i>Metode Perhitungan Sholat</h3><div style="display:grid;gap:14px"><div><label>Sudut Fajr (derajat)</label><input type="number" step="0.5" id="f_fajr"><p class="hint">KEMENAG/MUI: 20 | DIYANET: 18 | ISNA: 15 | Egypt: 19.5</p></div><div><label>Sudut Isha (derajat)</label><input type="number" step="0.5" id="f_isha"><p class="hint">KEMENAG/MUI: 18 | DIYANET: 17 | ISNA: 15 | Egypt: 17.5</p></div><div><label>Metode Asar</label><select id="f_asr"><option value="shafii">Syafi'i (standar)</option><option value="hanafi">Hanafi (bayangan 2x)</option></select></div><div><label>Durasi Azan (detik)</label><input type="number" id="f_azanDur" min="30" max="600"></div></div><div style="margin-top:18px"><button class="btn btn-g" onclick="sv('perhitungan')"><i class="fa-solid fa-floppy-disk"></i> Simpan</button></div></div><div class="cd"><h3 class="fl font-bold text-base" style="color:var(--gold-l)"><i class="fa-solid fa-table-list mr-2"></i>Preview Jadwal Hari Ini</h3><div id="previewTbl"></div></div></div>
 
-    <!-- ===== IQOMAH ===== -->
-    <div class="sec" id="sec-iqomah">
-      <div class="cd">
-        <h3 class="fl font-bold text-base" style="color:var(--gold-l)"><i class="fa-solid fa-hourglass-half mr-2"></i>Jeda Iqomah</h3>
-        <p class="hint" style="margin-bottom:14px">Durasi hitung mundur dari akhir azan sampai iqomah (menit)</p>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
-          <div><label>Subuh (menit)</label><input type="number" id="iq_subuh" min="1" max="30"></div>
-          <div><label>Dzuhur (menit)</label><input type="number" id="iq_dzuhur" min="1" max="30"></div>
-          <div><label>Ashar (menit)</label><input type="number" id="iq_asr" min="1" max="30"></div>
-          <div><label>Maghrib (menit)</label><input type="number" id="iq_maghrib" min="1" max="30"></div>
-          <div><label>Isya (menit)</label><input type="number" id="iq_isya" min="1" max="30"></div>
-        </div>
-        <div style="margin-top:18px"><button class="btn btn-g" onclick="sv('iqomah')"><i class="fa-solid fa-floppy-disk"></i> Simpan</button></div>
-      </div>
-    </div>
+    <div class="sec" id="sec-adjust"><div class="cd"><h3 class="fl font-bold text-base" style="color:var(--gold-l)"><i class="fa-solid fa-sliders mr-2"></i>Adjust Waktu Sholat</h3><p class="hint" style="margin-bottom:14px">Koreksi menit. Positif = ditambah, Negatif = dikurangi.</p><div style="display:grid;grid-template-columns:1fr 1fr;gap:14px"><div><label>Subuh</label><input type="number" step="1" id="aj_subuh"></div><div><label>Syuruq</label><input type="number" step="1" id="aj_terbit"></div><div><label>Dhuha</label><input type="number" step="1" id="aj_dhuha"></div><div><label>Dzuhur</label><input type="number" step="1" id="aj_dzuhur"></div><div><label>Ashar</label><input type="number" step="1" id="aj_asr"></div><div><label>Maghrib</label><input type="number" step="1" id="aj_maghrib"></div><div><label>Isya</label><input type="number" step="1" id="aj_isya"></div></div><div style="margin-top:18px;display:flex;gap:10px"><button class="btn btn-g" onclick="sv('adjust')"><i class="fa-solid fa-floppy-disk"></i> Simpan</button><button class="btn btn-o" onclick="rstAdj()"><i class="fa-solid fa-rotate-left"></i> Reset ke 0</button></div></div></div>
 
-    <!-- ===== JUMAT ===== -->
-    <div class="sec" id="sec-jumat">
-      <div class="cd">
-        <h3 class="fl font-bold text-base" style="color:var(--gold-l)"><i class="fa-solid fa-calendar-day mr-2"></i>Petugas Sholat Jumat</h3>
-        <p class="hint" style="margin-bottom:14px">Akan tampil di low third dan layar full screen Jumat</p>
-        <div style="display:grid;gap:14px">
-          <div><label>Imam</label><input type="text" id="jm_imam" placeholder="Nama imam"></div>
-          <div><label>Khatib</label><input type="text" id="jm_khatib" placeholder="Nama khatib"></div>
-          <div><label>Muadzin</label><input type="text" id="jm_muadzin" placeholder="Nama muadzin"></div>
-          <div><label>Bilal</label><input type="text" id="jm_bilal" placeholder="Nama bilal"></div>
-        </div>
-        <div style="margin-top:18px"><button class="btn btn-g" onclick="sv('jumat')"><i class="fa-solid fa-floppy-disk"></i> Simpan</button></div>
-      </div>
-    </div>
+    <div class="sec" id="sec-iqomah"><div class="cd"><h3 class="fl font-bold text-base" style="color:var(--gold-l)"><i class="fa-solid fa-hourglass-half mr-2"></i>Jeda Iqomah</h3><p class="hint" style="margin-bottom:14px">Hitung mundur dari akhir azan sampai iqomah (menit)</p><div style="display:grid;grid-template-columns:1fr 1fr;gap:14px"><div><label>Subuh</label><input type="number" id="iq_subuh" min="1" max="30"></div><div><label>Dzuhur</label><input type="number" id="iq_dzuhur" min="1" max="30"></div><div><label>Ashar</label><input type="number" id="iq_asr" min="1" max="30"></div><div><label>Maghrib</label><input type="number" id="iq_maghrib" min="1" max="30"></div><div><label>Isya</label><input type="number" id="iq_isya" min="1" max="30"></div></div><div style="margin-top:18px"><button class="btn btn-g" onclick="sv('iqomah')"><i class="fa-solid fa-floppy-disk"></i> Simpan</button></div></div></div>
 
-    <!-- ===== KEUANGAN ===== -->
-    <div class="sec" id="sec-keuangan">
-      <div class="cd">
-        <h3 class="fl font-bold text-base" style="color:var(--gold-l)"><i class="fa-solid fa-coins mr-2"></i>Informasi Keuangan</h3>
-        <p class="hint" style="margin-bottom:14px">Data ditampilkan pada low third di tampilan TV</p>
-        <div style="display:grid;gap:14px">
-          <div><label>Kas Masjid</label><input type="text" id="fn_kas" placeholder="Rp 0"></div>
-          <div><label>Kas Pembangunan</label><input type="text" id="fn_bangun" placeholder="Rp 0"></div>
-          <div><label>Infak Jumat Terakhir</label><input type="text" id="fn_infak" placeholder="Rp 0"></div>
-          <div><label>Tanggal Update</label><input type="date" id="fn_date"></div>
-        </div>
-        <div style="margin-top:18px"><button class="btn btn-g" onclick="sv('keuangan')"><i class="fa-solid fa-floppy-disk"></i> Simpan</button></div>
-      </div>
-    </div>
+    <div class="sec" id="sec-jumat"><div class="cd"><h3 class="fl font-bold text-base" style="color:var(--gold-l)"><i class="fa-solid fa-calendar-day mr-2"></i>Petugas Sholat Jumat</h3><div style="display:grid;gap:14px"><div><label>Imam</label><input type="text" id="jm_imam"></div><div><label>Khatib</label><input type="text" id="jm_khatib"></div><div><label>Muadzin</label><input type="text" id="jm_muadzin"></div><div><label>Bilal</label><input type="text" id="jm_bilal"></div></div><div style="margin-top:18px"><button class="btn btn-g" onclick="sv('jumat')"><i class="fa-solid fa-floppy-disk"></i> Simpan</button></div></div></div>
 
-    <!-- ===== SLIDESHOW ===== -->
-    <div class="sec" id="sec-slide">
-      <div class="cd">
-        <h3 class="fl font-bold text-base" style="color:var(--gold-l)"><i class="fa-solid fa-images mr-2"></i>Pengaturan Slideshow</h3>
-        <div style="margin-bottom:14px"><label>Interval Ganti Gambar (detik)</label><input type="number" id="sl_int" min="3" max="120"></div>
-        <div><label>URL Gambar (satu per baris)</label><textarea id="sl_imgs" rows="7" placeholder="https://contoh.com/foto1.jpg&#10;https://contoh.com/foto2.jpg"></textarea>
-          <p class="hint">Gunakan URL langsung ke file gambar (JPG/PNG/WebP). Rekomendasi resolusi 1920x1080.</p></div>
-        <div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap" id="slPreview"></div>
-        <div style="margin-top:18px"><button class="btn btn-g" onclick="sv('slide')"><i class="fa-solid fa-floppy-disk"></i> Simpan</button></div>
-      </div>
-    </div>
+    <div class="sec" id="sec-keuangan"><div class="cd"><h3 class="fl font-bold text-base" style="color:var(--gold-l)"><i class="fa-solid fa-coins mr-2"></i>Informasi Keuangan</h3><div style="display:grid;gap:14px"><div><label>Kas Masjid</label><input type="text" id="fn_kas"></div><div><label>Kas Pembangunan</label><input type="text" id="fn_bangun"></div><div><label>Infak Jumat</label><input type="text" id="fn_infak"></div><div><label>Tanggal Update</label><input type="date" id="fn_date"></div></div><div style="margin-top:18px"><button class="btn btn-g" onclick="sv('keuangan')"><i class="fa-solid fa-floppy-disk"></i> Simpan</button></div></div></div>
 
-    <!-- ===== RUNNING TEXT ===== -->
-    <div class="sec" id="sec-run">
-      <div class="cd">
-        <h3 class="fl font-bold text-base" style="color:var(--gold-l)"><i class="fa-solid fa-align-left mr-2"></i>Running Text</h3>
-        <div><label>Teks Berjalan (Footer)</label><textarea id="rt_text" rows="3" placeholder="Masukkan teks berjalan di sini..."></textarea>
-          <p class="hint">Teks ini akan berjalan di bagian bawah tampilan TV secara terus-menerus</p></div>
-        <div style="margin-top:18px"><button class="btn btn-g" onclick="sv('run')"><i class="fa-solid fa-floppy-disk"></i> Simpan</button></div>
-      </div>
-    </div>
+    <div class="sec" id="sec-slide"><div class="cd"><h3 class="fl font-bold text-base" style="color:var(--gold-l)"><i class="fa-solid fa-images mr-2"></i>Slideshow</h3><div style="margin-bottom:14px"><label>Interval (detik)</label><input type="number" id="sl_int" min="3" max="120"></div><div><label>URL Gambar (satu per baris)</label><textarea id="sl_imgs" rows="7"></textarea><p class="hint">Rekomendasi resolusi 1920x1080.</p></div><div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap" id="slPreview"></div><div style="margin-top:18px"><button class="btn btn-g" onclick="sv('slide')"><i class="fa-solid fa-floppy-disk"></i> Simpan</button></div></div></div>
 
-    <!-- ===== PHBI ===== -->
-    <div class="sec" id="sec-phbi">
-      <div class="cd">
-        <h3 class="fl font-bold text-base" style="color:var(--gold-l)"><i class="fa-solid fa-star-and-crescent mr-2"></i>Hari Besar Islam (PHBI)</h3>
-        <p class="hint" style="margin-bottom:14px">Sistem otomatis menampilkan countdown ke PHBI terdekat di tampilan TV</p>
-        <div id="phbiTbl"></div>
-        <div style="margin-top:14px;padding:14px;border:1px dashed var(--border);border-radius:10px">
-          <div style="font-size:.82em;font-weight:600;color:var(--gold);margin-bottom:10px">Tambah PHBI</div>
-          <div style="display:flex;gap:8px;align-items:end;flex-wrap:wrap">
-            <div style="flex:1;min-width:180px"><label style="font-size:.72em">Nama Acara</label><input type="text" id="phbi_n" placeholder="Isra Mi'raj 1447 H"></div>
-            <div style="flex:.5;min-width:150px"><label style="font-size:.72em">Tanggal</label><input type="date" id="phbi_d"></div>
-            <button class="btn btn-o" onclick="addPhbi()" style="margin-bottom:1px"><i class="fa-solid fa-plus"></i> Tambah</button>
-          </div>
-        </div>
-        <div style="margin-top:18px"><button class="btn btn-g" onclick="sv('phbi')"><i class="fa-solid fa-floppy-disk"></i> Simpan</button></div>
-      </div>
-    </div>
+    <div class="sec" id="sec-run"><div class="cd"><h3 class="fl font-bold text-base" style="color:var(--gold-l)"><i class="fa-solid fa-align-left mr-2"></i>Running Text</h3><div><label>Teks Berjalan</label><textarea id="rt_text" rows="3"></textarea><p class="hint">Teks berjalan di bagian bawah tampilan TV</p></div><div style="margin-top:18px"><button class="btn btn-g" onclick="sv('run')"><i class="fa-solid fa-floppy-disk"></i> Simpan</button></div></div></div>
 
-    <!-- ===== PESAN KUSTOM ===== -->
-    <div class="sec" id="sec-pesan">
-      <div class="cd">
-        <h3 class="fl font-bold text-base" style="color:var(--gold-l)"><i class="fa-solid fa-message mr-2"></i>Pesan Kustom (Full Screen)</h3>
-        <p class="hint" style="margin-bottom:14px">Pesan ini akan tampil full screen di TV sesuai jadwal atau secara manual</p>
-        <div id="pesanTbl"></div>
-        <div style="margin-top:16px;padding:16px;border:1px dashed var(--border);border-radius:10px">
-          <div style="font-size:.82em;font-weight:600;color:var(--gold);margin-bottom:12px">Tambah Pesan Baru</div>
-          <div style="display:grid;gap:12px">
-            <div><label>Judul</label><input type="text" id="msg_t" placeholder="Judul pesan"></div>
-            <div><label>Isi Pesan</label><textarea id="msg_b" rows="3" placeholder="Isi pesan yang ditampilkan..."></textarea></div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-              <div><label>Jadwal Mulai (opsional)</label><input type="datetime-local" id="msg_s"></div>
-              <div><label>Jadwal Selesai (opsional)</label><input type="datetime-local" id="msg_e"></div>
-            </div>
-            <div class="chk-row"><input type="checkbox" id="msg_m"><label>Tampilkan manual sekarang</label></div>
-            <button class="btn btn-g" onclick="addMsg()"><i class="fa-solid fa-plus"></i> Tambah Pesan</button>
-          </div>
-        </div>
-        <div style="margin-top:18px"><button class="btn btn-g" onclick="sv('pesan')"><i class="fa-solid fa-floppy-disk"></i> Simpan</button></div>
-      </div>
-    </div>
+    <div class="sec" id="sec-phbi"><div class="cd"><h3 class="fl font-bold text-base" style="color:var(--gold-l)"><i class="fa-solid fa-star-and-crescent mr-2"></i>Hari Besar Islam (PHBI)</h3><div id="phbiTbl"></div><div style="margin-top:14px;padding:14px;border:1px dashed var(--border);border-radius:10px"><div style="font-size:.82em;font-weight:600;color:var(--gold);margin-bottom:10px">Tambah PHBI</div><div style="display:flex;gap:8px;align-items:end;flex-wrap:wrap"><div style="flex:1;min-width:180px"><label style="font-size:.72em">Nama</label><input type="text" id="phbi_n"></div><div style="flex:.5;min-width:150px"><label style="font-size:.72em">Tanggal</label><input type="date" id="phbi_d"></div><button class="btn btn-o" onclick="addPhbi()" style="margin-bottom:1px"><i class="fa-solid fa-plus"></i> Tambah</button></div></div><div style="margin-top:18px"><button class="btn btn-g" onclick="sv('phbi')"><i class="fa-solid fa-floppy-disk"></i> Simpan</button></div></div></div>
 
-    <!-- ===== JADWAL 1 TAHUN ===== -->
-    <div class="sec" id="sec-tahunan">
-      <div class="cd">
-        <h3 class="fl font-bold text-base" style="color:var(--gold-l)"><i class="fa-solid fa-calendar mr-2"></i>Jadwal Sholat 1 Tahun</h3>
-        <p class="hint" style="margin-bottom:14px">Jadwal lengkap 5 waktu sholat selama setahun ke depan. Sesuai parameter lokasi, sudut, dan adjust yang sudah disimpan.</p>
-        <div class="yr-filters">
-          <div><label style="font-size:.7em">Mulai Tanggal</label><input type="date" id="yr_from"></div>
-          <div><label style="font-size:.7em">Sampai Tanggal</label><input type="date" id="yr_to"></div>
-          <div><label style="font-size:.7em">Filter Bulan</label>
-            <select id="yr_month"><option value="0">Semua Bulan</option></select></div>
-          <button class="btn btn-g" onclick="genYear()" style="margin-bottom:1px"><i class="fa-solid fa-table"></i> Generate Jadwal</button>
-          <button class="btn btn-o" onclick="expCSV()" style="margin-bottom:1px"><i class="fa-solid fa-file-csv"></i> Export CSV</button>
-          <button class="btn btn-o" onclick="window.print()" style="margin-bottom:1px"><i class="fa-solid fa-print"></i> Cetak</button>
-        </div>
-        <div id="yrTbl" class="yr-wrap"></div>
-      </div>
-    </div>
+    <div class="sec" id="sec-pesan"><div class="cd"><h3 class="fl font-bold text-base" style="color:var(--gold-l)"><i class="fa-solid fa-message mr-2"></i>Pesan Kustom (Full Screen)</h3><div id="pesanTbl"></div><div style="margin-top:16px;padding:16px;border:1px dashed var(--border);border-radius:10px"><div style="font-size:.82em;font-weight:600;color:var(--gold);margin-bottom:12px">Tambah Pesan</div><div style="display:grid;gap:12px"><div><label>Judul</label><input type="text" id="msg_t"></div><div><label>Isi</label><textarea id="msg_b" rows="3"></textarea></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:12px"><div><label>Mulai (opsional)</label><input type="datetime-local" id="msg_s"></div><div><label>Selesai (opsional)</label><input type="datetime-local" id="msg_e"></div></div><div class="chk-row"><input type="checkbox" id="msg_m"><label>Tampilkan manual</label></div><button class="btn btn-g" onclick="addMsg()"><i class="fa-solid fa-plus"></i> Tambah</button></div></div><div style="margin-top:18px"><button class="btn btn-g" onclick="sv('pesan')"><i class="fa-solid fa-floppy-disk"></i> Simpan</button></div></div></div>
 
-    <!-- ===== TAMPILAN ===== -->
-    <div class="sec" id="sec-tampilan">
-      <div class="cd">
-        <h3 class="fl font-bold text-base" style="color:var(--gold-l)"><i class="fa-solid fa-display mr-2"></i>Pengaturan Tampilan</h3>
-        <div style="display:grid;gap:16px">
-          <div class="chk-row"><input type="checkbox" id="dp_azan"><label>Otomatis tampilkan layar azan saat waktu sholat</label></div>
-          <div class="chk-row"><input type="checkbox" id="dp_black"><label>Tampilkan layar hitam saat sholat berlangsung</label></div>
-          <div><label>Durasi Layar Hitam (menit setelah iqomah)</label><input type="number" id="dp_blackM" min="5" max="60"></div>
-          <div><label>Welcome Jumat tampil (menit sebelum dzuhur)</label><input type="number" id="dp_jumM" min="5" max="30"></div>
-        </div>
-        <div style="margin-top:18px"><button class="btn btn-g" onclick="sv('tampilan')"><i class="fa-solid fa-floppy-disk"></i> Simpan</button></div>
-      </div>
-    </div>
+    <div class="sec" id="sec-tahunan"><div class="cd"><h3 class="fl font-bold text-base" style="color:var(--gold-l)"><i class="fa-solid fa-calendar mr-2"></i>Jadwal Sholat 1 Tahun</h3><p class="hint" style="margin-bottom:14px">5 waktu sholat setahun ke depan sesuai parameter tersimpan.</p><div class="yr-filters"><div><label style="font-size:.7em">Mulai</label><input type="date" id="yr_from"></div><div><label style="font-size:.7em">Sampai</label><input type="date" id="yr_to"></div><div><label style="font-size:.7em">Bulan</label><select id="yr_month"><option value="0">Semua</option></select></div><button class="btn btn-g" onclick="genYear()" style="margin-bottom:1px"><i class="fa-solid fa-table"></i> Generate</button><button class="btn btn-o" onclick="expCSV()" style="margin-bottom:1px"><i class="fa-solid fa-file-csv"></i> CSV</button><button class="btn btn-o" onclick="window.print()" style="margin-bottom:1px"><i class="fa-solid fa-print"></i> Cetak</button></div><div id="yrTbl" class="yr-wrap"></div></div></div>
 
-    <!-- ===== SYNC ===== -->
-    <div class="sec" id="sec-sync">
-      <div class="cd">
-        <h3 class="fl font-bold text-base" style="color:var(--gold-l)"><i class="fa-solid fa-cloud-arrow-up mr-2"></i>Sync Google Spreadsheet</h3>
-        <p class="hint" style="margin-bottom:14px">Baca dan tulis semua pengaturan dari/ke Google Spreadsheet via Apps Script.</p>
-        <div style="background:var(--input);border:1px solid var(--border);border-radius:8px;padding:14px;font-size:.72em;color:var(--muted);margin-bottom:16px;white-space:pre-wrap;overflow-x:auto;font-family:monospace;line-height:1.5">// ---- Apps Script Code ----
-// Paste di Extensions > Apps Script
-// Buat sheet bernama "Settings"
+    <div class="sec" id="sec-tampilan"><div class="cd"><h3 class="fl font-bold text-base" style="color:var(--gold-l)"><i class="fa-solid fa-display mr-2"></i>Pengaturan Tampilan</h3><div style="display:grid;gap:16px"><div class="chk-row"><input type="checkbox" id="dp_azan"><label>Otomatis tampilkan layar azan</label></div><div class="chk-row"><input type="checkbox" id="dp_black"><label>Tampilkan layar hitam saat sholat</label></div><div><label>Durasi Layar Hitam (menit)</label><input type="number" id="dp_blackM" min="5" max="60"></div><div><label>Welcome Jumat (menit sebelum dzuhur)</label><input type="number" id="dp_jumM" min="5" max="30"></div></div><div style="margin-top:18px"><button class="btn btn-g" onclick="sv('tampilan')"><i class="fa-solid fa-floppy-disk"></i> Simpan</button></div></div></div>
 
-function doGet(e){
-  return ContentService
-    .createTextOutput(JSON.stringify(read()))
-    .setMimeType(ContentService.MimeType.JSON);
-}
+    <div class="sec" id="sec-sync"><div class="cd"><h3 class="fl font-bold text-base" style="color:var(--gold-l)"><i class="fa-solid fa-cloud-arrow-up mr-2"></i>Sync Google Spreadsheet</h3><p class="hint" style="margin-bottom:14px">Baca/tulis pengaturan via Apps Script.</p><div style="background:var(--input);border:1px solid var(--border);border-radius:8px;padding:14px;font-size:.72em;color:var(--muted);margin-bottom:16px;white-space:pre-wrap;overflow-x:auto;font-family:monospace;line-height:1.5">// Apps Script — Extensions > Apps Script
+// Buat sheet "Settings"
+function doGet(e){return ContentService.createTextOutput(JSON.stringify(read())).setMimeType(ContentService.MimeType.JSON);}
+function doPost(e){var d=JSON.parse(e.postData.contents);SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Settings').getRange('A1').setValue(JSON.stringify(d));return ContentService.createTextOutput('OK');}
+function read(){var s=SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Settings');if(!s){s=SpreadsheetApp.getActiveSpreadsheet().insertSheet('Settings');s.getRange('A1').setValue('{}');}var v=s.getRange('A1').getValue();return v?JSON.parse(v):{};}</div><div><label>URL Web App</label><input type="url" id="sy_url" placeholder="https://script.google.com/macros/s/xxxxx/exec"></div><div style="margin-top:18px;display:flex;gap:10px;flex-wrap:wrap"><button class="btn btn-b" onclick="syncRead()"><i class="fa-solid fa-cloud-arrow-down"></i> Baca</button><button class="btn btn-g" onclick="syncWrite()"><i class="fa-solid fa-cloud-arrow-up"></i> Tulis</button></div></div><div class="cd"><h3 class="fl font-bold text-base" style="color:var(--gold-l)"><i class="fa-solid fa-database mr-2"></i>Backup Lokal</h3><div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn btn-o" onclick="doExport()"><i class="fa-solid fa-download"></i> Export JSON</button><button class="btn btn-o" onclick="document.getElementById('impF').click()"><i class="fa-solid fa-upload"></i> Import JSON</button><input type="file" id="impF" accept=".json" style="display:none" onchange="doImport(event)"><button class="btn btn-r" onclick="doReset()"><i class="fa-solid fa-triangle-exclamation"></i> Reset Semua</button></div></div></div>
 
-function doPost(e){
-  var d = JSON.parse(e.postData.contents);
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
-  ss.getSheetByName('Settings')
-    .getRange('A1').setValue(JSON.stringify(d));
-  return ContentService.createTextOutput('OK');
-}
-
-function read(){
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
-  var s = ss.getSheetByName('Settings');
-  if(!s){s=ss.insertSheet('Settings');s.getRange('A1').setValue('{}');}
-  var v = s.getRange('A1').getValue();
-  return v ? JSON.parse(v) : {};
-}</div>
-        <div style="display:grid;gap:14px">
-          <div><label>URL Web App (Spreadsheet)</label><input type="url" id="sy_url" placeholder="https://script.google.com/macros/s/xxxxx/exec"></div>
-        </div>
-        <div style="margin-top:18px;display:flex;gap:10px;flex-wrap:wrap">
-          <button class="btn btn-b" onclick="syncRead()"><i class="fa-solid fa-cloud-arrow-down"></i> Baca dari Sheet</button>
-          <button class="btn btn-g" onclick="syncWrite()"><i class="fa-solid fa-cloud-arrow-up"></i> Tulis ke Sheet</button>
-        </div>
-      </div>
-      <div class="cd">
-        <h3 class="fl font-bold text-base" style="color:var(--gold-l)"><i class="fa-solid fa-database mr-2"></i>Backup Lokal</h3>
-        <div style="display:flex;gap:10px;flex-wrap:wrap">
-          <button class="btn btn-o" onclick="doExport()"><i class="fa-solid fa-download"></i> Export JSON</button>
-          <button class="btn btn-o" onclick="document.getElementById('impF').click()"><i class="fa-solid fa-upload"></i> Import JSON</button>
-          <input type="file" id="impF" accept=".json" style="display:none" onchange="doImport(event)">
-          <button class="btn btn-r" onclick="doReset()"><i class="fa-solid fa-triangle-exclamation"></i> Reset Semua Pengaturan</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- ===== PASSWORD ===== -->
-    <div class="sec" id="sec-pw">
-      <div class="cd">
-        <h3 class="fl font-bold text-base" style="color:var(--gold-l)"><i class="fa-solid fa-key mr-2"></i>Ubah Password Admin</h3>
-        <div style="display:grid;gap:14px">
-          <div><label>Password Lama</label><input type="password" id="pw_old"></div>
-          <div><label>Password Baru</label><input type="password" id="pw_new"></div>
-          <div><label>Konfirmasi Password Baru</label><input type="password" id="pw_cfm"></div>
-        </div>
-        <div style="margin-top:18px"><button class="btn btn-g" onclick="chgPw()"><i class="fa-solid fa-floppy-disk"></i> Ubah Password</button></div>
-      </div>
-    </div>
+    <div class="sec" id="sec-pw"><div class="cd"><h3 class="fl font-bold text-base" style="color:var(--gold-l)"><i class="fa-solid fa-key mr-2"></i>Ubah Password</h3><div style="display:grid;gap:14px"><div><label>Password Lama</label><input type="password" id="pw_old"></div><div><label>Password Baru</label><input type="password" id="pw_new"></div><div><label>Konfirmasi</label><input type="password" id="pw_cfm"></div></div><div style="margin-top:18px"><button class="btn btn-g" onclick="chgPw()"><i class="fa-solid fa-floppy-disk"></i> Ubah Password</button></div></div></div>
 
   </main>
 </div>
 
 <script>
-/* ============================================================
-   DEFAULTS — SAMA PERSIS DENGAN index.html
-   ============================================================ */
-const D={
+var D={
   mosque:{name:'Masjid Agung Rejang Lebong',address:'Jl. R. Sukamto, Pasar Baru, Kab. Rejang Lebong, Bengkulu'},
   location:{latitude:-3.4567,longitude:102.5211,timezone:7,city:'Rejang Lebong'},
   calc:{fajrAngle:20,ishaAngle:18,asrMethod:'shafii'},
@@ -436,126 +190,59 @@ const D={
   password:'admin123',
   spreadsheetUrl:''
 };
+var PN={subuh:'Subuh',terbit:'Syuruq',dhuha:'Dhuha',dzuhur:'Dzuhur',asr:'Ashar',maghrib:'Maghrib',isya:'Isya'};
+var PO=['subuh','terbit','dhuha','dzuhur','asr','maghrib','isya'];
+var PR=['subuh','dzuhur','asr','maghrib','isya'];
+var MN=['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+var DN=['Ahad','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+var S,yrCache=null;
 
-const PN={subuh:'Subuh',terbit:'Syuruq',dhuha:'Dhuha',dzuhur:'Dzuhur',asr:'Ashar',maghrib:'Maghrib',isya:'Isya'};
-const PO=['subuh','terbit','dhuha','dzuhur','asr','maghrib','isya'];
-const PR=['subuh','dzuhur','asr','maghrib','isya'];
-const MN=['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
-const DN=['Ahad','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
-let S;
-let yrCache=null; // cache jadwal tahunan
-
-/* ============================================================
-   LOAD / SAVE — SINKRON DENGAN index.html
-   ============================================================ */
+function cloneD(){return JSON.parse(JSON.stringify(D))}
+function dm(t,s){if(!s||typeof s!=='object')return t;for(var k in s){if(!s.hasOwnProperty(k))continue;if(s[k]&&typeof s[k]==='object'&&!Array.isArray(s[k])&&t[k]&&typeof t[k]==='object'&&!Array.isArray(t[k])){dm(t[k],s[k]);}else{t[k]=s[k];}}return t;}
 function ld(){
-  try{
-    const r=localStorage.getItem('mosque_settings');
-    if(r){const p=JSON.parse(r);S=deepMerge(JSON.parse(JSON.stringify(D)),p);}
-    else S=JSON.parse(JSON.stringify(D));
-  }catch(e){S=JSON.parse(JSON.stringify(D));}
+  try{var r=localStorage.getItem('mosque_settings');
+    if(r){S=dm(cloneD(),JSON.parse(r));}else{S=cloneD();}
+  }catch(e){S=cloneD();}
   if(!Array.isArray(S.phbi))S.phbi=[];
   if(!Array.isArray(S.customMessages))S.customMessages=[];
-  if(!S.slideshow||!Array.isArray(S.slideshow.images))S.slideshow=JSON.parse(JSON.stringify(D.slideshow));
-  ['display','adjust','iqomah','calc','location','mosque','jumat','finance'].forEach(function(k){
-    if(!S[k])S[k]=JSON.parse(JSON.stringify(D[k]));
-  });
+  if(!S.slideshow||!Array.isArray(S.slideshow.images))S.slideshow=cloneD().slideshow;
+  ['display','adjust','iqomah','calc','location','mosque','jumat','finance'].forEach(function(k){if(!S[k])S[k]=cloneD()[k];});
   if(typeof S.spreadsheetUrl!=='string')S.spreadsheetUrl='';
 }
 function sv2(){localStorage.setItem('mosque_settings',JSON.stringify(S));}
+function toast(m,ok){ok=ok!==false;var t=document.getElementById('toast');t.className='toast '+(ok?'toast-ok':'toast-err')+' show';document.getElementById('toastMsg').textContent=m;setTimeout(function(){t.classList.remove('show')},2600);}
 
-/* Deep merge — sama dengan index.html */
-function deepMerge(t,s){
-  if(!s||typeof s!=='object')return t;
-  for(var k in s){
-    if(!s.hasOwnProperty(k))continue;
-    if(s[k]&&typeof s[k]==='object'&&!Array.isArray(s[k])&&t[k]&&typeof t[k]==='object'&&!Array.isArray(t[k])){deepMerge(t[k],s[k]);}
-    else{t[k]=s[k];}
-  }
-  return t;
+function doRefresh(){
+  var ic=document.getElementById('refreshIcon');
+  var si=document.querySelector('#btnRefreshSidebar i');
+  if(ic)ic.classList.add('spinning');
+  if(si)si.classList.add('spinning');
+  setTimeout(function(){location.reload();},600);
 }
 
-/* ============================================================
-   TOAST
-   ============================================================ */
-function toast(m,ok){ok=ok!==false;const t=document.getElementById('toast');t.className='toast '+(ok?'toast-ok':'toast-err')+' show';document.getElementById('toastMsg').textContent=m;setTimeout(()=>t.classList.remove('show'),2600);}
-
-/* ============================================================
-   LOGIN / LOGOUT
-   ============================================================ */
 function doLogin(){
   ld();
   if(document.getElementById('loginPass').value===S.password){
     document.getElementById('loginScreen').style.display='none';
     document.getElementById('adminDash').style.display='flex';
     loadAll();
-  }else{
-    document.getElementById('loginErr').style.display='block';
-    setTimeout(()=>document.getElementById('loginErr').style.display='none',3000);
-  }
+  }else{document.getElementById('loginErr').style.display='block';setTimeout(function(){document.getElementById('loginErr').style.display='none'},3000);}
 }
-function doLogout(){
-  document.getElementById('adminDash').style.display='none';
-  document.getElementById('loginScreen').style.display='flex';
-  document.getElementById('loginPass').value='';
-}
+function doLogout(){document.getElementById('adminDash').style.display='none';document.getElementById('loginScreen').style.display='flex';document.getElementById('loginPass').value='';}
 
-/* ============================================================
-   NAVIGATION
-   ============================================================ */
 function showSec(id){
-  document.querySelectorAll('.si[data-s]').forEach(i=>i.classList.remove('on'));
-  const el=document.querySelector('.si[data-s="'+id+'"]');
-  if(el)el.classList.add('on');
-  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('on'));
-  const sec=document.getElementById('sec-'+id);
-  if(sec)sec.classList.add('on');
+  document.querySelectorAll('.si[data-s]').forEach(function(i){i.classList.remove('on')});
+  var el=document.querySelector('.si[data-s="'+id+'"]');if(el)el.classList.add('on');
+  document.querySelectorAll('.sec').forEach(function(s){s.classList.remove('on')});
+  var sec=document.getElementById('sec-'+id);if(sec)sec.classList.add('on');
 }
-document.querySelectorAll('.si[data-s]').forEach(i=>{
-  i.addEventListener('click',function(){showSec(this.dataset.s);});
-});
+document.querySelectorAll('.si[data-s]').forEach(function(i){i.addEventListener('click',function(){showSec(this.dataset.s);});});
 
-/* ============================================================
-   PRAYER CALC — SAMA PERSIS DENGAN index.html
-   ============================================================ */
-const DG=Math.PI/180;
-function sunP(jd){
-  var dd=jd-2451545.0,g=((dd*.98560028)%360+357.529+360)%360,q=((dd*.98564736)%360+280.459+360)%360;
-  var L=((q+1.915*Math.sin(g*DG)+.02*Math.sin(2*g*DG))%360+360)%600;
-  var e=23.439-.00000036*dd;
-  var RA=Math.atan2(Math.cos(e*DG)*Math.sin(L*DG),Math.cos(L*DG))/DG;
-  var dec=Math.asin(Math.sin(e*DG)*Math.sin(L*DG))/DG;
-  return{dec:dec,eqt:(q-(((RA%360)+360)%360))/15};
-}
-function hAngle(a,lat,dec){
-  var c=(Math.sin(a*DG)-Math.sin(lat*DG)*Math.sin(dec*DG))/(Math.cos(lat*DG)*Math.cos(dec*DG));
-  return(c<-1||c>1)?0:Math.acos(c)/DG;
-}
-function calcPT(date){
-  var jd=date.getTime()/864e5+2440587.5;
-  var p=sunP(jd);
-  var lat=S.location.latitude,tz=S.location.timezone,lng=S.location.longitude;
-  var dh=12+tz-lng/15-p.eqt;
-  var af=S.calc.asrMethod==='hanafi'?2:1;
-  var aa=Math.atan2(1,af+Math.tan(Math.abs(lat-p.dec)*DG))/DG;
-  var fa=S.calc.fajrAngle||20,ia=S.calc.ishaAngle||18,ad=S.adjust||{};
-  var t={subuh:dh-hAngle(-fa,lat,p.dec)/15,terbit:dh-hAngle(-.8333,lat,p.dec)/15,
-    dhuha:dh+hAngle(4.5,lat,p.dec)/15,dzuhur:dh,asr:dh+hAngle(aa,lat,p.dec)/15,
-    maghrib:dh+hAngle(-.8333,lat,p.dec)/15,isya:dh+hAngle(-ia,lat,p.dec)/15};
-  var r={};
-  for(var k in t){
-    var v=t[k]+(parseInt(ad[k])||0)/60;
-    var h=Math.floor(v),m=Math.round((v-h)*60);
-    if(m>=60){h++;m-=60;}if(m<0){h--;m+=60;}
-    h=((h%24)+24)%24;
-    r[k]=String(h).padStart(2,'0')+':'+String(m).padStart(2,'0');
-  }
-  return r;
-}
+var DG=Math.PI/180;
+function sunP(jd){var dd=jd-2451545.0,g=((dd*.98560028)%360+357.529+360)%360,q=((dd*.98564736)%360+280.459+360)%600;var L=((q+1.915*Math.sin(g*DG)+.02*Math.sin(2*g*DG))%360+360)%600;var e=23.439-.00000036*dd;var RA=Math.atan2(Math.cos(e*DG)*Math.sin(L*DG),Math.cos(L*DG))/DG;var dec=Math.asin(Math.sin(e*DG)*Math.sin(L*DG))/DG;return{dec:dec,eqt:(q-(((RA%360)+360)%360))/15};}
+function hA(a,lat,dec){var c=(Math.sin(a*DG)-Math.sin(lat*DG)*Math.sin(dec*DG))/(Math.cos(lat*DG)*Math.cos(dec*DG));return(c<-1||c>1)?0:Math.acos(c)/DG;}
+function calcPT(date){var jd=date.getTime()/864e5+2440587.5;var p=sunP(jd);var lat=S.location.latitude,tz=S.location.timezone,lng=S.location.longitude;var dh=12+tz-lng/15-p.eqt;var af=S.calc.asrMethod==='hanafi'?2:1;var aa=Math.atan2(1,af+Math.tan(Math.abs(lat-p.dec)*DG))/DG;var fa=S.calc.fajrAngle||20,ia=S.calc.ishaAngle||18,ad=S.adjust||{};var t={subuh:dh-hA(-fa,lat,p.dec)/15,terbit:dh-hA(-.8333,lat,p.dec)/15,dhuha:dh+hA(4.5,lat,p.dec)/15,dzuhur:dh,asr:dh+hA(aa,lat,p.dec)/15,maghrib:dh+hA(-.8333,lat,p.dec)/15,isya:dh+hA(-ia,lat,p.dec)/15};var r={};for(var k in t){var v=t[k]+(parseInt(ad[k])||0)/60;var h=Math.floor(v),m=Math.round((v-h)*60);if(m>=60){h++;m-=60;}if(m<0){h--;m+=60;}h=((h%24)+24)%24;r[k]=String(h).padStart(2,'0')+':'+String(m).padStart(2,'0');}return r;}
 
-/* ============================================================
-   LOAD ALL FIELDS
-   ============================================================ */
 function loadAll(){
   ld();
   document.getElementById('f_name').value=S.mosque.name;
@@ -568,8 +255,8 @@ function loadAll(){
   document.getElementById('f_isha').value=S.calc.ishaAngle;
   document.getElementById('f_asr').value=S.calc.asrMethod;
   document.getElementById('f_azanDur').value=S.azanDuration;
-  PO.forEach(k=>document.getElementById('aj_'+k).value=S.adjust[k]);
-  PR.forEach(k=>document.getElementById('iq_'+k).value=S.iqomah[k]);
+  PO.forEach(function(k){document.getElementById('aj_'+k).value=S.adjust[k];});
+  PR.forEach(function(k){document.getElementById('iq_'+k).value=S.iqomah[k];});
   document.getElementById('jm_imam').value=S.jumat.imam;
   document.getElementById('jm_khatib').value=S.jumat.khatib;
   document.getElementById('jm_muadzin').value=S.jumat.muadzin;
@@ -582,368 +269,119 @@ function loadAll(){
   document.getElementById('sl_imgs').value=(S.slideshow.images||[]).join('\n');
   renderSlPrev();
   document.getElementById('rt_text').value=S.runningText;
-  renderPhbi();
-  renderMsg();
+  renderPhbi();renderMsg();
   document.getElementById('dp_azan').checked=S.display.autoAzan;
   document.getElementById('dp_black').checked=S.display.showBlackScreen;
   document.getElementById('dp_blackM').value=S.display.blackScreenMinutes;
   document.getElementById('dp_jumM').value=S.display.jumatWelcomeMinutes;
-  /* FIX: spreadsheetUrl — string tunggal, sama dengan index.html */
   document.getElementById('sy_url').value=S.spreadsheetUrl||'';
-  renderPrev();
-  initYearFilters();
-  yrCache=null;
+  renderPrev();initYearFilters();yrCache=null;
 }
 
-/* ============================================================
-   SAVE SECTIONS
-   ============================================================ */
 function sv(sec){
   ld();
   switch(sec){
-    case'masjid':
-      S.mosque.name=document.getElementById('f_name').value.trim()||D.mosque.name;
-      S.mosque.address=document.getElementById('f_addr').value.trim()||D.mosque.address;break;
-    case'lokasi':
-      S.location.latitude=parseFloat(document.getElementById('f_lat').value)||D.location.latitude;
-      S.location.longitude=parseFloat(document.getElementById('f_lng').value)||D.location.longitude;
-      S.location.timezone=parseInt(document.getElementById('f_tz').value)||D.location.timezone;
-      S.location.city=document.getElementById('f_city').value.trim()||D.location.city;break;
-    case'perhitungan':
-      S.calc.fajrAngle=parseFloat(document.getElementById('f_fajr').value)||D.calc.fajrAngle;
-      S.calc.ishaAngle=parseFloat(document.getElementById('f_isha').value)||D.calc.ishaAngle;
-      S.calc.asrMethod=document.getElementById('f_asr').value;
-      S.azanDuration=parseInt(document.getElementById('f_azanDur').value)||D.azanDuration;
-      yrCache=null;renderPrev();break;
-    case'adjust':
-      PO.forEach(k=>S.adjust[k]=parseInt(document.getElementById('aj_'+k).value)||0);
-      yrCache=null;renderPrev();break;
-    case'iqomah':
-      PR.forEach(k=>S.iqomah[k]=parseInt(document.getElementById('iq_'+k).value)||3);break;
-    case'jumat':
-      S.jumat.imam=document.getElementById('jm_imam').value.trim();
-      S.jumat.khatib=document.getElementById('jm_khatib').value.trim();
-      S.jumat.muadzin=document.getElementById('jm_muadzin').value.trim();
-      S.jumat.bilal=document.getElementById('jm_bilal').value.trim();break;
-    case'keuangan':
-      S.finance.kasMasjid=document.getElementById('fn_kas').value.trim();
-      S.finance.kasPembangunan=document.getElementById('fn_bangun').value.trim();
-      S.finance.infakJumat=document.getElementById('fn_infak').value.trim();
-      S.finance.lastUpdate=document.getElementById('fn_date').value||'-';break;
-    case'slide':
-      S.slideshow.interval=parseInt(document.getElementById('sl_int').value)||8;
-      var imgs=document.getElementById('sl_imgs').value.split('\n').map(function(s){return s.trim()}).filter(function(s){return s.length>0});
-      S.slideshow.images=imgs.length?imgs:D.slideshow.images;
-      renderSlPrev();break;
-    case'run':
-      S.runningText=document.getElementById('rt_text').value.trim();break;
-    case'phbi':break;
-    case'pesan':break;
-    case'tampilan':
-      S.display.autoAzan=document.getElementById('dp_azan').checked;
-      S.display.showBlackScreen=document.getElementById('dp_black').checked;
-      S.display.blackScreenMinutes=parseInt(document.getElementById('dp_blackM').value)||15;
-      S.display.jumatWelcomeMinutes=parseInt(document.getElementById('dp_jumM').value)||10;break;
-    case'sync':
-      /* FIX: tulis ke spreadsheetUrl string, sama dengan index.html */
-      S.spreadsheetUrl=document.getElementById('sy_url').value.trim();break;
+    case'masjid':S.mosque.name=document.getElementById('f_name').value.trim()||D.mosque.name;S.mosque.address=document.getElementById('f_addr').value.trim()||D.mosque.address;break;
+    case'lokasi':S.location.latitude=parseFloat(document.getElementById('f_lat').value)||D.location.latitude;S.location.longitude=parseFloat(document.getElementById('f_lng').value)||D.location.longitude;S.location.timezone=parseInt(document.getElementById('f_tz').value)||D.location.timezone;S.location.city=document.getElementById('f_city').value.trim()||D.location.city;break;
+    case'perhitungan':S.calc.fajrAngle=parseFloat(document.getElementById('f_fajr').value)||D.calc.fajrAngle;S.calc.ishaAngle=parseFloat(document.getElementById('f_isha').value)||D.calc.ishaAngle;S.calc.asrMethod=document.getElementById('f_asr').value;S.azanDuration=parseInt(document.getElementById('f_azanDur').value)||D.azanDuration;yrCache=null;renderPrev();break;
+    case'adjust':PO.forEach(function(k){S.adjust[k]=parseInt(document.getElementById('aj_'+k).value)||0;});yrCache=null;renderPrev();break;
+    case'iqomah':PR.forEach(function(k){S.iqomah[k]=parseInt(document.getElementById('iq_'+k).value)||3;});break;
+    case'jumat':S.jumat.imam=document.getElementById('jm_imam').value.trim();S.jumat.khatib=document.getElementById('jm_khatib').value.trim();S.jumat.muadzin=document.getElementById('jm_muadzin').value.trim();S.jumat.bilal=document.getElementById('jm_bilal').value.trim();break;
+    case'keuangan':S.finance.kasMasjid=document.getElementById('fn_kas').value.trim();S.finance.kasPembangunan=document.getElementById('fn_bangun').value.trim();S.finance.infakJumat=document.getElementById('fn_infak').value.trim();S.finance.lastUpdate=document.getElementById('fn_date').value||'-';break;
+    case'slide':S.slideshow.interval=parseInt(document.getElementById('sl_int').value)||8;var imgs=document.getElementById('sl_imgs').value.split('\n').map(function(s){return s.trim()}).filter(function(s){return s.length>0});S.slideshow.images=imgs.length?imgs:D.slideshow.images;renderSlPrev();break;
+    case'run':S.runningText=document.getElementById('rt_text').value.trim();break;
+    case'phbi':case'pesan':break;
+    case'tampilan':S.display.autoAzan=document.getElementById('dp_azan').checked;S.display.showBlackScreen=document.getElementById('dp_black').checked;S.display.blackScreenMinutes=parseInt(document.getElementById('dp_blackM').value)||15;S.display.jumatWelcomeMinutes=parseInt(document.getElementById('dp_jumM').value)||10;break;
+    case'sync':S.spreadsheetUrl=document.getElementById('sy_url').value.trim();break;
   }
   sv2();toast('Pengaturan berhasil disimpan');
 }
 
-function rstAdj(){
-  PO.forEach(k=>{S.adjust[k]=0;document.getElementById('aj_'+k).value=0;});
-  sv2();yrCache=null;renderPrev();toast('Adjust telah direset ke 0');
-}
+function rstAdj(){PO.forEach(function(k){S.adjust[k]=0;document.getElementById('aj_'+k).value=0;});sv2();yrCache=null;renderPrev();toast('Adjust direset ke 0');}
 
-/* ============================================================
-   PREVIEW JADWAL HARI INI
-   ============================================================ */
 function renderPrev(){
   var pt=calcPT(new Date());
   var ico={subuh:'fa-cloud-moon',terbit:'fa-sun',dhuha:'fa-sun',dzuhur:'fa-sun',asr:'fa-cloud-sun',maghrib:'fa-cloud-moon',isya:'fa-moon'};
   var h='<table class="tbl"><thead><tr><th></th><th>Sholat</th><th>Waktu</th><th>Iqomah</th><th>Adjust</th></tr></thead><tbody>';
-  PO.forEach(function(k){
-    var isP=PR.indexOf(k)>=0;
-    h+='<tr><td><i class="fa-solid '+ico[k]+'" style="color:var(--gold);width:20px;text-align:center"></i></td>';
-    h+='<td style="font-weight:500">'+PN[k]+'</td>';
-    h+='<td style="font-weight:700;color:var(--gold);font-variant-numeric:tabular-nums">'+pt[k]+'</td>';
-    h+='<td style="color:var(--muted)">'+(isP?'+'+S.iqomah[k]+'m':'-')+'</td>';
-    var adj=S.adjust[k];
-    h+='<td style="color:'+(adj?'#6ab0ff':'var(--dim)')+'">'+(adj?(adj>0?'+':'')+adj+'m':'0')+'</td></tr>';
+  PO.forEach(function(k){var isP=PR.indexOf(k)>=0;var adj=S.adjust[k];
+    h+='<tr><td><i class="fa-solid '+ico[k]+'" style="color:var(--gold);width:20px;text-align:center"></i></td><td style="font-weight:500">'+PN[k]+'</td><td style="font-weight:700;color:var(--gold);font-variant-numeric:tabular-nums">'+pt[k]+'</td><td style="color:var(--muted)">'+(isP?'+'+S.iqomah[k]+'m':'-')+'</td><td style="color:'+(adj?'#6ab0ff':'var(--dim)')+'">'+(adj?(adj>0?'+':'')+adj+'m':'0')+'</td></tr>';
   });
-  h+='</tbody></table>';
-  document.getElementById('previewTbl').innerHTML=h;
+  document.getElementById('previewTbl').innerHTML=h+'</tbody></table>';
 }
 
-/* ============================================================
-   SLIDESHOW PREVIEW
-   ============================================================ */
 function renderSlPrev(){
-  var imgs=(S.slideshow.images||[]).slice(0,4);
-  var c=document.getElementById('slPreview');
+  var imgs=(S.slideshow.images||[]).slice(0,4);var c=document.getElementById('slPreview');
   if(!imgs.length){c.innerHTML='<span style="font-size:.8em;color:var(--dim)">Belum ada gambar</span>';return;}
   c.innerHTML=imgs.map(function(u){return '<img src="'+u+'" style="width:100px;height:60px;object-fit:cover;border-radius:6px;border:1px solid var(--border)" onerror="this.style.display=\'none\'">'}).join('');
 }
 
-/* ============================================================
-   PHBI MANAGEMENT
-   ============================================================ */
 function renderPhbi(){
-  var list=S.phbi||[];
-  if(!list.length){document.getElementById('phbiTbl').innerHTML='<p style="font-size:.85em;color:var(--dim)">Belum ada data PHBI</p>';return;}
-  var h='<table class="tbl"><thead><tr><th>No</th><th>Nama Acara</th><th>Tanggal</th><th>Hitung Mundur</th><th></th></tr></thead><tbody>';
-  list.forEach(function(p,i){
-    var d=new Date(p.date+'T00:00:00');
-    var diff=Math.ceil((d-new Date())/(864e5));
-    var cd=diff>0?diff+' hari lagi':diff===0?'Hari ini':'Sudah lewat';
-    h+='<tr><td>'+(i+1)+'</td><td style="font-weight:500">'+p.name+'</td><td style="font-variant-numeric:tabular-nums">'+p.date+'</td>';
-    h+='<td style="color:'+(diff<=0?'var(--dim)':'var(--gold)')+'">'+cd+'</td>';
-    h+='<td><button class="btn btn-r" style="padding:5px 10px;font-size:.75em" onclick="rmPhbi('+i+')"><i class="fa-solid fa-trash"></i></button></td></tr>';
+  var list=S.phbi||[];if(!list.length){document.getElementById('phbiTbl').innerHTML='<p style="font-size:.85em;color:var(--dim)">Belum ada PHBI</p>';return;}
+  var h='<table class="tbl"><thead><tr><th>No</th><th>Nama</th><th>Tanggal</th><th>Countdown</th><th></th></tr></thead><tbody>';
+  list.forEach(function(p,i){var d=new Date(p.date+'T00:00:00'),diff=Math.ceil((d-new Date())/864e5),cd=diff>0?diff+' hari lagi':diff===0?'Hari ini':'Sudah lewat';
+    h+='<tr><td>'+(i+1)+'</td><td style="font-weight:500">'+p.name+'</td><td>'+p.date+'</td><td style="color:'+(diff<=0?'var(--dim)':'var(--gold)')+'">'+cd+'</td><td><button class="btn btn-r" style="padding:5px 10px;font-size:.75em" onclick="rmPhbi('+i+')"><i class="fa-solid fa-trash"></i></button></td></tr>';
   });
-  h+='</tbody></table>';
-  document.getElementById('phbiTbl').innerHTML=h;
+  document.getElementById('phbiTbl').innerHTML=h+'</tbody></table>';
 }
-function addPhbi(){
-  var n=document.getElementById('phbi_n').value.trim();
-  var d=document.getElementById('phbi_d').value;
-  if(!n||!d){toast('Nama dan tanggal wajib diisi',false);return;}
-  if(!S.phbi)S.phbi=[];
-  S.phbi.push({name:n,date:d});
-  S.phbi.sort(function(a,b){return new Date(a.date)-new Date(b.date);});
-  sv2();renderPhbi();
-  document.getElementById('phbi_n').value='';document.getElementById('phbi_d').value='';
-  toast('PHBI berhasil ditambahkan');
-}
+function addPhbi(){var n=document.getElementById('phbi_n').value.trim(),d=document.getElementById('phbi_d').value;if(!n||!d){toast('Nama dan tanggal wajib diisi',false);return;}S.phbi.push({name:n,date:d});S.phbi.sort(function(a,b){return new Date(a.date)-new Date(b.date);});sv2();renderPhbi();document.getElementById('phbi_n').value='';document.getElementById('phbi_d').value='';toast('PHBI ditambahkan');}
 function rmPhbi(i){S.phbi.splice(i,1);sv2();renderPhbi();toast('PHBI dihapus');}
 
-/* ============================================================
-   PESAN KUSTOM MANAGEMENT
-   ============================================================ */
 function renderMsg(){
-  var list=S.customMessages||[];
-  if(!list.length){document.getElementById('pesanTbl').innerHTML='<p style="font-size:.85em;color:var(--dim)">Belum ada pesan kustom</p>';return;}
+  var list=S.customMessages||[];if(!list.length){document.getElementById('pesanTbl').innerHTML='<p style="font-size:.85em;color:var(--dim)">Belum ada pesan</p>';return;}
   var h='<table class="tbl"><thead><tr><th>Judul</th><th>Jadwal</th><th>Manual</th><th>Aktif</th><th></th></tr></thead><tbody>';
-  list.forEach(function(m,i){
-    var sched='-';
-    if(m.scheduleStart&&m.scheduleEnd){
-      var s=new Date(m.scheduleStart),e=new Date(m.scheduleEnd);
-      sched=s.toLocaleDateString('id-ID',{day:'numeric',month:'short'})+' - '+e.toLocaleDateString('id-ID',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
-    }
-    h+='<tr><td style="font-weight:500;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+(m.title||'(tanpa judul)')+'</td>';
-    h+='<td style="font-size:.8em;color:var(--muted)">'+sched+'</td>';
-    h+='<td>'+(m.manual?'<span style="color:var(--gold)">Ya</span>':'Tidak')+'</td>';
-    h+='<td><button class="btn '+(m.active?'btn-g':'btn-o')+'" style="padding:4px 10px;font-size:.72em" onclick="toggleMsg('+i+')">'+(m.active?'ON':'OFF')+'</button></td>';
-    h+='<td><button class="btn btn-r" style="padding:4px 10px;font-size:.72em" onclick="rmMsg('+i+')"><i class="fa-solid fa-trash"></i></button></td></tr>';
+  list.forEach(function(m,i){var sched='-';if(m.scheduleStart&&m.scheduleEnd){var s=new Date(m.scheduleStart),e=new Date(m.scheduleEnd);sched=s.toLocaleDateString('id-ID',{day:'numeric',month:'short'})+' - '+e.toLocaleDateString('id-ID',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});}
+    h+='<tr><td style="font-weight:500;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+(m.title||'-')+'</td><td style="font-size:.8em;color:var(--muted)">'+sched+'</td><td>'+(m.manual?'<span style="color:var(--gold)">Ya</span>':'Tidak')+'</td><td><button class="btn '+(m.active?'btn-g':'btn-o')+'" style="padding:4px 10px;font-size:.72em" onclick="toggleMsg('+i+')">'+(m.active?'ON':'OFF')+'</button></td><td><button class="btn btn-r" style="padding:4px 10px;font-size:.72em" onclick="rmMsg('+i+')"><i class="fa-solid fa-trash"></i></button></td></tr>';
   });
-  h+='</tbody></table>';
-  document.getElementById('pesanTbl').innerHTML=h;
+  document.getElementById('pesanTbl').innerHTML=h+'</tbody></table>';
 }
-function addMsg(){
-  var t=document.getElementById('msg_t').value.trim();
-  var b=document.getElementById('msg_b').value.trim();
-  if(!t&&!b){toast('Judul atau isi pesan wajib diisi',false);return;}
-  if(!S.customMessages)S.customMessages=[];
-  var s=document.getElementById('msg_s').value;
-  var e=document.getElementById('msg_e').value;
-  S.customMessages.push({title:t,body:b,scheduleStart:s||'',scheduleEnd:e||'',schedule:!!(s&&e),manual:document.getElementById('msg_m').checked,active:true});
-  sv2();renderMsg();
-  document.getElementById('msg_t').value='';document.getElementById('msg_b').value='';
-  document.getElementById('msg_s').value='';document.getElementById('msg_e').value='';
-  document.getElementById('msg_m').checked=false;
-  toast('Pesan kustom ditambahkan');
-}
-function toggleMsg(i){S.customMessages[i].active=!S.customMessages[i].active;sv2();renderMsg();toast('Status pesan diubah');}
+function addMsg(){var t=document.getElementById('msg_t').value.trim(),b=document.getElementById('msg_b').value.trim();if(!t&&!b){toast('Judul atau isi wajib diisi',false);return;}var s=document.getElementById('msg_s').value,e=document.getElementById('msg_e').value;S.customMessages.push({title:t,body:b,scheduleStart:s||'',scheduleEnd:e||'',schedule:!!(s&&e),manual:document.getElementById('msg_m').checked,active:true});sv2();renderMsg();document.getElementById('msg_t').value='';document.getElementById('msg_b').value='';document.getElementById('msg_s').value='';document.getElementById('msg_e').value='';document.getElementById('msg_m').checked=false;toast('Pesan ditambahkan');}
+function toggleMsg(i){S.customMessages[i].active=!S.customMessages[i].active;sv2();renderMsg();}
 function rmMsg(i){S.customMessages.splice(i,1);sv2();renderMsg();toast('Pesan dihapus');}
 
-/* ============================================================
-   PASSWORD
-   ============================================================ */
-function chgPw(){
-  ld();
-  var o=document.getElementById('pw_old').value;
-  var n=document.getElementById('pw_new').value;
-  var c=document.getElementById('pw_cfm').value;
-  if(o!==S.password){toast('Password lama salah',false);return;}
-  if(n.length<4){toast('Password baru minimal 4 karakter',false);return;}
-  if(n!==c){toast('Konfirmasi password tidak cocok',false);return;}
-  S.password=n;sv2();
-  document.getElementById('pw_old').value='';document.getElementById('pw_new').value='';document.getElementById('pw_cfm').value='';
-  toast('Password berhasil diubah');
-}
+function chgPw(){ld();var o=document.getElementById('pw_old').value,n=document.getElementById('pw_new').value,c=document.getElementById('pw_cfm').value;if(o!==S.password){toast('Password lama salah',false);return;}if(n.length<4){toast('Minimal 4 karakter',false);return;}if(n!==c){toast('Konfirmasi tidak cocok',false);return;}S.password=n;sv2();document.getElementById('pw_old').value='';document.getElementById('pw_new').value='';document.getElementById('pw_cfm').value='';toast('Password diubah');}
 
-/* ============================================================
-   SYNC SPREADSHEET — SINKRON DENGAN index.html (spreadsheetUrl)
-   ============================================================ */
-function syncRead(){
-  ld();
-  var url=S.spreadsheetUrl;
-  if(!url){toast('URL Web App belum diisi',false);return;}
-  toast('Membaca data dari spreadsheet...');
-  fetch(url,{mode:'cors'})
-    .then(function(r){return r.json()})
-    .then(function(d){
-      S=deepMerge(JSON.parse(JSON.stringify(D)),d);
-      if(!Array.isArray(S.phbi))S.phbi=[];
-      if(!Array.isArray(S.customMessages))S.customMessages=[];
-      sv2();loadAll();yrCache=null;
-      toast('Data berhasil dibaca dari spreadsheet');
-    })
-    .catch(function(e){toast('Gagal membaca: '+e.message,false);});
-}
-function syncWrite(){
-  ld();
-  var url=S.spreadsheetUrl;
-  if(!url){toast('URL Web App belum diisi',false);return;}
-  toast('Menulis data ke spreadsheet...');
-  fetch(url,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(S)})
-    .then(function(){toast('Data berhasil ditulis ke spreadsheet');})
-    .catch(function(e){toast('Gagal menulis: '+e.message,false);});
-}
+function syncRead(){ld();var url=S.spreadsheetUrl;if(!url){toast('URL belum diisi',false);return;}toast('Membaca...');fetch(url,{mode:'cors'}).then(function(r){return r.json()}).then(function(d){S=dm(cloneD(),d);if(!Array.isArray(S.phbi))S.phbi=[];if(!Array.isArray(S.customMessages))S.customMessages=[];sv2();loadAll();yrCache=null;toast('Data dibaca');}).catch(function(e){toast('Gagal: '+e.message,false);});}
+function syncWrite(){ld();var url=S.spreadsheetUrl;if(!url){toast('URL belum diisi',false);return;}toast('Menulis...');fetch(url,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(S)}).then(function(){toast('Data ditulis');}).catch(function(e){toast('Gagal: '+e.message,false);});}
 
-/* ============================================================
-   EXPORT / IMPORT / RESET
-   ============================================================ */
-function doExport(){
-  ld();
-  var blob=new Blob([JSON.stringify(S,null,2)],{type:'application/json'});
-  var a=document.createElement('a');a.href=URL.createObjectURL(blob);
-  a.download='mosque_settings_'+new Date().toISOString().slice(0,10)+'.json';
-  a.click();URL.revokeObjectURL(a.href);toast('File backup berhasil diunduh');
-}
-function doImport(e){
-  var f=e.target.files[0];if(!f)return;
-  var r=new FileReader();
-  r.onload=function(ev){
-    try{
-      var d=JSON.parse(ev.target.result);
-      S=deepMerge(JSON.parse(JSON.stringify(D)),d);
-      if(!Array.isArray(S.phbi))S.phbi=[];
-      if(!Array.isArray(S.customMessages))S.customMessages=[];
-      sv2();loadAll();yrCache=null;
-      toast('Data berhasil diimpor');
-    }catch(err){toast('File tidak valid: '+err.message,false);}
-  };
-  r.readAsText(f);e.target.value='';
-}
-function doReset(){
-  if(!window.confirm('PERHATIAN: Semua pengaturan akan dikembalikan ke default. Lanjutkan?'))return;
-  localStorage.removeItem('mosque_settings');
-  S=JSON.parse(JSON.stringify(D));sv2();loadAll();yrCache=null;
-  toast('Semua pengaturan telah direset');
-}
-
-/* ============================================================
-   JADWAL SHOLAT 1 TAHUN
-   ============================================================ */
-function initYearFilters(){
-  var now=new Date();
-  var y=now.getFullYear();
-  var from=new Date(y,0,1);
-  var to=new Date(y+1,0,0);
-  document.getElementById('yr_from').value=fmtD(from);
-  document.getElementById('yr_to').value=fmtD(to);
-  /* Populate dropdown bulan */
-  var sel=document.getElementById('yr_month');
-  sel.innerHTML='<option value="0">Semua Bulan</option>';
-  MN.forEach(function(n,i){sel.innerHTML+='<option value="'+(i+1)+'">'+n+'</option>';});
-}
+function doExport(){ld();var blob=new Blob([JSON.stringify(S,null,2)],{type:'application/json'});var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='mosque_settings_'+new Date().toISOString().slice(0,10)+'.json';a.click();URL.revokeObjectURL(a.href);toast('Backup diunduh');}
+function doImport(e){var f=e.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(ev){try{var d=JSON.parse(ev.target.result);S=dm(cloneD(),d);if(!Array.isArray(S.phbi))S.phbi=[];if(!Array.isArray(S.customMessages))S.customMessages=[];sv2();loadAll();yrCache=null;toast('Data diimpor');}catch(err){toast('File tidak valid',false);}};r.readAsText(f);e.target.value='';}
+function doReset(){if(!window.confirm('PERHATIAN: Semua pengaturan dikembalikan ke default?'))return;localStorage.removeItem('mosque_settings');S=cloneD();sv2();loadAll();yrCache=null;toast('Pengaturan direset');}
 
 function fmtD(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
-
+function initYearFilters(){
+  var now=new Date(),y=now.getFullYear();
+  document.getElementById('yr_from').value=fmtD(new Date(y,0,1));
+  document.getElementById('yr_to').value=fmtD(new Date(y+1,0,0));
+  var sel=document.getElementById('yr_month');sel.innerHTML='<option value="0">Semua</option>';
+  MN.forEach(function(n,i){sel.innerHTML+='<option value="'+(i+1)+'">'+n+'</option>';});
+}
 function genYear(){
-  ld();
-  var fromStr=document.getElementById('yr_from').value;
-  var toStr=document.getElementById('yr_to').value;
-  var filterM=parseInt(document.getElementById('yr_month').value);
-  if(!fromStr||!toStr){toast('Pilih tanggal mulai dan sampai',false);return;}
-  var from=new Date(fromStr+'T00:00:00');
-  var to=new Date(toStr+'T00:00:00');
-  if(from>to){toast('Tanggal mulai harus sebelum tanggal sampai',false);return;}
-  var totalDays=Math.ceil((to-from)/(864e5))+1;
-  if(totalDays>730){toast('Maksimal 2 tahun (730 hari)',false);return;}
-
+  ld();var fromStr=document.getElementById('yr_from').value,toStr=document.getElementById('yr_to').value,filterM=parseInt(document.getElementById('yr_month').value);
+  if(!fromStr||!toStr){toast('Pilih tanggal',false);return;}
+  var from=new Date(fromStr+'T00:00:00'),to=new Date(toStr+'T00:00:00');
+  if(from>to){toast('Tanggal mulai harus sebelum sampai',false);return;}
+  var totalDays=Math.ceil((to-from)/864e5)+1;if(totalDays>730){toast('Maks 2 tahun',false);return;}
   toast('Menghitung '+totalDays+' hari...');
-
-  /* Gunakan setTimeout agar toast muncul dulu */
-  setTimeout(function(){
-    var rows=[];
-    var cur=new Date(from);
-    var startT=performance.now();
-
-    while(cur<=to){
-      var m=cur.getMonth()+1;
-      if(filterM===0||filterM===m){
-        var pt=calcPT(cur);
-        rows.push({
-          date:fmtD(cur),
-          day:DN[cur.getDay()],
-          month:MN[m-1],
-          mi:m,
-          subuh:pt.subuh,
-          dzuhur:pt.dzuhur,
-          asr:pt.asr,
-          maghrib:pt.maghrib,
-          isya:pt.isya
-        });
-      }
-      cur.setDate(cur.getDate()+1);
-    }
-
-    yrCache=rows;
-    renderYearTbl(rows);
-    var elapsed=((performance.now()-startT)/1000).toFixed(2);
-    toast(rows.length+' jadwal dihitung dalam '+elapsed+' detik');
+  setTimeout(function(){var rows=[],cur=new Date(from),st=performance.now();
+    while(cur<=to){var m=cur.getMonth()+1;if(filterM===0||filterM===m){var pt=calcPT(cur);rows.push({date:fmtD(cur),day:DN[cur.getDay()],month:MN[m-1],mi:m,subuh:pt.subuh,dzuhur:pt.dzuhur,asr:pt.asr,maghrib:pt.maghrib,isya:pt.isya});}cur.setDate(cur.getDate()+1);}
+    yrCache=rows;renderYearTbl(rows);toast(rows.length+' jadwal ('+((performance.now()-st)/1000).toFixed(2)+'s)');
   },50);
 }
-
 function renderYearTbl(rows){
-  if(!rows||!rows.length){
-    document.getElementById('yrTbl').innerHTML='<p style="padding:20px;font-size:.85em;color:var(--dim)">Belum ada data. Klik "Generate Jadwal" terlebih dahulu.</p>';
-    return;
-  }
-  var h='<table class="tbl"><thead><tr><th>No</th><th>Tanggal</th><th>Hari</th><th>Subuh</th><th>Dzuhur</th><th>Ashar</th><th>Maghrib</th><th>Isya</th></tr></thead><tbody>';
-  var lastM=-1;
-  rows.forEach(function(r,i){
-    if(r.mi!==lastM){
-      h+='<tr class="mhdr"><td colspan="8">'+r.month+'</td></tr>';
-      lastM=r.mi;
-    }
-    /* Format tanggal: 2025-01-27 → 27 */
-    var dd=r.date.split('-')[2];
-    h+='<tr><td>'+(i+1)+'</td>';
-    h+='<td style="font-variant-numeric:tabular-nums">'+dd+'</td>';
-    h+='<td class="dy">'+r.day+'</td>';
-    h+='<td class="pr">'+r.subuh+'</td>';
-    h+='<td class="pr">'+r.dzuhur+'</td>';
-    h+='<td class="pr">'+r.asr+'</td>';
-    h+='<td class="pr">'+r.maghrib+'</td>';
-    h+='<td class="pr">'+r.isya+'</td>';
-    h+='</tr>';
+  if(!rows||!rows.length){document.getElementById('yrTbl').innerHTML='<p style="padding:20px;color:var(--dim)">Klik "Generate" terlebih dahulu.</p>';return;}
+  var h='<table class="tbl"><thead><tr><th>No</th><th>Tgl</th><th>Hari</th><th>Subuh</th><th>Dzuhur</th><th>Ashar</th><th>Maghrib</th><th>Isya</th></tr></thead><tbody>',lastM=-1;
+  rows.forEach(function(r,i){if(r.mi!==lastM){h+='<tr class="mhdr"><td colspan="8">'+r.month+'</td></tr>';lastM=r.mi;}
+    h+='<tr><td>'+(i+1)+'</td><td style="font-variant-numeric:tabular-nums">'+r.date.split('-')[2]+'</td><td class="dy">'+r.day+'</td><td class="pr">'+r.subuh+'</td><td class="pr">'+r.dzuhur+'</td><td class="pr">'+r.asr+'</td><td class="pr">'+r.maghrib+'</td><td class="pr">'+r.isya+'</td></tr>';
   });
-  h+='</tbody></table>';
-  document.getElementById('yrTbl').innerHTML=h;
+  document.getElementById('yrTbl').innerHTML=h+'</tbody></table>';
 }
-
 function expCSV(){
-  if(!yrCache||!yrCache.length){toast('Generate jadwal terlebih dahulu',false);return;}
+  if(!yrCache||!yrCache.length){toast('Generate dulu',false);return;}
   var csv='No,Tanggal,Hari,Subuh,Dzuhur,Ashar,Maghrib,Isya\n';
-  yrCache.forEach(function(r,i){
-    csv+=(i+1)+','+r.date+','+r.day+','+r.subuh+','+r.dzuhur+','+r.asr+','+r.maghrib+','+r.isya+'\n';
-  });
-  var blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8;'});
-  var a=document.createElement('a');
-  a.href=URL.createObjectURL(blob);
-  var f=document.getElementById('yr_from').value||'jadwal';
-  var t=document.getElementById('yr_to').value||'';
-  a.download='jadwal_sholat_'+f+(t?'_'+t:'')+'.csv';
-  a.click();URL.revokeObjectURL(a.href);
-  toast('File CSV berhasil diunduh');
+  yrCache.forEach(function(r,i){csv+=(i+1)+','+r.date+','+r.day+','+r.subuh+','+r.dzuhur+','+r.asr+','+r.maghrib+','+r.isya+'\n';});
+  var blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8;'});var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='jadwal_sholat.csv';a.click();URL.revokeObjectURL(a.href);toast('CSV diunduh');
 }
 
-/* ============================================================
-   INIT
-   ============================================================ */
 ld();
 </script>
 </body>
