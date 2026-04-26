@@ -5,601 +5,299 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Display Masjid - Rejang Lebong</title>
 <script src="https://cdn.tailwindcss.com"></script>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800;900&family=Outfit:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Outfit:wght@200;300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
 :root{
-  --bg:#04060c;
-  --bg2:#080e1a;
-  --panel:rgba(8,14,28,.88);
-  --border:rgba(160,140,60,.12);
-  --border-hi:rgba(200,170,70,.35);
-  --gold:#c9a84c;
-  --gold-l:#e8d48b;
-  --gold-d:#8b7534;
-  --blue:#1a5fb4;
-  --blue-d:#0e3a70;
-  --text:#eae3d5;
-  --muted:#6e7a90;
-  --dim:#222d44;
-  --glass:rgba(10,18,34,.65);
+  --bg:#04070e;--bg2:#080e1c;--glass:rgba(10,18,38,0.72);
+  --gold:#c9a84c;--gold-l:#e8d48b;--gold-d:#8b7534;--gold-faint:rgba(201,168,76,.06);
+  --text:#eae3d5;--text2:#b5ad9e;--muted:#6b7590;
+  --dim:#1e2740;--border:rgba(201,168,76,.1);
+  --mono:'JetBrains Mono',monospace;
 }
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-html,body{height:100%;width:100%;overflow:hidden}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;overflow:hidden}
 body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text)}
+.lx{font-family:'Playfair Display',serif}
+.mono{font-family:var(--mono)}
 
-/* ===== SCALING: Lock to 16:9 viewport ===== */
-#app{position:fixed;inset:0;width:100vw;height:100vh;overflow:hidden;display:flex;flex-direction:column;background:var(--bg)}
+/* Background */
+#bgL{position:fixed;inset:0;z-index:0;pointer-events:none}
+#bgL::before{content:'';position:absolute;top:-20%;left:-10%;width:60%;height:60%;background:radial-gradient(ellipse,rgba(26,95,168,.06),transparent 70%);animation:dr1 20s ease-in-out infinite alternate}
+#bgL::after{content:'';position:absolute;bottom:-15%;right:-10%;width:55%;height:55%;background:radial-gradient(ellipse,rgba(201,168,76,.04),transparent 70%);animation:dr2 25s ease-in-out infinite alternate}
+@keyframes dr1{to{transform:translate(5%,8%)}}
+@keyframes dr2{to{transform:translate(-6%,-5%)}}
 
-.fl{font-family:'Playfair Display',serif}
+/* Main Grid */
+#app{position:relative;z-index:1;height:100vh;display:grid;grid-template-rows:auto 1fr auto}
 
-/* ===== HEADER ===== */
-.hdr{
-  height:clamp(70px,10vh,100px);
-  flex-shrink:0;
-  display:flex;align-items:center;justify-content:space-between;
-  padding:0 clamp(16px,2.5vw,40px);
-  background:linear-gradient(180deg,rgba(10,16,30,.97) 0%,rgba(8,12,22,.92) 100%);
-  border-bottom:1px solid var(--border);
-  position:relative;z-index:20;
-}
-.hdr::after{
-  content:'';position:absolute;bottom:0;left:15%;right:15%;height:1px;
-  background:linear-gradient(90deg,transparent,var(--gold-d),var(--gold),var(--gold-d),transparent);
-}
-.hdr-left{display:flex;flex-direction:column;gap:2px}
-.hdr-name{
-  font-family:'Playfair Display',serif;
-  font-size:clamp(16px,2.2vw,32px);
-  font-weight:700;
-  color:var(--gold);
-  letter-spacing:.02em;
-  line-height:1.1;
-}
-.hdr-addr{font-size:clamp(9px,.85vw,13px);color:var(--muted);font-weight:300;letter-spacing:.03em}
-.hdr-right{display:flex;flex-direction:column;align-items:flex-end;gap:1px}
-.hdr-clock{
-  font-family:'Playfair Display',serif;
-  font-size:clamp(24px,3.8vw,56px);
-  font-weight:800;
-  color:var(--gold);
-  letter-spacing:.04em;
-  line-height:1;
-  font-variant-numeric:tabular-nums;
-  text-shadow:0 0 30px rgba(201,168,76,.18);
-}
-.hdr-hijri{font-size:clamp(9px,.8vw,12px);color:var(--gold-d);font-weight:400;letter-spacing:.06em}
-.hdr-greg{font-size:clamp(9px,.78vw,12px);color:var(--muted);font-weight:300}
+/* Header */
+.hdr{padding:2.2vh 3vw;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);background:linear-gradient(180deg,rgba(8,14,28,.92),rgba(4,7,14,.7));backdrop-filter:blur(12px);position:relative}
+.hdr::after{content:'';position:absolute;bottom:0;left:15%;right:15%;height:1px;background:linear-gradient(90deg,transparent,var(--gold-d),transparent)}
+.hdr-name{font-size:clamp(1.15rem,1.9vw,1.65rem);font-weight:700;color:var(--gold-l);letter-spacing:.02em;line-height:1.2}
+.hdr-addr{font-size:clamp(.58rem,.75vw,.75rem);color:var(--muted);font-weight:300;letter-spacing:.03em;margin-top:2px}
+.hdr-clock{font-size:clamp(2rem,3.8vw,3.3rem);font-weight:300;color:var(--gold);letter-spacing:.04em;line-height:1;text-shadow:0 0 40px rgba(201,168,76,.15)}
+.hdr-hijri{font-size:clamp(.58rem,.72vw,.73rem);color:var(--gold-d);font-weight:400;letter-spacing:.08em;margin-top:2px}
+.hdr-greg{font-size:clamp(.52rem,.65vw,.68rem);color:var(--muted);font-weight:300;margin-top:1px}
 
-/* ===== MAIN ===== */
-.mn{flex:1;display:flex;overflow:hidden;min-height:0}
+/* Content */
+.ctn{display:grid;grid-template-columns:minmax(240px,28%) 1fr;overflow:hidden}
 
-/* ===== PRAYER PANEL ===== */
-.pp{
-  width:clamp(260px,28vw,380px);
-  flex-shrink:0;
-  display:flex;flex-direction:column;
-  padding:clamp(8px,1.2vh,16px) clamp(10px,1vw,18px);
-  background:linear-gradient(180deg,var(--bg2) 0%,var(--bg) 100%);
-  border-right:1px solid var(--border);
-  position:relative;
-  z-index:10;
-}
-.pp-title{
-  font-size:clamp(8px,.7vw,11px);
-  font-weight:600;
-  text-transform:uppercase;
-  letter-spacing:.18em;
-  color:var(--gold-d);
-  margin-bottom:clamp(4px,.6vh,10px);
-  display:flex;align-items:center;gap:6px;
-}
-.pp-title i{font-size:.9em}
-.pp-date{color:var(--dim);font-weight:400;letter-spacing:.06em;text-transform:none}
-.pp-list{flex:1;display:flex;flex-direction:column;justify-content:center;gap:clamp(3px,.45vh,6px)}
+/* Prayer Panel */
+.pp{padding:3vh 2vw;display:flex;flex-direction:column;justify-content:center;border-right:1px solid var(--border);position:relative}
+.pp::after{content:'';position:absolute;top:8%;bottom:8%;right:0;width:1px;background:linear-gradient(180deg,transparent,var(--gold-d),transparent)}
+.pp-lbl{font-size:clamp(.52rem,.6vw,.65rem);text-transform:uppercase;letter-spacing:.22em;color:var(--gold-d);font-weight:500;margin-bottom:3vh;padding-left:.3vw;display:flex;align-items:center;gap:8px}
+.pp-lbl::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--gold-d),transparent)}
+.pp-list{display:flex;flex-direction:column;gap:1.5vh}
 
 /* Prayer Card */
-.pc{
-  display:flex;align-items:center;
-  padding:clamp(7px,.9vh,12px) clamp(8px,.8vw,14px);
-  border-radius:8px;
-  border:1px solid transparent;
-  transition:all .5s cubic-bezier(.4,0,.2,1);
-  position:relative;
-  overflow:hidden;
-}
-.pc::before{
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(100deg,rgba(201,168,76,.05) 0%,transparent 60%);
-  opacity:0;transition:opacity .5s;
-}
-.pc:hover::before{opacity:1}
-.pc.next{
-  border-color:var(--border-hi);
-  background:linear-gradient(100deg,rgba(201,168,76,.08) 0%,rgba(201,168,76,.01) 100%);
-  box-shadow:0 0 20px rgba(201,168,76,.06),inset 0 0 20px rgba(201,168,76,.03);
-}
-.pc.next::before{opacity:1}
+.pc{display:grid;grid-template-columns:44px 1fr auto;align-items:center;padding:1.8vh 1.2vw;border-radius:10px;transition:all .5s cubic-bezier(.23,1,.32,1);border:1px solid transparent;position:relative;gap:.8vw}
+.pc::before{content:'';position:absolute;inset:0;border-radius:10px;background:linear-gradient(90deg,var(--gold-faint),transparent);opacity:0;transition:opacity .5s}
+.pc:hover::before{opacity:.5}
+.pc-ico{width:44px;height:44px;display:flex;align-items:center;justify-content:center;border-radius:10px;background:rgba(201,168,76,.06);color:var(--gold-d);font-size:.85em;transition:all .5s}
+.pc-body{display:flex;flex-direction:column;gap:1px;padding-left:.4vw}
+.pc-nm{font-size:clamp(.78rem,.95vw,1rem);font-weight:400;color:var(--text2);transition:color .5s}
+.pc-iq{font-size:clamp(.5rem,.58vw,.62rem);color:var(--dim);font-weight:300;transition:color .5s}
+.pc-tm{font-size:clamp(1.1rem,1.4vw,1.5rem);font-weight:500;color:var(--text);text-align:right;transition:all .5s}
+
+.pc.nx{border-color:rgba(201,168,76,.18);background:linear-gradient(90deg,rgba(201,168,76,.07),rgba(201,168,76,.015))}
+.pc.nx::before{opacity:1}
+.pc.nx .pc-ico{background:rgba(201,168,76,.14);color:var(--gold);box-shadow:0 0 18px rgba(201,168,76,.1)}
+.pc.nx .pc-nm{color:var(--gold-l);font-weight:500}
+.pc.nx .pc-iq{color:var(--gold-d)}
+.pc.nx .pc-tm{color:var(--gold-l);font-weight:600;font-size:clamp(1.25rem,1.6vw,1.7rem)}
 .pc.past{opacity:.35}
 
-.pc-icon{
-  width:clamp(28px,2.4vw,38px);height:clamp(28px,2.4vw,38px);
-  display:flex;align-items:center;justify-content:center;
-  border-radius:7px;
-  background:rgba(201,168,76,.07);
-  color:var(--gold-d);
-  font-size:clamp(.7em,.85vw,1em);
-  margin-right:clamp(6px,.7vw,12px);
-  flex-shrink:0;
-  transition:all .5s;
-}
-.pc.next .pc-icon{
-  background:rgba(201,168,76,.18);
-  color:var(--gold);
-  box-shadow:0 0 12px rgba(201,168,76,.15);
-}
-.pc-name{
-  font-weight:500;
-  font-size:clamp(.75em,.9vw,1em);
-  color:var(--muted);
-  min-width:clamp(55px,5vw,75px);
-  transition:color .5s;
-}
-.pc.next .pc-name{color:var(--gold-l);font-weight:600}
-.pc-iqomah{
-  font-size:clamp(.6em,.65vw,.75em);
-  color:var(--dim);
-  margin-left:clamp(4px,.4vw,8px);
-  font-weight:300;
-}
-.pc-time{
-  font-weight:600;
-  font-size:clamp(.85em,1.05vw,1.15em);
-  color:var(--text);
-  margin-left:auto;
-  font-variant-numeric:tabular-nums;
-  letter-spacing:.04em;
-  transition:all .5s;
-}
-.pc.next .pc-time{color:var(--gold);font-weight:700;font-size:clamp(.95em,1.2vw,1.3em)}
-.pc-dot{
-  width:clamp(5px,.4vw,8px);height:clamp(5px,.4vw,8px);
-  border-radius:50%;
-  margin-left:clamp(5px,.5vw,10px);
-  flex-shrink:0;
-  background:var(--dim);
-  transition:all .5s;
-}
-.pc.next .pc-dot{
-  background:var(--gold);
-  box-shadow:0 0 8px var(--gold);
-  animation:pDot 1.5s ease-in-out infinite;
-}
-@keyframes pDot{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.6);opacity:.4}}
+/* Media */
+.md{position:relative;overflow:hidden;background:#030610}
+.sl{position:absolute;inset:0;opacity:0;transition:opacity 2s ease-in-out,transform 8s ease-out;object-fit:cover;width:100%;height:100%;transform:scale(1.03)}
+.sl.on{opacity:1;transform:scale(1)}
+.md-grad{position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(170deg,rgba(4,7,14,.2) 0%,transparent 25%,transparent 50%,rgba(4,7,14,.55) 100%)}
 
-/* ===== MEDIA PANEL ===== */
-.mp{flex:1;position:relative;overflow:hidden}
-.mp img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 2s ease-in-out}
-.mp img.on{opacity:1}
-.mp::after{
-  content:'';position:absolute;inset:0;z-index:1;pointer-events:none;
-  background:
-    linear-gradient(180deg,rgba(4,6,12,.25) 0%,transparent 25%,transparent 55%,rgba(4,6,12,.65) 100%),
-    linear-gradient(90deg,rgba(4,6,12,.3) 0%,transparent 15%);
-}
-
-/* ===== PHBI CARD ===== */
-.phbi{
-  position:absolute;top:clamp(8px,1.5vh,20px);right:clamp(8px,1.2vw,20px);
-  z-index:5;
-  background:var(--glass);
-  backdrop-filter:blur(12px);
-  border:1px solid var(--border-hi);
-  border-radius:10px;
-  padding:clamp(8px,1vh,14px) clamp(10px,1vw,16px);
-  max-width:clamp(160px,16vw,230px);
-}
-.phbi-lbl{font-size:clamp(.55em,.58vw,.7em);text-transform:uppercase;letter-spacing:.15em;color:var(--gold);font-weight:600;margin-bottom:3px}
-.phbi-nm{font-weight:600;font-size:clamp(.7em,.82vw,1em);color:var(--gold-l);line-height:1.25;margin-bottom:2px}
-.phbi-cd{font-size:clamp(.6em,.7vw,.85em);color:var(--muted)}
+/* PHBI - Melayang */
+.phbi{position:absolute;top:3vh;right:2.5vw;z-index:5;background:var(--glass);border:1px solid rgba(201,168,76,.15);border-radius:14px;padding:1.8vh 1.8vw;backdrop-filter:blur(18px);max-width:250px;box-shadow:0 10px 40px rgba(0,0,0,.35)}
+.phbi-tag{font-size:clamp(.48rem,.55vw,.6rem);text-transform:uppercase;letter-spacing:.16em;color:var(--gold);font-weight:600;margin-bottom:.5vh;display:flex;align-items:center;gap:5px}
+.phbi-nm{font-size:clamp(.8rem,.92vw,.98rem);font-weight:600;color:var(--gold-l);line-height:1.35}
+.phbi-cd{font-size:clamp(.65rem,.75vw,.8rem);color:var(--text2);margin-top:.5vh}
 .phbi-cd b{color:var(--gold);font-weight:600}
 
-/* ===== LOW THIRD ===== */
-.lt{position:absolute;bottom:0;left:0;right:0;z-index:5}
-.lt-in{
-  background:linear-gradient(100deg,rgba(6,10,20,.92) 0%,rgba(6,10,20,.72) 100%);
-  backdrop-filter:blur(14px);
-  border-top:2px solid var(--gold-d);
-  padding:clamp(8px,1.2vh,16px) clamp(12px,1.5vw,24px);
-  display:flex;align-items:center;gap:clamp(8px,1vw,18px);
-  transform:translateY(100%);
-  transition:transform .65s cubic-bezier(.22,1,.36,1);
-}
-.lt-in.show{transform:translateY(0)}
-.lt-badge{
-  background:linear-gradient(135deg,var(--gold-d),var(--gold));
-  color:#050810;font-weight:700;
-  font-size:clamp(.55em,.6vw,.72em);
-  padding:clamp(3px,.3vh,5px) clamp(6px,.6vw,10px);
-  border-radius:4px;
-  white-space:nowrap;
-  text-transform:uppercase;
-  letter-spacing:.06em;
-  flex-shrink:0;
-}
+/* ===== LOW THIRD MELAYANG ===== */
+.lt-wrap{position:absolute;bottom:3.5vh;left:2.5vw;right:2.5vw;z-index:5}
+.lt{background:linear-gradient(105deg,rgba(6,12,26,.88),rgba(12,22,44,.75));border:1px solid rgba(201,168,76,.18);border-radius:16px;padding:2.2vh 2.8vw;display:flex;align-items:center;gap:2.2vw;backdrop-filter:blur(24px);box-shadow:0 12px 50px rgba(0,0,0,.4),0 0 0 1px rgba(201,168,76,.05) inset;transform:translateY(120%);transition:transform .75s cubic-bezier(.23,1,.32,1);opacity:0}
+.lt.on{transform:translateY(0);opacity:1}
+.lt-badge{background:linear-gradient(135deg,var(--gold-d),var(--gold));color:#04070e;font-weight:700;font-size:clamp(.52rem,.58vw,.63rem);padding:.6vh 1.1vw;border-radius:6px;white-space:nowrap;text-transform:uppercase;letter-spacing:.1em;flex-shrink:0}
 .lt-body{flex:1;min-width:0}
-.lt-t{font-weight:600;font-size:clamp(.7em,.82vw,1em);color:var(--gold-l);line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.lt-v{font-weight:300;font-size:clamp(.65em,.75vw,.9em);color:var(--text);margin-top:1px;opacity:.85;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lt-title{font-weight:600;font-size:clamp(.8rem,.95vw,1.02rem);color:var(--gold-l);margin-bottom:.3vh;letter-spacing:.01em}
+.lt-val{font-weight:300;font-size:clamp(.72rem,.82vw,.88rem);color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.4}
+.lt-line{width:1px;height:36px;background:linear-gradient(180deg,transparent,rgba(201,168,76,.25),transparent);flex-shrink:0}
 
-/* ===== FOOTER ===== */
-.ftr{
-  height:clamp(50px,8vh,72px);
-  flex-shrink:0;
-  display:flex;align-items:center;
-  background:linear-gradient(0deg,rgba(10,16,30,.97) 0%,rgba(8,12,22,.92) 100%);
-  border-top:1px solid var(--border);
-  position:relative;z-index:20;
-}
-.ftr::before{
-  content:'';position:absolute;top:0;left:15%;right:15%;height:1px;
-  background:linear-gradient(90deg,transparent,var(--gold-d),var(--gold),var(--gold-d),transparent);
-}
-.ftr-cd{
-  display:flex;align-items:center;gap:clamp(6px,.7vw,14px);
-  padding:0 clamp(16px,2.5vw,40px);
-  flex-shrink:0;
-  border-right:1px solid var(--border);
-  height:100%;
-}
-.ftr-cd-lbl{font-size:clamp(.6em,.68vw,.82em);color:var(--muted);white-space:nowrap;font-weight:300}
-.ftr-cd-row{display:flex;align-items:baseline;gap:clamp(3px,.3vw,6px)}
-.ftr-cd-nm{font-size:clamp(.75em,.85vw,1em);color:var(--gold-l);font-weight:500}
-.ftr-cd-tm{
-  font-size:clamp(1.1em,1.5vw,1.9em);
-  font-weight:700;
-  color:var(--gold);
-  font-variant-numeric:tabular-nums;
-  letter-spacing:.05em;
-  text-shadow:0 0 14px rgba(201,168,76,.2);
-}
-.ftr-run{flex:1;overflow:hidden;height:100%;display:flex;align-items:center;padding:0 clamp(12px,1.5vw,24px)}
-.ftr-run-t{
-  white-space:nowrap;
-  animation:runL var(--dur,45s) linear infinite;
-  font-size:clamp(.75em,.88vw,1.05em);
-  color:var(--text);
-  font-weight:300;
-  letter-spacing:.02em;
-}
-@keyframes runL{0%{transform:translateX(100vw)}100%{transform:translateX(-100%)}}
+/* Footer */
+.ftr{padding:1.6vh 3vw;display:flex;align-items:center;border-top:1px solid var(--border);background:linear-gradient(0deg,rgba(8,14,28,.92),rgba(4,7,14,.7));backdrop-filter:blur(12px);position:relative;gap:2.5vw}
+.ftr::before{content:'';position:absolute;top:0;left:15%;right:15%;height:1px;background:linear-gradient(90deg,transparent,var(--gold-d),transparent)}
+.cd-box{display:flex;align-items:center;gap:1vw;flex-shrink:0;border-right:1px solid var(--border);padding-right:2.5vw}
+.cd-lbl{font-size:clamp(.52rem,.6vw,.65rem);color:var(--muted);font-weight:300;white-space:nowrap}
+.cd-row{display:flex;align-items:baseline;gap:.5vw}
+.cd-nm{font-size:clamp(.78rem,.92vw,.98rem);color:var(--gold);font-weight:500}
+.cd-tm{font-size:clamp(1.3rem,1.8vw,2rem);font-weight:300;color:var(--gold-l);letter-spacing:.06em;text-shadow:0 0 20px rgba(201,168,76,.15)}
+.mq{flex:1;overflow:hidden;height:100%;display:flex;align-items:center;padding-left:1vw}
+.mq span{white-space:nowrap;animation:sx var(--dur,45s) linear infinite;font-size:clamp(.75rem,.85vw,.9rem);color:var(--text2);font-weight:300}
+@keyframes sx{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
 
-/* ===================================================
-   OVERLAY SCREENS
-   =================================================== */
+/* ===== OVERLAYS ===== */
 .ov{position:fixed;inset:0;z-index:100;display:none;flex-direction:column;align-items:center;justify-content:center}
 .ov.on{display:flex}
 .ov-bg{position:absolute;inset:0}
-.ov-ct{position:relative;z-index:2;text-align:center;padding:2vw}
+.ov-c{position:relative;z-index:2;text-align:center;padding:3vw;max-width:80vw}
+.ip{position:absolute;inset:0;opacity:.04;background-image:url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40 0L80 40L40 80L0 40Z' fill='none' stroke='%23c9a84c' stroke-width='.4'/%3E%3Cpath d='M40 12L68 40L40 68L12 40Z' fill='none' stroke='%23c9a84c' stroke-width='.25'/%3E%3Ccircle cx='40' cy='40' r='8' fill='none' stroke='%23c9a84c' stroke-width='.25'/%3E%3C/svg%3E");background-size:80px 80px}
+.of{position:absolute;inset:6vh 6vw;border:1px solid rgba(201,168,76,.08);border-radius:24px;pointer-events:none}
+.of::before,.of::after{content:'';position:absolute;width:40px;height:40px;border-color:rgba(201,168,76,.25);border-style:solid}
+.of::before{top:-1px;left:-1px;border-width:1px 0 0 1px;border-radius:24px 0 0 0}
+.of::after{bottom:-1px;right:-1px;border-width:0 1px 1px 0;border-radius:0 0 24px 0}
 
-.isl-pat{
-  position:absolute;inset:0;opacity:.05;pointer-events:none;
-  background-image:url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40 0L80 40L40 80L0 40Z' fill='none' stroke='%23c9a84c' stroke-width='.4'/%3E%3Cpath d='M40 12L68 40L40 68L12 40Z' fill='none' stroke='%23c9a84c' stroke-width='.25'/%3E%3Ccircle cx='40' cy='40' r='6' fill='none' stroke='%23c9a84c' stroke-width='.25'/%3E%3Ccircle cx='40' cy='40' r='14' fill='none' stroke='%23c9a84c' stroke-width='.15'/%3E%3C/svg%3E");
-  background-size:80px 80px;
-}
-.ov-frame{
-  position:absolute;
-  inset:clamp(40px,6vh,80px) clamp(60px,8vw,140px);
-  border:1px solid var(--border);
-  border-radius:16px;
-  pointer-events:none;
-}
-.ov-frame::before,.ov-frame::after{
-  content:'';position:absolute;width:clamp(20px,2.5vw,36px);height:clamp(20px,2.5vw,36px);
-  border-color:var(--gold-d);border-style:solid;
-}
-.ov-frame::before{top:-1px;left:-1px;border-width:2px 0 0 2px;border-radius:16px 0 0 0}
-.ov-frame::after{bottom:-1px;right:-1px;border-width:0 2px 2px 0;border-radius:0 0 16px 0}
+#ovAz .ov-bg{background:radial-gradient(ellipse at 50% 45%,#0e1a30,#04070e 65%)}
+.az-txt{font-size:clamp(3rem,6vw,5.5rem);font-weight:900;color:var(--gold);line-height:1;letter-spacing:.04em;text-shadow:0 0 60px rgba(201,168,76,.3),0 0 120px rgba(201,168,76,.1);animation:ap 3s ease-in-out infinite alternate}
+@keyframes ap{0%{text-shadow:0 0 40px rgba(201,168,76,.25),0 0 80px rgba(201,168,76,.08)}100%{text-shadow:0 0 70px rgba(201,168,76,.4),0 0 150px rgba(201,168,76,.15)}}
+.az-sub{font-size:clamp(.9rem,1.2vw,1.3rem);color:var(--gold-d);letter-spacing:.25em;text-transform:uppercase;font-weight:400;margin-top:2vh}
+.az-tm{font-size:clamp(.75rem,.9vw,1rem);color:var(--muted);margin-top:1.5vh;font-weight:300}
+.az-hint{font-size:clamp(.62rem,.72vw,.78rem);color:var(--dim);margin-top:5vh;font-weight:300;letter-spacing:.05em}
 
-/* --- AZAN --- */
-#ovAzan .ov-bg{background:radial-gradient(ellipse at 50% 45%,#0c1830 0%,#060a14 65%,#04060c 100%)}
-.az-label{
-  font-size:clamp(.9em,1.3vw,1.8em);
-  color:var(--gold-d);
-  letter-spacing:.4em;
-  font-weight:300;
-  margin-bottom:clamp(8px,1.5vh,20px);
-  text-transform:uppercase;
-}
-.az-main{
-  font-family:'Playfair Display',serif;
-  font-size:clamp(2.8em,5.5vw,8em);
-  font-weight:900;
-  color:var(--gold);
-  line-height:1;
-  letter-spacing:.06em;
-  text-shadow:0 0 50px rgba(201,168,76,.3),0 0 120px rgba(201,168,76,.1);
-  animation:azGlow 2.5s ease-in-out infinite alternate;
-}
-@keyframes azGlow{
-  0%{text-shadow:0 0 40px rgba(201,168,76,.25),0 0 80px rgba(201,168,76,.08)}
-  100%{text-shadow:0 0 60px rgba(201,168,76,.4),0 0 150px rgba(201,168,76,.15)}
-}
-.az-prayer{
-  font-size:clamp(1em,1.8vw,2.8em);
-  font-weight:300;
-  color:var(--gold-l);
-  margin-top:clamp(10px,2vh,30px);
-  letter-spacing:.2em;
-  text-transform:uppercase;
-}
-.az-time{
-  font-size:clamp(.7em,1vw,1.5em);
-  color:var(--muted);
-  margin-top:clamp(6px,1vh,14px);
-  font-weight:300;
-  font-variant-numeric:tabular-nums;
-}
-.az-sub{
-  font-size:clamp(.6em,.8vw,1.1em);
-  color:var(--dim);
-  margin-top:clamp(12px,2.5vh,30px);
-  font-weight:300;
-  letter-spacing:.08em;
-}
+#ovIq .ov-bg{background:radial-gradient(ellipse at 50% 45%,#0c1628,#04070e)}
+.iq-lbl{font-size:clamp(1.4rem,2.2vw,2.2rem);font-weight:400;color:var(--gold-l);letter-spacing:.3em;text-transform:uppercase}
+.iq-num{font-size:clamp(4rem,8vw,8rem);font-weight:200;color:var(--gold);line-height:1;margin-top:3vh;text-shadow:0 0 50px rgba(201,168,76,.2)}
+.iq-inf{font-size:clamp(.8rem,.95vw,1rem);color:var(--text2);margin-top:3vh;font-weight:300}
 
-/* --- IQOMAH --- */
-#ovIqo .ov-bg{background:radial-gradient(ellipse at 50% 45%,#0c1830 0%,#060a14 65%,#04060c 100%)}
-.iq-label{
-  font-family:'Playfair Display',serif;
-  font-size:clamp(1.2em,2.2vw,3.2em);
-  font-weight:600;
-  color:var(--gold-l);
-  letter-spacing:.25em;
-  text-transform:uppercase;
-}
-.iq-num{
-  font-family:'Playfair Display',serif;
-  font-size:clamp(4em,8vw,12em);
-  font-weight:200;
-  color:var(--gold);
-  line-height:1;
-  margin-top:clamp(10px,2vh,25px);
-  text-shadow:0 0 40px rgba(201,168,76,.2);
-  font-variant-numeric:tabular-nums;
-}
-.iq-info{
-  font-size:clamp(.65em,.85vw,1.2em);
-  color:var(--muted);
-  margin-top:clamp(12px,2vh,25px);
-  font-weight:300;
-}
+#ovJu .ov-bg{background:radial-gradient(ellipse at 50% 40%,#0a1425,#04070e)}
+.ju-ttl{font-size:clamp(2.5rem,4.5vw,4rem);font-weight:800;color:var(--gold);letter-spacing:.08em;text-shadow:0 0 40px rgba(201,168,76,.25)}
+.ju-sub{font-size:clamp(.85rem,1.1vw,1.15rem);color:var(--text2);font-weight:300;margin-top:1.5vh}
+.ju-g{display:flex;gap:2.5vw;justify-content:center;margin-top:5vh;flex-wrap:wrap}
+.ju-c{text-align:center;padding:2.5vh 2.8vw;background:var(--glass);border:1px solid rgba(201,168,76,.12);border-radius:14px;min-width:155px;backdrop-filter:blur(12px)}
+.ju-cl{font-size:clamp(.52rem,.58vw,.63rem);text-transform:uppercase;letter-spacing:.18em;color:var(--gold);margin-bottom:.8vh;font-weight:500}
+.ju-cv{font-size:clamp(.82rem,.98vw,1.05rem);font-weight:500;color:var(--text)}
+.ju-ck{font-size:clamp(1.2rem,1.5vw,1.6rem);color:var(--gold);margin-top:4vh;font-weight:300}
 
-/* --- JUMAT --- */
-#ovJum .ov-bg{background:radial-gradient(ellipse at 50% 40%,#0a1428 0%,#060a14 60%,#04060c 100%)}
-.jm-title{
-  font-family:'Playfair Display',serif;
-  font-size:clamp(2em,3.8vw,5.5em);
-  font-weight:900;
-  color:var(--gold);
-  text-shadow:0 0 40px rgba(201,168,76,.25);
-  letter-spacing:.08em;
-  line-height:1.1;
-}
-.jm-sub{
-  font-size:clamp(.7em,1vw,1.5em);
-  color:var(--gold-l);
-  font-weight:300;
-  margin-top:clamp(6px,1vh,14px);
-  letter-spacing:.1em;
-}
-.jm-grid{
-  margin-top:clamp(16px,3vh,40px);
-  display:flex;gap:clamp(12px,2vw,30px);
-  justify-content:center;flex-wrap:wrap;
-}
-.jm-card{
-  text-align:center;
-  padding:clamp(12px,1.8vh,22px) clamp(14px,2vw,30px);
-  background:rgba(201,168,76,.04);
-  border:1px solid var(--border);
-  border-radius:12px;
-  min-width:clamp(120px,12vw,180px);
-  backdrop-filter:blur(8px);
-}
-.jm-card-lbl{
-  font-size:clamp(.5em,.58vw,.72em);
-  text-transform:uppercase;
-  letter-spacing:.18em;
-  color:var(--gold);
-  margin-bottom:clamp(4px,.5vh,8px);
-  font-weight:600;
-}
-.jm-card-val{
-  font-size:clamp(.8em,1vw,1.4em);
-  font-weight:600;
-  color:var(--text);
-  line-height:1.3;
-}
-.jm-clk{
-  font-family:'Playfair Display',serif;
-  font-size:clamp(1em,1.6vw,2.2em);
-  color:var(--gold);
-  margin-top:clamp(14px,2.5vh,30px);
-  font-variant-numeric:tabular-nums;
-  text-shadow:0 0 10px rgba(201,168,76,.15);
-}
+#ovBk .ov-bg{background:#010204}
+.bk-ck{font-size:clamp(3rem,6vw,5.5rem);font-weight:200;color:rgba(201,168,76,.18)}
 
-/* --- BLACK --- */
-#ovBlack .ov-bg{background:#020204}
-.bl-clk{
-  font-family:'Playfair Display',serif;
-  font-size:clamp(3em,6vw,9em);
-  font-weight:200;
-  color:rgba(201,168,76,.18);
-  font-variant-numeric:tabular-nums;
-}
+#ovCu .ov-bg{background:radial-gradient(ellipse at 50% 45%,#0c1628,#04070e)}
+.cu-ttl{font-size:clamp(2rem,3.5vw,3.2rem);font-weight:800;color:var(--gold);margin-bottom:2.5vh}
+.cu-bd{font-size:clamp(1rem,1.5vw,1.5rem);font-weight:300;color:var(--text);max-width:65vw;line-height:1.7}
 
-/* --- CUSTOM MSG --- */
-#ovCust .ov-bg{background:radial-gradient(ellipse at 50% 45%,#0c1830 0%,#060a14 65%,#04060c 100%)}
-.cm-title{
-  font-family:'Playfair Display',serif;
-  font-size:clamp(1.5em,3vw,4.5em);
-  font-weight:800;
-  color:var(--gold);
-  margin-bottom:clamp(8px,1.5vh,20px);
-  line-height:1.15;
-}
-.cm-body{
-  font-size:clamp(.85em,1.4vw,2em);
-  font-weight:300;
-  color:var(--text);
-  max-width:70vw;
-  line-height:1.6;
-  letter-spacing:.02em;
-}
-
-.fadein{animation:fi .8s ease}
+.fi{animation:fi .9s ease}
 @keyframes fi{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-::-webkit-scrollbar{display:none}
+
+/* Error Fallback */
+#errorScreen{position:fixed;inset:0;z-index:9999;background:var(--bg);display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:2vw}
+#errorScreen.on{display:flex}
+#errorScreen .err-icon{font-size:3rem;color:var(--gold-d);margin-bottom:1.5vh}
+#errorScreen .err-title{font-size:1.4rem;color:var(--gold);font-weight:600;margin-bottom:1vh}
+#errorScreen .err-msg{font-size:.9rem;color:var(--muted);max-width:500px;line-height:1.6}
+#errorScreen .err-btn{margin-top:2vh;padding:10px 28px;border-radius:8px;background:linear-gradient(135deg,var(--gold-d),var(--gold));color:#04070e;font-weight:600;font-size:.85rem;cursor:pointer;border:none}
 </style>
 </head>
 <body>
 
-<!-- ===================== NORMAL DISPLAY ===================== -->
+<!-- Error Fallback Screen -->
+<div id="errorScreen">
+  <div class="err-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+  <div class="err-title lx">Terjadi Kesalahan</div>
+  <div class="err-msg" id="errMsg">Sistem mengalami error. Silakan refresh halaman.</div>
+  <button class="err-btn" onclick="location.reload()"><i class="fa-solid fa-rotate-right" style="margin-right:6px"></i> Refresh Halaman</button>
+</div>
+
+<div id="bgL"></div>
+
+<!-- ========== NORMAL DISPLAY ========== -->
 <div id="app">
-  <!-- HEADER -->
   <header class="hdr">
-    <div class="hdr-left">
-      <div class="hdr-name" id="mosqueName"></div>
-      <div class="hdr-addr" id="mosqueAddr"></div>
+    <div>
+      <div class="hdr-name lx" id="hName"></div>
+      <div class="hdr-addr" id="hAddr"></div>
     </div>
-    <div class="hdr-right">
-      <div class="hdr-clock" id="clock"></div>
-      <div class="hdr-hijri" id="hijriDate"></div>
-      <div class="hdr-greg" id="gregDate"></div>
+    <div style="text-align:right">
+      <div class="hdr-clock lx mono" id="hClk"></div>
+      <div class="hdr-hijri" id="hHij"></div>
+      <div class="hdr-greg" id="hGre"></div>
     </div>
   </header>
 
-  <!-- MAIN -->
-  <main class="mn">
-    <!-- PRAYER PANEL -->
+  <div class="ctn">
     <aside class="pp">
-      <div class="pp-title"><i class="fa-solid fa-mosque"></i> Jadwal Sholat <span class="pp-date" id="dateLabel"></span></div>
-      <div class="pp-list" id="prayerList"></div>
+      <div class="pp-lbl"><i class="fa-solid fa-mosque" style="font-size:.8em"></i> Jadwal Sholat</div>
+      <div class="pp-list" id="pLst"></div>
     </aside>
 
-    <!-- MEDIA PANEL -->
-    <section class="mp" id="mediaPanel">
-      <div id="slideBox"></div>
-      <!-- PHBI -->
-      <div class="phbi" id="phbiCard" style="display:none">
-        <div class="phbi-lbl"><i class="fa-solid fa-star-and-crescent"></i> PHBI</div>
-        <div class="phbi-nm" id="phbiName"></div>
-        <div class="phbi-cd" id="phbiCountdown"></div>
+    <section class="md">
+      <div id="slBox"></div>
+      <div class="md-grad"></div>
+
+      <div class="phbi" id="phbiBox" style="display:none">
+        <div class="phbi-tag"><i class="fa-regular fa-star"></i> PHBI</div>
+        <div class="phbi-nm" id="phbiNm"></div>
+        <div class="phbi-cd" id="phbiCd"></div>
       </div>
-      <!-- LOW THIRD -->
-      <div class="lt">
-        <div class="lt-in" id="lowThird">
-          <div class="lt-badge" id="ltBadge"></div>
+
+      <!-- Low Third Melayang -->
+      <div class="lt-wrap">
+        <div class="lt" id="ltBox">
+          <div class="lt-badge" id="ltBdg"></div>
+          <div class="lt-line"></div>
           <div class="lt-body">
-            <div class="lt-t" id="ltTitle"></div>
-            <div class="lt-v" id="ltValue"></div>
+            <div class="lt-title" id="ltTtl"></div>
+            <div class="lt-val" id="ltVal"></div>
           </div>
         </div>
       </div>
     </section>
-  </main>
+  </div>
 
-  <!-- FOOTER -->
   <footer class="ftr">
-    <div class="ftr-cd">
+    <div class="cd-box">
       <div>
-        <div class="ftr-cd-lbl">Sholat berikutnya</div>
-        <div class="ftr-cd-row">
-          <span class="ftr-cd-nm" id="cdPrayer"></span>
-          <span class="ftr-cd-tm" id="cdTime"></span>
+        <div class="cd-lbl">Sholat berikutnya</div>
+        <div class="cd-row">
+          <span class="cd-nm" id="cdNm"></span>
+          <span class="cd-tm mono" id="cdTm"></span>
         </div>
       </div>
     </div>
-    <div class="ftr-run">
-      <div class="ftr-run-t" id="marqueeText"></div>
-    </div>
+    <div class="mq"><span id="mqTx"></span></div>
   </footer>
 </div>
 
-<!-- ===================== AZAN OVERLAY ===================== -->
-<div id="ovAzan" class="ov">
-  <div class="ov-bg"></div>
-  <div class="isl-pat"></div>
-  <div class="ov-frame"></div>
-  <div class="ov-ct fadein">
-    <div class="az-label">SHOLAT</div>
-    <div class="az-main">ALLAHU AKBAR</div>
-    <div class="az-prayer" id="azanPrayerName"></div>
-    <div class="az-time" id="azanTime"></div>
-    <div class="az-sub">Segera dirikan sholat dalam jamah</div>
+<!-- ========== OVERLAYS ========== -->
+<div id="ovAz" class="ov">
+  <div class="ov-bg"></div><div class="ip"></div><div class="of"></div>
+  <div class="ov-c fi">
+    <div style="font-size:clamp(.65rem,.8vw,.85rem);color:var(--gold-d);letter-spacing:.4em;font-weight:300;text-transform:uppercase;margin-bottom:2vh">Masuk Waktu</div>
+    <div class="az-txt lx">ALLAHU AKBAR</div>
+    <div class="az-sub" id="azNm"></div>
+    <div class="az-tm mono" id="azTm"></div>
+    <div class="az-hint">Segera dirikan sholat dalam jamah</div>
   </div>
 </div>
 
-<!-- ===================== IQOMAH OVERLAY ===================== -->
-<div id="ovIqo" class="ov">
-  <div class="ov-bg"></div>
-  <div class="isl-pat"></div>
-  <div class="ov-frame"></div>
-  <div class="ov-ct fadein">
-    <div class="iq-label fl">TUNGGU IQOMAH</div>
-    <div class="iq-num fl" id="iqomahCount">00:00</div>
-    <div class="iq-info" id="iqomahPrayer"></div>
+<div id="ovIq" class="ov">
+  <div class="ov-bg"></div><div class="ip"></div><div class="of"></div>
+  <div class="ov-c fi">
+    <div class="iq-lbl lx">Tunggu Iqomah</div>
+    <div class="iq-num lx mono" id="iqNm">00:00</div>
+    <div class="iq-inf" id="iqInf"></div>
   </div>
 </div>
 
-<!-- ===================== JUMAT OVERLAY ===================== -->
-<div id="ovJum" class="ov">
-  <div class="ov-bg"></div>
-  <div class="isl-pat"></div>
-  <div class="ov-frame"></div>
-  <div class="ov-ct fadein">
-    <div class="jm-title fl">JUMAT MUBARAK</div>
-    <div class="jm-sub">Mari memakmurkan masjid dengan sholat berjamaah</div>
-    <div class="jm-grid" id="jumatInfo"></div>
-    <div class="jm-clk fl" id="jumatClock"></div>
+<div id="ovJu" class="ov">
+  <div class="ov-bg"></div><div class="ip"></div><div class="of"></div>
+  <div class="ov-c fi">
+    <div class="ju-ttl lx">Jum'at Mubarak</div>
+    <div class="ju-sub">Mari memakmurkan masjid dengan sholat berjamaah</div>
+    <div class="ju-g" id="juGr"></div>
+    <div class="ju-ck lx mono" id="juCk"></div>
   </div>
 </div>
 
-<!-- ===================== BLACK OVERLAY ===================== -->
-<div id="ovBlack" class="ov">
+<div id="ovBk" class="ov">
   <div class="ov-bg"></div>
-  <div class="bl-clk fl" id="blackClock"></div>
+  <div class="bk-ck lx mono" id="bkCk"></div>
 </div>
 
-<!-- ===================== CUSTOM MSG OVERLAY ===================== -->
-<div id="ovCust" class="ov">
-  <div class="ov-bg"></div>
-  <div class="isl-pat"></div>
-  <div class="ov-frame"></div>
-  <div class="ov-ct fadein">
-    <div class="cm-title fl" id="customTitle"></div>
-    <div class="cm-body" id="customBody"></div>
+<div id="ovCu" class="ov">
+  <div class="ov-bg"></div><div class="ip"></div><div class="of"></div>
+  <div class="ov-c fi">
+    <div class="cu-ttl lx" id="cuTtl"></div>
+    <div class="cu-bd" id="cuBd"></div>
   </div>
 </div>
 
 <script>
-/* ============================
-   KONSTANTA
-   ============================ */
-const DG=Math.PI/180;
-const HHIJ=['Muharram','Safar','Rabiul Awal','Rabiul Akhir','Jumadil Awal','Jumadil Akhir','Rajab','Sya\'ban','Ramadhan','Syawal','Dzulqa\'dah','Dzulhijjah'];
-const HDAY=['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
-const HMON=['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
-const ICO={subuh:'fa-cloud-moon',terbit:'fa-sun',dhuha:'fa-sun',dzuhur:'fa-sun',asr:'fa-cloud-sun',maghrib:'fa-cloud-moon',isya:'fa-moon'};
-const NM={subuh:'Subuh',terbit:'Syuruq',dhuha:'Dhuha',dzuhur:'Dzuhur',asr:'Ashar',maghrib:'Maghrib',isya:'Isya'};
-const PO=['subuh','terbit','dhuha','dzuhur','asr','maghrib','isya'];
-const AZ=['subuh','dzuhur','asr','maghrib','isya'];
+/* =========================================
+   SAFE WRAPPER - Cegah crash total
+   ========================================= */
+window.onerror = function(msg, src, line, col, err) {
+  document.getElementById('errMsg').textContent = 'Error pada baris ' + line + ': ' + msg;
+  document.getElementById('errorScreen').classList.add('on');
+  document.getElementById('app').style.display = 'none';
+  document.querySelectorAll('.ov').forEach(o => o.style.display = 'none');
+  return true;
+};
+window.onunhandledrejection = function(e) {
+  console.warn('Unhandled rejection:', e.reason);
+};
 
-/* ============================
+/* =========================================
+   CONSTANTS
+   ========================================= */
+const DG = Math.PI / 180;
+const HIJRI_M = ['Muharram','Safar','Rabiul Awal','Rabiul Akhir','Jumadil Awal','Jumadil Akhir','Rajab','Sya\'ban','Ramadhan','Syawal','Dzulqa\'dah','Dzulhijjah'];
+const DAYS = ['Minggu','Senin','Selasa','Rabu','Kamis','Jum\'at','Sabtu'];
+const MON = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+const ICO = {subuh:'fa-cloud-moon',dzuhur:'fa-sun',asr:'fa-cloud-sun',maghrib:'fa-cloud-moon',isya:'fa-moon'};
+const LBL = {subuh:'Subuh',dzuhur:'Dzuhur',asr:'Ashar',maghrib:'Maghrib',isya:'Isya'};
+const ORD = ['subuh','dzuhur','asr','maghrib','isya'];
+
+/* =========================================
    DEFAULTS
-   ============================ */
-const DEF={
+   ========================================= */
+const DEF = {
   mosque:{name:'Masjid Agung Rejang Lebong',address:'Jl. R. Sukamto, Pasar Baru, Kab. Rejang Lebong, Bengkulu'},
   location:{latitude:-3.4567,longitude:102.5211,timezone:7,city:'Rejang Lebong'},
   calc:{fajrAngle:20,ishaAngle:18,asrMethod:'shafii'},
@@ -608,7 +306,7 @@ const DEF={
   azanDuration:180,
   jumat:{imam:'Ust. Ahmad Fauzi, Lc.',khatib:'Ust. Muhammad Rizki, M.Pd.',muadzin:'H. Hasan Basri',bilal:'Bpk. Syamsul Bahri'},
   finance:{kasMasjid:'Rp 15.750.000',kasPembangunan:'Rp 45.200.000',infakJumat:'Rp 2.350.000',lastUpdate:'-'},
-  slideshow:{images:['https://picsum.photos/seed/masjidRL1/1920/1080','https://picsum.photos/seed/masjidRL2/1920/1080','https://picsum.photos/seed/masjidRL3/1920/1080','https://picsum.photos/seed/masjidRL4/1920/1080'],interval:8},
+  slideshow:{images:['https://picsum.photos/seed/masjidBlue1/1920/1080','https://picsum.photos/seed/masjidBlue2/1920/1080','https://picsum.photos/seed/masjidBlue3/1920/1080','https://picsum.photos/seed/masjidBlue4/1920/1080'],interval:8},
   runningText:'Selamat datang di Masjid Agung Rejang Lebong. Mari kita tingkatkan keimanan dan ketaqwaan dengan memperbanyak ibadah. Jaga kebersihan dan ketenangan masjid.',
   phbi:[{name:'Isra Mi\'raj 1446 H',date:'2025-01-27'},{name:'Nuzulul Quran 1446 H',date:'2025-03-01'},{name:'Idul Fitri 1446 H',date:'2025-03-30'},{name:'Idul Adha 1446 H',date:'2025-06-07'}],
   customMessages:[],
@@ -618,299 +316,500 @@ const DEF={
 };
 
 let S;
-function ldS(){
-  try{const d=localStorage.getItem('mosque_settings');S=d?{...DEF,...JSON.parse(d)}:{...DEF};}
-  catch(e){S={...DEF};}
-  if(!Array.isArray(S.phbi))S.phbi=[];
-  if(!Array.isArray(S.customMessages))S.customMessages=[];
-  if(!S.slideshow)S.slideshow=DEF.slideshow;
-  if(!S.display)S.display=DEF.display;
-  if(!S.adjust)S.adjust=DEF.adjust;
-  if(!S.iqomah)S.iqomah=DEF.iqomah;
-  if(typeof S.spreadsheetUrl==='undefined')S.spreadsheetUrl='';
-}
-function svS(){localStorage.setItem('mosque_settings',JSON.stringify(S));}
 
-/* ============================
-   PRAYER CALC
-   ============================ */
-function norm(v,mx){v=v%mx;return v<0?v+mx:v;}
-function sunPos(jd){
-  const D=jd-2451545.0;
-  const g=norm(357.529+0.98560028*D,360);
-  const q=norm(280.459+0.98564736*D,360);
-  const L=norm(q+1.915*Math.sin(g*DG)+0.020*Math.sin(2*g*DG),360);
-  const e=23.439-0.00000036*D;
-  const RA=Math.atan2(Math.cos(e*DG)*Math.sin(L*DG),Math.cos(L*DG))/DG;
-  const dec=Math.asin(Math.sin(e*DG)*Math.sin(L*DG))/DG;
-  return{dec,eqt:(q-norm(RA,360))/15};
-}
-function hAngle(alt,lat,dec){
-  const c=(Math.sin(alt*DG)-Math.sin(lat*DG)*Math.sin(dec*DG))/(Math.cos(lat*DG)*Math.cos(dec*DG));
-  return(c<-1||c>1)?0:Math.acos(c)/DG;
-}
-function calcPT(date){
-  const jd=date.getTime()/86400000+2440587.5;
-  const{dec,eqt}=sunPos(jd);
-  const lat=S.location.latitude,tz=S.location.timezone,lng=S.location.longitude;
-  const dh=12+tz-lng/15-eqt;
-  const af=S.calc.asrMethod==='hanafi'?2:1;
-  const asa=Math.atan2(1,af+Math.tan(Math.abs(lat-dec)*DG))/DG;
-  const t={
-    subuh:dh-hAngle(-S.calc.fajrAngle,lat,dec)/15,
-    terbit:dh-hAngle(-0.8333,lat,dec)/15,
-    dhuha:dh+hAngle(4.5,lat,dec)/15,
-    dzuhur:dh,
-    asr:dh+hAngle(asa,lat,dec)/15,
-    maghrib:dh+hAngle(-0.8333,lat,dec)/15,
-    isya:dh+hAngle(-S.calc.ishaAngle,lat,dec)/15
-  };
-  const r={};
-  for(const k in t){
-    let v=t[k]+S.adjust[k]/60;let h=Math.floor(v);let m=Math.round((v-h)*60);
-    if(m>=60){h++;m-=60;}if(m<0){h--;m+=60;}
-    h=((h%24)+24)%24;
-    r[k]=String(h).padStart(2,'0')+':'+String(m).padStart(2,'0');
-  }
-  return r;
-}
-
-/* ============================
-   HIJRI
-   ============================ */
-function toHijri(y,m,d){
-  const jd=Math.floor(Date.UTC(y,m-1,d)/86400000)+2440587.5;
-  const l=Math.floor(jd-1948439.5)+10632;
-  const n=Math.floor((l-1)/10631);
-  const l2=l-10631*n+354;
-  const j=Math.floor((10985-l2)/5316)*Math.floor((50*l2)/17719)+Math.floor(l2/5670)*Math.floor((43*l2)/15238);
-  const l3=l2-Math.floor((30-j)/15)*Math.floor((17719*j)/50)-Math.floor(j/16)*Math.floor((15238*j)/43)+29;
-  const hm=Math.floor((24*l3)/709);
-  const hd=l3-Math.floor((709*hm)/24);
-  return{year:30*n+j-30,month:hm,day:hd};
-}
-
-/* ============================
-   UTILS
-   ============================ */
-function t2m(t){const[h,m]=t.split(':').map(Number);return h*60+m;}
-function fmtCd(sec){
-  if(sec<=0)return'00:00';
-  const h=Math.floor(sec/3600),m=Math.floor((sec%3600)/60),s=sec%60;
-  return h>0?String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0'):String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
-}
-
-/* ============================
-   STATE
-   ============================ */
-let pTimes={},mode='normal',trig=new Set(),dateStr='',sIdx=0,sTmr=null,lIdx=0,lTmr=null,iqEnd=0,mEnd=0,azKey='';
-
-/* ============================
-   RENDER PRAYER LIST
-   ============================ */
-function renderPL(){
-  const now=new Date(),nm=now.getHours()*60+now.getMinutes();
-  let nxt=null;
-  for(const k of AZ){const p=t2m(pTimes[k]);if(p>nm){nxt=k;break;}}
-  if(!nxt)nxt=AZ[0];
-  let h='';
-  for(const k of PO){
-    const isN=k===nxt,isA=AZ.includes(k),pt=t2m(pTimes[k]),isP=pt<nm;
-    h+=`<div class="pc ${isN?'next':''} ${isP&&!isN?'past':''}">
-      <div class="pc-icon"><i class="fa-solid ${ICO[k]||'fa-clock'}"></i></div>
-      <div class="pc-name">${NM[k]}</div>
-      ${isA?`<div class="pc-iqomah">+${S.iqomah[k]}m</div>`:''}
-      <div class="pc-time">${pTimes[k]}</div>
-      <div class="pc-dot"></div>
-    </div>`;
-  }
-  document.getElementById('prayerList').innerHTML=h;
-}
-
-/* ============================
-   CLOCK & DATE
-   ============================ */
-function updClk(){
-  const n=new Date();
-  const ts=String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0')+':'+String(n.getSeconds()).padStart(2,'0');
-  document.getElementById('clock').textContent=ts;
-  document.getElementById('gregDate').textContent=HDAY[n.getDay()]+', '+n.getDate()+' '+HMON[n.getMonth()]+' '+n.getFullYear();
-  const hj=toHijri(n.getFullYear(),n.getMonth()+1,n.getDate());
-  document.getElementById('hijriDate').textContent=hj.day+' '+HHIJ[hj.month-1]+' '+hj.year+' H';
-  document.getElementById('dateLabel').textContent=HDAY[n.getDay()]+', '+n.getDate()+'/'+(n.getMonth()+1)+'/'+n.getFullYear();
-  document.getElementById('mosqueName').textContent=S.mosque.name;
-  document.getElementById('mosqueAddr').textContent=S.mosque.address;
-  document.getElementById('blackClock').textContent=ts;
-  document.getElementById('jumatClock').textContent=ts;
-}
-
-/* ============================
-   COUNTDOWN FOOTER
-   ============================ */
-function updCd(){
-  const n=new Date(),ns=n.getHours()*3600+n.getMinutes()*60+n.getSeconds();
-  let np=null,nm=Infinity;
-  for(const k of AZ){const p=t2m(pTimes[k])*60;if(p>ns&&p<nm){nm=p;np=k;}}
-  if(!np){np=AZ[0];nm=t2m(pTimes[np])*60+86400;}
-  document.getElementById('cdPrayer').textContent=NM[np];
-  document.getElementById('cdTime').textContent=fmtCd(Math.max(0,Math.floor(nm-ns)));
-}
-
-/* ============================
-   SLIDESHOW
-   ============================ */
-function initSlide(){
-  const c=document.getElementById('slideBox');c.innerHTML='';
-  const imgs=S.slideshow.images;
-  if(!imgs||!imgs.length){c.innerHTML='<div style="position:absolute;inset:0;background:linear-gradient(135deg,#060c1a,#0a1428,#081020)"></div>';return;}
-  imgs.forEach((s,i)=>{const img=document.createElement('img');img.className=i===0?'on':'';img.src=s;img.alt='';img.onerror=function(){this.style.display='none';};c.appendChild(img);});
-  sIdx=0;clearInterval(sTmr);sTmr=setInterval(()=>{const all=document.querySelectorAll('#slideBox img');if(all.length<2)return;all[sIdx].classList.remove('on');sIdx=(sIdx+1)%all.length;all[sIdx].classList.add('on');},S.slideshow.interval*1000);
-}
-
-/* ============================
-   LOW THIRD
-   ============================ */
-function getLT(){
-  const items=[],n=new Date();
-  if(n.getDay()===5)items.push({b:'Petugas Jumat',t:'Imam: '+S.jumat.imam,v:'Khatib: '+S.jumat.khatib+'  |  Muadzin: '+S.jumat.muadzin+'  |  Bilal: '+S.jumat.bilal});
-  items.push({b:'Kas Masjid',t:'Kas Masjid',v:S.finance.kasMasjid});
-  items.push({b:'Pembangunan',t:'Kas Pembangunan',v:S.finance.kasPembangunan});
-  items.push({b:'Infak Jumat',t:'Infak Jumat Terakhir',v:S.finance.infakJumat});
-  const ph=nextPHBI();
-  if(ph){const d=Math.ceil((ph.d-n)/864e5);items.push({b:'PHBI',t:ph.n,v:d>0?d+' hari lagi':'Hari ini'});}
-  return items;
-}
-function showLT(){
-  const items=getLT();if(!items.length)return;
-  const el=document.getElementById('lowThird'),it=items[lIdx%items.length];
-  document.getElementById('ltBadge').textContent=it.b;
-  document.getElementById('ltTitle').textContent=it.t;
-  document.getElementById('ltValue').textContent=it.v;
-  el.classList.add('show');
-  clearTimeout(lTmr);
-  lTmr=setTimeout(()=>{el.classList.remove('show');setTimeout(()=>{lIdx++;showLT();},700);},5500);
-}
-
-/* ============================
-   PHBI
-   ============================ */
-function nextPHBI(){
-  const n=new Date();let near=null,nd=Infinity;
-  for(const p of S.phbi){const d=new Date(p.date+'T00:00:00');const df=d-n;if(df>=0&&df<nd){nd=df;near={n:p.name,d};}}
-  return near;
-}
-function updPHBI(){
-  const ph=nextPHBI(),c=document.getElementById('phbiCard');
-  if(!ph){c.style.display='none';return;}
-  c.style.display='block';
-  document.getElementById('phbiName').textContent=ph.n;
-  const d=Math.ceil((ph.d-new Date())/864e5);
-  document.getElementById('phbiCountdown').innerHTML=d>0?'<b>'+d+'</b> hari lagi':d===0?'<b>Hari ini</b>':'<b>Baru saja</b>';
-}
-
-/* ============================
-   RUNNING TEXT
-   ============================ */
-function updRT(){
-  const el=document.getElementById('marqueeText');
-  if(!S.runningText){el.parentElement.style.display='none';return;}
-  el.parentElement.style.display='flex';
-  el.textContent=S.runningText;
-  el.style.setProperty('--dur',Math.max(25,S.runningText.length*.15)+'s');
-}
-
-/* ============================
-   OVERLAYS
-   ============================ */
-function hideOv(){document.querySelectorAll('.ov').forEach(o=>o.classList.remove('on'));}
-function showOv(id){hideOv();document.getElementById(id).classList.add('on');}
-function showNorm(){hideOv();document.getElementById('app').style.display='flex';}
-function hideNorm(){document.getElementById('app').style.display='none';}
-
-function trigAzan(k){
-  azKey=k;hideNorm();showOv('ovAzan');
-  document.getElementById('azanPrayerName').textContent=NM[k];
-  document.getElementById('azanTime').textContent=pTimes[k];
-  mode='azan';mEnd=Date.now()+S.azanDuration*1000;
-}
-function trigIqo(k){
-  hideNorm();showOv('ovIqo');
-  document.getElementById('iqomahPrayer').textContent=NM[k]+' — '+S.mosque.name;
-  iqEnd=Date.now()+(S.iqomah[k]||3)*6e4;mode='iqomah';
-}
-function trigBlack(){hideNorm();showOv('ovBlack');mode='black';mEnd=Date.now()+S.display.blackScreenMinutes*6e4;}
-function trigJum(){
-  hideNorm();
-  document.getElementById('jumatInfo').innerHTML=
-    `<div class="jm-card"><div class="jm-card-lbl">Imam</div><div class="jm-card-val">${S.jumat.imam}</div></div>
-     <div class="jm-card"><div class="jm-card-lbl">Khatib</div><div class="jm-card-val">${S.jumat.khatib}</div></div>
-     <div class="jm-card"><div class="jm-card-lbl">Muadzin</div><div class="jm-card-val">${S.jumat.muadzin}</div></div>
-     <div class="jm-card"><div class="jm-card-lbl">Bilal</div><div class="jm-card-val">${S.jumat.bilal}</div></div>`;
-  showOv('ovJum');mode='jumat';
-}
-function chkCust(){
-  if(!S.customMessages||!Array.isArray(S.customMessages))return false;
-  const n=new Date();
-  for(const m of S.customMessages){
-    if(!m.active)continue;
-    if(m.schedule&&m.scheduleStart&&m.scheduleEnd){
-      try{if(n>=new Date(m.scheduleStart)&&n<=new Date(m.scheduleEnd)){hideNorm();document.getElementById('customTitle').textContent=m.title||'';document.getElementById('customBody').textContent=m.body||'';showOv('ovCust');mode='cust';return true;}}catch(e){}
+/* Safe load dengan deep merge & fallback */
+function load() {
+  try {
+    const raw = localStorage.getItem('mosque_settings');
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      S = deepMerge(structuredClone(DEF), parsed);
+    } else {
+      S = structuredClone(DEF);
     }
-    if(m.manual){hideNorm();document.getElementById('customTitle').textContent=m.title||'';document.getElementById('customBody').textContent=m.body||'';showOv('ovCust');mode='cust';return true;}
+  } catch(e) {
+    console.warn('Load error, using defaults:', e);
+    S = structuredClone(DEF);
   }
+  /* Pastikan array selalu valid */
+  if (!Array.isArray(S.phbi)) S.phbi = [];
+  if (!Array.isArray(S.customMessages)) S.customMessages = [];
+  if (!S.slideshow || !Array.isArray(S.slideshow.images)) S.slideshow = structuredClone(DEF.slideshow);
+  if (!S.display) S.display = structuredClone(DEF.display);
+  if (!S.adjust) S.adjust = structuredClone(DEF.adjust);
+  if (!S.iqomah) S.iqomah = structuredClone(DEF.iqomah);
+  if (!S.calc) S.calc = structuredClone(DEF.calc);
+  if (!S.location) S.location = structuredClone(DEF.location);
+  if (!S.mosque) S.mosque = structuredClone(DEF.mosque);
+  if (!S.jumat) S.jumat = structuredClone(DEF.jumat);
+  if (!S.finance) S.finance = structuredClone(DEF.finance);
+  if (typeof S.spreadsheetUrl !== 'string') S.spreadsheetUrl = '';
+}
+
+/* Deep merge helper */
+function deepMerge(target, source) {
+  for (const key in source) {
+    if (!source.hasOwnProperty(key)) continue;
+    if (source[key] && typeof source[key] === 'object' && !Array.isArray(source[key]) && target[key] && typeof target[key] === 'object' && !Array.isArray(target[key])) {
+      deepMerge(target[key], source[key]);
+    } else {
+      target[key] = source[key];
+    }
+  }
+  return target;
+}
+
+function save() {
+  try { localStorage.setItem('mosque_settings', JSON.stringify(S)); }
+  catch(e) { console.warn('Save error:', e); }
+}
+
+/* =========================================
+   PRAYER CALCULATION
+   ========================================= */
+function sunPos(jd) {
+  const D = jd - 2451545.0;
+  const g = ((D * .98560028) % 360 + 357.529 + 360) % 360;
+  const q = ((D * .98564736) % 360 + 280.459 + 360) % 360;
+  const L = ((q + 1.915 * Math.sin(g*DG) + .02 * Math.sin(2*g*DG)) % 360 + 360) % 360;
+  const e = 23.439 - .00000036 * D;
+  const RA = Math.atan2(Math.cos(e*DG) * Math.sin(L*DG), Math.cos(L*DG)) / DG;
+  const dec = Math.asin(Math.sin(e*DG) * Math.sin(L*DG)) / DG;
+  return { dec, eqt: (q - (((RA%360)+360)%360)) / 15 };
+}
+
+function hAngle(alt, lat, dec) {
+  const c = (Math.sin(alt*DG) - Math.sin(lat*DG) * Math.sin(dec*DG)) / (Math.cos(lat*DG) * Math.cos(dec*DG));
+  return (c < -1 || c > 1) ? 0 : Math.acos(c) / DG;
+}
+
+function calcTimes(date) {
+  try {
+    const jd = date.getTime() / 864e5 + 2440587.5;
+    const { dec, eqt } = sunPos(jd);
+    const lat = S.location.latitude, tz = S.location.timezone, lng = S.location.longitude;
+    const dh = 12 + tz - lng/15 - eqt;
+    const af = S.calc.asrMethod === 'hanafi' ? 2 : 1;
+    const asa = Math.atan2(1, af + Math.tan(Math.abs(lat - dec) * DG)) / DG;
+    const fajr = S.calc.fajrAngle || 20;
+    const isha = S.calc.ishaAngle || 18;
+    const t = {
+      subuh: dh - hAngle(-fajr, lat, dec)/15,
+      dzuhur: dh,
+      asr: dh + hAngle(asa, lat, dec)/15,
+      maghrib: dh + hAngle(-.8333, lat, dec)/15,
+      isya: dh + hAngle(-isha, lat, dec)/15
+    };
+    const adj = S.adjust || {};
+    const r = {};
+    for (const k in t) {
+      let v = t[k] + (parseInt(adj[k]) || 0) / 60;
+      let h = Math.floor(v), m = Math.round((v - h) * 60);
+      if (m >= 60) { h++; m -= 60; }
+      if (m < 0) { h--; m += 60; }
+      h = ((h % 24) + 24) % 24;
+      r[k] = String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0');
+    }
+    return r;
+  } catch(e) {
+    console.warn('Calc error:', e);
+    return { subuh:'05:00', dzuhur:'12:00', asr:'15:15', maghrib:'18:00', isya:'19:15' };
+  }
+}
+
+/* =========================================
+   HIJRI
+   ========================================= */
+function toHijri(y, m, d) {
+  try {
+    const jd = Math.floor(Date.UTC(y, m-1, d) / 864e5) + 2440587.5;
+    const l = Math.floor(jd - 1948439.5) + 10632;
+    const n = Math.floor((l-1) / 10631);
+    const l2 = l - 10631*n + 354;
+    const j = Math.floor((10985-l2)/5316)*Math.floor((50*l2)/17719)+Math.floor(l2/5670)*Math.floor((43*l2)/15238);
+    const l3 = l2-Math.floor((30-j)/15)*Math.floor((17719*j)/50)-Math.floor(j/16)*Math.floor((15238*j)/43)+29;
+    const hm = Math.floor((24*l3)/709);
+    const hd = l3 - Math.floor((709*hm)/24);
+    return { year: 30*n+j-30, month: hm, day: hd };
+  } catch(e) { return { year: 1446, month: 1, day: 1 }; }
+}
+
+/* =========================================
+   UTILS
+   ========================================= */
+function toMin(t) { try { const p = String(t).split(':'); return parseInt(p[0])*60 + parseInt(p[1]); } catch(e) { return 0; } }
+function fmtCd(s) {
+  if (!s || s <= 0) return '00:00';
+  const h = Math.floor(s/3600), m = Math.floor((s%3600)/60), sc = s%60;
+  return h > 0
+    ? String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(sc).padStart(2,'0')
+    : String(m).padStart(2,'0')+':'+String(sc).padStart(2,'0');
+}
+function safeText(obj, key, fallback) {
+  try { const v = obj[key]; return (v !== undefined && v !== null) ? String(v) : fallback; }
+  catch(e) { return fallback; }
+}
+
+/* =========================================
+   STATE
+   ========================================= */
+let PT = {}, mode = 'norm', triggered = new Set(), dateStr = '';
+let sIdx = 0, sTmr = null, lIdx = 0, lTmr = null;
+let iqEnd = 0, mEnd = 0, azKey = '';
+
+/* =========================================
+   RENDER: PRAYER LIST
+   ========================================= */
+function renderPrayers() {
+  try {
+    const now = new Date(), nowM = now.getHours()*60 + now.getMinutes();
+    let nxt = null;
+    for (const k of ORD) { if (toMin(PT[k]) > nowM) { nxt = k; break; } }
+    if (!nxt) nxt = ORD[0];
+    let h = '';
+    for (const k of ORD) {
+      const isN = k === nxt, isP = toMin(PT[k]) < nowM;
+      const iq = S.iqomah[k] !== undefined ? S.iqomah[k] : 3;
+      h += '<div class="pc ' + (isN ? 'nx' : '') + (isP && !isN ? ' past' : '') + '">' +
+        '<div class="pc-ico"><i class="fa-solid ' + ICO[k] + '"></i></div>' +
+        '<div class="pc-body"><div class="pc-nm">' + LBL[k] + '</div>' +
+        '<div class="pc-iq">Iqomah +' + iq + ' menit</div></div>' +
+        '<div class="pc-tm mono">' + (PT[k] || '--:--') + '</div></div>';
+    }
+    document.getElementById('pLst').innerHTML = h;
+  } catch(e) { console.warn('renderPrayers error:', e); }
+}
+
+/* =========================================
+   RENDER: CLOCK
+   ========================================= */
+function renderClock() {
+  try {
+    const n = new Date();
+    const ts = String(n.getHours()).padStart(2,'0') + ':' + String(n.getMinutes()).padStart(2,'0') + ':' + String(n.getSeconds()).padStart(2,'0');
+    document.getElementById('hClk').textContent = ts;
+    document.getElementById('hGre').textContent = DAYS[n.getDay()] + ', ' + n.getDate() + ' ' + MON[n.getMonth()] + ' ' + n.getFullYear();
+    const hj = toHijri(n.getFullYear(), n.getMonth()+1, n.getDate());
+    document.getElementById('hHij').textContent = hj.day + ' ' + HIJRI_M[hj.month-1] + ' ' + hj.year + ' H';
+    document.getElementById('hName').textContent = safeText(S.mosque, 'name', 'Masjid');
+    document.getElementById('hAddr').textContent = safeText(S.mosque, 'address', '');
+    document.getElementById('bkCk').textContent = ts;
+    document.getElementById('juCk').textContent = ts;
+  } catch(e) { console.warn('renderClock error:', e); }
+}
+
+/* =========================================
+   RENDER: COUNTDOWN
+   ========================================= */
+function renderCd() {
+  try {
+    const n = new Date(), ns = n.getHours()*3600 + n.getMinutes()*60 + n.getSeconds();
+    let np = null, nm = Infinity;
+    for (const k of ORD) { const pt = toMin(PT[k])*60; if (pt > ns && pt < nm) { nm = pt; np = k; } }
+    if (!np) { np = ORD[0]; nm = toMin(PT[np])*60 + 86400; }
+    document.getElementById('cdNm').textContent = LBL[np];
+    document.getElementById('cdTm').textContent = fmtCd(Math.max(0, Math.floor(nm - ns)));
+  } catch(e) { console.warn('renderCd error:', e); }
+}
+
+/* =========================================
+   RENDER: SLIDESHOW
+   ========================================= */
+function initSlides() {
+  try {
+    const box = document.getElementById('slBox');
+    box.innerHTML = '';
+    const imgs = (S.slideshow && S.slideshow.images) ? S.slideshow.images : [];
+    if (!imgs.length) {
+      box.innerHTML = '<div style="position:absolute;inset:0;background:linear-gradient(135deg,#060c1a,#0a1428,#080e1c)"></div>';
+      return;
+    }
+    imgs.forEach(function(src, i) {
+      const img = document.createElement('img');
+      img.className = 'sl' + (i === 0 ? ' on' : '');
+      img.src = src;
+      img.onerror = function() { this.remove(); };
+      box.appendChild(img);
+    });
+    sIdx = 0;
+    clearInterval(sTmr);
+    sTmr = setInterval(nextSlide, Math.max(3000, (S.slideshow.interval || 8) * 1000));
+  } catch(e) { console.warn('initSlides error:', e); }
+}
+
+function nextSlide() {
+  try {
+    const imgs = document.querySelectorAll('.sl');
+    if (imgs.length < 2) return;
+    imgs[sIdx].classList.remove('on');
+    sIdx = (sIdx + 1) % imgs.length;
+    if (imgs[sIdx]) imgs[sIdx].classList.add('on');
+  } catch(e) {}
+}
+
+/* =========================================
+   RENDER: LOW THIRD
+   ========================================= */
+function getLtItems() {
+  try {
+    const items = [], n = new Date();
+    if (n.getDay() === 5 && S.jumat) {
+      items.push({
+        badge: "Petugas Jum'at",
+        title: 'Imam: ' + safeText(S.jumat, 'imam', '-'),
+        value: 'Khatib: ' + safeText(S.jumat, 'khatib', '-') + '  •  Muadzin: ' + safeText(S.jumat, 'muadzin', '-') + '  •  Bilal: ' + safeText(S.jumat, 'bilal', '-')
+      });
+    }
+    if (S.finance) {
+      items.push({ badge: 'Kas Masjid', title: 'Kas Masjid', value: safeText(S.finance, 'kasMasjid', '-') });
+      items.push({ badge: 'Pembangunan', title: 'Kas Pembangunan', value: safeText(S.finance, 'kasPembangunan', '-') });
+      items.push({ badge: "Infak Jum'at", title: 'Infak Terakhir', value: safeText(S.finance, 'infakJumat', '-') });
+    }
+    const ph = nextPHBI();
+    if (ph) {
+      const d = Math.ceil((ph.d - new Date()) / 864e5);
+      items.push({ badge: 'PHBI', title: ph.name, value: d > 0 ? d + ' hari lagi' : 'Hari ini' });
+    }
+    return items;
+  } catch(e) { return []; }
+}
+
+function showLt() {
+  try {
+    const items = getLtItems();
+    if (!items.length) return;
+    const el = document.getElementById('ltBox');
+    const it = items[lIdx % items.length];
+    document.getElementById('ltBdg').textContent = it.badge;
+    document.getElementById('ltTtl').textContent = it.title;
+    document.getElementById('ltVal').textContent = it.value;
+    el.classList.add('on');
+    clearTimeout(lTmr);
+    lTmr = setTimeout(function() {
+      el.classList.remove('on');
+      setTimeout(function() { lIdx++; showLt(); }, 900);
+    }, 6500);
+  } catch(e) { console.warn('showLt error:', e); }
+}
+
+/* =========================================
+   RENDER: PHBI
+   ========================================= */
+function nextPHBI() {
+  try {
+    const n = new Date();
+    let best = null, bd = Infinity;
+    if (!Array.isArray(S.phbi)) return null;
+    for (const p of S.phbi) {
+      if (!p.name || !p.date) continue;
+      const d = new Date(p.date + 'T00:00:00');
+      const df = d - n;
+      if (df >= 0 && df < bd) { bd = df; best = { name: p.name, d: d }; }
+    }
+    return best;
+  } catch(e) { return null; }
+}
+
+function renderPhbi() {
+  try {
+    const ph = nextPHBI(), box = document.getElementById('phbiBox');
+    if (!ph) { box.style.display = 'none'; return; }
+    box.style.display = 'block';
+    document.getElementById('phbiNm').textContent = ph.name;
+    const d = Math.ceil((ph.d - new Date()) / 864e5);
+    document.getElementById('phbiCd').innerHTML = d > 0 ? '<b>' + d + '</b> hari lagi' : d === 0 ? '<b>Hari ini</b>' : '<b>Baru saja</b>';
+  } catch(e) { console.warn('renderPhbi error:', e); }
+}
+
+/* =========================================
+   RENDER: MARQUEE
+   ========================================= */
+function renderMq() {
+  try {
+    const el = document.getElementById('mqTx');
+    const txt = safeText(S, 'runningText', '');
+    if (!txt) { el.parentElement.style.display = 'none'; return; }
+    el.parentElement.style.display = 'flex';
+    el.textContent = txt;
+    el.style.setProperty('--dur', Math.max(25, txt.length * .15) + 's');
+  } catch(e) {}
+}
+
+/* =========================================
+   OVERLAY HELPERS
+   ========================================= */
+function hideOv() { try { document.querySelectorAll('.ov').forEach(function(o) { o.classList.remove('on'); }); } catch(e) {} }
+function showOv(id) { try { hideOv(); document.getElementById(id).classList.add('on'); } catch(e) {} }
+function showNorm() { try { hideOv(); document.getElementById('app').style.display = 'grid'; document.getElementById('errorScreen').classList.remove('on'); } catch(e) {} }
+function hideNorm() { try { document.getElementById('app').style.display = 'none'; } catch(e) {} }
+
+function trigAzan(k) {
+  try {
+    azKey = k; hideNorm(); showOv('ovAz');
+    document.getElementById('azNm').textContent = LBL[k] || k;
+    document.getElementById('azTm').textContent = PT[k] || '';
+    mode = 'azan'; mEnd = Date.now() + (S.azanDuration || 180) * 1000;
+  } catch(e) { showNorm(); }
+}
+
+function trigIqo(k) {
+  try {
+    hideNorm(); showOv('ovIq');
+    document.getElementById('iqInf').textContent = (LBL[k] || '') + ' — ' + safeText(S.mosque, 'name', '');
+    iqEnd = Date.now() + ((S.iqomah && S.iqomah[k]) || 3) * 6e4;
+    mode = 'iqo';
+  } catch(e) { showNorm(); }
+}
+
+function trigBlack() {
+  try { hideNorm(); showOv('ovBk'); mode = 'black'; mEnd = Date.now() + (S.display.blackScreenMinutes || 15) * 6e4; }
+  catch(e) { showNorm(); }
+}
+
+function trigJum() {
+  try {
+    hideNorm();
+    const j = S.jumat || {};
+    document.getElementById('juGr').innerHTML =
+      '<div class="ju-c"><div class="ju-cl">Imam</div><div class="ju-cv">' + safeText(j,'imam','-') + '</div></div>' +
+      '<div class="ju-c"><div class="ju-cl">Khatib</div><div class="ju-cv">' + safeText(j,'khatib','-') + '</div></div>' +
+      '<div class="ju-c"><div class="ju-cl">Muadzin</div><div class="ju-cv">' + safeText(j,'muadzin','-') + '</div></div>' +
+      '<div class="ju-c"><div class="ju-cl">Bilal</div><div class="ju-cv">' + safeText(j,'bilal','-') + '</div></div>';
+    showOv('ovJu'); mode = 'jum';
+  } catch(e) { showNorm(); }
+}
+
+function chkCust() {
+  try {
+    if (!Array.isArray(S.customMessages)) return false;
+    const n = new Date();
+    for (const m of S.customMessages) {
+      if (!m.active) continue;
+      if (m.schedule && m.scheduleStart && m.scheduleEnd) {
+        try {
+          if (n >= new Date(m.scheduleStart) && n <= new Date(m.scheduleEnd)) {
+            hideNorm();
+            document.getElementById('cuTtl').textContent = m.title || '';
+            document.getElementById('cuBd').textContent = m.body || '';
+            showOv('ovCu'); mode = 'cust'; return true;
+          }
+        } catch(e) {}
+      }
+      if (m.manual) {
+        hideNorm();
+        document.getElementById('cuTtl').textContent = m.title || '';
+        document.getElementById('cuBd').textContent = m.body || '';
+        showOv('ovCu'); mode = 'cust'; return true;
+      }
+    }
+  } catch(e) { console.warn('chkCust error:', e); }
   return false;
 }
 
-/* ============================
-   MODE CHECK
-   ============================ */
-function chkMode(){
-  if(chkCust())return;
-  const n=new Date(),ts=n.toDateString();
-  if(dateStr!==ts){trig.clear();dateStr=ts;}
-  const ns=n.getHours()*3600+n.getMinutes()*60+n.getSeconds();
-  const isJ=n.getDay()===5;
+/* =========================================
+   MODE CHECKER
+   ========================================= */
+function chkMode() {
+  try {
+    if (chkCust()) return;
+    const n = new Date(), ds = n.toDateString();
+    if (dateStr !== ds) { triggered.clear(); dateStr = ds; }
+    const ns = n.getHours()*3600 + n.getMinutes()*60 + n.getSeconds();
+    const isJ = n.getDay() === 5;
 
-  if(mode==='azan'){if(Date.now()>=mEnd){AZ.includes(azKey)?trigIqo(azKey):showNorm();}else return;}
-  if(mode==='iqomah'){document.getElementById('iqomahCount').textContent=fmtCd(Math.max(0,Math.ceil((iqEnd-Date.now())/1000)));if(Date.now()>=iqEnd){S.display.showBlackScreen?trigBlack():showNorm();}else return;}
-  if(mode==='black'){if(Date.now()>=mEnd)showNorm();else return;}
-  if(mode==='jum'){const ds=t2m(pTimes.dzuhur)*60;if(ns>=ds-30&&!trig.has('j_a')){trig.add('j_a');trigAzan('dzuhur');return;}return;}
-  if(mode!=='normal')return;
+    if (mode === 'azan') { if (Date.now() >= mEnd) trigIqo(azKey); else return; }
+    if (mode === 'iqo') {
+      const r = Math.max(0, Math.ceil((iqEnd - Date.now()) / 1000));
+      document.getElementById('iqNm').textContent = fmtCd(r);
+      if (Date.now() >= iqEnd) { (S.display && S.display.showBlackScreen) ? trigBlack() : showNorm(); }
+      else return;
+    }
+    if (mode === 'black') { if (Date.now() >= mEnd) showNorm(); else return; }
+    if (mode === 'jum') {
+      const dSec = toMin(PT.dzuhur) * 60;
+      if (ns >= dSec - 30 && !triggered.has('j_az')) { triggered.add('j_az'); trigAzan('dzuhur'); return; }
+      return;
+    }
+    if (mode !== 'norm') return;
 
-  if(isJ&&!trig.has('j_w')){const ds=t2m(pTimes.dzuhur)*60;if(ns>=ds-S.display.jumatWelcomeMinutes*60){trig.add('j_w');trigJum();return;}}
-  if(S.display.autoAzan){for(const k of AZ){if(trig.has(k))continue;const p=t2m(pTimes[k])*60;if(ns>=p&&ns<p+30){trig.add(k);trigAzan(k);return;}}}
+    if (isJ && !triggered.has('j_wel')) {
+      const welSec = toMin(PT.dzuhur) * 60 - (S.display.jumatWelcomeMinutes || 10) * 60;
+      if (ns >= welSec) { triggered.add('j_wel'); trigJum(); return; }
+    }
+    if (S.display && S.display.autoAzan) {
+      for (const k of ORD) {
+        if (triggered.has(k)) continue;
+        const pt = toMin(PT[k]) * 60;
+        if (ns >= pt && ns < pt + 30) { triggered.add(k); trigAzan(k); return; }
+      }
+    }
+  } catch(e) { console.warn('chkMode error:', e); }
 }
 
-/* ============================
-   TICK
-   ============================ */
-function tick(){updClk();updCd();chkMode();if(mode==='normal'){renderPL();updPHBI();}}
+/* =========================================
+   MAIN TICK
+   ========================================= */
+function tick() {
+  try {
+    renderClock();
+    renderCd();
+    chkMode();
+    if (mode === 'norm') { renderPrayers(); renderPhbi(); }
+  } catch(e) { console.warn('tick error:', e); }
+}
 
-/* ============================
+/* =========================================
    SPREADSHEET SYNC
-   ============================ */
-function fetchSS(){
-  if(!S.spreadsheetUrl||!S.spreadsheetUrl.trim())return;
-  fetch(S.spreadsheetUrl,{mode:'cors'})
-    .then(r=>{if(!r.ok)throw 0;return r.json();})
-    .then(d=>{if(d&&typeof d==='object'){S={...DEF,...d};if(!Array.isArray(S.phbi))S.phbi=[];if(!Array.isArray(S.customMessages))S.customMessages=[];svS(S);pTimes=calcPT(new Date());initSlide();updRT();}})
-    .catch(()=>{});
+   ========================================= */
+function syncFetch() {
+  try {
+    const url = S.spreadsheetUrl;
+    if (!url || !url.trim()) return;
+    fetch(url, { mode: 'cors' })
+      .then(function(r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+      .then(function(d) {
+        if (d && typeof d === 'object') {
+          S = deepMerge(structuredClone(DEF), d);
+          if (!Array.isArray(S.phbi)) S.phbi = [];
+          if (!Array.isArray(S.customMessages)) S.customMessages = [];
+          save();
+          PT = calcTimes(new Date());
+          initSlides();
+          renderMq();
+        }
+      })
+      .catch(function() { /* gagal diam-diam */ });
+  } catch(e) {}
 }
 
-/* ============================
+/* =========================================
    INIT
-   ============================ */
-(function init(){
-  ldS();
-  pTimes=calcPT(new Date());
-  setInterval(()=>{pTimes=calcPT(new Date());},6e4);
-  updClk();renderPL();updCd();updPHBI();initSlide();updRT();
-  setTimeout(showLT,2500);
-  showNorm();
-  setInterval(tick,1000);
-  setInterval(fetchSS,3e4);
-  fetchSS();
-})();
+   ========================================= */
+function init() {
+  try {
+    load();
+    PT = calcTimes(new Date());
+    setInterval(function() { try { PT = calcTimes(new Date()); } catch(e) {} }, 6e4);
+    renderClock();
+    renderPrayers();
+    renderCd();
+    renderPhbi();
+    initSlides();
+    renderMq();
+    setTimeout(showLt, 2800);
+    showNorm();
+    setInterval(tick, 1000);
+    setInterval(syncFetch, 3e4);
+    syncFetch();
+  } catch(e) {
+    console.error('Init fatal error:', e);
+    document.getElementById('errMsg').textContent = 'Gagal memuat sistem: ' + e.message;
+    document.getElementById('errorScreen').classList.add('on');
+    document.getElementById('app').style.display = 'none';
+  }
+}
+
+init();
 </script>
 </body>
 </html>
