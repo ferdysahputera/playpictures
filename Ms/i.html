@@ -48,7 +48,6 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);-web
 .pc{display:grid;grid-template-columns:54px 1fr auto;align-items:center;padding:1.8vh 1.5vw;border-radius:14px;transition:all .5s cubic-bezier(.23,1,.32,1);border:2px solid rgba(30,40,65,.6);background:rgba(6,14,28,.5);gap:.8vw;flex-shrink:0;position:relative;box-shadow:inset 0 1px 3px rgba(0,0,0,.3)}
 .pc::before{content:'';position:absolute;inset:0;border-radius:14px;background:linear-gradient(90deg,var(--blue-f),transparent);opacity:0;transition:opacity .5s}
 .pc:hover{border-color:rgba(26,95,180,.25);background:rgba(8,16,32,.6)}.pc:hover::before{opacity:.5}
-/* ===== ICON - BESAR & TERANG ===== */
 .pc-ico{width:54px;height:54px;display:flex;align-items:center;justify-content:center;border-radius:12px;background:rgba(26,95,180,.1);border:1px solid rgba(26,95,180,.2);color:#6aa8f0;font-size:1.25rem;transition:all .5s}
 .pc-body{display:flex;flex-direction:column;gap:2px;padding-left:.5vw;min-width:0}
 .pc-nm{font-size:clamp(1rem,1.25vw,1.35rem);font-weight:700;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -86,7 +85,8 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);-web
 .cd-box{display:flex;align-items:center;gap:.8vw;flex-shrink:0;border-right:1px solid var(--border);padding-right:2.2vw}
 .cd-lbl{font-size:clamp(.55rem,.64rem,.7rem);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.06em}
 .cd-row{display:flex;align-items:center;gap:.5vw}
-.cd-nm{font-size:clamp(.82rem,.96rem;1.04rem);color:var(--gold);font-weight:700}
+/* FIX #1: titik koma → koma */
+.cd-nm{font-size:clamp(.82rem,.96rem,1.04rem);color:var(--gold);font-weight:700}
 .cd-tm{font-size:clamp(1.3rem,1.8vw,2rem);font-weight:700;color:var(--gold-l);text-shadow:0 2px 10px rgba(212,175,78,.18)}
 .mq{flex:1;overflow:hidden;height:100%;display:flex;align-items:center;padding-left:1vw}
 .mq span{white-space:nowrap;animation:sx var(--dur,45s) linear infinite;font-size:clamp(1.2rem,1.5vw,1.6rem);color:var(--text2);font-weight:600;letter-spacing:.02em}
@@ -149,8 +149,6 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);-web
   <div class="em" id="errMsg">Sistem mengalami error. Silakan refresh halaman.</div>
   <button class="eb" onclick="location.reload()"><i class="fa-solid fa-rotate-right" style="margin-right:6px"></i> Refresh</button>
 </div>
-
-<div id="bgL"></div>
 
 <div id="app">
   <header class="hdr">
@@ -252,7 +250,6 @@ var DG=Math.PI/180;
 var HM=['Muharram','Safar','Rabiul Awal','Rabiul Akhir','Jumadil Awal','Jumadil Akhir','Rajab','Sya\'ban','Ramadhan','Syawal','Dzulqa\'dah','Dzulhijjah'];
 var DY=['Minggu','Senin','Selasa','Rabu','Kamis','Jum\'at','Sabtu'];
 var MN=['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
-/* ===== ICON MAP - DIPERBESAR & DIPERJELAS ===== */
 var ICO={subuh:'fa-cloud-moon',dzuhur:'fa-sun',asr:'fa-cloud-sun',maghrib:'fa-cloud-moon',isya:'fa-moon'};
 var LB={subuh:'Subuh',dzuhur:'Dzuhur',asr:'Ashar',maghrib:'Maghrib',isya:'Isya'};
 var OD=['subuh','dzuhur','asr','maghrib','isya'];
@@ -283,7 +280,6 @@ function gT(o,k,f){try{var v=o[k];return(v!==undefined&&v!==null)?String(v):f}ca
 function ld(){try{var r=localStorage.getItem('mosque_settings');S=r?dM(sC(DEF),JSON.parse(r)):sC(DEF)}catch(e){S=sC(DEF)}if(!Array.isArray(S.phbi))S.phbi=[];if(!Array.isArray(S.customMessages))S.customMessages=[];if(!S.slideshow||!Array.isArray(S.slideshow.images))S.slideshow=sC(DEF.slideshow);['display','adjust','iqomah','calc','location','mosque','jumat','finance'].forEach(function(k){if(!S[k])S[k]=sC(DEF[k])});if(typeof S.spreadsheetUrl!=='string')S.spreadsheetUrl=''}
 function sv(){try{localStorage.setItem('mosque_settings',JSON.stringify(S))}catch(e){}}
 
-/* ===== PRAYER CALC ===== */
 function sP(jd){var D=jd-2451545.0,g=((D*.98560028)%360+357.529+360)%360,q=((D*.98564736)%360+280.459+360)%360,L=((q+1.915*Math.sin(g*DG)+.02*Math.sin(2*g*DG))%360+360)%600,e=23.439-.00000036*D,RA=Math.atan2(Math.cos(e*DG)*Math.sin(L*DG),Math.cos(L*DG))/DG,dc=Math.asin(Math.sin(e*DG)*Math.sin(L*DG))/DG;return{dec:dc,eqt:(q-(((RA%360)+360)%360))/15}}
 function hA(a,la,dc){var c=(Math.sin(a*DG)-Math.sin(la*DG)*Math.sin(dc*DG))/(Math.cos(la*DG)*Math.cos(dc*DG));return(c<-1||c>1)?0:Math.acos(c)/DG}
 function cT(d){try{var jd=d.getTime()/864e5+2440587.5,p=sP(jd),la=S.location.latitude,tz=S.location.timezone,ln=S.location.longitude,dh=12+tz-ln/15-p.eqt,af=S.calc.asrMethod==='hanafi'?2:1,aa=Math.atan2(1,af+Math.tan(Math.abs(la-p.dec)*DG))/DG,fa=S.calc.fajrAngle||20,ia=S.calc.ishaAngle||18,ad=S.adjust||{},t={subuh:dh-hA(-fa,la,p.dec)/15,dzuhur:dh,asr:dh+hA(aa,la,p.dec)/15,maghrib:dh+hA(-.8333,la,p.dec)/15,isya:dh+hA(-ia,la,p.dec)/15},r={};for(var k in t){var v=t[k]+(parseInt(ad[k])||0)/60,h=Math.floor(v),m=Math.round((v-h)*60);if(m>=60){h++;m-=60}if(m<0){h--;m+=60}h=((h%24)+24)%24;r[k]=String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')}return r}catch(e){return{subuh:'05:00',dzuhur:'12:00',asr:'15:15',maghrib:'18:00',isya:'19:15'}}}
@@ -293,7 +289,6 @@ function fC(s){if(!s||s<=0)return'00:00';var h=Math.floor(s/3600),m=Math.floor((
 
 var PT={},mode='norm',trig=new Set(),dStr='',sI=0,sT=null,lI=0,lT=null,iE=0,mE=0,aK='';
 
-/* ===== RENDER PRAYER LIST ===== */
 function rP(){
   try {
     var n=new Date(),nM=n.getHours()*60+n.getMinutes(),nx=null;
@@ -308,7 +303,6 @@ function rP(){
   } catch(e){}
 }
 
-/* ===== CLOCK & DATES ===== */
 function rC(){
   try{
     var n=new Date(),
@@ -324,7 +318,6 @@ function rC(){
   } catch(e){}
 }
 
-/* ===== COUNTDOWN ===== */
 function rCd(){
   try{
     var n=new Date(),ns=n.getHours()*3600+n.getMinutes()*60+n.getSeconds(),np=null,nm=1/0;
@@ -335,7 +328,6 @@ function rCd(){
   } catch(e){}
 }
 
-/* ===== SLIDESHOW ===== */
 function iS(){
   try{
     var b=document.getElementById('slBox');b.innerHTML='';
@@ -353,12 +345,16 @@ function iS(){
 }
 function nS(){try{var imgs=document.querySelectorAll('.sl');if(imgs.length<2)return;imgs[sI].classList.remove('on');sI=(sI+1)%imgs.length;if(imgs[sI])imgs[sI].classList.add('on')}catch(e){}}
 
-/* ===== LOW THIRD ===== */
 function gLI(){
   try{
     var items=[],n=new Date();
     if(n.getDay()===5&&S.jumat)items.push({badge:"Petugas Jum'at",title:'Imam: '+gT(S.jumat,'imam','-'),value:'Khatib: '+gT(S.jumat,'khatib','-')+'  \u2022  Muadzin: '+gT(S.jumat,'muadzin','-')+'  \u2022  Bilal: '+gT(S.jumat,'bilal','-')});
-    if(S.finance){items.push({badge:'Kas Masjid',title:'Kas Masjid',value:gT(S.finance,'kasMasjid','-'});items.push({badge:'Pembangunan',title:'Kas Pembangunan',value:gT(S.finance,'kasPembangunan','-'});items.push({badge:"Infak Jum'at",title:'Infak Terakhir',value:gT(S.finance,'infakJumat','-')})}
+    if(S.finance){
+      /* FIX #2: kurung tutup yang hilang ditambahkan */
+      items.push({badge:'Kas Masjid',title:'Kas Masjid',value:gT(S.finance,'kasMasjid','-')});
+      items.push({badge:'Pembangunan',title:'Kas Pembangunan',value:gT(S.finance,'kasPembangunan','-')});
+      items.push({badge:"Infak Jum'at",title:'Infak Terakhir',value:gT(S.finance,'infakJumat','-')});
+    }
     var ph=nPH();if(ph){var d=Math.ceil((ph.d-new Date())/864e5);items.push({badge:'PHBI',title:ph.name,value:d>0?d+' hari lagi':'Hari ini'})}
     return items;
   } catch(e){return[];}
@@ -377,7 +373,6 @@ function sL(){
   } catch(e){}
 }
 
-/* ===== PHBI ===== */
 function nPH(){
   try{
     var n=new Date(),best=null,bd=1/0;
@@ -401,7 +396,6 @@ function rPh(){
   } catch(e){}
 }
 
-/* ===== MARQUEE ===== */
 function rMq(){
   try{
     var el=document.getElementById('mqTx'),txt=gT(S,'runningText','');
@@ -412,7 +406,6 @@ function rMq(){
   } catch(e){}
 }
 
-/* ===== OVERLAY HELPERS ===== */
 function hOv(){try{document.querySelectorAll('.ov').forEach(function(o){o.classList.remove('on')})}catch(e){}}
 function sOv(id){try{hOv();document.getElementById(id).classList.add('on')}catch(e){}}
 function sNm(){try{hOv();document.getElementById('app').style.display='flex';document.getElementById('errScr').classList.remove('on')}catch(e){}}
@@ -426,11 +419,12 @@ function tJu(){
   try{
     hNm();
     var j=S.jumat||{};
+    /* FIX #3: </div> kelebihan dihapus, sehingga juGr tidak tertutup prematur */
     document.getElementById('juGr').innerHTML=
       '<div class="ju-c"><div class="ju-cl">Imam</div><div class="ju-cv">'+gT(j,'imam','-')+'</div></div>'+
       '<div class="ju-c"><div class="ju-cl">Khatib</div><div class="ju-cv">'+gT(j,'khatib','-')+'</div></div>'+
       '<div class="ju-c"><div class="ju-cl">Muadzin</div><div class="ju-cv">'+gT(j,'muadzin','-')+'</div></div>'+
-      '<div class="ju-c"><div class="ju-cl">Bilal</div><div class="ju-cv">'+gT(j,'bilal','-')+'</div></div></div>';
+      '<div class="ju-c"><div class="ju-cl">Bilal</div><div class="ju-cv">'+gT(j,'bilal','-')+'</div></div>';
     sOv('ovJu');mode='jum';
   } catch(e){sNm();}
 }
@@ -449,7 +443,6 @@ function cCu(){
   } catch(e){return false;}
 }
 
-/* ===== MODE CHECKER ===== */
 function chkM(){
   try{
     if(cCu())return;
@@ -479,7 +472,6 @@ function chkM(){
   } catch(e){}
 }
 
-/* ===== MAIN TICK ===== */
 function tick(){try{rC();rCd();chkM();if(mode==='norm'){rP();rPh();}}catch(e){}}
 
 function sF(){try{var url=S.spreadsheetUrl;if(!url||!url.trim())return;fetch(url,{mode:'cors'}).then(function(r){if(!r.ok)throw 0;return r.json()}).then(function(d){if(d&&typeof d==='object'){S=dM(sC(DEF),d);if(!Array.isArray(S.phbi))S.phbi=[];if(!Array.isArray(S.customMessages))S.customMessages=[];sv();PT=cT(new Date());iS();rMq()}}).catch(function(){});}catch(e){}}
