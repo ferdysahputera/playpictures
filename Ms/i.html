@@ -7,7 +7,7 @@
     <title>Display Masjid - Rejang Lebong</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link
-        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Playfair+Display:wght@600;700;800;900&family=Outfit:wght@400;500;600;700;800&display=swap">
+        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Playfair+Display:wght@600;700;800;900&family=Outfit:wght@400;500;600;700;800&family=Montserrat:wght@500;600;700;800;900&display=swap">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         :root {
@@ -53,9 +53,10 @@
         }
 
         .nm {
-            font-family: 'Cinzel', serif;
+            font-family: 'Montserrat', sans-serif;
             font-variant-numeric: tabular-nums;
-            letter-spacing: .04em
+            letter-spacing: .02em;
+            font-weight: 700;
         }
 
         #app {
@@ -162,18 +163,21 @@
         }
 
         .hdr-hijri {
-            font-size: clamp(.64rem, .82vw, .9rem);
-            color: var(--blue-l);
-            font-weight: 600;
-            letter-spacing: .1em;
-            margin-top: 3px
+            font-size: clamp(.75rem, .95vw, 1.05rem);
+            color: var(--gold-l);
+            font-weight: 700;
+            letter-spacing: .05em;
+            margin-top: 5px;
+            font-family: 'Outfit', sans-serif;
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
         }
 
         .hdr-greg {
-            font-size: clamp(.56rem, .72vw, .78rem);
-            color: var(--muted);
+            font-size: clamp(.65rem, .85vw, .95rem);
+            color: var(--text2);
             font-weight: 500;
-            margin-top: 1px
+            margin-top: 2px;
+            font-family: 'Outfit', sans-serif;
         }
 
         .ctn {
@@ -401,7 +405,7 @@
             z-index: 5;
             background: rgba(31, 43, 143, 0.6);
             border: 1px solid rgba(110, 124, 240, 0.2);
-            border-radius: 30px;
+            border-radius: 12px;
             padding: 1vh 1.5vw;
             backdrop-filter: blur(16px);
             box-shadow: 0 8px 28px rgba(0, 0, 0, 0.25);
@@ -417,7 +421,7 @@
             background: var(--gold);
             color: #0a0e14;
             padding: 0.4vh 1vw;
-            border-radius: 20px;
+            border-radius: 8px;
             font-weight: 800;
         }
 
@@ -518,6 +522,37 @@
 
         .lt-line {
             display: none;
+        }
+
+        .jm-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2vw;
+            width: 100%;
+            margin-top: 0.5vh;
+        }
+
+        .jm-col {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5vh;
+        }
+
+        .jm-lbl {
+            font-size: clamp(.7rem, .85vw, .95rem);
+            color: var(--gold-l);
+            text-transform: uppercase;
+            letter-spacing: .1em;
+            font-weight: 700;
+        }
+
+        .jm-val {
+            font-size: clamp(.9rem, 1.1vw, 1.25rem);
+            color: var(--text);
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .ftr {
@@ -821,9 +856,22 @@
         }
 
         .bk-ck {
-            font-size: clamp(3.8rem, 7vw, 7.5rem);
-            font-weight: 600;
-            color: rgba(212, 175, 78, 0.8)
+            font-family: 'Montserrat', sans-serif;
+            font-size: clamp(6rem, 12vw, 10rem);
+            font-weight: 200;
+            color: var(--gold-l);
+            line-height: 1;
+            letter-spacing: 0.02em;
+            text-shadow: 0 0 40px rgba(212, 175, 78, 0.2)
+        }
+
+        .bk-date {
+            font-size: clamp(1.2rem, 2vw, 2rem);
+            color: var(--muted);
+            margin-top: 2vh;
+            font-weight: 400;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
         }
 
         #ovCu .ov-bg {
@@ -1421,6 +1469,7 @@
             Refresh</button>
     </div>
 
+    <audio id="murAudio" preload="none"></audio>
     <div id="app">
         <header class="hdr">
             <div class="hdr-left">
@@ -1509,6 +1558,32 @@
         </div>
     </div>
 
+    <div id="ovCdAz" class="ov">
+        <div class="ov-bg"></div>
+        <div class="ip"></div>
+        <div class="of"></div>
+        <div class="ov-c fi">
+            <div
+                style="font-size:clamp(1rem,2vw,1.5rem);color:var(--gold-d);text-transform:uppercase;letter-spacing:0.3em;margin-bottom:2vh;">
+                Menuju Waktu Sholat</div>
+            <div class="az-sub nm" id="cdAzNm" style="font-size:clamp(1.5rem,3vw,2.5rem);margin-bottom:4vh;"></div>
+            <div class="iq-num lx nm" id="cdAzTm">00:00</div>
+        </div>
+    </div>
+
+    <div id="ovReady" class="ov">
+        <div class="ov-bg"></div>
+        <div class="ip"></div>
+        <div class="of"></div>
+        <div class="ov-c fi">
+            <div class="az-txt lx nm"
+                style="font-size:clamp(3rem,6vw,5rem);color:var(--gold-l);text-shadow:0 0 30px rgba(212,175,78,0.3)">
+                Waktu Sholat Tiba</div>
+            <div class="iq-hint" style="font-size:clamp(1.5rem,3vw,2.5rem);margin-top:4vh;color:var(--gold)">Luruskan
+                dan rapikan shaf</div>
+        </div>
+    </div>
+
     <div id="ovJu" class="ov">
         <div class="ov-bg"></div>
         <div class="ip"></div>
@@ -1523,7 +1598,11 @@
 
     <div id="ovBk" class="ov">
         <div class="ov-bg"></div>
-        <div class="bk-ck lx nm" id="bkCk"></div>
+        <div class="ov-c fi"
+            style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%">
+            <div class="bk-ck nm" id="bkCk"></div>
+            <div class="bk-date" id="bkDate"></div>
+        </div>
     </div>
 
     <div id="ovCu" class="ov">
@@ -1602,23 +1681,46 @@
                 var n = new Date(),
                     ts = String(n.getHours()).padStart(2, '0') + ':' + String(n.getMinutes()).padStart(2, '0') + ':' + String(n.getSeconds()).padStart(2, '0');
                 document.getElementById('hClk').textContent = ts;
-                document.getElementById('hGre').textContent = DY[n.getDay()] + ', ' + n.getDate() + ' ' + MN[n.getMonth()] + ' ' + n.getFullYear();
+                var gDate = DY[n.getDay()] + ', ' + n.getDate() + ' ' + MN[n.getMonth()] + ' ' + n.getFullYear();
+                document.getElementById('hGre').textContent = gDate;
                 var hj = tH(n.getFullYear(), n.getMonth() + 1, n.getDate());
-                document.getElementById('hHij').textContent = hj.day + ' ' + HM[hj.month - 1] + ' ' + hj.year + ' H';
+                var hDate = hj.day + ' ' + HM[hj.month - 1] + ' ' + hj.year + ' H';
+                document.getElementById('hHij').textContent = hDate;
                 document.getElementById('hName').textContent = gT(S.mosque, 'name', 'Masjid');
                 document.getElementById('hAddr').textContent = gT(S.mosque, 'address', '');
-                document.getElementById('bkCk').textContent = ts;
+                document.getElementById('bkCk').textContent = String(n.getHours()).padStart(2, '0') + ':' + String(n.getMinutes()).padStart(2, '0');
+                var elDate = document.getElementById('bkDate');
+                if (elDate) elDate.textContent = gDate + ' \u2014 ' + hDate;
                 document.getElementById('juCk').textContent = ts;
             } catch (e) { }
         }
 
+        var murOn = false, curMur = null;
         function rCd() {
             try {
                 var n = new Date(), ns = n.getHours() * 3600 + n.getMinutes() * 60 + n.getSeconds(), np = null, nm = 1 / 0;
                 for (var i = 0; i < OD.length; i++) { var pt = tM(PT[OD[i]]) * 60; if (pt > ns && pt < nm) { nm = pt; np = OD[i] } }
                 if (!np) { np = OD[0]; nm = tM(PT[np]) * 60 + 86400 }
                 document.getElementById('cdNm').textContent = LB[np];
-                document.getElementById('cdTm').textContent = fC(Math.max(0, Math.floor(nm - ns)));
+                var rem = Math.max(0, Math.floor(nm - ns));
+                document.getElementById('cdTm').textContent = fC(rem);
+
+                /* AUTO MUROTTAL LOGIC */
+                if (S.murottal && S.murottal[np]) {
+                    var mUrl = S.murottal[np];
+                    if (mUrl && rem > 180 && rem <= 900) {
+                        if (!murOn || curMur !== np) {
+                            var aud = document.getElementById('murAudio');
+                            aud.src = mUrl;
+                            var p = aud.play();
+                            if (p !== undefined) { p.catch(function (e) { console.log('Murottal autoplay blocked'); }); }
+                            murOn = true; curMur = np;
+                        }
+                    } else {
+                        if (murOn) { document.getElementById('murAudio').pause(); murOn = false; curMur = null; }
+                    }
+                } else if (murOn) { document.getElementById('murAudio').pause(); murOn = false; curMur = null; }
+
             } catch (e) { }
         }
 
@@ -1636,14 +1738,46 @@
         }
         function nS() { try { var imgs = document.querySelectorAll('.sl'); if (imgs.length < 2) return; for (var i = 0; i < imgs.length; i++) imgs[i].classList.remove('prev'); imgs[sI].classList.remove('on'); imgs[sI].classList.add('prev'); sI = (sI + 1) % imgs.length; if (imgs[sI]) imgs[sI].classList.add('on') } catch (e) { } }
 
+        function pGrd(txt) {
+            if (!txt) return '';
+            var lines = txt.split('\n').map(function (s) { return s.trim(); }).filter(function (s) { return s.length > 0; });
+            if (lines.length === 0) return '';
+            var html = '<div class="jm-grid">';
+            for (var i = 0; i < lines.length; i += 2) {
+                var lbl = lines[i];
+                var val = lines[i + 1] || '-';
+                html += '<div class="jm-col"><div class="jm-lbl">' + lbl + '</div><div class="jm-val">' + val + '</div></div>';
+            }
+            html += '</div>';
+            return html;
+        }
+
         function gLI() {
             try {
                 var items = [], n = new Date();
-                if (S.jumat) items.push({ badge: "Petugas Jum'at", title: '', value: 'Imam: ' + gT(S.jumat, 'imam', '-') + '  \u2022  Khatib: ' + gT(S.jumat, 'khatib', '-') + '  \u2022  Muadzin: ' + gT(S.jumat, 'muadzin', '-') + '  \u2022  Bilal: ' + gT(S.jumat, 'bilal', '-') });
+                if (S.jumat) {
+                    var gridHTML = '<div class="jm-grid">' +
+                        '<div class="jm-col"><div class="jm-lbl">Imam</div><div class="jm-val">' + gT(S.jumat, 'imam', '-') + '</div></div>' +
+                        '<div class="jm-col"><div class="jm-lbl">Khatib</div><div class="jm-val">' + gT(S.jumat, 'khatib', '-') + '</div></div>' +
+                        '<div class="jm-col"><div class="jm-lbl">Muadzin</div><div class="jm-val">' + gT(S.jumat, 'muadzin', '-') + '</div></div>' +
+                        '<div class="jm-col"><div class="jm-lbl">Bilal</div><div class="jm-val">' + gT(S.jumat, 'bilal', '-') + '</div></div>' +
+                        '</div>';
+                    items.push({ badge: "Petugas Jum'at", title: '', value: gridHTML, isHtml: true });
+                }
                 if (S.finance) {
-                    items.push({ badge: 'Kas Masjid', title: '', value: gT(S.finance, 'kasMasjid', '-') });
-                    items.push({ badge: 'Pembangunan', title: '', value: gT(S.finance, 'kasPembangunan', '-') });
-                    items.push({ badge: "Infak Jum'at", title: '', value: gT(S.finance, 'infakJumat', '-') });
+                    var lastUpd = gT(S.finance, 'lastUpdate', '-');
+                    if (lastUpd && lastUpd !== '-') {
+                        var dp = lastUpd.split('-');
+                        if (dp.length === 3) lastUpd = dp[2] + '/' + dp[1] + '/' + dp[0];
+                    }
+                    var finHTML = '<div class="jm-grid">' +
+                        '<div class="jm-col"><div class="jm-lbl">Saldo Awal</div><div class="jm-val">' + gT(S.finance, 'saldoAwal', '-') + '</div></div>' +
+                        '<div class="jm-col"><div class="jm-lbl">Pemasukan</div><div class="jm-val">' + gT(S.finance, 'pemasukan', '-') + '</div></div>' +
+                        '<div class="jm-col"><div class="jm-lbl">Pengeluaran</div><div class="jm-val">' + gT(S.finance, 'pengeluaran', '-') + '</div></div>' +
+                        '<div class="jm-col"><div class="jm-lbl">Saldo Akhir</div><div class="jm-val">' + gT(S.finance, 'saldoAkhir', '-') + '</div></div>' +
+                        '</div>';
+                    var bdg = "Informasi Keuangan" + (lastUpd !== '-' ? " (Per " + lastUpd + ")" : "");
+                    items.push({ badge: bdg, title: '', value: finHTML, isHtml: true });
                 }
                 var ph = nPH(); if (ph) { var d = Math.ceil((ph.d - new Date()) / 864e5); items.push({ badge: 'PHBI', title: ph.name, value: d > 0 ? d + ' hari lagi' : 'Hari ini' }) }
                 return items;
@@ -1657,7 +1791,11 @@
                 document.getElementById('ltBdg').textContent = it.badge;
                 var ttl = document.getElementById('ltTtl');
                 if (it.title) { ttl.style.display = 'block'; ttl.textContent = it.title; } else { ttl.style.display = 'none'; }
-                document.getElementById('ltVal').textContent = it.value;
+                if (it.isHtml) {
+                    document.getElementById('ltVal').innerHTML = it.value;
+                } else {
+                    document.getElementById('ltVal').textContent = it.value;
+                }
                 el.classList.remove('out'); el.classList.add('on');
                 clearTimeout(lT);
                 lT = setTimeout(function () { el.classList.remove('on'); el.classList.add('out'); setTimeout(function () { el.classList.remove('out'); lI++; sL() }, 1000) }, 6500);
@@ -1694,10 +1832,10 @@
                 el.closest('.mq').style.display = 'flex';
                 var items = txt.split('\n').filter(function (i) { return i.trim().length > 0; });
                 var sep = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-star-and-crescent" style="color:#ffd700;font-size:1.1em;text-shadow:0 0 12px rgba(255,215,0,0.4)"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-                var baseContent = items.map(function(t) { return t.replace(/</g, '&lt;').replace(/>/g, '&gt;'); }).join(sep) + sep;
+                var baseContent = items.map(function (t) { return t.replace(/</g, '&lt;').replace(/>/g, '&gt;'); }).join(sep) + sep;
                 // Repeat enough times so a single span is wider than the screen
                 var repeatCount = Math.max(1, Math.ceil(100 / baseContent.length));
-                var content = ''; for(var i=0; i<repeatCount; i++) content += baseContent;
+                var content = ''; for (var i = 0; i < repeatCount; i++) content += baseContent;
                 document.getElementById('mqTx').innerHTML = content;
                 document.getElementById('mqTx2').innerHTML = content;
                 el.closest('.mq-scroll').style.setProperty('--dur', Math.max(15, content.length * 0.15) + 's');
@@ -1709,8 +1847,10 @@
         function sNm() { try { hOv(); document.getElementById('app').style.display = 'flex'; document.getElementById('errScr').classList.remove('on') } catch (e) { } }
         function hNm() { try { document.getElementById('app').style.display = 'none' } catch (e) { } }
 
+        function tCdAz(k) { try { hNm(); sOv('ovCdAz'); document.getElementById('cdAzNm').textContent = LB[k] || k; mode = 'cdAz'; aK = k; } catch (e) { sNm() } }
         function tAz(k) { try { aK = k; hNm(); sOv('ovAz'); document.getElementById('azNm').textContent = LB[k] || k; document.getElementById('azTm').textContent = PT[k] || ''; document.getElementById('azHint').textContent = (S.display && S.display.azanText) || 'Segera dirikan sholat berjamaah'; mode = 'azan'; mE = Date.now() + (S.azanDuration || 180) * 1000; } catch (e) { sNm() } }
-        function tIq(k) { try { hNm(); sOv('ovIq'); document.getElementById('iqInf').textContent = (LB[k] || '') + ' \u2014 ' + gT(S.mosque, 'name', ''); var ih = document.getElementById('iqHint'); if(ih) ih.textContent = (S.display && S.display.iqomahText) || 'Luruskan dan rapatkan shaf'; iE = Date.now() + ((S.iqomah && S.iqomah[k]) || 3) * 6e4; mode = 'iqo'; } catch (e) { sNm() } }
+        function tIq(k) { try { hNm(); sOv('ovIq'); document.getElementById('iqInf').textContent = (LB[k] || '') + ' \u2014 ' + gT(S.mosque, 'name', ''); var ih = document.getElementById('iqHint'); if (ih) ih.textContent = (S.display && S.display.iqomahText) || 'Luruskan dan rapatkan shaf'; iE = Date.now() + ((S.iqomah && S.iqomah[k]) || 3) * 6e4; mode = 'iqo'; } catch (e) { sNm() } }
+        function tReady() { try { hNm(); sOv('ovReady'); mode = 'ready'; mE = Date.now() + 10000; } catch (e) { sNm() } }
         function tBk() { try { hNm(); sOv('ovBk'); mode = 'black'; mE = Date.now() + (S.display.blackScreenMinutes || 15) * 6e4; } catch (e) { sNm(); } }
 
         function tJu() {
@@ -1743,14 +1883,25 @@
                 if (cCu()) return;
                 var n = new Date(), ds = n.toDateString(); if (dStr !== ds) { trig.clear(); dStr = ds }
                 var ns = n.getHours() * 3600 + n.getMinutes() * 60 + n.getSeconds(), iJ = n.getDay() === 5;
+                if (mode === 'cdAz') {
+                    var pt = tM(PT[aK]) * 60, rem = Math.max(0, pt - ns);
+                    document.getElementById('cdAzTm').textContent = fC(rem);
+                    if (ns >= pt) { tAz(aK); }
+                    return;
+                }
                 if (mode === 'azan') { if (Date.now() >= mE) tIq(aK); return; }
-                if (mode === 'iqo') { var r = Math.max(0, Math.ceil((iE - Date.now()) / 1000)); document.getElementById('iqNm').textContent = fC(r); if (Date.now() >= iE) { (S.display && S.display.showBlackScreen) ? tBk() : sNm(); } return; }
+                if (mode === 'iqo') { var r = Math.max(0, Math.ceil((iE - Date.now()) / 1000)); document.getElementById('iqNm').textContent = fC(r); if (Date.now() >= iE) { tReady(); } return; }
+                if (mode === 'ready') { if (Date.now() >= mE) { (S.display && S.display.showBlackScreen) ? tBk() : sNm(); } return; }
                 if (mode === 'black') { if (Date.now() >= mE) sNm(); return; }
                 if (mode === 'jum') { var dS = tM(PT.dzuhur) * 60; if (ns >= dS - 30 && !trig.has('ja')) { trig.add('ja'); tJu(); return; } return; }
                 if (mode !== 'norm') return;
                 if (iJ && !trig.has('jw')) { var wS = tM(PT.dzuhur) * 60 - (S.display.jumatWelcomeMinutes || 10) * 60; if (ns >= wS) { trig.add('jw'); tJu(); return; } }
                 if (S.display && S.display.autoAzan) {
-                    for (var i = 0; i < OD.length; i++) { var k = OD[i]; if (trig.has(k)) continue; var pt = tM(PT[k]) * 60; if (ns >= pt && ns < pt + 30) { trig.add(k); tAz(k); return; } }
+                    for (var i = 0; i < OD.length; i++) {
+                        var k = OD[i], pt = tM(PT[k]) * 60;
+                        if (!trig.has('cd' + k) && ns >= pt - 60 && ns < pt) { trig.add('cd' + k); tCdAz(k); return; }
+                        if (!trig.has(k) && ns >= pt && ns < pt + 30) { trig.add('cd' + k); trig.add(k); tAz(k); return; }
+                    }
                 }
             } catch (e) { }
         }
