@@ -648,6 +648,8 @@
             <button class="btn btn-o" style="font-size:.75em;padding:6px 12px;white-space:nowrap"
                 onclick="showSec('adjust')">Adjust</button>
             <button class="btn btn-o" style="font-size:.75em;padding:6px 12px;white-space:nowrap"
+                onclick="showSec('murottal')">Murottal</button>
+            <button class="btn btn-o" style="font-size:.75em;padding:6px 12px;white-space:nowrap"
                 onclick="showSec('iqomah')">Iqomah</button>
             <button class="btn btn-o" style="font-size:.75em;padding:6px 12px;white-space:nowrap"
                 onclick="showSec('jumat')">Jumat</button>
@@ -686,6 +688,8 @@
                     style="width:16px;text-align:center"></i> Perhitungan Sholat</div>
             <div class="si" data-s="adjust"><i class="fa-solid fa-sliders" style="width:16px;text-align:center"></i>
                 Adjust Waktu</div>
+            <div class="si" data-s="murottal"><i class="fa-solid fa-volume-high"
+                    style="width:16px;text-align:center"></i> Auto Murottal</div>
             <div class="si" data-s="iqomah"><i class="fa-solid fa-hourglass-half"
                     style="width:16px;text-align:center"></i> Jeda Iqomah</div>
             <div class="si" data-s="jumat"><i class="fa-solid fa-calendar-day" style="width:16px;text-align:center"></i>
@@ -836,6 +840,25 @@
                 </div>
             </div>
 
+            <!-- MUROTTAL -->
+            <div class="sec" id="sec-murottal">
+                <div class="cd">
+                    <h3 class="fl font-bold text-base" style="color:var(--gold-l)"><i
+                            class="fa-solid fa-volume-high mr-2"></i>Auto Murottal</h3>
+                    <p class="hint" style="margin-bottom:14px">Masukkan URL MP3 untuk diputar otomatis 15 mnt sblm
+                        sholat. Kosongkan untuk nonaktif.</p>
+                    <div style="display:grid;gap:14px">
+                        <div><label>Subuh</label><input type="text" id="mr_subuh" placeholder="https://..."></div>
+                        <div><label>Dzuhur</label><input type="text" id="mr_dzuhur" placeholder="https://..."></div>
+                        <div><label>Ashar</label><input type="text" id="mr_asr" placeholder="https://..."></div>
+                        <div><label>Maghrib</label><input type="text" id="mr_maghrib" placeholder="https://..."></div>
+                        <div><label>Isya</label><input type="text" id="mr_isya" placeholder="https://..."></div>
+                    </div>
+                    <div style="margin-top:18px"><button class="btn btn-g" onclick="sv('murottal')"><i
+                                class="fa-solid fa-floppy-disk"></i> Simpan</button></div>
+                </div>
+            </div>
+
             <!-- JUMAT -->
             <div class="sec" id="sec-jumat">
                 <div class="cd">
@@ -858,9 +881,10 @@
                     <h3 class="fl font-bold text-base" style="color:var(--gold-l)"><i
                             class="fa-solid fa-coins mr-2"></i>Keuangan</h3>
                     <div style="display:grid;gap:14px">
-                        <div><label>Kas Masjid</label><input type="text" id="fn_kas"></div>
-                        <div><label>Kas Pembangunan</label><input type="text" id="fn_bangun"></div>
-                        <div><label>Infak Jumat</label><input type="text" id="fn_infak"></div>
+                        <div><label>Saldo Awal</label><input type="text" id="fn_awal"></div>
+                        <div><label>Pemasukan</label><input type="text" id="fn_masuk"></div>
+                        <div><label>Pengeluaran</label><input type="text" id="fn_keluar"></div>
+                        <div><label>Saldo Akhir</label><input type="text" id="fn_akhir"></div>
                         <div><label>Tanggal Update</label><input type="date" id="fn_date"></div>
                     </div>
                     <div style="margin-top:18px"><button class="btn btn-g" onclick="sv('keuangan')"><i
@@ -1148,12 +1172,13 @@
             iqomah: { subuh: 2, dzuhur: 3, asr: 3, maghrib: 2, isya: 3 },
             azanDuration: 180,
             jumat: { imam: 'Ust. Ahmad Fauzi, Lc.', khatib: 'Ust. Muhammad Rizki, M.Pd.', muadzin: 'H. Hasan Basri', bilal: 'Bpk. Syamsul Bahri' },
-            finance: { kasMasjid: 'Rp 15.750.000', kasPembangunan: 'Rp 45.200.000', infakJumat: 'Rp 2.350.000', lastUpdate: '-' },
+            finance: { saldoAwal: 'Rp 10.000.000', pemasukan: 'Rp 5.000.000', pengeluaran: 'Rp 2.000.000', saldoAkhir: 'Rp 13.000.000', lastUpdate: '-' },
             slideshow: { images: ['https://picsum.photos/seed/masjidBlue1/1920/1080', 'https://picsum.photos/seed/masjidBlue2/1920/1080', 'https://picsum.photos/seed/masjidBlue3/1920/1080', 'https://picsum.photos/seed/masjidBlue4/1920/1080'], interval: 8 },
             runningText: 'Selamat datang di Masjid Agung Rejang Lebong.',
             phbi: [{ name: "Isra Mi'raj 1446 H", date: '2025-01-27' }, { name: 'Nuzulul Quran 1446 H', date: '2025-03-01' }, { name: 'Idul Fitri 1446 H', date: '2025-03-30' }, { name: 'Idul Adha 1446 H', date: '2025-06-07' }],
             customMessages: [],
             display: { showBlackScreen: true, blackScreenMinutes: 15, autoAzan: true, jumatWelcomeMinutes: 10, azanText: 'Segera dirikan sholat berjamaah', iqomahText: 'Luruskan dan rapatkan shaf' },
+            murottal: { subuh: '', dzuhur: '', asr: '', maghrib: '', isya: '' },
             password: 'admin123',
             spreadsheetUrl: ''
         };
@@ -1175,7 +1200,7 @@
             if (!Array.isArray(S.phbi)) S.phbi = [];
             if (!Array.isArray(S.customMessages)) S.customMessages = [];
             if (!S.slideshow || !Array.isArray(S.slideshow.images)) S.slideshow = cloneD().slideshow;
-            ['display', 'adjust', 'iqomah', 'calc', 'location', 'mosque', 'jumat', 'finance'].forEach(function (k) { if (!S[k]) S[k] = cloneD()[k]; });
+            ['display', 'adjust', 'iqomah', 'calc', 'location', 'mosque', 'jumat', 'finance', 'murottal'].forEach(function (k) { if (!S[k]) S[k] = cloneD()[k]; });
             if (typeof S.spreadsheetUrl !== 'string') S.spreadsheetUrl = '';
         }
         function sv2() { localStorage.setItem('mosque_settings', JSON.stringify(S)); }
@@ -1223,13 +1248,15 @@
             document.getElementById('f_azanDur').value = S.azanDuration;
             PO.forEach(function (k) { document.getElementById('aj_' + k).value = S.adjust[k]; });
             PR.forEach(function (k) { document.getElementById('iq_' + k).value = S.iqomah[k]; });
+            PR.forEach(function (k) { var e = document.getElementById('mr_' + k); if (e) e.value = S.murottal[k] || ''; });
             document.getElementById('jm_imam').value = S.jumat.imam;
             document.getElementById('jm_khatib').value = S.jumat.khatib;
             document.getElementById('jm_muadzin').value = S.jumat.muadzin;
             document.getElementById('jm_bilal').value = S.jumat.bilal;
-            document.getElementById('fn_kas').value = S.finance.kasMasjid;
-            document.getElementById('fn_bangun').value = S.finance.kasPembangunan;
-            document.getElementById('fn_infak').value = S.finance.infakJumat;
+            document.getElementById('fn_awal').value = S.finance.saldoAwal || '';
+            document.getElementById('fn_masuk').value = S.finance.pemasukan || '';
+            document.getElementById('fn_keluar').value = S.finance.pengeluaran || '';
+            document.getElementById('fn_akhir').value = S.finance.saldoAkhir || '';
             document.getElementById('fn_date').value = S.finance.lastUpdate && S.finance.lastUpdate !== '-' ? S.finance.lastUpdate : '';
             document.getElementById('sl_int').value = S.slideshow.interval;
             document.getElementById('sl_imgs').value = (S.slideshow.images || []).join('\n');
@@ -1258,8 +1285,9 @@
                 case 'perhitungan': S.calc.fajrAngle = parseFloat(document.getElementById('f_fajr').value) || D.calc.fajrAngle; S.calc.ishaAngle = parseFloat(document.getElementById('f_isha').value) || D.calc.ishaAngle; S.calc.asrMethod = document.getElementById('f_asr').value; S.azanDuration = parseInt(document.getElementById('f_azanDur').value) || D.azanDuration; yrCache = null; renderPrev(); break;
                 case 'adjust': PO.forEach(function (k) { S.adjust[k] = parseInt(document.getElementById('aj_' + k).value) || 0; }); yrCache = null; renderPrev(); break;
                 case 'iqomah': PR.forEach(function (k) { S.iqomah[k] = parseInt(document.getElementById('iq_' + k).value) || 3; }); break;
+                case 'murottal': PR.forEach(function (k) { S.murottal[k] = document.getElementById('mr_' + k).value.trim(); }); break;
                 case 'jumat': S.jumat.imam = document.getElementById('jm_imam').value.trim(); S.jumat.khatib = document.getElementById('jm_khatib').value.trim(); S.jumat.muadzin = document.getElementById('jm_muadzin').value.trim(); S.jumat.bilal = document.getElementById('jm_bilal').value.trim(); break;
-                case 'keuangan': S.finance.kasMasjid = document.getElementById('fn_kas').value.trim(); S.finance.kasPembangunan = document.getElementById('fn_bangun').value.trim(); S.finance.infakJumat = document.getElementById('fn_infak').value.trim(); S.finance.lastUpdate = document.getElementById('fn_date').value || '-'; break;
+                case 'keuangan': S.finance.saldoAwal = document.getElementById('fn_awal').value.trim(); S.finance.pemasukan = document.getElementById('fn_masuk').value.trim(); S.finance.pengeluaran = document.getElementById('fn_keluar').value.trim(); S.finance.saldoAkhir = document.getElementById('fn_akhir').value.trim(); S.finance.lastUpdate = document.getElementById('fn_date').value || '-'; break;
                 case 'slide': S.slideshow.interval = parseInt(document.getElementById('sl_int').value) || 8; var imgs = document.getElementById('sl_imgs').value.split('\n').map(function (s) { return s.trim() }).filter(function (s) { return s.length > 0 }); S.slideshow.images = imgs.length ? imgs : D.slideshow.images; renderSlPrev(); break;
                 case 'run': S.runningText = document.getElementById('rt_text').value.trim(); break;
                 case 'phbi': case 'pesan': break;
