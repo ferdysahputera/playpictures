@@ -6,10 +6,9 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <title>Admin - Display Masjid Rejang Lebong</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Outfit:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link id="gf-link" rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Playfair+Display:wght@600;700;800;900&family=Outfit:wght@400;500;600;700;800&family=Montserrat:wght@500;600;700;800;900&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         :root {
             --bg: #050810;
@@ -33,14 +32,24 @@
         }
 
         body {
-            font-family: 'Outfit', sans-serif;
+            font-family: var(--font-main, 'Outfit', sans-serif);
             background: var(--bg);
             color: var(--text);
+            font-size: 15px;
+            overflow-x: hidden;
+            display: flex;
             min-height: 100vh
         }
 
-        .fl {
-            font-family: 'Playfair Display', serif
+        .lx {
+            font-family: var(--font-lx, 'Playfair Display', serif)
+        }
+
+        .nm {
+            font-family: var(--font-nm, 'Montserrat', sans-serif);
+            font-variant-numeric: tabular-nums;
+            letter-spacing: .02em;
+            font-weight: 700;
         }
 
         input,
@@ -664,6 +673,8 @@
             <button class="btn btn-o" style="font-size:.75em;padding:6px 12px;white-space:nowrap"
                 onclick="showSec('pesan')">Pesan</button>
             <button class="btn btn-o" style="font-size:.75em;padding:6px 12px;white-space:nowrap"
+                onclick="showSec('pengumuman')">Pengumuman</button>
+            <button class="btn btn-o" style="font-size:.75em;padding:6px 12px;white-space:nowrap"
                 onclick="showSec('tahunan')">Tahunan</button>
             <button class="btn btn-o" style="font-size:.75em;padding:6px 12px;white-space:nowrap"
                 onclick="showSec('tampilan')">Tampilan</button>
@@ -704,6 +715,8 @@
                     style="width:16px;text-align:center"></i> PHBI</div>
             <div class="si" data-s="pesan"><i class="fa-solid fa-message" style="width:16px;text-align:center"></i>
                 Pesan Kustom</div>
+            <div class="si" data-s="pengumuman"><i class="fa-solid fa-bullhorn" style="width:16px;text-align:center"></i>
+                Pengumuman</div>
             <div class="si" data-s="tahunan"><i class="fa-solid fa-calendar" style="width:16px;text-align:center"></i>
                 Jadwal 1 Tahun</div>
             <div class="si" data-s="tampilan"><i class="fa-solid fa-display" style="width:16px;text-align:center"></i>
@@ -734,6 +747,9 @@
                     <span id="hdrSync"
                         style="display:flex;align-items:center;gap:6px;font-size:.72em;color:var(--muted)"><span
                             class="sync-dot sync-off" id="hdrDot"></span><span id="hdrSyncTxt">Offline</span></span>
+                    <button class="btn btn-o" title="Test Koneksi" onclick="testSync()"><i class="fa-solid fa-plug"></i></button>
+                    <button class="btn btn-o" title="Baca (Sync dari Cloud)" onclick="syncRead()"><i class="fa-solid fa-cloud-arrow-down"></i></button>
+                    <button class="btn btn-o" title="Tulis (Sync ke Cloud)" onclick="syncWrite()"><i class="fa-solid fa-cloud-arrow-up"></i></button>
                     <button class="btn btn-o" onclick="window.open('index.html','_blank')"><i
                             class="fa-solid fa-tv"></i> Display</button>
                     <button class="btn btn-o" onclick="doRefresh()" id="btnRefreshTop"><i
@@ -879,7 +895,7 @@
             <div class="sec" id="sec-keuangan">
                 <div class="cd">
                     <h3 class="fl font-bold text-base" style="color:var(--gold-l)"><i
-                            class="fa-solid fa-coins mr-2"></i>Keuangan</h3>
+                            class="fa-solid fa-coins mr-2"></i>Kas Masjid</h3>
                     <div style="display:grid;gap:14px">
                         <div><label>Saldo Awal</label><input type="text" id="fn_awal"></div>
                         <div><label>Pemasukan</label><input type="text" id="fn_masuk"></div>
@@ -887,9 +903,20 @@
                         <div><label>Saldo Akhir</label><input type="text" id="fn_akhir"></div>
                         <div><label>Tanggal Update</label><input type="date" id="fn_date"></div>
                     </div>
-                    <div style="margin-top:18px"><button class="btn btn-g" onclick="sv('keuangan')"><i
-                                class="fa-solid fa-floppy-disk"></i> Simpan</button></div>
                 </div>
+                <div class="cd">
+                    <h3 class="fl font-bold text-base" style="color:var(--gold-l)"><i
+                            class="fa-solid fa-building mr-2"></i>Kas Pembangunan</h3>
+                    <div style="display:grid;gap:14px">
+                        <div><label>Saldo Awal</label><input type="text" id="pb_awal"></div>
+                        <div><label>Pemasukan</label><input type="text" id="pb_masuk"></div>
+                        <div><label>Pengeluaran</label><input type="text" id="pb_keluar"></div>
+                        <div><label>Saldo Akhir</label><input type="text" id="pb_akhir"></div>
+                        <div><label>Tanggal Update</label><input type="date" id="pb_date"></div>
+                    </div>
+                </div>
+                <div style="margin-bottom:20px"><button class="btn btn-g" onclick="sv('keuangan')"><i
+                            class="fa-solid fa-floppy-disk"></i> Simpan Keuangan</button></div>
             </div>
 
             <!-- SLIDESHOW -->
@@ -966,6 +993,26 @@
                 </div>
             </div>
 
+            <!-- PENGUMUMAN -->
+            <div class="sec" id="sec-pengumuman">
+                <div class="cd">
+                    <h3 class="fl font-bold text-base" style="color:var(--gold-l)"><i
+                            class="fa-solid fa-bullhorn mr-2"></i>Pengumuman</h3>
+                    <div id="pengumumanTbl"></div>
+                    <div style="margin-top:16px;padding:16px;border:1px dashed var(--border);border-radius:10px">
+                        <div style="font-size:.82em;font-weight:600;color:var(--gold);margin-bottom:12px">Tambah Pengumuman
+                        </div>
+                        <div style="display:grid;gap:12px">
+                            <div><label>Judul</label><input type="text" id="png_t"></div>
+                            <div><label>Isi Pengumuman</label><textarea id="png_b" rows="3"></textarea></div>
+                            <button class="btn btn-g" onclick="addPengumuman()"><i class="fa-solid fa-plus"></i> Tambah</button>
+                        </div>
+                    </div>
+                    <div style="margin-top:18px"><button class="btn btn-g" onclick="sv('pengumuman')"><i
+                                class="fa-solid fa-floppy-disk"></i> Simpan</button></div>
+                </div>
+            </div>
+
             <!-- TAHUNAN -->
             <div class="sec" id="sec-tahunan">
                 <div class="cd">
@@ -992,6 +1039,39 @@
                     <h3 class="fl font-bold text-base" style="color:var(--gold-l)"><i
                             class="fa-solid fa-display mr-2"></i>Tampilan</h3>
                     <div style="display:grid;gap:16px">
+                        <div><label>Tema Warna</label><select id="dp_theme">
+                            <option value="default">Default (Biru Gelap Mewah)</option>
+                            <option value="navy_gold">Navy Gold (Biru Dongker & Emas)</option>
+                            <option value="green_gold">Green Gold (Hijau & Emas)</option>
+                            <option value="white_gold">White Gold (Putih Bersih & Emas Mewah)</option>
+                        </select></div>
+                        <div style="margin-top:10px;padding-top:10px;border-top:1px dashed var(--border);">
+                            <h4 style="font-size:0.85em;color:var(--gold);margin-bottom:10px;">Pengaturan Font (Huruf)</h4>
+                            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:14px;">
+                                <div><label>Font Utama</label><select id="dp_fontMain" onchange="previewFont()">
+                                    <option value="Outfit">Outfit</option><option value="Roboto">Roboto</option>
+                                    <option value="Inter">Inter</option><option value="Poppins">Poppins</option>
+                                    <option value="Montserrat">Montserrat</option>
+                                </select></div>
+                                <div><label>Font Judul</label><select id="dp_fontTitle" onchange="previewFont()">
+                                    <option value="Playfair Display">Playfair Display</option>
+                                    <option value="Cinzel">Cinzel</option><option value="Lora">Lora</option>
+                                    <option value="Merriweather">Merriweather</option>
+                                </select></div>
+                                <div><label>Font Angka</label><select id="dp_fontNum" onchange="previewFont()">
+                                    <option value="Montserrat">Montserrat</option>
+                                    <option value="Orbitron">Orbitron</option>
+                                    <option value="Roboto Mono">Roboto Mono</option>
+                                </select></div>
+                            </div>
+                            <div style="padding:15px;border:1px solid var(--border);border-radius:8px;background:var(--bg);text-align:center;">
+                                <div style="font-size:0.7em;color:var(--muted);margin-bottom:5px;">Preview Font</div>
+                                <div id="previewTitle" class="lx" style="font-size:1.8em;color:var(--gold-l);margin-bottom:5px;">Masjid Agung Rejang Lebong</div>
+                                <div id="previewMain" style="font-size:0.9em;color:var(--text);margin-bottom:5px;">Mari rapatkan shaf dan jaga kekhusyukan sholat berjamaah.</div>
+                                <div id="previewNum" class="nm" style="font-size:1.5em;color:var(--gold);">12:45:00</div>
+                            </div>
+                        </div>
+                        <div style="margin-top:10px;padding-top:10px;border-top:1px dashed var(--border);"></div>
                         <div class="chk-row"><input type="checkbox" id="dp_azan"><label>Otomatis layar azan</label>
                         </div>
                         <div class="chk-row"><input type="checkbox" id="dp_black"><label>Layar hitam saat sholat</label>
@@ -1002,8 +1082,16 @@
                                 min="5" max="30"></div>
                         <div><label>Teks Tambahan Layar Adzan</label><input type="text" id="dp_azTxt"
                                 placeholder="Segera dirikan sholat berjamaah"></div>
+                        <div><label>Running Text Adzan (Tekan Enter untuk memisah kalimat)</label><textarea id="dp_azRun" rows="2"></textarea></div>
+                        <div><label>Running Text Adzan Jumat (Tekan Enter untuk memisah kalimat)</label><textarea id="dp_azJuRun" rows="2"></textarea></div>
                         <div><label>Teks Tambahan Layar Iqomah</label><input type="text" id="dp_iqTxt"
                                 placeholder="Luruskan dan rapatkan shaf"></div>
+                        <div><label>Running Text Iqomah (Tekan Enter untuk memisah kalimat)</label><textarea id="dp_iqRun" rows="2"></textarea></div>
+                        <div style="margin-top:10px;padding-top:10px;border-top:1px dashed var(--border);">
+                            <h4 style="font-size:0.85em;color:var(--gold);margin-bottom:10px;">Pengaturan Khutbah Jumat</h4>
+                            <div><label>Teks Pemberitahuan Layar Khutbah</label><textarea id="dp_khutbahTxt" rows="2" placeholder="Harap tenang, Khutbah Jumat sedang berlangsung"></textarea></div>
+                            <div style="margin-top:10px"><label>Durasi Layar Khutbah (menit)</label><input type="number" id="dp_khutbahM" min="5" max="120"></div>
+                        </div>
                     </div>
                     <div style="margin-top:18px"><button class="btn btn-g" onclick="sv('tampilan')"><i
                                 class="fa-solid fa-floppy-disk"></i> Simpan</button></div>
@@ -1173,11 +1261,13 @@
             azanDuration: 180,
             jumat: { imam: 'Ust. Ahmad Fauzi, Lc.', khatib: 'Ust. Muhammad Rizki, M.Pd.', muadzin: 'H. Hasan Basri', bilal: 'Bpk. Syamsul Bahri' },
             finance: { saldoAwal: 'Rp 10.000.000', pemasukan: 'Rp 5.000.000', pengeluaran: 'Rp 2.000.000', saldoAkhir: 'Rp 13.000.000', lastUpdate: '-' },
+            pembangunan: { saldoAwal: 'Rp 0', pemasukan: 'Rp 0', pengeluaran: 'Rp 0', saldoAkhir: 'Rp 0', lastUpdate: '-' },
             slideshow: { images: ['https://picsum.photos/seed/masjidBlue1/1920/1080', 'https://picsum.photos/seed/masjidBlue2/1920/1080', 'https://picsum.photos/seed/masjidBlue3/1920/1080', 'https://picsum.photos/seed/masjidBlue4/1920/1080'], interval: 8 },
             runningText: 'Selamat datang di Masjid Agung Rejang Lebong.',
             phbi: [{ name: "Isra Mi'raj 1446 H", date: '2025-01-27' }, { name: 'Nuzulul Quran 1446 H', date: '2025-03-01' }, { name: 'Idul Fitri 1446 H', date: '2025-03-30' }, { name: 'Idul Adha 1446 H', date: '2025-06-07' }],
             customMessages: [],
-            display: { showBlackScreen: true, blackScreenMinutes: 15, autoAzan: true, jumatWelcomeMinutes: 10, azanText: 'Segera dirikan sholat berjamaah', iqomahText: 'Luruskan dan rapatkan shaf' },
+            announcements: [],
+            display: { theme: 'default', fontMain: 'Outfit', fontTitle: 'Playfair Display', fontNum: 'Montserrat', showBlackScreen: true, blackScreenMinutes: 15, autoAzan: true, jumatWelcomeMinutes: 10, azanText: 'Segera dirikan sholat berjamaah', azanRunText: 'Menuju waktu sholat\nBersiaplah dan tinggalkan aktivitas Anda', azanJumatRunText: 'Menuju Sholat Jumat\nBersegeralah menuju masjid', iqomahText: 'Luruskan dan rapatkan shaf', iqomahRunText: 'Mohon luruskan shaf, matikan HP, dan jaga kekhusyukan sholat', khutbahText: 'Harap tenang, Khutbah Jumat sedang berlangsung.\n\n"Barangsiapa yang berkata kepada temannya ketika imam sedang berkhutbah pada hari Jumat, \'Diamlah!\', maka ia telah berbuat sia-sia."', khutbahMinutes: 30 },
             murottal: { subuh: '', dzuhur: '', asr: '', maghrib: '', isya: '' },
             password: 'admin123',
             spreadsheetUrl: ''
@@ -1199,11 +1289,81 @@
             } catch (e) { S = cloneD(); }
             if (!Array.isArray(S.phbi)) S.phbi = [];
             if (!Array.isArray(S.customMessages)) S.customMessages = [];
+            if (!Array.isArray(S.announcements)) S.announcements = [];
             if (!S.slideshow || !Array.isArray(S.slideshow.images)) S.slideshow = cloneD().slideshow;
-            ['display', 'adjust', 'iqomah', 'calc', 'location', 'mosque', 'jumat', 'finance', 'murottal'].forEach(function (k) { if (!S[k]) S[k] = cloneD()[k]; });
+            ['display', 'adjust', 'iqomah', 'calc', 'location', 'mosque', 'jumat', 'finance', 'pembangunan', 'murottal'].forEach(function (k) { if (!S[k]) S[k] = cloneD()[k]; });
             if (typeof S.spreadsheetUrl !== 'string') S.spreadsheetUrl = '';
         }
         function sv2() { localStorage.setItem('mosque_settings', JSON.stringify(S)); }
+        function applyTheme() {
+            var th = S.display && S.display.theme ? S.display.theme : 'default';
+            var r = document.documentElement;
+            if (th === 'navy_gold') {
+                r.style.setProperty('--bg', '#07152b');
+                r.style.setProperty('--panel', '#0f203b');
+                r.style.setProperty('--border', 'rgba(201,168,76,0.2)');
+                r.style.setProperty('--gold', '#c9a84c');
+                r.style.setProperty('--gold-l', '#e8d48b');
+                r.style.setProperty('--gold-d', '#8b7534');
+                r.style.setProperty('--text', '#f0f4fa');
+                r.style.setProperty('--input', '#051020');
+            } else if (th === 'green_gold') {
+                r.style.setProperty('--bg', '#062013');
+                r.style.setProperty('--panel', '#0a2e1d');
+                r.style.setProperty('--border', 'rgba(212,175,55,0.2)');
+                r.style.setProperty('--gold', '#d4af37');
+                r.style.setProperty('--gold-l', '#f3e5ab');
+                r.style.setProperty('--gold-d', '#aa8c2c');
+                r.style.setProperty('--text', '#eaf2ec');
+                r.style.setProperty('--input', '#04160e');
+            } else if (th === 'white_gold') {
+                r.style.setProperty('--bg', '#f2f5f8');
+                r.style.setProperty('--panel', '#ffffff');
+                r.style.setProperty('--border', 'rgba(184,134,11,0.25)');
+                r.style.setProperty('--gold', '#b8860b');
+                r.style.setProperty('--gold-l', '#daa520');
+                r.style.setProperty('--gold-d', '#8b6508');
+                r.style.setProperty('--text', '#2c3e50');
+                r.style.setProperty('--input', '#fafcff');
+                r.style.setProperty('--muted', '#7f8c8d');
+                r.style.setProperty('--dim', '#bdc3c7');
+            } else {
+                r.style.setProperty('--bg', '#050810');
+                r.style.setProperty('--panel', '#0c1528');
+                r.style.setProperty('--border', 'rgba(180,150,60,0.15)');
+                r.style.setProperty('--gold', '#c9a84c');
+                r.style.setProperty('--gold-l', '#e8d48b');
+                r.style.setProperty('--gold-d', '#8b7534');
+                r.style.setProperty('--text', '#e8e0d0');
+                r.style.setProperty('--input', '#0a1225');
+                r.style.setProperty('--muted', '#7a8599');
+                r.style.setProperty('--dim', '#2a3450');
+            }
+
+            var fm = S.display && S.display.fontMain ? S.display.fontMain : 'Outfit';
+            var fx = S.display && S.display.fontTitle ? S.display.fontTitle : 'Playfair Display';
+            var fn = S.display && S.display.fontNum ? S.display.fontNum : 'Montserrat';
+            
+            r.style.setProperty('--font-main', "'" + fm + "', sans-serif");
+            r.style.setProperty('--font-lx', "'" + fx + "', serif");
+            r.style.setProperty('--font-nm', "'" + fn + "', sans-serif");
+            
+            var fUrl = 'https://fonts.googleapis.com/css2?family=' + fm.replace(/ /g, '+') + ':wght@400;500;600;700&family=' + fx.replace(/ /g, '+') + ':wght@600;700;800&family=' + fn.replace(/ /g, '+') + ':wght@500;600;700;800&display=swap';
+            var lnk = document.getElementById('gf-link');
+            if (lnk && lnk.href !== fUrl) lnk.href = fUrl;
+        }
+        function previewFont() {
+            var fm = document.getElementById('dp_fontMain').value;
+            var fx = document.getElementById('dp_fontTitle').value;
+            var fn = document.getElementById('dp_fontNum').value;
+            var fUrl = 'https://fonts.googleapis.com/css2?family=' + fm.replace(/ /g, '+') + ':wght@400;500;600;700&family=' + fx.replace(/ /g, '+') + ':wght@600;700;800&family=' + fn.replace(/ /g, '+') + ':wght@500;600;700;800&display=swap';
+            var lnk = document.getElementById('gf-link');
+            if (lnk && lnk.href !== fUrl) lnk.href = fUrl;
+            var r = document.documentElement;
+            r.style.setProperty('--font-main', "'" + fm + "', sans-serif");
+            r.style.setProperty('--font-lx', "'" + fx + "', serif");
+            r.style.setProperty('--font-nm', "'" + fn + "', sans-serif");
+        }
         function toast(m, ok) { ok = ok !== false; var t = document.getElementById('toast'); t.className = 'toast ' + (ok ? 'toast-ok' : 'toast-err') + ' show'; document.getElementById('toastMsg').textContent = m; setTimeout(function () { t.classList.remove('show') }, 2600); }
         function doRefresh() { var ic = document.getElementById('refreshIcon'); if (ic) ic.classList.add('spinning'); setTimeout(function () { location.reload(); }, 600); }
 
@@ -1236,6 +1396,7 @@
         /* ===== LOAD ALL ===== */
         function loadAll() {
             ld();
+            applyTheme();
             document.getElementById('f_name').value = S.mosque.name;
             document.getElementById('f_addr').value = S.mosque.address;
             document.getElementById('f_lat').value = S.location.latitude;
@@ -1258,17 +1419,31 @@
             document.getElementById('fn_keluar').value = S.finance.pengeluaran || '';
             document.getElementById('fn_akhir').value = S.finance.saldoAkhir || '';
             document.getElementById('fn_date').value = S.finance.lastUpdate && S.finance.lastUpdate !== '-' ? S.finance.lastUpdate : '';
+            document.getElementById('pb_awal').value = S.pembangunan.saldoAwal || '';
+            document.getElementById('pb_masuk').value = S.pembangunan.pemasukan || '';
+            document.getElementById('pb_keluar').value = S.pembangunan.pengeluaran || '';
+            document.getElementById('pb_akhir').value = S.pembangunan.saldoAkhir || '';
+            document.getElementById('pb_date').value = S.pembangunan.lastUpdate && S.pembangunan.lastUpdate !== '-' ? S.pembangunan.lastUpdate : '';
             document.getElementById('sl_int').value = S.slideshow.interval;
             document.getElementById('sl_imgs').value = (S.slideshow.images || []).join('\n');
             renderSlPrev();
             document.getElementById('rt_text').value = S.runningText;
-            renderPhbi(); renderMsg();
+            renderPhbi(); renderMsg(); renderPengumuman();
+            document.getElementById('dp_theme').value = S.display.theme || 'default';
+            document.getElementById('dp_fontMain').value = S.display.fontMain || 'Outfit';
+            document.getElementById('dp_fontTitle').value = S.display.fontTitle || 'Playfair Display';
+            document.getElementById('dp_fontNum').value = S.display.fontNum || 'Montserrat';
             document.getElementById('dp_azan').checked = S.display.autoAzan;
             document.getElementById('dp_black').checked = S.display.showBlackScreen;
             document.getElementById('dp_blackM').value = S.display.blackScreenMinutes;
             document.getElementById('dp_jumM').value = S.display.jumatWelcomeMinutes;
             document.getElementById('dp_azTxt').value = S.display.azanText || '';
+            document.getElementById('dp_azRun').value = S.display.azanRunText || '';
+            document.getElementById('dp_azJuRun').value = S.display.azanJumatRunText || '';
             document.getElementById('dp_iqTxt').value = S.display.iqomahText || '';
+            document.getElementById('dp_iqRun').value = S.display.iqomahRunText || '';
+            document.getElementById('dp_khutbahTxt').value = S.display.khutbahText || '';
+            document.getElementById('dp_khutbahM').value = S.display.khutbahMinutes || 30;
             document.getElementById('sy_url').value = S.spreadsheetUrl || '';
             document.getElementById('sy_auto').checked = false;
             document.getElementById('sy_interval').value = 60;
@@ -1287,11 +1462,11 @@
                 case 'iqomah': PR.forEach(function (k) { S.iqomah[k] = parseInt(document.getElementById('iq_' + k).value) || 3; }); break;
                 case 'murottal': PR.forEach(function (k) { S.murottal[k] = document.getElementById('mr_' + k).value.trim(); }); break;
                 case 'jumat': S.jumat.imam = document.getElementById('jm_imam').value.trim(); S.jumat.khatib = document.getElementById('jm_khatib').value.trim(); S.jumat.muadzin = document.getElementById('jm_muadzin').value.trim(); S.jumat.bilal = document.getElementById('jm_bilal').value.trim(); break;
-                case 'keuangan': S.finance.saldoAwal = document.getElementById('fn_awal').value.trim(); S.finance.pemasukan = document.getElementById('fn_masuk').value.trim(); S.finance.pengeluaran = document.getElementById('fn_keluar').value.trim(); S.finance.saldoAkhir = document.getElementById('fn_akhir').value.trim(); S.finance.lastUpdate = document.getElementById('fn_date').value || '-'; break;
+                case 'keuangan': S.finance.saldoAwal = document.getElementById('fn_awal').value.trim(); S.finance.pemasukan = document.getElementById('fn_masuk').value.trim(); S.finance.pengeluaran = document.getElementById('fn_keluar').value.trim(); S.finance.saldoAkhir = document.getElementById('fn_akhir').value.trim(); S.finance.lastUpdate = document.getElementById('fn_date').value || '-'; S.pembangunan.saldoAwal = document.getElementById('pb_awal').value.trim(); S.pembangunan.pemasukan = document.getElementById('pb_masuk').value.trim(); S.pembangunan.pengeluaran = document.getElementById('pb_keluar').value.trim(); S.pembangunan.saldoAkhir = document.getElementById('pb_akhir').value.trim(); S.pembangunan.lastUpdate = document.getElementById('pb_date').value || '-'; break;
                 case 'slide': S.slideshow.interval = parseInt(document.getElementById('sl_int').value) || 8; var imgs = document.getElementById('sl_imgs').value.split('\n').map(function (s) { return s.trim() }).filter(function (s) { return s.length > 0 }); S.slideshow.images = imgs.length ? imgs : D.slideshow.images; renderSlPrev(); break;
                 case 'run': S.runningText = document.getElementById('rt_text').value.trim(); break;
-                case 'phbi': case 'pesan': break;
-                case 'tampilan': S.display.autoAzan = document.getElementById('dp_azan').checked; S.display.showBlackScreen = document.getElementById('dp_black').checked; S.display.blackScreenMinutes = parseInt(document.getElementById('dp_blackM').value) || 15; S.display.jumatWelcomeMinutes = parseInt(document.getElementById('dp_jumM').value) || 10; S.display.azanText = document.getElementById('dp_azTxt').value.trim(); S.display.iqomahText = document.getElementById('dp_iqTxt').value.trim(); break;
+                case 'phbi': case 'pesan': case 'pengumuman': break;
+                case 'tampilan': S.display.theme = document.getElementById('dp_theme').value; S.display.fontMain = document.getElementById('dp_fontMain').value; S.display.fontTitle = document.getElementById('dp_fontTitle').value; S.display.fontNum = document.getElementById('dp_fontNum').value; S.display.autoAzan = document.getElementById('dp_azan').checked; S.display.showBlackScreen = document.getElementById('dp_black').checked; S.display.blackScreenMinutes = parseInt(document.getElementById('dp_blackM').value) || 15; S.display.jumatWelcomeMinutes = parseInt(document.getElementById('dp_jumM').value) || 10; S.display.azanText = document.getElementById('dp_azTxt').value.trim(); S.display.azanRunText = document.getElementById('dp_azRun').value.trim(); S.display.azanJumatRunText = document.getElementById('dp_azJuRun').value.trim(); S.display.iqomahText = document.getElementById('dp_iqTxt').value.trim(); S.display.iqomahRunText = document.getElementById('dp_iqRun').value.trim(); S.display.khutbahText = document.getElementById('dp_khutbahTxt').value.trim(); S.display.khutbahMinutes = parseInt(document.getElementById('dp_khutbahM').value) || 30; applyTheme(); break;
                 case 'sync':
                     S.spreadsheetUrl = document.getElementById('sy_url').value.trim();
                     sv2();
@@ -1344,6 +1519,18 @@
         function addMsg() { var t = document.getElementById('msg_t').value.trim(), b = document.getElementById('msg_b').value.trim(); if (!t && !b) { toast('Isi judul atau pesan', false); return; } var s = document.getElementById('msg_s').value, e = document.getElementById('msg_e').value; S.customMessages.push({ title: t, body: b, scheduleStart: s || '', scheduleEnd: e || '', schedule: !!(s && e), manual: document.getElementById('msg_m').checked, active: true }); sv2(); renderMsg(); document.getElementById('msg_t').value = ''; document.getElementById('msg_b').value = ''; document.getElementById('msg_s').value = ''; document.getElementById('msg_e').value = ''; document.getElementById('msg_m').checked = false; toast('Pesan ditambahkan'); }
         function toggleMsg(i) { S.customMessages[i].active = !S.customMessages[i].active; sv2(); renderMsg(); }
         function rmMsg(i) { S.customMessages.splice(i, 1); sv2(); renderMsg(); toast('Pesan dihapus'); }
+
+        /* ===== PENGUMUMAN ===== */
+        function renderPengumuman() {
+            var list = S.announcements || []; if (!list.length) { document.getElementById('pengumumanTbl').innerHTML = '<p style="font-size:.85em;color:var(--dim)">Belum ada</p>'; return; }
+            var h = '<table class="tbl"><thead><tr><th>Judul</th><th>Isi</th><th></th></tr></thead><tbody>';
+            list.forEach(function (m, i) {
+                h += '<tr><td style="font-weight:500;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + (m.title || '-') + '</td><td style="max-width:300px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + (m.body || '-') + '</td><td><button class="btn btn-r" style="padding:4px 10px;font-size:.72em" onclick="rmPengumuman(' + i + ')"><i class="fa-solid fa-trash"></i></button></td></tr>';
+            });
+            document.getElementById('pengumumanTbl').innerHTML = h + '</tbody></table>';
+        }
+        function addPengumuman() { var t = document.getElementById('png_t').value.trim(), b = document.getElementById('png_b').value.trim(); if (!t || !b) { toast('Isi judul dan pengumuman', false); return; } S.announcements.push({ title: t, body: b }); sv2(); renderPengumuman(); document.getElementById('png_t').value = ''; document.getElementById('png_b').value = ''; toast('Pengumuman ditambahkan'); }
+        function rmPengumuman(i) { S.announcements.splice(i, 1); sv2(); renderPengumuman(); toast('Pengumuman dihapus'); }
 
         /* ===== PASSWORD ===== */
         function chgPw() { ld(); var o = document.getElementById('pw_old').value, n = document.getElementById('pw_new').value, c = document.getElementById('pw_cfm').value; if (o !== S.password) { toast('Password lama salah', false); return; } if (n.length < 4) { toast('Minimal 4 karakter', false); return; } if (n !== c) { toast('Konfirmasi tidak cocok', false); return; } S.password = n; sv2(); document.getElementById('pw_old').value = ''; document.getElementById('pw_new').value = ''; document.getElementById('pw_cfm').value = ''; toast('Password diubah'); }
@@ -1421,6 +1608,7 @@
                     S = dm(cloneD(), d);
                     if (!Array.isArray(S.phbi)) S.phbi = [];
                     if (!Array.isArray(S.customMessages)) S.customMessages = [];
+                    if (!Array.isArray(S.announcements)) S.announcements = [];
                     var newHash = JSON.stringify(S);
                     sv2();
                     lastSync = Date.now();
@@ -1504,7 +1692,7 @@
 
         /* ===== EXPORT/IMPORT/RESET ===== */
         function doExport() { ld(); var blob = new Blob([JSON.stringify(S, null, 2)], { type: 'application/json' }); var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'mosque_settings_' + new Date().toISOString().slice(0, 10) + '.json'; a.click(); URL.revokeObjectURL(a.href); toast('Backup diunduh'); }
-        function doImport(e) { var f = e.target.files[0]; if (!f) return; var r = new FileReader(); r.onload = function (ev) { try { var d = JSON.parse(ev.target.result); S = dm(cloneD(), d); if (!Array.isArray(S.phbi)) S.phbi = []; if (!Array.isArray(S.customMessages)) S.customMessages = []; sv2(); loadAll(); yrCache = null; toast('Data diimpor'); } catch (err) { toast('File tidak valid', false); } }; r.readAsText(f); e.target.value = ''; }
+        function doImport(e) { var f = e.target.files[0]; if (!f) return; var r = new FileReader(); r.onload = function (ev) { try { var d = JSON.parse(ev.target.result); S = dm(cloneD(), d); if (!Array.isArray(S.phbi)) S.phbi = []; if (!Array.isArray(S.customMessages)) S.customMessages = []; if (!Array.isArray(S.announcements)) S.announcements = []; sv2(); loadAll(); yrCache = null; toast('Data diimpor'); } catch (err) { toast('File tidak valid', false); } }; r.readAsText(f); e.target.value = ''; }
         function doReset() { if (!window.confirm('PERHATIAN: Semua pengaturan dikembalikan ke default?')) return; stopAutoSync(); localStorage.removeItem('mosque_settings'); S = cloneD(); sv2(); loadAll(); yrCache = null; updSyncUI('off', 'Direset', ''); toast('Pengaturan direset'); }
 
         /* ===== INIT ===== */
