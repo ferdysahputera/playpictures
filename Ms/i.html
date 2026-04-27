@@ -86,7 +86,7 @@
             align-items: center;
             justify-content: space-between;
             border-bottom: 1px solid var(--border);
-            background: linear-gradient(180deg, rgba(31, 43, 143, .96), rgba(17, 26, 97, .82));
+            background: var(--hdr-bg, linear-gradient(180deg, rgba(31, 43, 143, .96), rgba(17, 26, 97, .82)));
             backdrop-filter: blur(14px);
             position: relative
         }
@@ -112,8 +112,8 @@
             width: clamp(44px, 3.4vw, 60px);
             height: clamp(44px, 3.4vw, 60px);
             border-radius: 13px;
-            background: linear-gradient(135deg, rgba(0, 123, 255, .16), rgba(0, 123, 255, .05));
-            border: 1px solid rgba(0, 123, 255, .28);
+            background: var(--logo-bg, linear-gradient(135deg, rgba(0, 123, 255, .16), rgba(0, 123, 255, .05)));
+            border: 1px solid var(--logo-border, rgba(0, 123, 255, .28));
             display: flex;
             align-items: center;
             justify-content: center;
@@ -127,8 +127,8 @@
         }
 
         .hdr-logo:hover {
-            background: linear-gradient(135deg, rgba(0, 123, 255, .28), rgba(0, 123, 255, .1));
-            border-color: rgba(59, 130, 246, .45);
+            background: var(--logo-hover-bg, linear-gradient(135deg, rgba(0, 123, 255, .28), rgba(0, 123, 255, .1)));
+            border-color: var(--logo-hover-border, rgba(59, 130, 246, .45));
             box-shadow: 0 4px 24px rgba(26, 95, 180, .2);
             transform: scale(1.05)
         }
@@ -197,7 +197,7 @@
             border-right: 1px solid var(--border);
             position: relative;
             overflow: hidden;
-            background: linear-gradient(180deg, rgba(31, 43, 143, .6), rgba(17, 26, 97, .3))
+            background: var(--pp-bg, linear-gradient(180deg, rgba(31, 43, 143, .6), rgba(17, 26, 97, .3)))
         }
 
         .pp::after {
@@ -216,7 +216,7 @@
             min-width: 0;
             position: relative;
             overflow: hidden;
-            background: #111a61
+            background: var(--md-bg, #111a61)
         }
 
         .pp-lbl {
@@ -253,12 +253,12 @@
             padding: 1.6vh 1.4vw;
             border-radius: 13px;
             transition: all .5s cubic-bezier(.23, 1, .32, 1);
-            border: 1.5px solid rgba(31, 43, 143, .6);
-            background: rgba(31, 43, 143, .65);
+            border: 1.5px solid var(--pc-border, rgba(31, 43, 143, .6));
+            background: var(--pc-bg, rgba(31, 43, 143, .65));
             gap: .7vw;
             flex-shrink: 0;
             position: relative;
-            box-shadow: inset 0 1px 3px rgba(31, 43, 143, .5), 0 2px 8px rgba(0, 123, 255, .05)
+            box-shadow: var(--pc-shadow, inset 0 1px 3px rgba(31, 43, 143, .5), 0 2px 8px rgba(0, 123, 255, .05))
         }
 
         .pc::before {
@@ -272,8 +272,8 @@
         }
 
         .pc:hover {
-            border-color: rgba(0, 123, 255, .22);
-            background: rgba(31, 43, 143, .85)
+            border-color: var(--pc-hover-border, rgba(0, 123, 255, .22));
+            background: var(--pc-hover-bg, rgba(31, 43, 143, .85))
         }
 
         .pc:hover::before {
@@ -287,8 +287,8 @@
             align-items: center;
             justify-content: center;
             border-radius: 11px;
-            background: rgba(0, 123, 255, .09);
-            border: 1px solid rgba(0, 123, 255, .18);
+            background: var(--pc-ico-bg, rgba(0, 123, 255, .09));
+            border: 1px solid var(--pc-ico-border, rgba(0, 123, 255, .18));
             color: var(--blue-l);
             font-size: 1.15rem;
             transition: all .5s
@@ -395,7 +395,7 @@
             inset: 0;
             z-index: 1;
             pointer-events: none;
-            background: linear-gradient(170deg, rgba(31, 43, 143, .6) 0%, transparent 22%, transparent 52%, rgba(43, 56, 168, .5) 100%)
+            background: var(--md-grad-bg, linear-gradient(170deg, rgba(31, 43, 143, .6) 0%, transparent 22%, transparent 52%, rgba(43, 56, 168, .5) 100%))
         }
 
         .phbi {
@@ -403,8 +403,8 @@
             top: 3vh;
             right: 3vw;
             z-index: 5;
-            background: rgba(31, 43, 143, 0.6);
-            border: 1px solid rgba(110, 124, 240, 0.2);
+            background: var(--phbi-bg, rgba(31, 43, 143, 0.6));
+            border: 1px solid var(--phbi-border, rgba(110, 124, 240, 0.2));
             border-radius: 12px;
             padding: 1vh 1.5vw;
             backdrop-filter: blur(16px);
@@ -457,7 +457,7 @@
         }
 
         .lt {
-            background: rgba(31, 43, 143, 0.4);
+            background: var(--lt-bg, rgba(31, 43, 143, 0.4));
             border: 1px solid rgba(255, 255, 255, 0.2);
             border-left: 6px solid var(--gold);
             border-radius: 16px;
@@ -561,7 +561,7 @@
             display: flex;
             align-items: center;
             border-top: 1px solid var(--border);
-            background: linear-gradient(0deg, rgba(31, 43, 143, .96), rgba(17, 26, 97, .82));
+            background: var(--ftr-bg, linear-gradient(0deg, rgba(31, 43, 143, .96), rgba(17, 26, 97, .82)));
             backdrop-filter: blur(14px);
             position: relative
         }
@@ -711,7 +711,7 @@
         }
 
         #ovAz .ov-bg {
-            background: radial-gradient(ellipse at 50% 45%, #111a61, #1f2b8f 65%)
+            background: var(--ov-bg-grad, radial-gradient(ellipse at 50% 45%, #111a61, #1f2b8f 65%))
         }
 
         .az-txt {
@@ -758,7 +758,7 @@
         }
 
         #ovIq .ov-bg {
-            background: radial-gradient(ellipse at 50% 45%, #111a61, #1f2b8f)
+            background: var(--ov-bg-iq, radial-gradient(ellipse at 50% 45%, #111a61, #1f2b8f))
         }
 
         .iq-lbl {
@@ -793,7 +793,7 @@
         }
 
         #ovJu .ov-bg {
-            background: radial-gradient(ellipse at 50% 40%, #111a61, #1f2b8f)
+            background: var(--ov-bg-ju, radial-gradient(ellipse at 50% 40%, #111a61, #1f2b8f))
         }
 
         .ju-ttl {
@@ -875,7 +875,7 @@
         }
 
         #ovCu .ov-bg {
-            background: radial-gradient(ellipse at 50% 45%, #111a61, #1f2b8f)
+            background: var(--ov-bg-cu, radial-gradient(ellipse at 50% 45%, #111a61, #1f2b8f))
         }
 
         .cu-ttl {
@@ -1678,36 +1678,156 @@
                 var r = document.documentElement;
                 if (th === 'navy_gold') {
                     r.style.setProperty('--bg', '#07152b');
+                    r.style.setProperty('--glass', 'rgba(10, 20, 38, .88)');
+                    r.style.setProperty('--blue', '#142036');
+                    r.style.setProperty('--blue-g', 'rgba(201,168,76,.05)');
+                    r.style.setProperty('--blue-f', 'rgba(201,168,76,.02)');
                     r.style.setProperty('--border', 'rgba(201,168,76,0.2)');
                     r.style.setProperty('--gold', '#c9a84c');
                     r.style.setProperty('--gold-l', '#e8d48b');
                     r.style.setProperty('--gold-d', '#8b7534');
                     r.style.setProperty('--text', '#f0f4fa');
+                    r.style.setProperty('--text2', '#ffffff');
+                    r.style.setProperty('--hdr-bg', 'linear-gradient(180deg, rgba(7, 21, 43, .96), rgba(5, 10, 20, .82))');
+                    r.style.setProperty('--pp-bg', 'linear-gradient(180deg, rgba(7, 21, 43, .6), rgba(5, 10, 20, .3))');
+                    r.style.setProperty('--md-bg', '#050a14');
+                    r.style.setProperty('--blue-d', '#142036');
+                    r.style.setProperty('--blue-l', '#c9a84c');
+                    r.style.setProperty('--logo-bg', 'linear-gradient(135deg, rgba(201,168,76,.1), rgba(201,168,76,.02))');
+                    r.style.setProperty('--logo-border', 'rgba(201,168,76,.2)');
+                    r.style.setProperty('--logo-hover-bg', 'linear-gradient(135deg, rgba(201,168,76,.15), rgba(201,168,76,.05))');
+                    r.style.setProperty('--logo-hover-border', 'rgba(201,168,76,.3)');
+                    r.style.setProperty('--pc-border', 'rgba(201,168,76,.15)');
+                    r.style.setProperty('--pc-bg', 'rgba(10, 20, 38, .65)');
+                    r.style.setProperty('--pc-shadow', 'inset 0 1px 3px rgba(0,0,0,.5), 0 2px 8px rgba(0,0,0,.2)');
+                    r.style.setProperty('--pc-hover-border', 'rgba(201,168,76,.3)');
+                    r.style.setProperty('--pc-hover-bg', 'rgba(15, 25, 45, .85)');
+                    r.style.setProperty('--pc-ico-bg', 'rgba(201,168,76,.05)');
+                    r.style.setProperty('--pc-ico-border', 'rgba(201,168,76,.15)');
+                    r.style.setProperty('--md-grad-bg', 'linear-gradient(170deg, rgba(5,10,20,.6) 0%, transparent 22%, transparent 52%, rgba(5,10,20,.8) 100%)');
+                    r.style.setProperty('--phbi-bg', 'rgba(10,20,38,.6)');
+                    r.style.setProperty('--phbi-border', 'rgba(201,168,76,.15)');
+                    r.style.setProperty('--lt-bg', 'rgba(10,20,38,.5)');
+                    r.style.setProperty('--ftr-bg', 'linear-gradient(0deg, rgba(7, 21, 43, .96), rgba(5, 10, 20, .82))');
+                    r.style.setProperty('--ov-bg-grad', 'radial-gradient(ellipse at 50% 45%, #050a14, #07152b 65%)');
+                    r.style.setProperty('--ov-bg-iq', 'radial-gradient(ellipse at 50% 45%, #050a14, #07152b)');
+                    r.style.setProperty('--ov-bg-ju', 'radial-gradient(ellipse at 50% 40%, #050a14, #07152b)');
+                    r.style.setProperty('--ov-bg-cu', 'radial-gradient(ellipse at 50% 45%, #050a14, #07152b)');
                 } else if (th === 'green_gold') {
                     r.style.setProperty('--bg', '#062013');
+                    r.style.setProperty('--glass', 'rgba(8, 28, 16, .88)');
+                    r.style.setProperty('--blue', '#0a2e1d');
+                    r.style.setProperty('--blue-g', 'rgba(212,175,55,.05)');
+                    r.style.setProperty('--blue-f', 'rgba(212,175,55,.02)');
                     r.style.setProperty('--border', 'rgba(212,175,55,0.2)');
                     r.style.setProperty('--gold', '#d4af37');
                     r.style.setProperty('--gold-l', '#f3e5ab');
                     r.style.setProperty('--gold-d', '#aa8c2c');
                     r.style.setProperty('--text', '#eaf2ec');
+                    r.style.setProperty('--text2', '#ffffff');
+                    r.style.setProperty('--hdr-bg', 'linear-gradient(180deg, rgba(6, 32, 19, .96), rgba(3, 15, 9, .82))');
+                    r.style.setProperty('--pp-bg', 'linear-gradient(180deg, rgba(6, 32, 19, .6), rgba(3, 15, 9, .3))');
+                    r.style.setProperty('--md-bg', '#030f09');
+                    r.style.setProperty('--blue-d', '#0a2e1d');
+                    r.style.setProperty('--blue-l', '#d4af37');
+                    r.style.setProperty('--logo-bg', 'linear-gradient(135deg, rgba(212,175,55,.1), rgba(212,175,55,.02))');
+                    r.style.setProperty('--logo-border', 'rgba(212,175,55,.2)');
+                    r.style.setProperty('--logo-hover-bg', 'linear-gradient(135deg, rgba(212,175,55,.15), rgba(212,175,55,.05))');
+                    r.style.setProperty('--logo-hover-border', 'rgba(212,175,55,.3)');
+                    r.style.setProperty('--pc-border', 'rgba(212,175,55,.15)');
+                    r.style.setProperty('--pc-bg', 'rgba(8, 28, 16, .65)');
+                    r.style.setProperty('--pc-shadow', 'inset 0 1px 3px rgba(0,0,0,.5), 0 2px 8px rgba(0,0,0,.2)');
+                    r.style.setProperty('--pc-hover-border', 'rgba(212,175,55,.3)');
+                    r.style.setProperty('--pc-hover-bg', 'rgba(10, 35, 20, .85)');
+                    r.style.setProperty('--pc-ico-bg', 'rgba(212,175,55,.05)');
+                    r.style.setProperty('--pc-ico-border', 'rgba(212,175,55,.15)');
+                    r.style.setProperty('--md-grad-bg', 'linear-gradient(170deg, rgba(3,15,9,.6) 0%, transparent 22%, transparent 52%, rgba(3,15,9,.8) 100%)');
+                    r.style.setProperty('--phbi-bg', 'rgba(8,28,16,.6)');
+                    r.style.setProperty('--phbi-border', 'rgba(212,175,55,.15)');
+                    r.style.setProperty('--lt-bg', 'rgba(8,28,16,.5)');
+                    r.style.setProperty('--ftr-bg', 'linear-gradient(0deg, rgba(6, 32, 19, .96), rgba(3, 15, 9, .82))');
+                    r.style.setProperty('--ov-bg-grad', 'radial-gradient(ellipse at 50% 45%, #030f09, #062013 65%)');
+                    r.style.setProperty('--ov-bg-iq', 'radial-gradient(ellipse at 50% 45%, #030f09, #062013)');
+                    r.style.setProperty('--ov-bg-ju', 'radial-gradient(ellipse at 50% 40%, #030f09, #062013)');
+                    r.style.setProperty('--ov-bg-cu', 'radial-gradient(ellipse at 50% 45%, #030f09, #062013)');
                 } else if (th === 'white_gold') {
                     r.style.setProperty('--bg', '#f2f5f8');
+                    r.style.setProperty('--glass', 'rgba(255, 255, 255, .88)');
+                    r.style.setProperty('--blue', '#bdc3c7');
+                    r.style.setProperty('--blue-g', 'rgba(184,134,11,.05)');
+                    r.style.setProperty('--blue-f', 'rgba(184,134,11,.02)');
                     r.style.setProperty('--border', 'rgba(184,134,11,0.25)');
                     r.style.setProperty('--gold', '#b8860b');
                     r.style.setProperty('--gold-l', '#daa520');
                     r.style.setProperty('--gold-d', '#8b6508');
                     r.style.setProperty('--text', '#2c3e50');
+                    r.style.setProperty('--text2', '#34495e');
                     r.style.setProperty('--muted', '#7f8c8d');
                     r.style.setProperty('--dim', '#bdc3c7');
+                    r.style.setProperty('--hdr-bg', 'linear-gradient(180deg, rgba(242, 245, 248, .96), rgba(220, 225, 230, .9))');
+                    r.style.setProperty('--pp-bg', 'linear-gradient(180deg, rgba(242, 245, 248, .6), rgba(220, 225, 230, .4))');
+                    r.style.setProperty('--md-bg', '#ffffff');
+                    r.style.setProperty('--blue-d', '#bdc3c7');
+                    r.style.setProperty('--blue-l', '#b8860b');
+                    r.style.setProperty('--logo-bg', 'linear-gradient(135deg, rgba(184,134,11,.08), rgba(184,134,11,.02))');
+                    r.style.setProperty('--logo-border', 'rgba(184,134,11,.2)');
+                    r.style.setProperty('--logo-hover-bg', 'linear-gradient(135deg, rgba(184,134,11,.15), rgba(184,134,11,.05))');
+                    r.style.setProperty('--logo-hover-border', 'rgba(184,134,11,.3)');
+                    r.style.setProperty('--pc-border', 'rgba(184,134,11,.2)');
+                    r.style.setProperty('--pc-bg', 'rgba(255, 255, 255, .65)');
+                    r.style.setProperty('--pc-shadow', 'inset 0 1px 3px rgba(255,255,255,.5), 0 2px 8px rgba(0,0,0,.05)');
+                    r.style.setProperty('--pc-hover-border', 'rgba(184,134,11,.4)');
+                    r.style.setProperty('--pc-hover-bg', 'rgba(255, 255, 255, .85)');
+                    r.style.setProperty('--pc-ico-bg', 'rgba(184,134,11,.08)');
+                    r.style.setProperty('--pc-ico-border', 'rgba(184,134,11,.2)');
+                    r.style.setProperty('--md-grad-bg', 'linear-gradient(170deg, rgba(242,245,248,.6) 0%, transparent 22%, transparent 52%, rgba(220,225,230,.8) 100%)');
+                    r.style.setProperty('--phbi-bg', 'rgba(255,255,255,.8)');
+                    r.style.setProperty('--phbi-border', 'rgba(184,134,11,.25)');
+                    r.style.setProperty('--lt-bg', 'rgba(255,255,255,.85)');
+                    r.style.setProperty('--ftr-bg', 'linear-gradient(0deg, rgba(242, 245, 248, .96), rgba(220, 225, 230, .82))');
+                    r.style.setProperty('--ov-bg-grad', 'radial-gradient(ellipse at 50% 45%, #ffffff, #f2f5f8 65%)');
+                    r.style.setProperty('--ov-bg-iq', 'radial-gradient(ellipse at 50% 45%, #ffffff, #f2f5f8)');
+                    r.style.setProperty('--ov-bg-ju', 'radial-gradient(ellipse at 50% 40%, #ffffff, #f2f5f8)');
+                    r.style.setProperty('--ov-bg-cu', 'radial-gradient(ellipse at 50% 45%, #ffffff, #f2f5f8)');
                 } else {
                     r.style.setProperty('--bg', '#1f2b8f');
+                    r.style.setProperty('--glass', 'rgba(31, 43, 143, .88)');
+                    r.style.setProperty('--blue', '#3b4ac7');
+                    r.style.setProperty('--blue-g', 'rgba(59, 74, 199, .15)');
+                    r.style.setProperty('--blue-f', 'rgba(59, 74, 199, .08)');
                     r.style.setProperty('--border', 'rgba(255, 255, 255, .2)');
                     r.style.setProperty('--gold', '#ffd700');
                     r.style.setProperty('--gold-l', '#ffea70');
                     r.style.setProperty('--gold-d', '#ccac00');
                     r.style.setProperty('--text', '#ffffff');
+                    r.style.setProperty('--text2', '#e0f4ff');
                     r.style.setProperty('--muted', '#aab4f5');
                     r.style.setProperty('--dim', '#111a61');
+                    r.style.setProperty('--hdr-bg', 'linear-gradient(180deg, rgba(31, 43, 143, .96), rgba(17, 26, 97, .82))');
+                    r.style.setProperty('--pp-bg', 'linear-gradient(180deg, rgba(31, 43, 143, .6), rgba(17, 26, 97, .3))');
+                    r.style.setProperty('--md-bg', '#111a61');
+                    r.style.setProperty('--blue-d', '#111a61');
+                    r.style.setProperty('--blue-l', '#6e7cf0');
+                    r.style.setProperty('--logo-bg', 'linear-gradient(135deg, rgba(0, 123, 255, .16), rgba(0, 123, 255, .05))');
+                    r.style.setProperty('--logo-border', 'rgba(0, 123, 255, .28)');
+                    r.style.setProperty('--logo-hover-bg', 'linear-gradient(135deg, rgba(0, 123, 255, .28), rgba(0, 123, 255, .1))');
+                    r.style.setProperty('--logo-hover-border', 'rgba(59, 130, 246, .45)');
+                    r.style.setProperty('--pc-border', 'rgba(31, 43, 143, .6)');
+                    r.style.setProperty('--pc-bg', 'rgba(31, 43, 143, .65)');
+                    r.style.setProperty('--pc-shadow', 'inset 0 1px 3px rgba(31, 43, 143, .5), 0 2px 8px rgba(0, 123, 255, .05)');
+                    r.style.setProperty('--pc-hover-border', 'rgba(0, 123, 255, .22)');
+                    r.style.setProperty('--pc-hover-bg', 'rgba(31, 43, 143, .85)');
+                    r.style.setProperty('--pc-ico-bg', 'rgba(0, 123, 255, .09)');
+                    r.style.setProperty('--pc-ico-border', 'rgba(0, 123, 255, .18)');
+                    r.style.setProperty('--md-grad-bg', 'linear-gradient(170deg, rgba(31, 43, 143, .6) 0%, transparent 22%, transparent 52%, rgba(43, 56, 168, .5) 100%)');
+                    r.style.setProperty('--phbi-bg', 'rgba(31, 43, 143, 0.6)');
+                    r.style.setProperty('--phbi-border', 'rgba(110, 124, 240, 0.2)');
+                    r.style.setProperty('--lt-bg', 'rgba(31, 43, 143, 0.4)');
+                    r.style.setProperty('--ftr-bg', 'linear-gradient(0deg, rgba(31, 43, 143, .96), rgba(17, 26, 97, .82))');
+                    r.style.setProperty('--ov-bg-grad', 'radial-gradient(ellipse at 50% 45%, #111a61, #1f2b8f 65%)');
+                    r.style.setProperty('--ov-bg-iq', 'radial-gradient(ellipse at 50% 45%, #111a61, #1f2b8f)');
+                    r.style.setProperty('--ov-bg-ju', 'radial-gradient(ellipse at 50% 40%, #111a61, #1f2b8f)');
+                    r.style.setProperty('--ov-bg-cu', 'radial-gradient(ellipse at 50% 45%, #111a61, #1f2b8f)');
                 }
 
                 var fm = S.display && S.display.fontMain ? S.display.fontMain : 'Outfit';
@@ -1925,7 +2045,7 @@
                 if (!txt) { el.closest('.mq').style.display = 'none'; return; }
                 el.closest('.mq').style.display = 'flex';
                 var items = txt.split('\n').filter(function (i) { return i.trim().length > 0; });
-                var sep = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-star-and-crescent" style="color:#ffd700;font-size:1.1em;text-shadow:0 0 12px rgba(255,215,0,0.4)"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+                var sep = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-star-and-crescent" style="color:var(--gold);font-size:1.1em;text-shadow:0 0 12px var(--gold-g)"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
                 var baseContent = items.map(function (t) { return t.replace(/</g, '&lt;').replace(/>/g, '&gt;'); }).join(sep) + sep;
                 var repeatCount = Math.max(1, Math.ceil(100 / baseContent.length));
                 var content = ''; for (var i = 0; i < repeatCount; i++) content += baseContent;
