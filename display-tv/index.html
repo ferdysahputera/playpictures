@@ -1,0 +1,2178 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Display Masjid - Rejang Lebong</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link id="gf-link" rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Playfair+Display:wght@600;700;800;900&family=Outfit:wght@400;500;600;700;800&family=Montserrat:wght@500;600;700;800;900&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --bg: #1f2b8f;
+            --glass: rgba(31, 43, 143, .88);
+            --blue: #3b4ac7;
+            --blue-l: #6e7cf0;
+            --blue-d: #111a61;
+            --blue-g: rgba(59, 74, 199, .15);
+            --blue-f: rgba(59, 74, 199, .08);
+            --gold: #ffd700;
+            --gold-l: #ffea70;
+            --gold-d: #ccac00;
+            --gold-g: rgba(255, 215, 0, .15);
+            --text: #ffffff;
+            --text2: #e0f4ff;
+            --muted: #aab4f5;
+            --dim: #111a61;
+            --border: rgba(255, 255, 255, .2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box
+        }
+
+        html,
+        body {
+            height: 100%;
+            overflow: hidden
+        }
+
+        body {
+            font-family: var(--font-main, 'Outfit', sans-serif);
+            background: var(--bg);
+            color: var(--text);
+            -webkit-font-smoothing: antialiased
+        }
+
+        .lx {
+            font-family: var(--font-lx, 'Playfair Display', serif)
+        }
+
+        .nm {
+            font-family: var(--font-nm, 'Montserrat', sans-serif);
+            font-variant-numeric: tabular-nums;
+            letter-spacing: .02em;
+            font-weight: 700;
+        }
+
+        #app {
+            position: relative;
+            z-index: 1;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            min-height: 0
+        }
+
+        #app::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            z-index: -1;
+            opacity: 0.05;
+            pointer-events: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 80 80'%3E%3Cpath fill='none' stroke='%23ffc107' stroke-width='1.5' d='M40 0l5.8 25.4L68.3 11.7 54.6 34.2 80 40l-25.4 5.8L68.3 68.3 45.8 54.6 40 80l-5.8-25.4L11.7 68.3 25.4 45.8 0 40l25.4-5.8L11.7 11.7 34.2 25.4z'/%3E%3Cpath fill='none' stroke='%23ffc107' stroke-width='1' d='M40 18l4 18 18 4-18 4-4 18-4-18-18-4 18-4z'/%3E%3C/svg%3E");
+            background-size: 100px 100px;
+        }
+
+        .hdr {
+            flex-shrink: 0;
+            padding: 1.8vh 3vw;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border);
+            background: var(--hdr-bg, linear-gradient(180deg, rgba(31, 43, 143, .96), rgba(17, 26, 97, .82)));
+            backdrop-filter: blur(14px);
+            position: relative
+        }
+
+        .hdr::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 10%;
+            right: 10%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--blue-d), transparent)
+        }
+
+        .hdr-left {
+            display: flex;
+            align-items: center;
+            gap: 1.4vw
+        }
+
+        /* ===== LOGO — bisa diklik ===== */
+        .hdr-logo {
+            width: clamp(44px, 3.4vw, 60px);
+            height: clamp(44px, 3.4vw, 60px);
+            border-radius: 13px;
+            background: var(--logo-bg, linear-gradient(135deg, rgba(0, 123, 255, .16), rgba(0, 123, 255, .05)));
+            border: 1px solid var(--logo-border, rgba(0, 123, 255, .28));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--blue-l);
+            font-size: clamp(1rem, 1.6vw, 1.5rem);
+            flex-shrink: 0;
+            box-shadow: 0 4px 20px rgba(26, 95, 180, .1);
+            text-decoration: none;
+            cursor: pointer;
+            transition: all .3s ease
+        }
+
+        .hdr-logo:hover {
+            background: var(--logo-hover-bg, linear-gradient(135deg, rgba(0, 123, 255, .28), rgba(0, 123, 255, .1)));
+            border-color: var(--logo-hover-border, rgba(59, 130, 246, .45));
+            box-shadow: 0 4px 24px rgba(26, 95, 180, .2);
+            transform: scale(1.05)
+        }
+
+        .hdr-logo:active {
+            transform: scale(.96)
+        }
+
+        .hdr-name {
+            font-size: clamp(1.15rem, 2vw, 1.8rem);
+            font-weight: 700;
+            color: var(--gold-l);
+            letter-spacing: .02em;
+            line-height: 1.2;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, .05)
+        }
+
+        .hdr-addr {
+            font-size: clamp(.62rem, .8vw, .88rem);
+            color: var(--muted);
+            font-weight: 500;
+            margin-top: 2px
+        }
+
+        .hdr-clock {
+            font-size: clamp(2.4rem, 4.4vw, 3.8rem);
+            font-weight: 700;
+            color: var(--gold);
+            letter-spacing: .06em;
+            line-height: 1;
+            text-shadow: 0 2px 12px rgba(255, 193, 7, .15), 0 0 40px rgba(255, 193, 7, .05)
+        }
+
+        .hdr-hijri {
+            font-size: clamp(.75rem, .95vw, 1.05rem);
+            color: var(--gold-l);
+            font-weight: 700;
+            letter-spacing: .05em;
+            margin-top: 5px;
+            font-family: 'Outfit', sans-serif;
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .hdr-greg {
+            font-size: clamp(.65rem, .85vw, .95rem);
+            color: var(--text2);
+            font-weight: 500;
+            margin-top: 2px;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .ctn {
+            flex: 1;
+            min-height: 0;
+            display: flex;
+            overflow: hidden
+        }
+
+        .pp {
+            flex: 0 0 30%;
+            max-width: 30%;
+            padding: 2.8vh 2vw;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            border-right: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+            background: var(--pp-bg, linear-gradient(180deg, rgba(31, 43, 143, .6), rgba(17, 26, 97, .3)))
+        }
+
+        .pp::after {
+            content: '';
+            position: absolute;
+            top: 8%;
+            bottom: 8%;
+            right: 0;
+            width: 1px;
+            background: linear-gradient(180deg, transparent, var(--blue-d), transparent);
+            pointer-events: none
+        }
+
+        .md {
+            flex: 1;
+            min-width: 0;
+            position: relative;
+            overflow: hidden;
+            background: var(--md-bg, #111a61)
+        }
+
+        .pp-lbl {
+            font-size: clamp(.54rem, .66vw, .72rem);
+            text-transform: uppercase;
+            letter-spacing: .26em;
+            color: var(--blue-l);
+            font-weight: 700;
+            margin-bottom: 2.8vh;
+            padding-left: .2vw;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-shrink: 0
+        }
+
+        .pp-lbl::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, var(--blue-d), transparent)
+        }
+
+        .pp-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.1vh
+        }
+
+        .pc {
+            display: grid;
+            grid-template-columns: 50px 1fr auto;
+            align-items: center;
+            padding: 1.6vh 1.4vw;
+            border-radius: 13px;
+            transition: all .5s cubic-bezier(.23, 1, .32, 1);
+            border: 1.5px solid var(--pc-border, rgba(31, 43, 143, .6));
+            background: var(--pc-bg, rgba(31, 43, 143, .65));
+            gap: .7vw;
+            flex-shrink: 0;
+            position: relative;
+            box-shadow: var(--pc-shadow, inset 0 1px 3px rgba(31, 43, 143, .5), 0 2px 8px rgba(0, 123, 255, .05))
+        }
+
+        .pc::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 13px;
+            background: linear-gradient(90deg, var(--blue-f), transparent);
+            opacity: 0;
+            transition: opacity .5s
+        }
+
+        .pc:hover {
+            border-color: var(--pc-hover-border, rgba(0, 123, 255, .22));
+            background: var(--pc-hover-bg, rgba(31, 43, 143, .85))
+        }
+
+        .pc:hover::before {
+            opacity: .5
+        }
+
+        .pc-ico {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 11px;
+            background: var(--pc-ico-bg, rgba(0, 123, 255, .09));
+            border: 1px solid var(--pc-ico-border, rgba(0, 123, 255, .18));
+            color: var(--blue-l);
+            font-size: 1.15rem;
+            transition: all .5s
+        }
+
+        .pc-body {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            padding-left: .4vw;
+            min-width: 0
+        }
+
+        .pc-nm {
+            font-size: clamp(.92rem, 1.15vw, 1.28rem);
+            font-weight: 700;
+            color: var(--text2);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis
+        }
+
+        .pc-iq {
+            font-size: clamp(.52rem, .62vw, .7rem);
+            color: var(--muted);
+            font-weight: 500
+        }
+
+        .pc-tm {
+            font-size: clamp(1.35rem, 1.75vw, 1.95rem);
+            font-weight: 700;
+            color: var(--text);
+            text-align: right;
+            letter-spacing: .04em
+        }
+
+        .pc.nx {
+            border: 1.5px solid rgba(255, 193, 7, .42);
+            background: linear-gradient(90deg, rgba(255, 193, 7, .12), rgba(255, 193, 7, .03));
+            box-shadow: 0 0 36px rgba(255, 193, 7, .09), inset 0 1px 3px rgba(31, 43, 143, .5), 0 0 0 1px rgba(255, 193, 7, .07)
+        }
+
+        .pc.nx::before {
+            opacity: 1;
+            background: linear-gradient(90deg, var(--gold-g), transparent)
+        }
+
+        .pc.nx .pc-ico {
+            background: rgba(255, 193, 7, .18);
+            border-color: rgba(255, 193, 7, .3);
+            color: var(--gold-l);
+            box-shadow: 0 0 18px rgba(255, 193, 7, .18)
+        }
+
+        .pc.nx .pc-nm {
+            color: var(--gold-l);
+            font-weight: 800
+        }
+
+        .pc.nx .pc-iq {
+            color: var(--gold-d)
+        }
+
+        .pc.nx .pc-tm {
+            color: var(--gold-l);
+            font-weight: 800;
+            font-size: clamp(1.55rem, 2vw, 2.2rem);
+            text-shadow: 0 2px 10px rgba(255, 193, 7, .16)
+        }
+
+        .pc.past {
+            opacity: .22
+        }
+
+        #slBox {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+        }
+
+        .sl {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            opacity: 0;
+            transition: opacity 2.5s ease-in-out;
+            object-fit: cover;
+            width: 100%;
+            height: 100%;
+        }
+
+        .sl.prev {
+            opacity: 1;
+            z-index: 1;
+        }
+
+        .sl.on {
+            opacity: 1;
+            z-index: 2;
+        }
+
+        .md-grad {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            pointer-events: none;
+            background: var(--md-grad-bg, linear-gradient(170deg, rgba(31, 43, 143, .6) 0%, transparent 22%, transparent 52%, rgba(43, 56, 168, .5) 100%))
+        }
+
+        .phbi {
+            position: absolute;
+            top: 3vh;
+            right: 3vw;
+            z-index: 5;
+            background: var(--phbi-bg, rgba(31, 43, 143, 0.6));
+            border: 1px solid var(--phbi-border, rgba(110, 124, 240, 0.2));
+            border-radius: 12px;
+            padding: 1vh 1.5vw;
+            backdrop-filter: blur(16px);
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.25);
+            display: flex;
+            align-items: center;
+            gap: 1vw;
+        }
+
+        .phbi-tag {
+            font-size: clamp(.55rem, .65vw, .75rem);
+            text-transform: uppercase;
+            letter-spacing: .1em;
+            background: var(--gold);
+            color: #0a0e14;
+            padding: 0.4vh 1vw;
+            border-radius: 8px;
+            font-weight: 800;
+        }
+
+        .phbi-tag::after {
+            display: none;
+        }
+
+        .phbi-nm {
+            font-size: clamp(.85rem, 1vw, 1.1rem);
+            font-weight: 700;
+            color: var(--text);
+            white-space: nowrap;
+        }
+
+        .phbi-cd {
+            font-size: clamp(.8rem, .9vw, 1rem);
+            color: var(--gold-l);
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .phbi-cd b {
+            color: var(--gold);
+            font-weight: 800
+        }
+
+        .lt-wrap {
+            position: absolute;
+            bottom: 3vh;
+            left: 4vw;
+            right: 4vw;
+            z-index: 5;
+        }
+
+        .lt {
+            background: var(--lt-bg, rgba(31, 43, 143, 0.4));
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-left: 6px solid var(--gold);
+            border-radius: 16px;
+            padding: 2.5vh 4vw;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1.2vh;
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+            transform: translateY(120%);
+            opacity: 0;
+            transition: transform .8s cubic-bezier(.23, 1, .32, 1), opacity .7s ease;
+            width: 100%;
+        }
+
+        .lt.on {
+            transform: translateY(0);
+            opacity: 1
+        }
+
+        .lt.out {
+            transform: translateY(12px);
+            opacity: 0;
+            transition: transform 1s cubic-bezier(.4, 0, 1, 1), opacity .9s ease .05s
+        }
+
+        .lt-badge {
+            background: linear-gradient(135deg, var(--gold-d), var(--gold));
+            color: #0a0e14;
+            font-weight: 800;
+            font-size: clamp(.64rem, .76vw, .84rem);
+            padding: .8vh 1.4vw;
+            border-radius: 7px;
+            white-space: nowrap;
+            text-transform: uppercase;
+            letter-spacing: .11em;
+            flex-shrink: 0
+        }
+
+        .lt-body {
+            flex: 1;
+            min-width: 0
+        }
+
+        .lt-title {
+            font-size: clamp(1rem, 1.22vw, 1.32rem);
+            font-weight: 700;
+            color: var(--gold-l);
+            margin-bottom: .3vh;
+            letter-spacing: .01em
+        }
+
+        .lt-val {
+            font-size: clamp(.88rem, 1.05vw, 1.15rem);
+            font-weight: 500;
+            color: var(--text2);
+            white-space: normal;
+            line-height: 1.4
+        }
+
+        .lt-line {
+            display: none;
+        }
+
+        .jm-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2vw;
+            width: 100%;
+            margin-top: 0.5vh;
+        }
+
+        .jm-col {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5vh;
+        }
+
+        .jm-lbl {
+            font-size: clamp(.7rem, .85vw, .95rem);
+            color: var(--gold-l);
+            text-transform: uppercase;
+            letter-spacing: .1em;
+            font-weight: 700;
+        }
+
+        .jm-val {
+            font-size: clamp(.9rem, 1.1vw, 1.25rem);
+            color: var(--text);
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .ftr {
+            flex-shrink: 0;
+            padding: 1.4vh 3vw;
+            display: flex;
+            align-items: center;
+            border-top: 1px solid var(--border);
+            background: var(--ftr-bg, linear-gradient(0deg, rgba(31, 43, 143, .96), rgba(17, 26, 97, .82)));
+            backdrop-filter: blur(14px);
+            position: relative
+        }
+
+        .ftr::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 10%;
+            right: 10%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--blue-d), transparent)
+        }
+
+        .cd-box {
+            display: flex;
+            align-items: center;
+            gap: .7vw;
+            flex-shrink: 0;
+            border-right: 1px solid var(--border);
+            padding-right: 2vw
+        }
+
+        .cd-lbl {
+            font-size: clamp(.5rem, .6vw, .66rem);
+            color: var(--muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: .06em
+        }
+
+        .cd-row {
+            display: flex;
+            align-items: center;
+            gap: .45vw
+        }
+
+        .cd-nm {
+            font-size: clamp(.76rem, .9vw, .98rem);
+            color: var(--gold);
+            font-weight: 700
+        }
+
+        .cd-tm {
+            font-size: clamp(1.2rem, 1.7vw, 1.9rem);
+            font-weight: 700;
+            color: var(--gold-l);
+            text-shadow: 0 2px 10px rgba(255, 193, 7, .18)
+        }
+
+        .mq {
+            flex: 1;
+            overflow: hidden;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+
+        .mq-scroll {
+            display: flex;
+            width: fit-content;
+            animation: sx var(--dur, 45s) linear infinite;
+            will-change: transform;
+        }
+
+        .mq-scroll span {
+            display: inline-block;
+            white-space: nowrap;
+            font-size: clamp(1.1rem, 1.4vw, 1.5rem);
+            color: var(--text2);
+            font-weight: 600;
+            letter-spacing: .02em;
+        }
+
+        @keyframes sx {
+            100% {
+                transform: translateX(-50%)
+            }
+        }
+
+        .ov {
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center
+        }
+
+        .ov.on {
+            display: flex
+        }
+
+        .ov-bg {
+            position: absolute;
+            inset: 0
+        }
+
+        .ov-c {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            padding: 3vw;
+            max-width: 80vw
+        }
+
+        .ip {
+            position: absolute;
+            inset: 0;
+            opacity: .035;
+            background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40 0L80 40L40 80L0 40Z' fill='none' stroke='%23d4af4e' stroke-width='.4'/%3E%3Cpath d='M40 12L68 40L40 68L12 40Z' fill='none' stroke='%23d4af4e' stroke-width='.25'/%3E%3Ccircle cx='40' cy='40' r='8' fill='none' stroke='%23d4af4e' stroke-width='.25'/%3E%3C/svg%3E");
+            background-size: 80px 80px
+        }
+
+        .of {
+            position: absolute;
+            inset: 6vh 6vw;
+            border: 1px solid rgba(212, 175, 78, .08);
+            border-radius: 24px;
+            pointer-events: none
+        }
+
+        .of::before,
+        .of::after {
+            content: '';
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            border-color: rgba(212, 175, 78, .2);
+            border-style: solid
+        }
+
+        .of::before {
+            top: -1px;
+            left: -1px;
+            border-width: 1px 0 0 1px;
+            border-radius: 24px 0 0 0
+        }
+
+        .of::after {
+            bottom: -1px;
+            right: -1px;
+            border-width: 0 1px 1px 0;
+            border-radius: 0 0 24px 0
+        }
+
+        #ovAz .ov-bg {
+            background: var(--ov-bg-grad, radial-gradient(ellipse at 50% 45%, #111a61, #1f2b8f 65%))
+        }
+
+        .az-txt {
+            font-size: clamp(3.8rem, 7vw, 6.5rem);
+            font-weight: 800;
+            color: var(--gold);
+            line-height: 1;
+            letter-spacing: .06em;
+            text-shadow: 0 3px 15px rgba(0, 0, 0, .1), 0 0 60px rgba(255, 193, 7, .15), 0 0 120px rgba(255, 193, 7, .05);
+            animation: ap 3s ease-in-out infinite alternate
+        }
+
+        @keyframes ap {
+            0% {
+                text-shadow: 0 3px 15px rgba(0, 0, 0, .1), 0 0 50px rgba(255, 193, 7, .15), 0 0 80px rgba(255, 193, 7, .05)
+            }
+
+            100% {
+                text-shadow: 0 3px 15px rgba(0, 0, 0, .1), 0 0 70px rgba(255, 193, 7, .2), 0 0 150px rgba(255, 193, 7, .1)
+            }
+        }
+
+        .az-sub {
+            font-size: clamp(1.1rem, 1.5vw, 1.65rem);
+            color: var(--gold-l);
+            letter-spacing: .26em;
+            text-transform: uppercase;
+            font-weight: 700;
+            margin-top: 2vh
+        }
+
+        .az-tm {
+            font-size: clamp(.9rem, 1.15vw, 1.25rem);
+            color: var(--muted);
+            margin-top: 1.5vh;
+            font-weight: 600
+        }
+
+        .az-hint {
+            font-size: clamp(.74rem, .88vw, .96rem);
+            color: var(--dim);
+            margin-top: 5vh;
+            font-weight: 500
+        }
+
+        #ovIq .ov-bg {
+            background: var(--ov-bg-iq, radial-gradient(ellipse at 50% 45%, #111a61, #1f2b8f))
+        }
+
+        .iq-lbl {
+            font-size: clamp(1.4rem, 2.4vw, 2.5rem);
+            font-weight: 700;
+            color: var(--gold-l);
+            letter-spacing: .28em;
+            text-transform: uppercase
+        }
+
+        .iq-num {
+            font-size: clamp(5.5rem, 10vw, 10rem);
+            font-weight: 600;
+            color: var(--gold);
+            line-height: 1;
+            margin-top: 3vh;
+            text-shadow: 0 3px 15px rgba(0, 0, 0, .1), 0 0 50px rgba(255, 193, 7, .1)
+        }
+
+        .iq-inf {
+            font-size: clamp(.9rem, 1.15vw, 1.25rem);
+            color: var(--text2);
+            margin-top: 3vh;
+            font-weight: 600
+        }
+
+        .iq-hint {
+            font-size: clamp(.74rem, .88vw, .96rem);
+            color: var(--dim);
+            margin-top: 1.5vh;
+            font-weight: 500
+        }
+
+        #ovJu .ov-bg {
+            background: var(--ov-bg-ju, radial-gradient(ellipse at 50% 40%, #111a61, #1f2b8f))
+        }
+
+        .ju-ttl {
+            font-size: clamp(2.8rem, 5.2vw, 4.8rem);
+            font-weight: 800;
+            color: var(--gold);
+            letter-spacing: .1em;
+            text-shadow: 0 3px 12px rgba(0, 0, 0, .1), 0 0 40px rgba(255, 193, 7, .15)
+        }
+
+        .ju-sub {
+            font-size: clamp(.9rem, 1.2vw, 1.35rem);
+            color: var(--text2);
+            font-weight: 600;
+            margin-top: 1.5vh
+        }
+
+        .ju-g {
+            display: flex;
+            gap: 2.2vw;
+            justify-content: center;
+            margin-top: 4.5vh;
+            flex-wrap: wrap
+        }
+
+        .ju-c {
+            text-align: center;
+            padding: 2.5vh 2.8vw;
+            background: var(--glass);
+            border: 1px solid rgba(212, 175, 78, .14);
+            border-radius: 13px;
+            min-width: 155px;
+            backdrop-filter: blur(12px)
+        }
+
+        .ju-cl {
+            font-size: clamp(.54rem, .66vw, .72rem);
+            text-transform: uppercase;
+            letter-spacing: .18em;
+            color: var(--gold);
+            margin-bottom: .7vh;
+            font-weight: 700
+        }
+
+        .ju-cv {
+            font-size: clamp(.88rem, 1.04vw, 1.14rem);
+            font-weight: 600;
+            color: var(--text)
+        }
+
+        .ju-ck {
+            font-size: clamp(1.5rem, 1.9vw, 2.1rem);
+            color: var(--gold);
+            margin-top: 3.5vh;
+            font-weight: 600
+        }
+
+        #ovBk .ov-bg {
+            background: #010306
+        }
+
+        .bk-ck {
+            font-family: 'Montserrat', sans-serif;
+            font-size: clamp(6rem, 12vw, 10rem);
+            font-weight: 200;
+            color: var(--gold-l);
+            line-height: 1;
+            letter-spacing: 0.02em;
+            text-shadow: 0 0 40px rgba(212, 175, 78, 0.2)
+        }
+
+        .bk-date {
+            font-size: clamp(1.2rem, 2vw, 2rem);
+            color: var(--muted);
+            margin-top: 2vh;
+            font-weight: 400;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+        }
+
+        #ovCu .ov-bg {
+            background: var(--ov-bg-cu, radial-gradient(ellipse at 50% 45%, #111a61, #1f2b8f))
+        }
+
+        .cu-ttl {
+            font-size: clamp(2.2rem, 3.8vw, 3.6rem);
+            font-weight: 800;
+            color: var(--gold-l);
+            margin-bottom: 2.2vh
+        }
+
+        .cu-bd {
+            font-size: clamp(1.05rem, 1.6vw, 1.65rem);
+            font-weight: 600;
+            color: var(--text);
+            max-width: 65vw;
+            line-height: 1.7
+        }
+
+        .fi {
+            animation: fi .9s ease
+        }
+
+        @keyframes fi {
+            from {
+                opacity: 0;
+                transform: translateY(10px)
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0)
+            }
+        }
+
+        #errScr {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: var(--bg);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2vw
+        }
+
+        #errScr.on {
+            display: flex
+        }
+
+        .ei {
+            font-size: 3rem;
+            color: var(--blue);
+            margin-bottom: 1.5vh
+        }
+
+        .et {
+            font-size: 1.5rem;
+            color: var(--blue-l);
+            font-weight: 700;
+            margin-bottom: 1vh
+        }
+
+        .em {
+            font-size: 1rem;
+            color: var(--muted);
+            max-width: 500px;
+            line-height: 1.6
+        }
+
+        .eb {
+            margin-top: 2vh;
+            padding: 12px 32px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--blue-d), var(--blue));
+            color: #fff;
+            font-weight: 800;
+            font-size: .95rem;
+            cursor: pointer;
+            border: none
+        }
+
+        @media(max-width:1024px) {
+            .pp {
+                flex: 0 0 28%;
+                max-width: 28%;
+                padding: 2.2vh 1.6vw
+            }
+
+            .pc {
+                grid-template-columns: 42px 1fr auto;
+                padding: 1.3vh 1.1vw;
+                gap: .5vw;
+                border-radius: 11px
+            }
+
+            .pc-ico {
+                width: 42px;
+                height: 42px;
+                font-size: 1rem;
+                border-radius: 9px
+            }
+
+            .pc-body {
+                padding-left: .3vw;
+                gap: 1px
+            }
+
+            .pc-nm {
+                font-size: clamp(.82rem, 1.05vw, 1.15rem)
+            }
+
+            .pc-iq {
+                font-size: clamp(.46rem, .56vw, .62rem)
+            }
+
+            .pc-tm {
+                font-size: clamp(1.2rem, 1.55vw, 1.7rem)
+            }
+
+            .pc.nx .pc-tm {
+                font-size: clamp(1.4rem, 1.8vw, 1.95rem)
+            }
+
+            .pp-lbl {
+                margin-bottom: 2vh;
+                font-size: clamp(.48rem, .58vw, .64rem);
+                letter-spacing: .2em
+            }
+        }
+
+        @media(max-width:768px) {
+            .hdr {
+                padding: 1vh 2.5vw
+            }
+
+            .hdr-logo {
+                width: 28px;
+                height: 28px;
+                font-size: .68rem;
+                border-radius: 7px;
+                box-shadow: 0 2px 10px rgba(26, 95, 180, .08)
+            }
+
+            .hdr-name {
+                font-size: .72rem
+            }
+
+            .hdr-addr {
+                font-size: .38rem;
+                margin-top: 0
+            }
+
+            .hdr-left {
+                gap: 1.8vw
+            }
+
+            .hdr-clock {
+                font-size: 1.45rem;
+                letter-spacing: .04em
+            }
+
+            .hdr-hijri {
+                font-size: .38rem;
+                margin-top: 1px;
+                letter-spacing: .06em
+            }
+
+            .hdr-greg {
+                font-size: .34rem;
+                margin-top: 0
+            }
+
+            .pp {
+                flex: 0 0 27%;
+                max-width: 27%;
+                padding: 1.5vh 1vw
+            }
+
+            .pp::after {
+                top: 5%;
+                bottom: 5%
+            }
+
+            .pp-lbl {
+                margin-bottom: 1.4vh;
+                font-size: .36rem;
+                letter-spacing: .14em;
+                gap: 6px
+            }
+
+            .pp-list {
+                gap: .8vh
+            }
+
+            .pc {
+                grid-template-columns: 30px 1fr auto;
+                padding: .9vh .7vw;
+                gap: .35vw;
+                border-radius: 8px;
+                border-width: 1px
+            }
+
+            .pc::before {
+                border-radius: 8px
+            }
+
+            .pc-ico {
+                width: 30px;
+                height: 30px;
+                font-size: .65rem;
+                border-radius: 6px
+            }
+
+            .pc-body {
+                padding-left: .2vw;
+                gap: 0
+            }
+
+            .pc-nm {
+                font-size: .6rem;
+                font-weight: 600
+            }
+
+            .pc-iq {
+                font-size: .32rem;
+                font-weight: 400
+            }
+
+            .pc-tm {
+                font-size: .82rem;
+                font-weight: 700
+            }
+
+            .pc.nx {
+                border-width: 1.5px
+            }
+
+            .pc.nx .pc-tm {
+                font-size: .96rem
+            }
+
+            .pc.nx .pc-nm {
+                font-size: .64rem
+            }
+
+            .pc.nx .pc-ico {
+                width: 30px;
+                height: 30px;
+                box-shadow: 0 0 12px rgba(212, 175, 78, .15)
+            }
+
+            .ftr {
+                padding: .8vh 2.5vw
+            }
+
+            .cd-box {
+                padding-right: 1.5vw;
+                gap: .4vw
+            }
+
+            .cd-lbl {
+                font-size: .32rem;
+                letter-spacing: .04em
+            }
+
+            .cd-row {
+                gap: .3vw
+            }
+
+            .cd-nm {
+                font-size: .52rem
+            }
+
+            .cd-tm {
+                font-size: .88rem
+            }
+
+            .mq {
+                padding-left: .6vw
+            }
+
+            .mq span {
+                font-size: .72rem
+            }
+
+            .phbi {
+                top: 1vh;
+                right: 1.5vw;
+                padding: .6vh .9vw;
+                max-width: 130px;
+                border-radius: 8px
+            }
+
+            .phbi-tag {
+                font-size: .3rem;
+                margin-bottom: .15vh;
+                letter-spacing: .12em
+            }
+
+            .phbi-nm {
+                font-size: .52rem;
+                line-height: 1.2
+            }
+
+            .phbi-cd {
+                font-size: .4rem;
+                margin-top: .15vh
+            }
+
+            .lt-wrap {
+                bottom: 1vh;
+                left: 1.5vw;
+                right: 1.5vw
+            }
+
+            .lt {
+                padding: 1.2vh 1.8vw;
+                gap: 1.2vw;
+                border-radius: 10px;
+                border-width: 1px
+            }
+
+            .lt-badge {
+                font-size: .38rem;
+                padding: .4vh .8vw;
+                border-radius: 5px;
+                letter-spacing: .06em
+            }
+
+            .lt-title {
+                font-size: .58rem;
+                margin-bottom: .15vh
+            }
+
+            .lt-val {
+                font-size: .48rem
+            }
+
+            .lt-line {
+                height: 22px
+            }
+
+            .az-txt {
+                font-size: 2.2rem
+            }
+
+            .az-sub {
+                font-size: .7rem;
+                margin-top: 1.2vh;
+                letter-spacing: .14em
+            }
+
+            .az-tm {
+                font-size: .56rem;
+                margin-top: .8vh
+            }
+
+            .az-hint {
+                font-size: .46rem;
+                margin-top: 2.5vh
+            }
+
+            .iq-lbl {
+                font-size: .9rem;
+                letter-spacing: .16em
+            }
+
+            .iq-num {
+                font-size: 3.2rem;
+                margin-top: 1.5vh
+            }
+
+            .iq-inf {
+                font-size: .64rem;
+                margin-top: 1.5vh
+            }
+
+            .ju-ttl {
+                font-size: 1.5rem;
+                letter-spacing: .06em
+            }
+
+            .ju-sub {
+                font-size: .56rem;
+                margin-top: .8vh
+            }
+
+            .ju-g {
+                gap: 1.2vw;
+                margin-top: 2vh
+            }
+
+            .ju-c {
+                padding: 1vh 1.5vw;
+                min-width: 0;
+                flex: 1 1 42%;
+                border-radius: 8px
+            }
+
+            .ju-cl {
+                font-size: .34rem;
+                letter-spacing: .1em
+            }
+
+            .ju-cv {
+                font-size: .56rem
+            }
+
+            .ju-ck {
+                font-size: .82rem;
+                margin-top: 1.5vh
+            }
+
+            .cu-ttl {
+                font-size: 1.2rem;
+                margin-bottom: 1.2vh
+            }
+
+            .cu-bd {
+                font-size: .72rem;
+                max-width: 85vw;
+                line-height: 1.5
+            }
+
+            .bk-ck {
+                font-size: 2.2rem
+            }
+
+            .of {
+                inset: 2vh 4vw;
+                border-radius: 12px
+            }
+
+            .of::before,
+            .of::after {
+                width: 24px;
+                height: 24px
+            }
+
+            .ov-c {
+                padding: 5vw
+            }
+        }
+
+        @media(max-width:580px) {
+            .hdr {
+                padding: .8vh 2vw
+            }
+
+            .hdr-logo {
+                width: 22px;
+                height: 22px;
+                font-size: .55rem;
+                border-radius: 5px
+            }
+
+            .hdr-name {
+                font-size: .58rem
+            }
+
+            .hdr-addr {
+                font-size: .32rem
+            }
+
+            .hdr-clock {
+                font-size: 1.15rem
+            }
+
+            .hdr-hijri {
+                font-size: .3rem
+            }
+
+            .hdr-greg {
+                font-size: .28rem
+            }
+
+            .pp {
+                flex: 0 0 26%;
+                max-width: 26%;
+                padding: 1vh .6vw
+            }
+
+            .pp-lbl {
+                margin-bottom: 1vh;
+                font-size: .3rem;
+                letter-spacing: .1em;
+                gap: 4px
+            }
+
+            .pp-list {
+                gap: .6vh
+            }
+
+            .pc {
+                grid-template-columns: 24px 1fr auto;
+                padding: .7vh .5vw;
+                gap: .25vw;
+                border-radius: 6px
+            }
+
+            .pc-ico {
+                width: 24px;
+                height: 24px;
+                font-size: .5rem;
+                border-radius: 5px
+            }
+
+            .pc-nm {
+                font-size: .48rem
+            }
+
+            .pc-iq {
+                font-size: .26rem
+            }
+
+            .pc-tm {
+                font-size: .68rem
+            }
+
+            .pc.nx .pc-tm {
+                font-size: .8rem
+            }
+
+            .pc.nx .pc-ico {
+                width: 24px;
+                height: 24px
+            }
+
+            .ftr {
+                padding: .6vh 2vw
+            }
+
+            .cd-tm {
+                font-size: .72rem
+            }
+
+            .cd-nm {
+                font-size: .42rem
+            }
+
+            .cd-lbl {
+                font-size: .26rem
+            }
+
+            .mq span {
+                font-size: .58rem
+            }
+
+            .phbi {
+                max-width: 95px;
+                padding: .4vh .6vw
+            }
+
+            .phbi-nm {
+                font-size: .42rem
+            }
+
+            .phbi-cd {
+                font-size: .32rem
+            }
+
+            .lt {
+                padding: .8vh 1.2vw;
+                gap: .8vw
+            }
+
+            .lt-badge {
+                font-size: .3rem;
+                padding: .3vh .5vw
+            }
+
+            .lt-title {
+                font-size: .46rem
+            }
+
+            .lt-val {
+                font-size: .38rem
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="errScr">
+        <div class="ei"><i class="fa-solid fa-triangle-exclamation"></i></div>
+        <div class="et">Terjadi Kesalahan</div>
+        <div class="em" id="errMsg">Sistem mengalami error. Silakan refresh halaman.</div>
+        <button class="eb" onclick="location.reload()"><i class="fa-solid fa-rotate-right" style="margin-right:6px"></i>
+            Refresh</button>
+    </div>
+
+    <audio id="murAudio" preload="none"></audio>
+    <div id="app">
+        <header class="hdr">
+            <div class="hdr-left">
+                <!-- LOGO DIUBAH: div → a dengan href ke admin -->
+                <a class="hdr-logo" href="./admin.html" title="Menu Admin"><i class="fa-solid fa-mosque"></i></a>
+                <div>
+                    <div class="hdr-name lx" id="hName"></div>
+                    <div class="hdr-addr" id="hAddr"></div>
+                </div>
+            </div>
+            <div style="text-align:right">
+                <div class="hdr-clock lx nm" id="hClk"></div>
+                <div class="hdr-hijri nm" id="hHij"></div>
+                <div class="hdr-greg" id="hGre"></div>
+            </div>
+        </header>
+
+        <div class="ctn">
+            <aside class="pp">
+                <div class="pp-lbl"><i class="fa-solid fa-mosque" style="font-size:.85em"></i> Jadwal Sholat</div>
+                <div class="pp-list" id="pLst"></div>
+            </aside>
+            <section class="md">
+                <div id="slBox"></div>
+                <div class="md-grad"></div>
+                <div class="phbi" id="phbiBox" style="display:none">
+                    <div class="phbi-tag"><i class="fa-solid fa-calendar-days"></i> PHBI</div>
+                    <div class="phbi-nm" id="phbiNm"></div>
+                    <div class="phbi-cd" id="phbiCd"></div>
+                </div>
+                <div class="lt-wrap">
+                    <div class="lt" id="ltBox">
+                        <div class="lt-badge" id="ltBdg"></div>
+                        <div class="lt-line"></div>
+                        <div class="lt-body">
+                            <div class="lt-title" id="ltTtl"></div>
+                            <div class="lt-val" id="ltVal"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <footer class="ftr">
+            <div class="cd-box">
+                <div>
+                    <div class="cd-lbl">Sholat berikutnya</div>
+                    <div class="cd-row">
+                        <span class="cd-nm" id="cdNm"></span>
+                        <span class="cd-tm nm" id="cdTm"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="mq">
+                <div class="mq-scroll">
+                    <span id="mqTx"></span><span id="mqTx2"></span>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <div id="ovAz" class="ov">
+        <div class="ov-bg"></div>
+        <div class="ip"></div>
+        <div class="of"></div>
+        <div class="ov-c fi">
+            <div
+                style="font-size:clamp(.7rem,.85vw,.95rem);color:var(--gold-d);letter-spacing:.35em;font-weight:600;text-transform:uppercase;margin-bottom:2vh">
+                Masuk Waktu</div>
+            <div class="az-txt lx nm">ADZAN</div>
+            <div class="az-sub nm" id="azNm"></div>
+            <div class="az-tm nm" id="azTm"></div>
+            <div class="az-hint" id="azHint">Segera dirikan sholat dalam jamaah</div>
+        </div>
+        <div class="mq" style="position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,0.6);border-top:1px solid var(--border);padding:1.5vh 0;">
+            <div class="mq-scroll">
+                <span id="mqAzTx"></span><span id="mqAzTx2"></span>
+            </div>
+        </div>
+    </div>
+
+    <div id="ovIq" class="ov">
+        <div class="ov-bg"></div>
+        <div class="ip"></div>
+        <div class="of"></div>
+        <div class="ov-c fi">
+            <div class="iq-lbl lx">Iqomah</div>
+            <div class="iq-num lx nm" id="iqNm">00:00</div>
+            <div class="iq-inf" id="iqInf"></div>
+            <div class="iq-hint" id="iqHint">Luruskan dan rapatkan shaf</div>
+        </div>
+        <div class="mq" style="position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,0.6);border-top:1px solid var(--border);padding:1.5vh 0;">
+            <div class="mq-scroll">
+                <span id="mqIqTx"></span><span id="mqIqTx2"></span>
+            </div>
+        </div>
+    </div>
+
+    <div id="ovCdAz" class="ov">
+        <div class="ov-bg"></div>
+        <div class="ip"></div>
+        <div class="of"></div>
+        <div class="ov-c fi">
+            <div
+                style="font-size:clamp(1rem,2vw,1.5rem);color:var(--gold-d);text-transform:uppercase;letter-spacing:0.3em;margin-bottom:2vh;">
+                Menuju Waktu Sholat</div>
+            <div class="az-sub nm" id="cdAzNm" style="font-size:clamp(1.5rem,3vw,2.5rem);margin-bottom:4vh;"></div>
+            <div class="iq-num lx nm" id="cdAzTm">00:00</div>
+        </div>
+    </div>
+
+    <div id="ovReady" class="ov">
+        <div class="ov-bg"></div>
+        <div class="ip"></div>
+        <div class="of"></div>
+        <div class="ov-c fi">
+            <div class="az-txt lx nm"
+                style="font-size:clamp(3rem,6vw,5rem);color:var(--gold-l);text-shadow:0 0 30px rgba(212,175,78,0.3)">
+                Waktu Sholat Tiba</div>
+            <div class="iq-hint" style="font-size:clamp(1.5rem,3vw,2.5rem);margin-top:4vh;color:var(--gold)">Luruskan
+                dan rapikan shaf</div>
+        </div>
+    </div>
+
+    <div id="ovJu" class="ov">
+        <div class="ov-bg"></div>
+        <div class="ip"></div>
+        <div class="of"></div>
+        <div class="ov-c fi">
+            <div class="ju-ttl lx nm">Jum'at Mubarak</div>
+            <div class="ju-sub">Mari memakmurkan masjid dengan sholat berjamaah</div>
+            <div class="ju-g" id="juGr"></div>
+            <div class="ju-ck lx nm" id="juCk"></div>
+        </div>
+    </div>
+
+    <div id="ovBk" class="ov">
+        <div class="ov-bg"></div>
+        <div class="ov-c fi"
+            style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%">
+            <div class="bk-ck nm" id="bkCk"></div>
+            <div class="bk-date" id="bkDate"></div>
+        </div>
+    </div>
+
+    <div id="ovKhutbah" class="ov">
+        <div class="ov-bg"></div>
+        <div class="ip"></div>
+        <div class="of"></div>
+        <div class="ov-c fi">
+            <div class="ju-ttl lx nm" style="font-size:clamp(3rem,5vw,4.5rem);color:var(--gold-l)">Khutbah Jum'at</div>
+            <div class="ju-sub" id="khutbahMsg" style="font-size:clamp(1.5rem,2.5vw,2.2rem);margin-top:4vh;max-width:80%;line-height:1.4">Harap tenang</div>
+        </div>
+    </div>
+
+    <div id="ovCu" class="ov">
+        <div class="ov-bg"></div>
+        <div class="ip"></div>
+        <div class="of"></div>
+        <div class="ov-c fi">
+            <div class="cu-ttl lx" id="cuTtl"></div>
+            <div class="cu-bd" id="cuBd"></div>
+        </div>
+    </div>
+
+    <script>
+        window.onerror = function (m, s, l) { document.getElementById('errMsg').textContent = 'Error baris ' + l + ': ' + m; document.getElementById('errScr').classList.add('on'); document.getElementById('app').style.display = 'none'; return true };
+        window.onunhandledrejection = function (e) { console.warn('Rejected:', e.reason) };
+
+        var DG = Math.PI / 180;
+        var HM = ['Muharram', 'Safar', 'Rabiul Awal', 'Rabiul Akhir', 'Jumadil Awal', 'Jumadil Akhir', 'Rajab', 'Sya\'ban', 'Ramadhan', 'Syawal', 'Dzulqa\'dah', 'Dzulhijjah'];
+        var DY = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jum\'at', 'Sabtu'];
+        var MN = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+        var ICO = { subuh: 'fa-cloud-moon', dzuhur: 'fa-sun', asr: 'fa-cloud-sun', maghrib: 'fa-cloud-moon', isya: 'fa-moon' };
+        var LB = { subuh: 'Subuh', dzuhur: 'Dzuhur', asr: 'Ashar', maghrib: 'Maghrib', isya: 'Isya' };
+        var OD = ['subuh', 'dzuhur', 'asr', 'maghrib', 'isya'];
+
+        var DEF = {
+            mosque: { name: 'Masjid Agung Rejang Lebong', address: 'Jl. R. Sukamto, Pasar Baru, Kab. Rejang Lebong, Bengkulu' },
+            location: { latitude: -3.4567, longitude: 102.5211, timezone: 7, city: 'Rejang Lebong' },
+            calc: { fajrAngle: 20, ishaAngle: 18, asrMethod: 'shafii' },
+            adjust: { subuh: 0, terbit: 0, dhuha: 0, dzuhur: 0, asr: 0, maghrib: 0, isya: 0 },
+            iqomah: { subuh: 2, dzuhur: 3, asr: 3, maghrib: 2, isya: 3 },
+            azanDuration: 180,
+            jumat: { imam: 'Ust. Ahmad Fauzi, Lc.', khatib: 'Ust. Muhammad Rizki, M.Pd.', muadzin: 'H. Hasan Basri', bilal: 'Bpk. Syamsul Bahri' },
+            finance: { saldoAwal: 'Rp 10.000.000', pemasukan: 'Rp 5.000.000', pengeluaran: 'Rp 2.000.000', saldoAkhir: 'Rp 13.000.000', lastUpdate: '-' },
+            pembangunan: { saldoAwal: 'Rp 0', pemasukan: 'Rp 0', pengeluaran: 'Rp 0', saldoAkhir: 'Rp 0', lastUpdate: '-' },
+            slideshow: { images: ['https://picsum.photos/seed/masjidBlue1/1920/1080', 'https://picsum.photos/seed/masjidBlue2/1920/1080', 'https://picsum.photos/seed/masjidBlue3/1920/1080', 'https://picsum.photos/seed/masjidBlue4/1920/1080'], interval: 8 },
+            runningText: 'Selamat datang di Masjid Agung Rejang Lebong. Mari kita tingkatkan keimanan dan ketaqwaan dengan memperbanyak ibadah. Jaga kebersihan dan ketenangan masjid.',
+            phbi: [{ name: 'Isra Mi\'raj 1446 H', date: '2025-01-27' }, { name: 'Nuzulul Quran 1446 H', date: '2025-03-01' }, { name: 'Idul Fitri 1446 H', date: '2025-03-30' }, { name: 'Idul Adha 1446 H', date: '2025-06-07' }],
+            customMessages: [],
+            announcements: [],
+            display: { theme: 'default', fontMain: 'Outfit', fontTitle: 'Playfair Display', fontNum: 'Montserrat', showBlackScreen: true, blackScreenMinutes: 15, autoAzan: true, jumatWelcomeMinutes: 10, azanText: 'Segera dirikan sholat berjamaah', azanRunText: 'Menuju waktu sholat\nBersiaplah dan tinggalkan aktivitas Anda', azanJumatRunText: 'Menuju Sholat Jumat\nBersegeralah menuju masjid', iqomahText: 'Luruskan dan rapatkan shaf', iqomahRunText: 'Mohon luruskan shaf, matikan HP, dan jaga kekhusyukan sholat', khutbahText: 'Harap tenang, Khutbah Jumat sedang berlangsung.\n\n"Barangsiapa yang berkata kepada temannya ketika imam sedang berkhutbah pada hari Jumat, \'Diamlah!\', maka ia telah berbuat sia-sia."', khutbahMinutes: 30 },
+            password: 'admin123',
+            spreadsheetUrl: ''
+        };
+
+        var S = null;
+        function sC(o) { try { return JSON.parse(JSON.stringify(o)) } catch (e) { return sC(DEF) } }
+        function dM(t, s) { if (!s || typeof s !== 'object') return t; for (var k in s) { if (!s.hasOwnProperty(k)) continue; if (s[k] && typeof s[k] === 'object' && !Array.isArray(s[k]) && t[k] && typeof t[k] === 'object' && !Array.isArray(t[k])) { dM(t[k], s[k]) } else { t[k] = s[k] } } return t }
+        function gT(o, k, f) { try { var v = o[k]; return (v !== undefined && v !== null) ? String(v) : f } catch (e) { return f } }
+
+        function applyTheme() {
+            try {
+                var th = S.display && S.display.theme ? S.display.theme : 'default';
+                var r = document.documentElement;
+                if (th === 'navy_gold') {
+                    r.style.setProperty('--bg', '#07152b');
+                    r.style.setProperty('--glass', 'rgba(10, 20, 38, .88)');
+                    r.style.setProperty('--blue', '#142036');
+                    r.style.setProperty('--blue-g', 'rgba(201,168,76,.05)');
+                    r.style.setProperty('--blue-f', 'rgba(201,168,76,.02)');
+                    r.style.setProperty('--border', 'rgba(201,168,76,0.2)');
+                    r.style.setProperty('--gold', '#c9a84c');
+                    r.style.setProperty('--gold-l', '#e8d48b');
+                    r.style.setProperty('--gold-d', '#8b7534');
+                    r.style.setProperty('--text', '#f0f4fa');
+                    r.style.setProperty('--text2', '#ffffff');
+                    r.style.setProperty('--hdr-bg', 'linear-gradient(180deg, rgba(7, 21, 43, .96), rgba(5, 10, 20, .82))');
+                    r.style.setProperty('--pp-bg', 'linear-gradient(180deg, rgba(7, 21, 43, .6), rgba(5, 10, 20, .3))');
+                    r.style.setProperty('--md-bg', '#050a14');
+                    r.style.setProperty('--blue-d', '#142036');
+                    r.style.setProperty('--blue-l', '#c9a84c');
+                    r.style.setProperty('--logo-bg', 'linear-gradient(135deg, rgba(201,168,76,.1), rgba(201,168,76,.02))');
+                    r.style.setProperty('--logo-border', 'rgba(201,168,76,.2)');
+                    r.style.setProperty('--logo-hover-bg', 'linear-gradient(135deg, rgba(201,168,76,.15), rgba(201,168,76,.05))');
+                    r.style.setProperty('--logo-hover-border', 'rgba(201,168,76,.3)');
+                    r.style.setProperty('--pc-border', 'rgba(201,168,76,.15)');
+                    r.style.setProperty('--pc-bg', 'rgba(10, 20, 38, .65)');
+                    r.style.setProperty('--pc-shadow', 'inset 0 1px 3px rgba(0,0,0,.5), 0 2px 8px rgba(0,0,0,.2)');
+                    r.style.setProperty('--pc-hover-border', 'rgba(201,168,76,.3)');
+                    r.style.setProperty('--pc-hover-bg', 'rgba(15, 25, 45, .85)');
+                    r.style.setProperty('--pc-ico-bg', 'rgba(201,168,76,.05)');
+                    r.style.setProperty('--pc-ico-border', 'rgba(201,168,76,.15)');
+                    r.style.setProperty('--md-grad-bg', 'linear-gradient(170deg, rgba(5,10,20,.6) 0%, transparent 22%, transparent 52%, rgba(5,10,20,.8) 100%)');
+                    r.style.setProperty('--phbi-bg', 'rgba(10,20,38,.6)');
+                    r.style.setProperty('--phbi-border', 'rgba(201,168,76,.15)');
+                    r.style.setProperty('--lt-bg', 'rgba(10,20,38,.5)');
+                    r.style.setProperty('--ftr-bg', 'linear-gradient(0deg, rgba(7, 21, 43, .96), rgba(5, 10, 20, .82))');
+                    r.style.setProperty('--ov-bg-grad', 'radial-gradient(ellipse at 50% 45%, #050a14, #07152b 65%)');
+                    r.style.setProperty('--ov-bg-iq', 'radial-gradient(ellipse at 50% 45%, #050a14, #07152b)');
+                    r.style.setProperty('--ov-bg-ju', 'radial-gradient(ellipse at 50% 40%, #050a14, #07152b)');
+                    r.style.setProperty('--ov-bg-cu', 'radial-gradient(ellipse at 50% 45%, #050a14, #07152b)');
+                } else if (th === 'green_gold') {
+                    r.style.setProperty('--bg', '#062013');
+                    r.style.setProperty('--glass', 'rgba(8, 28, 16, .88)');
+                    r.style.setProperty('--blue', '#0a2e1d');
+                    r.style.setProperty('--blue-g', 'rgba(212,175,55,.05)');
+                    r.style.setProperty('--blue-f', 'rgba(212,175,55,.02)');
+                    r.style.setProperty('--border', 'rgba(212,175,55,0.2)');
+                    r.style.setProperty('--gold', '#d4af37');
+                    r.style.setProperty('--gold-l', '#f3e5ab');
+                    r.style.setProperty('--gold-d', '#aa8c2c');
+                    r.style.setProperty('--text', '#eaf2ec');
+                    r.style.setProperty('--text2', '#ffffff');
+                    r.style.setProperty('--hdr-bg', 'linear-gradient(180deg, rgba(6, 32, 19, .96), rgba(3, 15, 9, .82))');
+                    r.style.setProperty('--pp-bg', 'linear-gradient(180deg, rgba(6, 32, 19, .6), rgba(3, 15, 9, .3))');
+                    r.style.setProperty('--md-bg', '#030f09');
+                    r.style.setProperty('--blue-d', '#0a2e1d');
+                    r.style.setProperty('--blue-l', '#d4af37');
+                    r.style.setProperty('--logo-bg', 'linear-gradient(135deg, rgba(212,175,55,.1), rgba(212,175,55,.02))');
+                    r.style.setProperty('--logo-border', 'rgba(212,175,55,.2)');
+                    r.style.setProperty('--logo-hover-bg', 'linear-gradient(135deg, rgba(212,175,55,.15), rgba(212,175,55,.05))');
+                    r.style.setProperty('--logo-hover-border', 'rgba(212,175,55,.3)');
+                    r.style.setProperty('--pc-border', 'rgba(212,175,55,.15)');
+                    r.style.setProperty('--pc-bg', 'rgba(8, 28, 16, .65)');
+                    r.style.setProperty('--pc-shadow', 'inset 0 1px 3px rgba(0,0,0,.5), 0 2px 8px rgba(0,0,0,.2)');
+                    r.style.setProperty('--pc-hover-border', 'rgba(212,175,55,.3)');
+                    r.style.setProperty('--pc-hover-bg', 'rgba(10, 35, 20, .85)');
+                    r.style.setProperty('--pc-ico-bg', 'rgba(212,175,55,.05)');
+                    r.style.setProperty('--pc-ico-border', 'rgba(212,175,55,.15)');
+                    r.style.setProperty('--md-grad-bg', 'linear-gradient(170deg, rgba(3,15,9,.6) 0%, transparent 22%, transparent 52%, rgba(3,15,9,.8) 100%)');
+                    r.style.setProperty('--phbi-bg', 'rgba(8,28,16,.6)');
+                    r.style.setProperty('--phbi-border', 'rgba(212,175,55,.15)');
+                    r.style.setProperty('--lt-bg', 'rgba(8,28,16,.5)');
+                    r.style.setProperty('--ftr-bg', 'linear-gradient(0deg, rgba(6, 32, 19, .96), rgba(3, 15, 9, .82))');
+                    r.style.setProperty('--ov-bg-grad', 'radial-gradient(ellipse at 50% 45%, #030f09, #062013 65%)');
+                    r.style.setProperty('--ov-bg-iq', 'radial-gradient(ellipse at 50% 45%, #030f09, #062013)');
+                    r.style.setProperty('--ov-bg-ju', 'radial-gradient(ellipse at 50% 40%, #030f09, #062013)');
+                    r.style.setProperty('--ov-bg-cu', 'radial-gradient(ellipse at 50% 45%, #030f09, #062013)');
+                } else if (th === 'white_gold') {
+                    r.style.setProperty('--bg', '#f2f5f8');
+                    r.style.setProperty('--glass', 'rgba(255, 255, 255, .88)');
+                    r.style.setProperty('--blue', '#bdc3c7');
+                    r.style.setProperty('--blue-g', 'rgba(184,134,11,.05)');
+                    r.style.setProperty('--blue-f', 'rgba(184,134,11,.02)');
+                    r.style.setProperty('--border', 'rgba(184,134,11,0.25)');
+                    r.style.setProperty('--gold', '#b8860b');
+                    r.style.setProperty('--gold-l', '#daa520');
+                    r.style.setProperty('--gold-d', '#8b6508');
+                    r.style.setProperty('--text', '#2c3e50');
+                    r.style.setProperty('--text2', '#34495e');
+                    r.style.setProperty('--muted', '#7f8c8d');
+                    r.style.setProperty('--dim', '#bdc3c7');
+                    r.style.setProperty('--hdr-bg', 'linear-gradient(180deg, rgba(242, 245, 248, .96), rgba(220, 225, 230, .9))');
+                    r.style.setProperty('--pp-bg', 'linear-gradient(180deg, rgba(242, 245, 248, .6), rgba(220, 225, 230, .4))');
+                    r.style.setProperty('--md-bg', '#ffffff');
+                    r.style.setProperty('--blue-d', '#bdc3c7');
+                    r.style.setProperty('--blue-l', '#b8860b');
+                    r.style.setProperty('--logo-bg', 'linear-gradient(135deg, rgba(184,134,11,.08), rgba(184,134,11,.02))');
+                    r.style.setProperty('--logo-border', 'rgba(184,134,11,.2)');
+                    r.style.setProperty('--logo-hover-bg', 'linear-gradient(135deg, rgba(184,134,11,.15), rgba(184,134,11,.05))');
+                    r.style.setProperty('--logo-hover-border', 'rgba(184,134,11,.3)');
+                    r.style.setProperty('--pc-border', 'rgba(184,134,11,.2)');
+                    r.style.setProperty('--pc-bg', 'rgba(255, 255, 255, .65)');
+                    r.style.setProperty('--pc-shadow', 'inset 0 1px 3px rgba(255,255,255,.5), 0 2px 8px rgba(0,0,0,.05)');
+                    r.style.setProperty('--pc-hover-border', 'rgba(184,134,11,.4)');
+                    r.style.setProperty('--pc-hover-bg', 'rgba(255, 255, 255, .85)');
+                    r.style.setProperty('--pc-ico-bg', 'rgba(184,134,11,.08)');
+                    r.style.setProperty('--pc-ico-border', 'rgba(184,134,11,.2)');
+                    r.style.setProperty('--md-grad-bg', 'linear-gradient(170deg, rgba(242,245,248,.6) 0%, transparent 22%, transparent 52%, rgba(220,225,230,.8) 100%)');
+                    r.style.setProperty('--phbi-bg', 'rgba(255,255,255,.8)');
+                    r.style.setProperty('--phbi-border', 'rgba(184,134,11,.25)');
+                    r.style.setProperty('--lt-bg', 'rgba(255,255,255,.85)');
+                    r.style.setProperty('--ftr-bg', 'linear-gradient(0deg, rgba(242, 245, 248, .96), rgba(220, 225, 230, .82))');
+                    r.style.setProperty('--ov-bg-grad', 'radial-gradient(ellipse at 50% 45%, #ffffff, #f2f5f8 65%)');
+                    r.style.setProperty('--ov-bg-iq', 'radial-gradient(ellipse at 50% 45%, #ffffff, #f2f5f8)');
+                    r.style.setProperty('--ov-bg-ju', 'radial-gradient(ellipse at 50% 40%, #ffffff, #f2f5f8)');
+                    r.style.setProperty('--ov-bg-cu', 'radial-gradient(ellipse at 50% 45%, #ffffff, #f2f5f8)');
+                } else {
+                    r.style.setProperty('--bg', '#1f2b8f');
+                    r.style.setProperty('--glass', 'rgba(31, 43, 143, .88)');
+                    r.style.setProperty('--blue', '#3b4ac7');
+                    r.style.setProperty('--blue-g', 'rgba(59, 74, 199, .15)');
+                    r.style.setProperty('--blue-f', 'rgba(59, 74, 199, .08)');
+                    r.style.setProperty('--border', 'rgba(255, 255, 255, .2)');
+                    r.style.setProperty('--gold', '#ffd700');
+                    r.style.setProperty('--gold-l', '#ffea70');
+                    r.style.setProperty('--gold-d', '#ccac00');
+                    r.style.setProperty('--text', '#ffffff');
+                    r.style.setProperty('--text2', '#e0f4ff');
+                    r.style.setProperty('--muted', '#aab4f5');
+                    r.style.setProperty('--dim', '#111a61');
+                    r.style.setProperty('--hdr-bg', 'linear-gradient(180deg, rgba(31, 43, 143, .96), rgba(17, 26, 97, .82))');
+                    r.style.setProperty('--pp-bg', 'linear-gradient(180deg, rgba(31, 43, 143, .6), rgba(17, 26, 97, .3))');
+                    r.style.setProperty('--md-bg', '#111a61');
+                    r.style.setProperty('--blue-d', '#111a61');
+                    r.style.setProperty('--blue-l', '#6e7cf0');
+                    r.style.setProperty('--logo-bg', 'linear-gradient(135deg, rgba(0, 123, 255, .16), rgba(0, 123, 255, .05))');
+                    r.style.setProperty('--logo-border', 'rgba(0, 123, 255, .28)');
+                    r.style.setProperty('--logo-hover-bg', 'linear-gradient(135deg, rgba(0, 123, 255, .28), rgba(0, 123, 255, .1))');
+                    r.style.setProperty('--logo-hover-border', 'rgba(59, 130, 246, .45)');
+                    r.style.setProperty('--pc-border', 'rgba(31, 43, 143, .6)');
+                    r.style.setProperty('--pc-bg', 'rgba(31, 43, 143, .65)');
+                    r.style.setProperty('--pc-shadow', 'inset 0 1px 3px rgba(31, 43, 143, .5), 0 2px 8px rgba(0, 123, 255, .05)');
+                    r.style.setProperty('--pc-hover-border', 'rgba(0, 123, 255, .22)');
+                    r.style.setProperty('--pc-hover-bg', 'rgba(31, 43, 143, .85)');
+                    r.style.setProperty('--pc-ico-bg', 'rgba(0, 123, 255, .09)');
+                    r.style.setProperty('--pc-ico-border', 'rgba(0, 123, 255, .18)');
+                    r.style.setProperty('--md-grad-bg', 'linear-gradient(170deg, rgba(31, 43, 143, .6) 0%, transparent 22%, transparent 52%, rgba(43, 56, 168, .5) 100%)');
+                    r.style.setProperty('--phbi-bg', 'rgba(31, 43, 143, 0.6)');
+                    r.style.setProperty('--phbi-border', 'rgba(110, 124, 240, 0.2)');
+                    r.style.setProperty('--lt-bg', 'rgba(31, 43, 143, 0.4)');
+                    r.style.setProperty('--ftr-bg', 'linear-gradient(0deg, rgba(31, 43, 143, .96), rgba(17, 26, 97, .82))');
+                    r.style.setProperty('--ov-bg-grad', 'radial-gradient(ellipse at 50% 45%, #111a61, #1f2b8f 65%)');
+                    r.style.setProperty('--ov-bg-iq', 'radial-gradient(ellipse at 50% 45%, #111a61, #1f2b8f)');
+                    r.style.setProperty('--ov-bg-ju', 'radial-gradient(ellipse at 50% 40%, #111a61, #1f2b8f)');
+                    r.style.setProperty('--ov-bg-cu', 'radial-gradient(ellipse at 50% 45%, #111a61, #1f2b8f)');
+                }
+
+                var fm = S.display && S.display.fontMain ? S.display.fontMain : 'Outfit';
+                var fx = S.display && S.display.fontTitle ? S.display.fontTitle : 'Playfair Display';
+                var fn = S.display && S.display.fontNum ? S.display.fontNum : 'Montserrat';
+                
+                r.style.setProperty('--font-main', "'" + fm + "', sans-serif");
+                r.style.setProperty('--font-lx', "'" + fx + "', serif");
+                r.style.setProperty('--font-nm', "'" + fn + "', sans-serif");
+                
+                var fUrl = 'https://fonts.googleapis.com/css2?family=' + fm.replace(/ /g, '+') + ':wght@400;500;600;700&family=' + fx.replace(/ /g, '+') + ':wght@600;700;800&family=' + fn.replace(/ /g, '+') + ':wght@500;600;700;800&display=swap';
+                var lnk = document.getElementById('gf-link');
+                if (lnk && lnk.href !== fUrl) lnk.href = fUrl;
+            } catch (e) { }
+        }
+
+        function ld() { try { var r = localStorage.getItem('mosque_settings'); S = r ? dM(sC(DEF), JSON.parse(r)) : sC(DEF) } catch (e) { S = sC(DEF) } if (!Array.isArray(S.phbi)) S.phbi = []; if (!Array.isArray(S.customMessages)) S.customMessages = []; if (!Array.isArray(S.announcements)) S.announcements = []; if (!S.slideshow || !Array.isArray(S.slideshow.images)) S.slideshow = sC(DEF.slideshow);['display', 'adjust', 'iqomah', 'calc', 'location', 'mosque', 'jumat', 'finance', 'pembangunan'].forEach(function (k) { if (!S[k]) S[k] = sC(DEF[k]) }); if (typeof S.spreadsheetUrl !== 'string') S.spreadsheetUrl = ''; applyTheme(); }
+        function sv() { try { localStorage.setItem('mosque_settings', JSON.stringify(S)) } catch (e) { } }
+
+        function sP(jd) { var D = jd - 2451545.0, g = ((D * .98560028) % 360 + 357.529 + 360) % 360, q = ((D * .98564736) % 360 + 280.459 + 360) % 360, L = ((q + 1.915 * Math.sin(g * DG) + .02 * Math.sin(2 * g * DG)) % 360 + 360) % 600, e = 23.439 - .00000036 * D, RA = Math.atan2(Math.cos(e * DG) * Math.sin(L * DG), Math.cos(L * DG)) / DG, dc = Math.asin(Math.sin(e * DG) * Math.sin(L * DG)) / DG; return { dec: dc, eqt: (q - (((RA % 360) + 360) % 360)) / 15 } }
+        function hA(a, la, dc) { var c = (Math.sin(a * DG) - Math.sin(la * DG) * Math.sin(dc * DG)) / (Math.cos(la * DG) * Math.cos(dc * DG)); return (c < -1 || c > 1) ? 0 : Math.acos(c) / DG }
+        function cT(d) { try { var jd = d.getTime() / 864e5 + 2440587.5, p = sP(jd), la = S.location.latitude, tz = S.location.timezone, ln = S.location.longitude, dh = 12 + tz - ln / 15 - p.eqt, af = S.calc.asrMethod === 'hanafi' ? 2 : 1, aa = Math.atan2(1, af + Math.tan(Math.abs(la - p.dec) * DG)) / DG, fa = S.calc.fajrAngle || 20, ia = S.calc.ishaAngle || 18, ad = S.adjust || {}, t = { subuh: dh - hA(-fa, la, p.dec) / 15, dzuhur: dh, asr: dh + hA(aa, la, p.dec) / 15, maghrib: dh + hA(-.8333, la, p.dec) / 15, isya: dh + hA(-ia, la, p.dec) / 15 }, r = {}; for (var k in t) { var v = t[k] + (parseInt(ad[k]) || 0) / 60, h = Math.floor(v), m = Math.round((v - h) * 60); if (m >= 60) { h++; m -= 60 } if (m < 0) { h--; m += 60 } h = ((h % 24) + 24) % 24; r[k] = String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0') } return r } catch (e) { return { subuh: '05:00', dzuhur: '12:00', asr: '15:15', maghrib: '18:00', isya: '19:15' } } }
+        function tH(y, m, d) { try { var jd = Math.floor(Date.UTC(y, m - 1, d) / 864e5) + 2440587.5, l = Math.floor(jd - 1948439.5) + 10632, n = Math.floor((l - 1) / 10631), l2 = l - 10631 * n + 354, j = Math.floor((10985 - l2) / 5316) * Math.floor((50 * l2) / 17719) + Math.floor(l2 / 5670) * Math.floor((43 * l2) / 15238), l3 = l2 - Math.floor((30 - j) / 15) * Math.floor((17719 * j) / 50) - Math.floor(j / 16) * Math.floor((15238 * j) / 43) + 29, hm = Math.floor((24 * l3) / 709); return { year: 30 * n + j - 30, month: hm, day: l3 - Math.floor((709 * hm) / 24) } } catch (e) { return { year: 1446, month: 1, day: 1 } } }
+        function tM(t) { try { var p = String(t).split(':'); return parseInt(p[0]) * 60 + parseInt(p[1]) } catch (e) { return 0 } }
+        function fC(s) { if (!s || s <= 0) return '00:00'; var h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), sc = s % 60; return h > 0 ? String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0') + ':' + String(sc).padStart(2, '0') : String(m).padStart(2, '0') + ':' + String(sc).padStart(2, '0') }
+
+        var PT = {}, mode = 'norm', trig = new Set(), dStr = '', sI = 0, sT = null, lI = 0, lT = null, iE = 0, mE = 0, aK = '';
+
+        function rP() {
+            try {
+                var n = new Date(), nM = n.getHours() * 60 + n.getMinutes(), nx = null;
+                for (var i = 0; i < OD.length; i++) { if (tM(PT[OD[i]]) > nM) { nx = OD[i]; break } }
+                if (!nx) nx = OD[0];
+                var h = '';
+                for (var i = 0; i < OD.length; i++) {
+                    var k = OD[i], iN = k === nx, iP = tM(PT[k]) < nM, iq = S.iqomah[k] !== undefined ? S.iqomah[k] : 3;
+                    h += '<div class="pc ' + (iN ? 'nx' : '') + (iP && !iN ? ' past' : '') + '"><div class="pc-ico"><i class="fa-solid ' + ICO[k] + '"></i></div><div class="pc-body"><div class="pc-nm">' + LB[k] + '</div><div class="pc-iq">+' + iq + ' mnt</div></div><div class="pc-tm nm">' + (PT[k] || '--:--') + '</div></div>';
+                }
+                document.getElementById('pLst').innerHTML = h;
+            } catch (e) { }
+        }
+
+        function rC() {
+            try {
+                var n = new Date(),
+                    ts = String(n.getHours()).padStart(2, '0') + ':' + String(n.getMinutes()).padStart(2, '0') + ':' + String(n.getSeconds()).padStart(2, '0');
+                document.getElementById('hClk').textContent = ts;
+                var gDate = DY[n.getDay()] + ', ' + n.getDate() + ' ' + MN[n.getMonth()] + ' ' + n.getFullYear();
+                document.getElementById('hGre').textContent = gDate;
+                var hj = tH(n.getFullYear(), n.getMonth() + 1, n.getDate());
+                var hDate = hj.day + ' ' + HM[hj.month - 1] + ' ' + hj.year + ' H';
+                document.getElementById('hHij').textContent = hDate;
+                document.getElementById('hName').textContent = gT(S.mosque, 'name', 'Masjid');
+                document.getElementById('hAddr').textContent = gT(S.mosque, 'address', '');
+                document.getElementById('bkCk').textContent = String(n.getHours()).padStart(2, '0') + ':' + String(n.getMinutes()).padStart(2, '0');
+                var elDate = document.getElementById('bkDate');
+                if (elDate) elDate.textContent = gDate + ' \u2014 ' + hDate;
+                document.getElementById('juCk').textContent = ts;
+            } catch (e) { }
+        }
+
+        var murOn = false, curMur = null;
+        function rCd() {
+            try {
+                var n = new Date(), ns = n.getHours() * 3600 + n.getMinutes() * 60 + n.getSeconds(), np = null, nm = 1 / 0;
+                for (var i = 0; i < OD.length; i++) { var pt = tM(PT[OD[i]]) * 60; if (pt > ns && pt < nm) { nm = pt; np = OD[i] } }
+                if (!np) { np = OD[0]; nm = tM(PT[np]) * 60 + 86400 }
+                document.getElementById('cdNm').textContent = LB[np];
+                var rem = Math.max(0, Math.floor(nm - ns));
+                document.getElementById('cdTm').textContent = fC(rem);
+
+                /* AUTO MUROTTAL LOGIC */
+                if (S.murottal && S.murottal[np]) {
+                    var mUrl = S.murottal[np];
+                    if (mUrl && rem > 180 && rem <= 900) {
+                        if (!murOn || curMur !== np) {
+                            var aud = document.getElementById('murAudio');
+                            aud.src = mUrl;
+                            var p = aud.play();
+                            if (p !== undefined) { p.catch(function (e) { console.log('Murottal autoplay blocked'); }); }
+                            murOn = true; curMur = np;
+                        }
+                    } else {
+                        if (murOn) { document.getElementById('murAudio').pause(); murOn = false; curMur = null; }
+                    }
+                } else if (murOn) { document.getElementById('murAudio').pause(); murOn = false; curMur = null; }
+
+            } catch (e) { }
+        }
+
+        function iS() {
+            try {
+                var b = document.getElementById('slBox'); b.innerHTML = '';
+                var imgs = S.slideshow && S.slideshow.images ? S.slideshow.images : [];
+                if (!imgs.length) { b.innerHTML = '<div style="position:absolute;inset:0;background:linear-gradient(135deg,#060c1a,#0a1428,#080e1c)"></div>'; return; }
+                for (var i = 0; i < imgs.length; i++) {
+                    var img = document.createElement('img'); img.className = 'sl' + (i === 0 ? ' on' : '');
+                    img.src = imgs[i]; img.onerror = function () { this.remove(); }; b.appendChild(img);
+                }
+                sI = 0; clearInterval(sT); sT = setInterval(nS, Math.max(3000, (S.slideshow.interval || 8) * 1000));
+            } catch (e) { }
+        }
+        function nS() { try { var imgs = document.querySelectorAll('.sl'); if (imgs.length < 2) return; for (var i = 0; i < imgs.length; i++) imgs[i].classList.remove('prev'); imgs[sI].classList.remove('on'); imgs[sI].classList.add('prev'); sI = (sI + 1) % imgs.length; if (imgs[sI]) imgs[sI].classList.add('on') } catch (e) { } }
+
+        function pGrd(txt) {
+            if (!txt) return '';
+            var lines = txt.split('\n').map(function (s) { return s.trim(); }).filter(function (s) { return s.length > 0; });
+            if (lines.length === 0) return '';
+            var html = '<div class="jm-grid">';
+            for (var i = 0; i < lines.length; i += 2) {
+                var lbl = lines[i];
+                var val = lines[i + 1] || '-';
+                html += '<div class="jm-col"><div class="jm-lbl">' + lbl + '</div><div class="jm-val">' + val + '</div></div>';
+            }
+            html += '</div>';
+            return html;
+        }
+
+        function gLI() {
+            try {
+                var items = [], n = new Date();
+                if (S.jumat) {
+                    var gridHTML = '<div class="jm-grid">' +
+                        '<div class="jm-col"><div class="jm-lbl">Imam</div><div class="jm-val">' + gT(S.jumat, 'imam', '-') + '</div></div>' +
+                        '<div class="jm-col"><div class="jm-lbl">Khatib</div><div class="jm-val">' + gT(S.jumat, 'khatib', '-') + '</div></div>' +
+                        '<div class="jm-col"><div class="jm-lbl">Muadzin</div><div class="jm-val">' + gT(S.jumat, 'muadzin', '-') + '</div></div>' +
+                        '<div class="jm-col"><div class="jm-lbl">Bilal</div><div class="jm-val">' + gT(S.jumat, 'bilal', '-') + '</div></div>' +
+                        '</div>';
+                    items.push({ badge: "Petugas Jum'at", title: '', value: gridHTML, isHtml: true });
+                }
+                if (S.finance) {
+                    var lastUpd = gT(S.finance, 'lastUpdate', '-');
+                    if (lastUpd && lastUpd !== '-') {
+                        var dp = lastUpd.split('-');
+                        if (dp.length === 3) lastUpd = dp[2] + '/' + dp[1] + '/' + dp[0];
+                    }
+                    var finHTML = '<div class="jm-grid">' +
+                        '<div class="jm-col"><div class="jm-lbl">Saldo Awal</div><div class="jm-val">' + gT(S.finance, 'saldoAwal', '-') + '</div></div>' +
+                        '<div class="jm-col"><div class="jm-lbl">Pemasukan</div><div class="jm-val">' + gT(S.finance, 'pemasukan', '-') + '</div></div>' +
+                        '<div class="jm-col"><div class="jm-lbl">Pengeluaran</div><div class="jm-val">' + gT(S.finance, 'pengeluaran', '-') + '</div></div>' +
+                        '<div class="jm-col"><div class="jm-lbl">Saldo Akhir</div><div class="jm-val">' + gT(S.finance, 'saldoAkhir', '-') + '</div></div>' +
+                        '</div>';
+                    var bdg = "Keuangan Masjid" + (lastUpd !== '-' ? " (Per " + lastUpd + ")" : "");
+                    items.push({ badge: bdg, title: '', value: finHTML, isHtml: true });
+                }
+                if (S.pembangunan) {
+                    var lastUpd = gT(S.pembangunan, 'lastUpdate', '-');
+                    if (lastUpd && lastUpd !== '-') {
+                        var dp = lastUpd.split('-');
+                        if (dp.length === 3) lastUpd = dp[2] + '/' + dp[1] + '/' + dp[0];
+                    }
+                    var finHTML = '<div class="jm-grid">' +
+                        '<div class="jm-col"><div class="jm-lbl">Saldo Awal</div><div class="jm-val">' + gT(S.pembangunan, 'saldoAwal', '-') + '</div></div>' +
+                        '<div class="jm-col"><div class="jm-lbl">Pemasukan</div><div class="jm-val">' + gT(S.pembangunan, 'pemasukan', '-') + '</div></div>' +
+                        '<div class="jm-col"><div class="jm-lbl">Pengeluaran</div><div class="jm-val">' + gT(S.pembangunan, 'pengeluaran', '-') + '</div></div>' +
+                        '<div class="jm-col"><div class="jm-lbl">Saldo Akhir</div><div class="jm-val">' + gT(S.pembangunan, 'saldoAkhir', '-') + '</div></div>' +
+                        '</div>';
+                    var bdg = "Kas Pembangunan" + (lastUpd !== '-' ? " (Per " + lastUpd + ")" : "");
+                    items.push({ badge: bdg, title: '', value: finHTML, isHtml: true });
+                }
+                if (S.announcements && Array.isArray(S.announcements)) {
+                    S.announcements.forEach(function(ann) {
+                        items.push({ badge: "Pengumuman", title: ann.title || '', value: ann.body || '' });
+                    });
+                }
+                var ph = nPH(); if (ph) { var d = Math.ceil((ph.d - new Date()) / 864e5); items.push({ badge: 'PHBI', title: ph.name, value: d > 0 ? d + ' hari lagi' : 'Hari ini' }) }
+                return items;
+            } catch (e) { return []; }
+        }
+
+        function sL() {
+            try {
+                var items = gLI(); if (!items.length) return;
+                var el = document.getElementById('ltBox'), it = items[lI % items.length];
+                document.getElementById('ltBdg').textContent = it.badge;
+                var ttl = document.getElementById('ltTtl');
+                if (it.title) { ttl.style.display = 'block'; ttl.textContent = it.title; } else { ttl.style.display = 'none'; }
+                if (it.isHtml) {
+                    document.getElementById('ltVal').innerHTML = it.value;
+                } else {
+                    document.getElementById('ltVal').textContent = it.value;
+                }
+                el.classList.remove('out'); el.classList.add('on');
+                clearTimeout(lT);
+                lT = setTimeout(function () { el.classList.remove('on'); el.classList.add('out'); setTimeout(function () { el.classList.remove('out'); lI++; sL() }, 1000) }, 6500);
+            } catch (e) { }
+        }
+
+        function nPH() {
+            try {
+                var n = new Date(), best = null, bd = 1 / 0;
+                if (!Array.isArray(S.phbi)) return null;
+                for (var i = 0; i < S.phbi.length; i++) {
+                    var p = S.phbi[i]; if (!p.name || !p.date) continue;
+                    var d = new Date(p.date + 'T00:00:00'), df = d - n;
+                    if (df >= 0 && df < bd) { bd = df; best = { name: p.name, d: d } }
+                }
+                return best;
+            } catch (e) { return null; }
+        }
+        function rPh() {
+            try {
+                var ph = nPH(), box = document.getElementById('phbiBox');
+                if (!ph) { box.style.display = 'none'; return; }
+                box.style.display = 'block';
+                document.getElementById('phbiNm').textContent = ph.name;
+                var d = Math.ceil((ph.d - new Date()) / 864e5);
+                document.getElementById('phbiCd').innerHTML = d > 0 ? '<b>' + d + '</b> hari lagi' : d === 0 ? '<b>Hari ini</b>' : '<b>Baru saja</b>';
+            } catch (e) { }
+        }
+
+        function setMq(el1Id, el2Id, txt) {
+            try {
+                var el = document.getElementById(el1Id);
+                if (!txt) { el.closest('.mq').style.display = 'none'; return; }
+                el.closest('.mq').style.display = 'flex';
+                var items = txt.split('\n').filter(function (i) { return i.trim().length > 0; });
+                var sep = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-star-and-crescent" style="color:var(--gold);font-size:1.1em;text-shadow:0 0 12px var(--gold-g)"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+                var baseContent = items.map(function (t) { return t.replace(/</g, '&lt;').replace(/>/g, '&gt;'); }).join(sep) + sep;
+                var repeatCount = Math.max(1, Math.ceil(100 / baseContent.length));
+                var content = ''; for (var i = 0; i < repeatCount; i++) content += baseContent;
+                document.getElementById(el1Id).innerHTML = content;
+                document.getElementById(el2Id).innerHTML = content;
+                el.closest('.mq-scroll').style.setProperty('--dur', Math.max(15, content.length * 0.15) + 's');
+            } catch (e) { }
+        }
+
+        function rMq() { setMq('mqTx', 'mqTx2', gT(S, 'runningText', '')); }
+
+        function hOv() { try { document.querySelectorAll('.ov').forEach(function (o) { o.classList.remove('on') }) } catch (e) { } }
+        function sOv(id) { try { hOv(); document.getElementById(id).classList.add('on') } catch (e) { } }
+        function sNm() { try { hOv(); document.getElementById('app').style.display = 'flex'; document.getElementById('errScr').classList.remove('on') } catch (e) { } }
+        function hNm() { try { document.getElementById('app').style.display = 'none' } catch (e) { } }
+
+        function tCdAz(k) { try { hNm(); sOv('ovCdAz'); document.getElementById('cdAzNm').textContent = LB[k] || k; mode = 'cdAz'; aK = k; } catch (e) { sNm() } }
+        function tAz(k) { 
+            try { 
+                aK = k; hNm(); sOv('ovAz'); 
+                document.getElementById('azNm').textContent = LB[k] || k; 
+                document.getElementById('azTm').textContent = PT[k] || ''; 
+                document.getElementById('azHint').textContent = (S.display && S.display.azanText) || 'Segera dirikan sholat berjamaah'; 
+                var iJ = new Date().getDay() === 5;
+                var runText = (iJ && k === 'dzuhur') ? ((S.display && S.display.azanJumatRunText) || '') : ((S.display && S.display.azanRunText) || '');
+                setMq('mqAzTx', 'mqAzTx2', runText);
+                mode = 'azan'; 
+                mE = Date.now() + (S.azanDuration || 180) * 1000; 
+            } catch (e) { sNm() } 
+        }
+        function tIq(k) { 
+            try { 
+                hNm(); sOv('ovIq'); 
+                document.getElementById('iqInf').textContent = (LB[k] || '') + ' \u2014 ' + gT(S.mosque, 'name', ''); 
+                var ih = document.getElementById('iqHint'); 
+                if (ih) ih.textContent = (S.display && S.display.iqomahText) || 'Luruskan dan rapatkan shaf'; 
+                setMq('mqIqTx', 'mqIqTx2', (S.display && S.display.iqomahRunText) || '');
+                iE = Date.now() + ((S.iqomah && S.iqomah[k]) || 3) * 6e4; 
+                mode = 'iqo'; 
+            } catch (e) { sNm() } 
+        }
+        function tReady() { try { hNm(); sOv('ovReady'); mode = 'ready'; mE = Date.now() + 10000; } catch (e) { sNm() } }
+        function tBk() { try { hNm(); sOv('ovBk'); mode = 'black'; mE = Date.now() + (S.display.blackScreenMinutes || 15) * 6e4; } catch (e) { sNm(); } }
+        function tKhutbah() { 
+            try { 
+                hNm(); 
+                sOv('ovKhutbah'); 
+                var txt = (S.display && S.display.khutbahText) || 'Harap tenang, Khutbah Jumat sedang berlangsung';
+                document.getElementById('khutbahMsg').innerHTML = txt.replace(/\n/g, '<br>');
+                mode = 'khutbah'; 
+                mE = Date.now() + (S.display && S.display.khutbahMinutes ? S.display.khutbahMinutes : 30) * 6e4; 
+            } catch (e) { sNm() } 
+        }
+
+        function tJu() {
+            try {
+                hNm(); var j = S.jumat || {};
+                document.getElementById('juGr').innerHTML =
+                    '<div class="ju-c"><div class="ju-cl">Imam</div><div class="ju-cv">' + gT(j, 'imam', '-') + '</div></div>' +
+                    '<div class="ju-c"><div class="ju-cl">Khatib</div><div class="ju-cv">' + gT(j, 'khatib', '-') + '</div></div>' +
+                    '<div class="ju-c"><div class="ju-cl">Muadzin</div><div class="ju-cv">' + gT(j, 'muadzin', '-') + '</div></div>' +
+                    '<div class="ju-c"><div class="ju-cl">Bilal</div><div class="ju-cv">' + gT(j, 'bilal', '-') + '</div></div>';
+                sOv('ovJu'); mode = 'jum';
+            } catch (e) { sNm(); }
+        }
+        function cCu() {
+            try {
+                if (!Array.isArray(S.customMessages)) return false; var n = new Date();
+                for (var i = 0; i < S.customMessages.length; i++) {
+                    var m = S.customMessages[i]; if (!m.active) continue;
+                    if (m.schedule && m.scheduleStart && m.scheduleEnd) {
+                        try { if (n >= new Date(m.scheduleStart) && n <= new Date(m.scheduleEnd)) { hNm(); document.getElementById('cuTtl').textContent = m.title || ''; document.getElementById('cuBd').textContent = m.body || ''; sOv('ovCu'); mode = 'cust'; return true; } } catch (e) { }
+                    }
+                    if (m.manual) { hNm(); document.getElementById('cuTtl').textContent = m.title || ''; document.getElementById('cuBd').textContent = m.body || ''; sOv('ovCu'); mode = 'cust'; return true; }
+                }
+                return false;
+            } catch (e) { return false; }
+        }
+
+        function chkM() {
+            try {
+                if (cCu()) return;
+                var n = new Date(), ds = n.toDateString(); if (dStr !== ds) { trig.clear(); dStr = ds }
+                var ns = n.getHours() * 3600 + n.getMinutes() * 60 + n.getSeconds(), iJ = n.getDay() === 5;
+                if (mode === 'cdAz') {
+                    var pt = tM(PT[aK]) * 60, rem = Math.max(0, pt - ns);
+                    document.getElementById('cdAzTm').textContent = fC(rem);
+                    if (ns >= pt) { tAz(aK); }
+                    return;
+                }
+                if (mode === 'azan') { 
+                    if (Date.now() >= mE) {
+                        var isFriday = new Date().getDay() === 5;
+                        if (isFriday && aK === 'dzuhur') {
+                            tKhutbah();
+                        } else {
+                            tIq(aK);
+                        }
+                    }
+                    return; 
+                }
+                if (mode === 'khutbah') {
+                    if (Date.now() >= mE) tBk();
+                    return;
+                }
+                if (mode === 'iqo') { var r = Math.max(0, Math.ceil((iE - Date.now()) / 1000)); document.getElementById('iqNm').textContent = fC(r); if (Date.now() >= iE) { tReady(); } return; }
+                if (mode === 'ready') { if (Date.now() >= mE) { (S.display && S.display.showBlackScreen) ? tBk() : sNm(); } return; }
+                if (mode === 'black') { if (Date.now() >= mE) sNm(); return; }
+                if (mode === 'jum') { var dS = tM(PT.dzuhur) * 60; if (ns >= dS - 30 && !trig.has('ja')) { trig.add('ja'); tJu(); return; } return; }
+                if (mode !== 'norm') return;
+                if (iJ && !trig.has('jw')) { var wS = tM(PT.dzuhur) * 60 - (S.display.jumatWelcomeMinutes || 10) * 60; if (ns >= wS) { trig.add('jw'); tJu(); return; } }
+                if (S.display && S.display.autoAzan) {
+                    for (var i = 0; i < OD.length; i++) {
+                        var k = OD[i], pt = tM(PT[k]) * 60;
+                        if (!trig.has('cd' + k) && ns >= pt - 60 && ns < pt) { trig.add('cd' + k); tCdAz(k); return; }
+                        if (!trig.has(k) && ns >= pt && ns < pt + 30) { trig.add('cd' + k); trig.add(k); tAz(k); return; }
+                    }
+                }
+            } catch (e) { }
+        }
+
+        function tick() { try { rC(); rCd(); chkM(); if (mode === 'norm') { rP(); rPh(); } } catch (e) { } }
+        function sF() { try { var url = S.spreadsheetUrl; if (!url || !url.trim()) return; fetch(url, { mode: 'cors' }).then(function (r) { if (!r.ok) throw 0; return r.json() }).then(function (d) { if (d && typeof d === 'object') { S = dM(sC(DEF), d); if (!Array.isArray(S.phbi)) S.phbi = []; if (!Array.isArray(S.customMessages)) S.customMessages = []; sv(); PT = cT(new Date()); iS(); rMq(); applyTheme(); rC(); sL(); } }).catch(function () { }); } catch (e) { } }
+
+        function init() { try { ld(); PT = cT(new Date()); setInterval(function () { try { PT = cT(new Date()) } catch (e) { } }, 6e4); rC(); rP(); rCd(); rPh(); iS(); rMq(); setTimeout(sL, 2800); sNm(); setInterval(tick, 1000); setInterval(sF, 3e4); sF(); window.addEventListener('storage', function(e) { if(e.key === 'mosque_settings') { ld(); PT = cT(new Date()); rC(); rP(); rMq(); sL(); } }); } catch (e) { document.getElementById('errMsg').textContent = 'Gagal memuat: ' + e.message; document.getElementById('errScr').classList.add('on'); document.getElementById('app').style.display = 'none' } }
+        init();
+    </script>
+</body>
+
+</html>
