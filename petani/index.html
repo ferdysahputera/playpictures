@@ -3,169 +3,185 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Asisten Petani Sayur v2</title>
+    <title>Asisten Petani Sayur v3</title>
     <style>
         :root {
             --primary: #2e7d32;
-            --secondary: #fb8c00;
+            --secondary: #0288d1;
             --bg: #f1f8e9;
             --text: #333;
             --white: #ffffff;
-            --gray: #e0e0e0;
+            --rugi: #e53935;
+            --laba: #43a047;
         }
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--bg);
             color: var(--text);
-            margin: 0;
-            padding: 0;
-            padding-bottom: 70px;
+            margin: 0; padding: 0; padding-bottom: 70px;
         }
 
-        /* Navigasi Bawah */
+        /* Navigasi */
         .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            background: var(--white);
-            display: flex;
-            justify-content: space-around;
-            padding: 10px 0;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
-            z-index: 1000;
+            position: fixed; bottom: 0; width: 100%; background: var(--white);
+            display: flex; justify-content: space-around; padding: 10px 0;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1); z-index: 1000;
         }
-        .nav-item { text-align: center; color: #757575; font-size: 12px; cursor: pointer; flex: 1; }
+        .nav-item { text-align: center; color: #757575; font-size: 11px; cursor: pointer; flex: 1; }
         .nav-item.active { color: var(--primary); font-weight: bold; }
-        .nav-icon { font-size: 24px; display: block; margin-bottom: 2px; }
+        .nav-icon { font-size: 22px; display: block; margin-bottom: 2px; }
 
-        /* Halaman */
         .page { display: none; padding: 15px; animation: fadeIn 0.3s; }
         .page.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Kartu & Input */
+        /* Komponen */
         header { background: var(--primary); color: white; padding: 15px; border-radius: 10px; margin-bottom: 15px; text-align: center; }
         .card { background: var(--white); padding: 15px; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 15px; }
-        
-        input, select, button { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; font-size: 16px; }
+        input, select, button { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; font-size: 15px; }
         button { background: var(--primary); color: white; border: none; font-weight: bold; cursor: pointer; }
-        
-        /* List Data */
-        .laba { color: var(--primary); font-weight: bold; }
-        .rugi { color: #d32f2f; font-weight: bold; }
+        .btn-hapus { background: #e0e0e0; color: #333; font-size: 12px; padding: 8px; margin-top: 5px; }
+
+        .laba { color: var(--laba); font-weight: bold; }
+        .rugi { color: var(--rugi); font-weight: bold; }
         .item-list { list-style: none; padding: 0; margin: 0; }
-        .item-list li { background: #f9f9f9; margin-bottom: 8px; padding: 12px; border-radius: 8px; display: flex; justify-content: space-between; border-left: 4px solid var(--primary); }
+        .item-list li { background: #f9f9f9; margin-bottom: 8px; padding: 12px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid var(--secondary); }
+
+        /* Grafik Melingkar (Donut Chart) */
+        .chart-wrapper { display: flex; justify-content: center; margin: 20px 0; }
+        .donut-chart {
+            width: 160px; height: 160px; border-radius: 50%;
+            background: conic-gradient(var(--rugi) 0% 50%, var(--laba) 50% 100%); /* Default */
+            position: relative; display: flex; justify-content: center; align-items: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: background 0.5s ease;
+        }
+        .donut-inner {
+            width: 110px; height: 110px; background: var(--white); border-radius: 50%;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            text-align: center; font-size: 11px; color: #555;
+        }
+        .donut-inner strong { font-size: 14px; color: var(--text); margin-top: 3px; }
+
+        /* Kartu Per Kategori di Beranda */
+        .kategori-column { border: 2px solid #e0e0e0; border-radius: 8px; padding: 10px; margin-bottom: 15px; background: #fafafa; }
+        .kategori-header { background: var(--primary); color: white; padding: 8px 12px; border-radius: 6px; margin: -10px -10px 10px -10px; font-weight: bold; }
+        .jadwal-mini { font-size: 12px; background: white; padding: 6px; border-radius: 4px; margin-bottom: 5px; border-left: 3px solid #ff9800; display:flex; justify-content: space-between;}
         
-        /* Kategori Tanaman */
-        .rekap-tanaman { display: flex; justify-content: space-between; border-bottom: 1px dashed #ccc; padding: 8px 0; }
-        
-        /* Jadwal Tags */
-        .tag-kegiatan { font-size: 11px; padding: 3px 8px; border-radius: 12px; color: white; display: inline-block; margin-bottom: 5px;}
-        .bg-tanam { background: #8d6e63; }
-        .bg-racun { background: #e53935; }
-        .bg-pupuk { background: #fb8c00; }
-        .bg-panen { background: #43a047; }
+        .badge { font-size: 10px; padding: 3px 6px; border-radius: 10px; color: white; background: #757575;}
     </style>
 </head>
 <body>
 
     <div id="page-welcome" class="page">
         <div style="text-align: center; margin-top: 50px;">
-            <h1>🌾 TaniSayur</h1>
-            <p>Silakan isi profil Anda untuk memulai.</p>
+            <h1>🌾 TaniSayur</h1><p>Silakan isi nama Anda untuk memulai.</p>
         </div>
         <div class="card">
-            <input type="text" id="input-nama" placeholder="Nama Lengkap Anda">
+            <input type="text" id="input-nama" placeholder="Nama Petani">
             <button onclick="simpanProfil()">Mulai Aplikasi</button>
         </div>
     </div>
 
     <div id="page-home" class="page">
-        <header>
-            <h2 style="margin:0">Halo, <span id="nama-user">Petani</span>!</h2>
-            <small>Ringkasan Keuangan Lahan Anda</small>
-        </header>
+        <header><h2 style="margin:0">Halo, <span id="nama-user">Petani</span>!</h2></header>
 
         <div class="card">
-            <h3 style="margin-top: 0; color: var(--primary);">Keuangan Per Tanaman</h3>
-            <div id="rekap-per-tanaman">
+            <h3 style="margin-top: 0; text-align: center;">Grafik Total Keuangan</h3>
+            <div class="chart-wrapper">
+                <div class="donut-chart" id="main-chart">
+                    <div class="donut-inner">
+                        <span>Laba Bersih</span>
+                        <strong id="chart-laba-bersih">Rp 0</strong>
+                    </div>
                 </div>
-            
-            <div style="margin-top: 15px; padding-top: 10px; border-top: 2px solid #333;">
-                <strong>TOTAL KESELURUHAN: </strong>
-                <span id="total-bersih" style="float: right; font-size: 18px;">Rp 0</span>
             </div>
+            <div style="display:flex; justify-content:space-between; font-size:12px; text-align:center;">
+                <div style="color:var(--rugi);">PENGELUARAN<br><strong id="chart-keluar">Rp 0</strong></div>
+                <div style="color:var(--laba);">PENGHASILAN<br><strong id="chart-masuk">Rp 0</strong></div>
+            </div>
+        </div>
+
+        <h3 style="margin-bottom: 10px;">Ringkasan Per Tanaman</h3>
+        <div id="container-kategori-beranda">
+            </div>
+    </div>
+
+    <div id="page-kategori" class="page">
+        <div class="card">
+            <h3 style="margin-top: 0;">Buat Kategori Tanaman</h3>
+            <p style="font-size:12px; color:#666;">Tambahkan tanaman sebelum mencatat jadwal atau keuangan.</p>
+            <input type="text" id="input-kategori-baru" placeholder="Cth: Cabai Merah Blok A">
+            <button onclick="tambahKategori()">+ Tambah Kategori</button>
+        </div>
+        <div class="card">
+            <h3 style="margin-top: 0;">Daftar Kategori Aktif</h3>
+            <ul class="item-list" id="list-kategori"></ul>
         </div>
     </div>
 
     <div id="page-jadwal" class="page">
         <div class="card">
-            <h3 style="margin-top: 0;">Buat Jadwal Baru</h3>
-            <input type="text" id="jadwal-tanaman" placeholder="Nama Tanaman (Cth: Cabai Merah A)">
+            <h3 style="margin-top: 0;">Tambah Jadwal</h3>
+            <select id="jadwal-tanaman" class="select-tanaman"></select>
             <select id="jadwal-kegiatan">
-                <option value="Olah Lahan">Olah Lahan</option>
-                <option value="Tanam">Mulai Tanam</option>
-                <option value="Semprot Racun">Semprot Racun / Hama</option>
-                <option value="Beri Pupuk">Beri Pupuk</option>
-                <option value="Panen">Panen</option>
+                <option value="Olah Tanam">Olah Tanam</option>
+                <option value="Pemupukan">Pemupukan</option>
+                <option value="Pengecoran">Pengecoran</option>
+                <option value="Penyiangan">Penyiangan</option>
+                <option value="Penimbunan">Penimbunan</option>
+                <option value="Penyemprotan">Penyemprotan</option>
+                <option value="Pemanenan">Pemanenan</option>
+                <option value="Lainnya">Lainnya</option>
             </select>
             <input type="date" id="jadwal-tanggal">
             <button onclick="tambahJadwal()">Simpan Jadwal</button>
         </div>
-
         <div class="card">
-            <h3 style="margin-top: 0;">Kalender Kegiatan</h3>
-            <ul class="item-list" id="list-jadwal"></ul>
+            <h3 style="margin-top: 0;">Semua Jadwal</h3>
+            <ul class="item-list" id="list-jadwal-semua"></ul>
         </div>
     </div>
 
     <div id="page-transaksi" class="page">
         <div class="card">
             <h3 style="margin-top: 0;">Catat Keuangan</h3>
-            <input type="text" id="keuangan-tanaman" placeholder="Untuk Tanaman Apa? (Cth: Cabai Merah A)">
-            <input type="text" id="ket" placeholder="Keterangan (Cth: Beli Obat Ulat)">
+            <select id="keuangan-tanaman" class="select-tanaman"></select>
+            <input type="text" id="ket" placeholder="Keterangan (Cth: Beli Urea)">
             <input type="number" id="nominal" placeholder="Jumlah Rupiah">
             <select id="jenis">
-                <option value="keluar">Pengeluaran (Modal/Obat)</option>
-                <option value="masuk">Penghasilan (Jual Panen)</option>
+                <option value="keluar">Pengeluaran (Modal)</option>
+                <option value="masuk">Penghasilan (Panen)</option>
             </select>
             <button onclick="tambahTransaksi()">Simpan Data</button>
         </div>
-
         <div class="card">
-            <h3 style="margin-top: 0;">Riwayat Semua Transaksi</h3>
+            <h3 style="margin-top: 0;">Riwayat Keuangan</h3>
             <ul class="item-list" id="riwayat-list"></ul>
         </div>
     </div>
 
     <nav class="bottom-nav" id="navbar" style="display: none;">
-        <div class="nav-item active" onclick="pindahHalaman('home', this)">
-            <span class="nav-icon">🏠</span> Beranda
-        </div>
-        <div class="nav-item" onclick="pindahHalaman('jadwal', this)">
-            <span class="nav-icon">📅</span> Jadwal
-        </div>
-        <div class="nav-item" onclick="pindahHalaman('transaksi', this)">
-            <span class="nav-icon">💰</span> Keuangan
-        </div>
-        <div class="nav-item" onclick="hapusData()">
-            <span class="nav-icon">⚙️</span> Reset
-        </div>
+        <div class="nav-item active" onclick="pindahHalaman('home', this)"><span class="nav-icon">🏠</span> Beranda</div>
+        <div class="nav-item" onclick="pindahHalaman('kategori', this)"><span class="nav-icon">🌱</span> Kategori</div>
+        <div class="nav-item" onclick="pindahHalaman('jadwal', this)"><span class="nav-icon">📅</span> Jadwal</div>
+        <div class="nav-item" onclick="pindahHalaman('transaksi', this)"><span class="nav-icon">💰</span> Keuangan</div>
     </nav>
 
     <script>
-        let dataKeuangan = JSON.parse(localStorage.getItem('dataKeuangan')) || [];
-        let dataJadwal = JSON.parse(localStorage.getItem('dataJadwal')) || [];
+        // Database Lokal
         let profilTani = JSON.parse(localStorage.getItem('profilTani')) || null;
+        let dbKategori = JSON.parse(localStorage.getItem('dbKategori')) || [];
+        let dbKeuangan = JSON.parse(localStorage.getItem('dbKeuangan')) || [];
+        let dbJadwal = JSON.parse(localStorage.getItem('dbJadwal')) || [];
 
         function initApp() {
             if (profilTani) {
                 document.getElementById('nama-user').innerText = profilTani.nama;
                 document.getElementById('navbar').style.display = 'flex';
-                pindahHalaman('home', document.querySelector('.nav-item'));
-                updateKeuangan();
-                updateJadwal();
+                pindahHalaman('home', document.querySelectorAll('.nav-item')[0]);
+                refreshSemuaData();
             } else {
                 document.getElementById('navbar').style.display = 'none';
                 pindahHalaman('welcome', null);
@@ -183,148 +199,157 @@
 
         function simpanProfil() {
             const nama = document.getElementById('input-nama').value;
-            if (nama === '') return alert('Nama harus diisi!');
+            if (!nama) return alert('Nama harus diisi!');
             profilTani = { nama: nama };
             localStorage.setItem('profilTani', JSON.stringify(profilTani));
             initApp();
         }
 
-        function hapusData() {
-            if(confirm("Yakin ingin mereset aplikasi? Semua data akan hilang.")) {
-                localStorage.clear();
-                location.reload();
+        // --- KATEGORI ---
+        function tambahKategori() {
+            const nama = document.getElementById('input-kategori-baru').value;
+            if(!nama) return alert('Isi nama kategori!');
+            if(dbKategori.includes(nama)) return alert('Kategori sudah ada!');
+            
+            dbKategori.push(nama);
+            localStorage.setItem('dbKategori', JSON.stringify(dbKategori));
+            document.getElementById('input-kategori-baru').value = '';
+            refreshSemuaData();
+            alert('Kategori berhasil ditambahkan!');
+        }
+
+        function hapusKategori(nama) {
+            if(confirm(`Hapus kategori ${nama}? Seluruh jadwal & keuangan terkait tidak akan terhapus, namun tidak terhubung lagi.`)){
+                dbKategori = dbKategori.filter(k => k !== nama);
+                localStorage.setItem('dbKategori', JSON.stringify(dbKategori));
+                refreshSemuaData();
             }
         }
 
-        // --- LOGIKA JADWAL ---
+        // --- JADWAL ---
         function tambahJadwal() {
             const tanaman = document.getElementById('jadwal-tanaman').value;
             const kegiatan = document.getElementById('jadwal-kegiatan').value;
             const tanggal = document.getElementById('jadwal-tanggal').value;
 
-            if (!tanaman || !tanggal) return alert('Lengkapi tanaman dan tanggal!');
+            if (!tanaman || !tanggal) return alert('Buat Kategori dan pilih Tanggal terlebih dahulu!');
 
-            dataJadwal.push({ tanaman, kegiatan, tanggal });
-            
-            // Urutkan jadwal berdasarkan tanggal terdekat
-            dataJadwal.sort((a, b) => new Date(a.tanggal) - new Date(b.tanggal));
-            
-            localStorage.setItem('dataJadwal', JSON.stringify(dataJadwal));
-            document.getElementById('jadwal-tanaman').value = '';
-            document.getElementById('jadwal-tanggal').value = '';
-            updateJadwal();
+            dbJadwal.push({ id: Date.now(), tanaman, kegiatan, tanggal });
+            dbJadwal.sort((a, b) => new Date(a.tanggal) - new Date(b.tanggal));
+            localStorage.setItem('dbJadwal', JSON.stringify(dbJadwal));
+            refreshSemuaData();
+            alert('Jadwal tersimpan!');
         }
 
-        function updateJadwal() {
-            const list = document.getElementById('list-jadwal');
-            list.innerHTML = '';
-            
-            dataJadwal.forEach((item, index) => {
-                let warnaTag = 'bg-tanam';
-                if(item.kegiatan.includes('Racun')) warnaTag = 'bg-racun';
-                if(item.kegiatan.includes('Pupuk')) warnaTag = 'bg-pupuk';
-                if(item.kegiatan.includes('Panen')) warnaTag = 'bg-panen';
-
-                const li = document.createElement('li');
-                li.innerHTML = `
-                    <div>
-                        <span class="tag-kegiatan ${warnaTag}">${item.kegiatan}</span><br>
-                        <strong>${item.tanaman}</strong>
-                    </div>
-                    <div style="text-align:right;">
-                        <small>${item.tanggal}</small><br>
-                        <button onclick="hapusJadwal(${index})" style="background:transparent; color:red; padding:0; margin-top:5px; width:auto;">Selesai ✖</button>
-                    </div>
-                `;
-                list.appendChild(li);
-            });
+        function hapusJadwal(id) {
+            dbJadwal = dbJadwal.filter(j => j.id !== id);
+            localStorage.setItem('dbJadwal', JSON.stringify(dbJadwal));
+            refreshSemuaData();
         }
 
-        function hapusJadwal(index) {
-            dataJadwal.splice(index, 1);
-            localStorage.setItem('dataJadwal', JSON.stringify(dataJadwal));
-            updateJadwal();
-        }
-
-        // --- LOGIKA KEUANGAN PER TANAMAN ---
+        // --- KEUANGAN ---
         function tambahTransaksi() {
-            const tanaman = document.getElementById('keuangan-tanaman').value || 'Umum';
+            const tanaman = document.getElementById('keuangan-tanaman').value;
             const ket = document.getElementById('ket').value;
             const nominal = document.getElementById('nominal').value;
             const jenis = document.getElementById('jenis').value;
 
-            if (!ket || !nominal) return alert('Keterangan dan nominal wajib diisi!');
+            if (!tanaman || !ket || !nominal) return alert('Data tidak lengkap!');
 
-            dataKeuangan.push({ tanaman, keterangan: ket, jumlah: parseInt(nominal), tipe: jenis, tanggal: new Date().toLocaleDateString('id-ID') });
-            localStorage.setItem('dataKeuangan', JSON.stringify(dataKeuangan));
-            
+            dbKeuangan.push({ id: Date.now(), tanaman, keterangan: ket, jumlah: parseInt(nominal), tipe: jenis, tanggal: new Date().toLocaleDateString('id-ID') });
+            localStorage.setItem('dbKeuangan', JSON.stringify(dbKeuangan));
             document.getElementById('ket').value = '';
             document.getElementById('nominal').value = '';
-            alert('Berhasil disimpan!');
-            updateKeuangan();
+            refreshSemuaData();
+            alert('Keuangan tersimpan!');
         }
 
-        function updateKeuangan() {
-            const listRiwayat = document.getElementById('riwayat-list');
-            const wadahRekap = document.getElementById('rekap-per-tanaman');
-            listRiwayat.innerHTML = '';
-            wadahRekap.innerHTML = '';
-            
-            let rekapTanaman = {};
-            let totalSemua = 0;
-
-            // Proses Data Terbalik (Terbaru di atas)
-            [...dataKeuangan].reverse().forEach(item => {
-                // 1. Render List Riwayat
-                const warna = item.tipe === 'masuk' ? 'laba' : 'rugi';
-                const simbol = item.tipe === 'masuk' ? '+' : '-';
-                const li = document.createElement('li');
-                li.innerHTML = `
-                    <div>
-                        <small style="color:#888;">${item.tanaman} | ${item.tanggal}</small><br>
-                        <strong>${item.keterangan}</strong>
-                    </div>
-                    <span class="${warna}" style="margin-top:10px;">${simbol} Rp ${item.jumlah.toLocaleString()}</span>
-                `;
-                listRiwayat.appendChild(li);
-
-                // 2. Kalkulasi Rekap per Tanaman
-                if (!rekapTanaman[item.tanaman]) {
-                    rekapTanaman[item.tanaman] = { modal: 0, hasil: 0 };
-                }
-                
-                if (item.tipe === 'masuk') {
-                    rekapTanaman[item.tanaman].hasil += item.jumlah;
-                    totalSemua += item.jumlah;
-                } else {
-                    rekapTanaman[item.tanaman].modal += item.jumlah;
-                    totalSemua -= item.jumlah;
-                }
+        // --- RENDER SEMUA UI ---
+        function refreshSemuaData() {
+            // 1. Update Dropdown Select Tanaman
+            document.querySelectorAll('.select-tanaman').forEach(select => {
+                select.innerHTML = dbKategori.length ? '' : '<option value="">-- Buat Kategori Dulu --</option>';
+                dbKategori.forEach(k => select.innerHTML += `<option value="${k}">${k}</option>`);
             });
 
-            // 3. Tampilkan Rekap di Beranda
-            for (const [namaTanaman, data] of Object.entries(rekapTanaman)) {
-                let untungBersih = data.hasil - data.modal;
-                let classWarna = untungBersih >= 0 ? 'laba' : 'rugi';
-                
-                wadahRekap.innerHTML += `
-                    <div class="rekap-tanaman">
-                        <div>
-                            <strong>${namaTanaman}</strong><br>
-                            <small>Modal: Rp ${data.modal.toLocaleString()}</small> | 
-                            <small>Hasil: Rp ${data.hasil.toLocaleString()}</small>
-                        </div>
-                        <div class="${classWarna}" style="text-align:right;">
-                            <small>Laba/Rugi</small><br>
-                            <strong>Rp ${untungBersih.toLocaleString()}</strong>
-                        </div>
-                    </div>
-                `;
+            // 2. Update List Kategori
+            const listKat = document.getElementById('list-kategori');
+            listKat.innerHTML = '';
+            dbKategori.forEach(k => {
+                listKat.innerHTML += `<li><strong>${k}</strong> <span style="color:red; cursor:pointer;" onclick="hapusKategori('${k}')">✖</span></li>`;
+            });
+
+            // 3. Rekap & Render Beranda (Grafik + Kolom Per Kategori)
+            let totalMasuk = 0, totalKeluar = 0;
+            const wadahBeranda = document.getElementById('container-kategori-beranda');
+            wadahBeranda.innerHTML = '';
+
+            if(dbKategori.length === 0) {
+                wadahBeranda.innerHTML = '<p style="text-align:center; color:#888;">Belum ada kategori. Buka menu "Kategori" untuk memulai.</p>';
             }
 
-            const warnaTotal = totalSemua >= 0 ? 'laba' : 'rugi';
-            document.getElementById('total-bersih').className = warnaTotal;
-            document.getElementById('total-bersih').innerText = `Rp ${totalSemua.toLocaleString()}`;
+            dbKategori.forEach(kategori => {
+                let mskKat = 0, klrKat = 0;
+                
+                // Hitung keuangan per kategori
+                dbKeuangan.filter(k => k.tanaman === kategori).forEach(uang => {
+                    if(uang.tipe === 'masuk') { mskKat += uang.jumlah; totalMasuk += uang.jumlah; }
+                    else { klrKat += uang.jumlah; totalKeluar += uang.jumlah; }
+                });
+
+                // Ambil jadwal khusus kategori ini
+                let htmlJadwal = '';
+                let jadwalKat = dbJadwal.filter(j => j.tanaman === kategori);
+                if(jadwalKat.length === 0) htmlJadwal = '<div class="jadwal-mini" style="color:#888;">Belum ada jadwal</div>';
+                jadwalKat.forEach(j => {
+                    htmlJadwal += `<div class="jadwal-mini"><span><span class="badge">${j.kegiatan}</span></span> <span>${j.tanggal}</span></div>`;
+                });
+
+                let labaRugi = mskKat - klrKat;
+                let warna = labaRugi >= 0 ? 'var(--laba)' : 'var(--rugi)';
+
+                wadahBeranda.innerHTML += `
+                    <div class="kategori-column">
+                        <div class="kategori-header">${kategori}</div>
+                        <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:10px;">
+                            <span>Modal: Rp ${klrKat.toLocaleString()}<br>Hasil: Rp ${mskKat.toLocaleString()}</span>
+                            <strong style="color:${warna}; font-size:14px; text-align:right;">Netto:<br>Rp ${labaRugi.toLocaleString()}</strong>
+                        </div>
+                        <div style="font-size:11px; font-weight:bold; margin-bottom:5px; color:#555;">JADWAL MENDATANG:</div>
+                        ${htmlJadwal}
+                    </div>
+                `;
+            });
+
+            // 4. Update Grafik Melingkar (Donut Chart)
+            document.getElementById('chart-masuk').innerText = `Rp ${totalMasuk.toLocaleString()}`;
+            document.getElementById('chart-keluar').innerText = `Rp ${totalKeluar.toLocaleString()}`;
+            let labaBersihTotal = totalMasuk - totalKeluar;
+            let elLaba = document.getElementById('chart-laba-bersih');
+            elLaba.innerText = `Rp ${labaBersihTotal.toLocaleString()}`;
+            elLaba.style.color = labaBersihTotal >= 0 ? 'var(--laba)' : 'var(--rugi)';
+
+            let totalUang = totalMasuk + totalKeluar;
+            let persenRugi = totalUang === 0 ? 50 : (totalKeluar / totalUang) * 100;
+            // Ubah gradien CSS secara dinamis
+            document.getElementById('main-chart').style.background = `conic-gradient(var(--rugi) 0% ${persenRugi}%, var(--laba) ${persenRugi}% 100%)`;
+
+            // 5. Render List Transaksi & Jadwal Master
+            const listJadwal = document.getElementById('list-jadwal-semua');
+            listJadwal.innerHTML = '';
+            dbJadwal.forEach(j => {
+                listJadwal.innerHTML += `<li><div><span class="badge">${j.kegiatan}</span><br><strong>${j.tanaman}</strong></div>
+                <div style="text-align:right"><small>${j.tanggal}</small><br><span onclick="hapusJadwal(${j.id})" style="color:red; font-size:12px; cursor:pointer;">✖ Hapus</span></div></li>`;
+            });
+
+            const listRiwayat = document.getElementById('riwayat-list');
+            listRiwayat.innerHTML = '';
+            [...dbKeuangan].reverse().forEach(u => {
+                const simbol = u.tipe === 'masuk' ? '+' : '-';
+                const wrn = u.tipe === 'masuk' ? 'laba' : 'rugi';
+                listRiwayat.innerHTML += `<li><div><small>${u.tanaman}</small><br><strong>${u.keterangan}</strong></div>
+                <div style="text-align:right"><small>${u.tanggal}</small><br><span class="${wrn}">${simbol} Rp ${u.jumlah.toLocaleString()}</span></div></li>`;
+            });
         }
 
         initApp();
