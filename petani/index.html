@@ -3,121 +3,130 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Asisten Petani Sayur v4</title>
+    <title>Asisten Petani Sayur v5</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
 
+        /* TEMA LIME LIGHT (DEFAULT) */
         :root {
-            --primary: #10b981; /* Hijau modern */
-            --primary-dark: #059669;
-            --secondary: #3b82f6; /* Biru modern */
-            --bg: #f3f4f6;
-            --text: #1f2937;
-            --text-light: #6b7280;
-            --white: #ffffff;
+            --primary: #65a30d;     /* Lime 600 */
+            --primary-dark: #4d7c0f;
+            --bg: #f7fee7;          /* Lime 50 */
+            --card: #ffffff;
+            --text: #1a2e05;        /* Lime 950 */
+            --text-light: #64748b;
+            --border: #e2e8f0;
             --rugi: #ef4444;
-            --laba: #10b981;
+            --laba: #65a30d;
+            --nav-bg: rgba(255, 255, 255, 0.8);
+            --shadow: rgba(0,0,0,0.06);
             --radius: 16px;
         }
 
+        /* TEMA LIME DARK */
+        body.dark {
+            --primary: #a3e635;     /* Lime 400 */
+            --primary-dark: #bef264;
+            --bg: #0f190a;          /* Sangat gelap kehijauan */
+            --card: #162411;        /* Kartu gelap */
+            --text: #f7fee7;        /* Teks terang */
+            --text-light: #94a3b8;
+            --border: #2a3f20;
+            --rugi: #f87171;
+            --laba: #a3e635;
+            --nav-bg: rgba(22, 36, 17, 0.8);
+            --shadow: rgba(0,0,0,0.4);
+        }
+
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
-            margin: 0; padding: 0; padding-bottom: 90px;
+            font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text);
+            margin: 0; padding: 0; padding-bottom: 90px; transition: background-color 0.3s, color 0.3s;
         }
 
         /* Navigasi Glassmorphism */
         .bottom-nav {
             position: fixed; bottom: 15px; left: 15px; right: 15px;
-            background: rgba(255, 255, 255, 0.75);
-            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            border-radius: 24px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
-            display: flex; justify-content: space-around; padding: 10px 5px;
-            z-index: 1000;
+            background: var(--nav-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--border); border-radius: 24px; box-shadow: 0 8px 32px var(--shadow);
+            display: flex; justify-content: space-around; padding: 12px 5px; z-index: 1000; transition: 0.3s;
         }
-        .nav-item { text-align: center; color: var(--text-light); font-size: 10px; font-weight: 600; cursor: pointer; flex: 1; display: flex; flex-direction: column; align-items: center; transition: 0.3s; }
+        .nav-item { text-align: center; color: var(--text-light); font-size: 11px; font-weight: 600; cursor: pointer; flex: 1; display: flex; flex-direction: column; align-items: center; transition: 0.3s; }
         .nav-item.active { color: var(--primary); }
         .nav-item svg { width: 24px; height: 24px; margin-bottom: 4px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-        .nav-item.active svg { fill: rgba(16, 185, 129, 0.1); }
 
         .page { display: none; padding: 20px; animation: fadeIn 0.3s ease-out; }
         .page.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
         /* Komponen Minimalis */
-        header { background: var(--primary); color: white; padding: 20px; border-radius: var(--radius); margin-bottom: 20px; text-align: center; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2); }
-        .card { background: var(--white); padding: 20px; border-radius: var(--radius); box-shadow: 0 4px 20px rgba(0,0,0,0.03); margin-bottom: 20px; border: 1px solid rgba(0,0,0,0.02); }
+        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .btn-theme { background: var(--card); border: 1px solid var(--border); border-radius: 50%; width: 40px; height: 40px; cursor: pointer; display: flex; justify-content: center; align-items: center; color: var(--text); box-shadow: 0 4px 10px var(--shadow); transition: 0.3s;}
+        
+        .card { background: var(--card); padding: 20px; border-radius: var(--radius); box-shadow: 0 4px 20px var(--shadow); margin-bottom: 20px; border: 1px solid var(--border); transition: 0.3s; }
         h3 { margin-top: 0; color: var(--text); font-size: 16px; font-weight: 700; margin-bottom: 15px; }
         
-        input, select, button { width: 100%; padding: 14px; margin: 8px 0; border: 1px solid #e5e7eb; border-radius: 12px; box-sizing: border-box; font-size: 14px; font-family: 'Inter', sans-serif; background: #f9fafb; outline: none; transition: 0.2s; }
-        input:focus, select:focus { border-color: var(--primary); background: var(--white); box-shadow: 0 0 0 3px rgba(16,185,129,0.1); }
+        input, select, button { width: 100%; padding: 14px; margin: 8px 0; border: 1px solid var(--border); border-radius: 12px; box-sizing: border-box; font-size: 14px; font-family: 'Inter', sans-serif; background: var(--card); color: var(--text); outline: none; transition: 0.2s; }
+        input:focus, select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(101, 163, 13, 0.2); }
         
-        button { background: var(--primary); color: white; border: none; font-weight: 600; cursor: pointer; font-size: 15px; margin-top: 15px; transition: 0.2s; box-shadow: 0 4px 10px rgba(16,185,129,0.2); }
-        button:active { transform: scale(0.98); }
-        button.btn-update { background: var(--secondary); box-shadow: 0 4px 10px rgba(59,130,246,0.2); }
-
-        /* List Minimalis */
+        button.btn-primary { background: var(--primary); color: #fff; border: none; font-weight: 600; cursor: pointer; font-size: 15px; margin-top: 10px; }
+        button.btn-primary:active { transform: scale(0.98); }
+        
         .item-list { list-style: none; padding: 0; margin: 0; }
-        .item-list li { background: var(--white); margin-bottom: 10px; padding: 15px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #f3f4f6; }
-        .action-btns { display: flex; gap: 10px; }
-        .action-btns span { cursor: pointer; font-size: 16px; opacity: 0.7; }
-        .action-btns span:active { opacity: 1; }
+        .item-list li { background: var(--card); margin-bottom: 10px; padding: 15px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border); transition: 0.3s;}
+        .action-btns span { cursor: pointer; font-size: 16px; opacity: 0.7; margin-left: 10px;}
 
         /* Grafik Melingkar */
-        .chart-wrapper { display: flex; justify-content: center; margin: 20px 0; }
-        .donut-chart { width: 150px; height: 150px; border-radius: 50%; background: conic-gradient(var(--rugi) 0% 50%, var(--laba) 50% 100%); position: relative; display: flex; justify-content: center; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: 0.5s; }
-        .donut-inner { width: 110px; height: 110px; background: var(--white); border-radius: 50%; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; font-size: 12px; color: var(--text-light); }
-        .donut-inner strong { font-size: 16px; color: var(--text); margin-top: 4px; font-weight: 700; }
+        .chart-wrapper { display: flex; justify-content: center; margin: 10px 0; }
+        .donut-chart { width: 140px; height: 140px; border-radius: 50%; background: conic-gradient(var(--rugi) 0% 50%, var(--laba) 50% 100%); display: flex; justify-content: center; align-items: center; box-shadow: 0 4px 15px var(--shadow); transition: 0.5s; }
+        .donut-inner { width: 100px; height: 100px; background: var(--card); border-radius: 50%; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; transition: 0.3s;}
+        .donut-inner span { font-size: 11px; color: var(--text-light); }
+        .donut-inner strong { font-size: 15px; color: var(--text); font-weight: 700; }
 
-        .badge { font-size: 11px; padding: 4px 8px; border-radius: 8px; color: white; background: var(--text-light); font-weight: 600; }
-        .kategori-card { border: 1px solid #e5e7eb; border-radius: 12px; padding: 15px; margin-bottom: 15px; background: var(--white); }
-        .kategori-header { font-weight: 700; font-size: 16px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; color: var(--primary-dark); }
-        
+        .badge { font-size: 11px; padding: 4px 8px; border-radius: 8px; color: #fff; background: var(--text-light); font-weight: 600; }
         .laba { color: var(--laba); font-weight: 700; }
         .rugi { color: var(--rugi); font-weight: 700; }
+        
+        /* Dashboard Spesifik */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; text-align: center; font-size: 12px; margin-top: 15px; }
+        .dash-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 10px; margin-bottom: 10px;}
     </style>
 </head>
 <body>
 
-    <div id="page-welcome" class="page">
-        <div style="text-align: center; margin-top: 50px;">
-            <svg style="width:60px; color:var(--primary);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-            <h1 style="color:var(--text); margin-bottom:5px;">TaniSayur</h1>
-            <p style="color:var(--text-light);">Manajemen Pertanian Modern</p>
-        </div>
-        <div class="card" style="margin-top: 30px;">
-            <input type="text" id="input-nama" placeholder="Nama Petani">
-            <button onclick="simpanProfil()">Mulai Sekarang</button>
-        </div>
-    </div>
-
-    <div id="page-home" class="page">
-        <header><h2 style="margin:0; font-weight:600;">Halo, <span id="nama-user">Petani</span>!</h2></header>
+    <div id="page-home" class="page active">
+        <header>
+            <div>
+                <h2 style="margin:0; font-weight:700;">Halo, <span id="nama-user">Petani</span>!</h2>
+                <small style="color:var(--text-light);">Ringkasan Kebunmu</small>
+            </div>
+            <button class="btn-theme" onclick="toggleTheme()">🌗</button>
+        </header>
 
         <div class="card">
-            <h3 style="text-align: center;">Total Keuangan</h3>
+            <h3 style="text-align:center; margin-bottom: 0;">Total Keuangan</h3>
             <div class="chart-wrapper">
                 <div class="donut-chart" id="main-chart"><div class="donut-inner"><span>Laba Bersih</span><strong id="chart-laba-bersih">Rp 0</strong></div></div>
             </div>
-            <div style="display:flex; justify-content:space-between; font-size:12px; text-align:center;">
+            <div class="grid-2">
                 <div style="color:var(--rugi);">PENGELUARAN<br><strong id="chart-keluar" style="font-size:14px;">Rp 0</strong></div>
                 <div style="color:var(--laba);">PENGHASILAN<br><strong id="chart-masuk" style="font-size:14px;">Rp 0</strong></div>
             </div>
         </div>
 
-        <h3>Per Tanaman</h3>
+        <div class="card">
+            <h3>⏳ Agenda Mendatang</h3>
+            <div id="dash-agenda" style="font-size:13px; color:var(--text-light);">Tidak ada jadwal mendatang.</div>
+        </div>
+
+        <h3 style="margin-bottom:10px;">Ringkasan Per Tanaman</h3>
         <div id="container-kategori-beranda"></div>
     </div>
 
     <div id="page-kategori" class="page">
         <div class="card">
             <h3>Kategori Tanaman</h3>
-            <p style="font-size:12px; color:var(--text-light); margin-top:-10px;">Tambahkan tanaman sebelum mencatat data.</p>
             <input type="text" id="input-kategori-baru" placeholder="Cth: Cabai Merah Blok A">
-            <button onclick="tambahKategori()">Tambah Kategori</button>
+            <button class="btn-primary" onclick="tambahKategori()">Tambah Kategori</button>
         </div>
         <div class="card">
             <h3>Daftar Kategori Aktif</h3>
@@ -125,48 +134,38 @@
         </div>
     </div>
 
-    <div id="page-perawatan" class="page">
+    <div id="page-aktivitas" class="page">
         <div class="card">
-            <h3 id="judul-form-perawatan">Catat Perawatan</h3>
-            <select id="rawat-tanaman" class="select-tanaman"></select>
-            <select id="rawat-jenis">
-                <option value="Penyemprotan">Penyemprotan (Racun/Fungisida)</option>
+            <h3 id="judul-form-aktivitas">Catat Aktivitas Baru</h3>
+            <select id="akt-tanaman" class="select-tanaman"></select>
+            <select id="akt-kegiatan">
+                <option value="Olah Lahan">Olah Lahan</option>
+                <option value="Tanam">Tanam</option>
                 <option value="Pemupukan">Pemupukan</option>
+                <option value="Penyemprotan">Penyemprotan (Racun/Obat)</option>
                 <option value="Pengecoran">Pengecoran</option>
+                <option value="Penyiangan">Penyiangan (Cabut Rumput)</option>
+                <option value="Pemanenan">Pemanenan</option>
+                <option value="Lainnya">Lainnya...</option>
             </select>
-            <input type="text" id="rawat-bahan" placeholder="Nama Bahan (Cth: NPK 16-16-16 / Amistar Top)">
-            <input type="text" id="rawat-dosis" placeholder="Takaran/Dosis (Cth: 2 Sendok/Tangki)">
-            <input type="date" id="rawat-tanggal">
-            <button id="btn-simpan-perawatan" onclick="simpanPerawatan()">Simpan Perawatan</button>
-        </div>
-        <div class="card">
-            <h3>Riwayat Perawatan</h3>
-            <ul class="item-list" id="list-perawatan"></ul>
-        </div>
-    </div>
-
-    <div id="page-jadwal" class="page">
-        <div class="card">
-            <h3 id="judul-form-jadwal">Rencana Kegiatan</h3>
-            <select id="jadwal-tanaman" class="select-tanaman"></select>
-            <select id="jadwal-kegiatan">
-                <option value="Olah Tanam">Olah Lahan / Tanam</option>
-                <option value="Pemupukan">Jadwal Pemupukan</option>
-                <option value="Penyemprotan">Jadwal Penyemprotan</option>
-                <option value="Pemanenan">Perkiraan Panen</option>
+            <input type="text" id="akt-bahan" placeholder="Bahan/Dosis (Cth: NPK 2 Sendok) *Opsional">
+            <input type="date" id="akt-tanggal">
+            <select id="akt-status">
+                <option value="selesai">✅ Selesai (Simpan sbg Riwayat)</option>
+                <option value="jadwal">⏳ Rencana (Simpan sbg Jadwal)</option>
             </select>
-            <input type="date" id="jadwal-tanggal">
-            <button id="btn-simpan-jadwal" onclick="simpanJadwal()">Simpan Jadwal</button>
+            <button class="btn-primary" id="btn-simpan-aktivitas" onclick="simpanAktivitas()">Simpan Aktivitas</button>
         </div>
+        
         <div class="card">
-            <h3>Semua Jadwal</h3>
-            <ul class="item-list" id="list-jadwal-semua"></ul>
+            <h3>Daftar Aktivitas</h3>
+            <ul class="item-list" id="list-aktivitas"></ul>
         </div>
     </div>
 
     <div id="page-transaksi" class="page">
         <div class="card">
-            <h3 id="judul-form-keuangan">Catat Keuangan</h3>
+            <h3 id="judul-form-keuangan">Catat Transaksi</h3>
             <select id="keuangan-tanaman" class="select-tanaman"></select>
             <input type="text" id="ket" placeholder="Keterangan (Cth: Beli Urea / Jual Sawi)">
             <input type="number" id="nominal" placeholder="Nominal Rupiah">
@@ -174,7 +173,7 @@
                 <option value="keluar">Pengeluaran (Modal)</option>
                 <option value="masuk">Penghasilan (Panen)</option>
             </select>
-            <button id="btn-simpan-keuangan" onclick="simpanKeuangan()">Simpan Data</button>
+            <button class="btn-primary" id="btn-simpan-keuangan" onclick="simpanKeuangan()">Simpan Data</button>
         </div>
         <div class="card">
             <h3>Riwayat Keuangan</h3>
@@ -182,67 +181,72 @@
         </div>
     </div>
 
-    <nav class="bottom-nav" id="navbar" style="display: none;">
+    <nav class="bottom-nav" id="navbar">
         <div class="nav-item active" onclick="pindahHalaman('home', this)">
             <svg><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>Beranda
         </div>
         <div class="nav-item" onclick="pindahHalaman('kategori', this)">
             <svg><path d="M11 20A7 7 0 0 1 4 13c0-3.5 3-7 7-7 1.5 0 3 .5 4 1.5 1-1 2.5-1.5 4-1.5 4 0 7 3.5 7 7a7 7 0 0 1-7 7H11z"></path></svg>Kategori
         </div>
-        <div class="nav-item" onclick="pindahHalaman('jadwal', this)">
-            <svg><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>Jadwal
-        </div>
-        <div class="nav-item" onclick="pindahHalaman('perawatan', this)">
-            <svg><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path></svg>Rawat
+        <div class="nav-item" onclick="pindahHalaman('aktivitas', this)">
+            <svg><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>Aktivitas
         </div>
         <div class="nav-item" onclick="pindahHalaman('transaksi', this)">
-            <svg><path d="M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4"></path><path d="M4 6v12a2 2 0 0 0 2 2h14v-4H6"></path></svg>Uang
+            <svg><path d="M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4"></path><path d="M4 6v12a2 2 0 0 0 2 2h14v-4H6"></path></svg>Keuangan
         </div>
     </nav>
 
     <script>
-        // Database
-        let profilTani = JSON.parse(localStorage.getItem('profilTani')) || null;
+        // Setup Theme & Database
+        let isDark = localStorage.getItem('themeDark') === 'true';
+        if (isDark) document.body.classList.add('dark');
+
         let dbKategori = JSON.parse(localStorage.getItem('dbKategori')) || [];
         let dbKeuangan = JSON.parse(localStorage.getItem('dbKeuangan')) || [];
-        let dbJadwal = JSON.parse(localStorage.getItem('dbJadwal')) || [];
-        let dbPerawatan = JSON.parse(localStorage.getItem('dbPerawatan')) || [];
-
-        // State Edit Global
+        let dbAktivitas = JSON.parse(localStorage.getItem('dbAktivitas')) || []; // Pengganti dbJadwal & dbPerawatan
         let editState = { mode: false, id: null, type: null };
 
-        function initApp() {
-            if (profilTani) {
-                document.getElementById('nama-user').innerText = profilTani.nama;
-                document.getElementById('navbar').style.display = 'flex';
-                pindahHalaman('home', document.querySelectorAll('.nav-item')[0]);
-                refreshSemuaData();
-            } else {
-                document.getElementById('navbar').style.display = 'none';
-                pindahHalaman('welcome', null);
-            }
+        function toggleTheme() {
+            isDark = !isDark;
+            document.body.classList.toggle('dark', isDark);
+            localStorage.setItem('themeDark', isDark);
         }
 
         function pindahHalaman(halamanId, elemenTab) {
-            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.getElementById('page-' + halamanId).classList.add('active');
             if (elemenTab) {
-                document.querySelectorAll('.nav-item').forEach(tab => tab.classList.remove('active'));
+                document.querySelectorAll('.nav-item').forEach(t => t.classList.remove('active'));
                 elemenTab.classList.add('active');
             }
-            batalEdit(); // Reset form jika pindah tab
+            batalEdit(); window.scrollTo(0,0);
         }
 
-        function simpanProfil() {
-            const nama = document.getElementById('input-nama').value;
-            if (!nama) return;
-            profilTani = { nama: nama };
-            localStorage.setItem('profilTani', JSON.stringify(profilTani));
-            initApp();
+        function setEditMode(type, obj, btnId, formJudulId, titleText) {
+            editState = { mode: true, id: obj.id, type: type };
+            document.getElementById(btnId).innerText = "Update Data";
+            document.getElementById(formJudulId).innerText = "Edit " + titleText;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        function getToday() {
-            return new Date().toISOString().split('T')[0];
+        function batalEdit() {
+            editState = { mode: false, id: null, type: null };
+            document.getElementById('btn-simpan-keuangan').innerText = "Simpan Data";
+            document.getElementById('judul-form-keuangan').innerText = "Catat Transaksi";
+            document.getElementById('ket').value = ''; document.getElementById('nominal').value = '';
+            
+            document.getElementById('btn-simpan-aktivitas').innerText = "Simpan Aktivitas";
+            document.getElementById('judul-form-aktivitas').innerText = "Catat Aktivitas Baru";
+            document.getElementById('akt-bahan').value = ''; document.getElementById('akt-tanggal').value = '';
+        }
+
+        function hapusData(type, id) {
+            if(!confirm('Hapus data ini?')) return;
+            if(type === 'keuangan') dbKeuangan = dbKeuangan.filter(d => d.id !== id);
+            if(type === 'aktivitas') dbAktivitas = dbAktivitas.filter(d => d.id !== id);
+            
+            localStorage.setItem('db' + type.charAt(0).toUpperCase() + type.slice(1), JSON.stringify(eval('db' + type.charAt(0).toUpperCase() + type.slice(1))));
+            refreshSemuaData();
         }
 
         // --- KATEGORI ---
@@ -250,59 +254,44 @@
             const nama = document.getElementById('input-kategori-baru').value;
             if(!nama) return;
             if(dbKategori.includes(nama)) return alert('Sudah ada!');
-            dbKategori.push(nama);
-            localStorage.setItem('dbKategori', JSON.stringify(dbKategori));
-            document.getElementById('input-kategori-baru').value = '';
-            refreshSemuaData();
+            dbKategori.push(nama); localStorage.setItem('dbKategori', JSON.stringify(dbKategori));
+            document.getElementById('input-kategori-baru').value = ''; refreshSemuaData();
         }
-
         function hapusKategori(nama) {
-            if(confirm('Hapus kategori ini?')) {
-                dbKategori = dbKategori.filter(k => k !== nama);
-                localStorage.setItem('dbKategori', JSON.stringify(dbKategori));
-                refreshSemuaData();
+            if(confirm('Hapus kategori ini?')) { dbKategori = dbKategori.filter(k => k !== nama); localStorage.setItem('dbKategori', JSON.stringify(dbKategori)); refreshSemuaData(); }
+        }
+
+        // --- AKTIVITAS (GABUNGAN) ---
+        function simpanAktivitas() {
+            const tanaman = document.getElementById('akt-tanaman').value;
+            const kegiatan = document.getElementById('akt-kegiatan').value;
+            const bahan = document.getElementById('akt-bahan').value || '-';
+            const tanggal = document.getElementById('akt-tanggal').value;
+            const status = document.getElementById('akt-status').value;
+            
+            if (!tanaman || !tanggal) return alert('Tanaman dan Tanggal wajib diisi!');
+
+            if (editState.mode && editState.type === 'aktivitas') {
+                let index = dbAktivitas.findIndex(k => k.id === editState.id);
+                dbAktivitas[index] = { ...dbAktivitas[index], tanaman, kegiatan, bahan, tanggal, status };
+            } else {
+                dbAktivitas.push({ id: Date.now(), tanaman, kegiatan, bahan, tanggal, status });
             }
+            
+            // Urutkan berdasarkan tanggal terbaru/terdekat
+            dbAktivitas.sort((a, b) => new Date(b.tanggal) - new Date(a.tanggal));
+            localStorage.setItem('dbAktivitas', JSON.stringify(dbAktivitas));
+            batalEdit(); refreshSemuaData();
         }
 
-        // --- CORE CRUD LOGIC ---
-        function setEditMode(type, obj, btnId, formJudulId, titleText) {
-            editState = { mode: true, id: obj.id, type: type };
-            const btn = document.getElementById(btnId);
-            btn.innerText = "Simpan Perubahan";
-            btn.className = "btn-update";
-            document.getElementById(formJudulId).innerText = "Edit " + titleText;
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        function batalEdit() {
-            editState = { mode: false, id: null, type: null };
-            // Reset Buttons Keuangan
-            document.getElementById('btn-simpan-keuangan').innerText = "Simpan Data";
-            document.getElementById('btn-simpan-keuangan').className = "";
-            document.getElementById('judul-form-keuangan').innerText = "Catat Keuangan";
-            document.getElementById('ket').value = ''; document.getElementById('nominal').value = '';
-            
-            // Reset Buttons Jadwal
-            document.getElementById('btn-simpan-jadwal').innerText = "Simpan Jadwal";
-            document.getElementById('btn-simpan-jadwal').className = "";
-            document.getElementById('judul-form-jadwal').innerText = "Rencana Kegiatan";
-            document.getElementById('jadwal-tanggal').value = '';
-            
-            // Reset Buttons Perawatan
-            document.getElementById('btn-simpan-perawatan').innerText = "Simpan Perawatan";
-            document.getElementById('btn-simpan-perawatan').className = "";
-            document.getElementById('judul-form-perawatan').innerText = "Catat Perawatan";
-            document.getElementById('rawat-bahan').value = ''; document.getElementById('rawat-dosis').value = ''; document.getElementById('rawat-tanggal').value = '';
-        }
-
-        function hapusData(type, id) {
-            if(!confirm('Hapus data ini?')) return;
-            if(type === 'keuangan') dbKeuangan = dbKeuangan.filter(d => d.id !== id);
-            if(type === 'jadwal') dbJadwal = dbJadwal.filter(d => d.id !== id);
-            if(type === 'perawatan') dbPerawatan = dbPerawatan.filter(d => d.id !== id);
-            
-            localStorage.setItem('db' + type.charAt(0).toUpperCase() + type.slice(1), JSON.stringify(eval('db' + type.charAt(0).toUpperCase() + type.slice(1))));
-            refreshSemuaData();
+        function formEditAktivitas(id) {
+            let data = dbAktivitas.find(k => k.id === id);
+            document.getElementById('akt-tanaman').value = data.tanaman;
+            document.getElementById('akt-kegiatan').value = data.kegiatan;
+            document.getElementById('akt-bahan').value = data.bahan === '-' ? '' : data.bahan;
+            document.getElementById('akt-tanggal').value = data.tanggal;
+            document.getElementById('akt-status').value = data.status;
+            setEditMode('aktivitas', data, 'btn-simpan-aktivitas', 'judul-form-aktivitas', 'Aktivitas');
         }
 
         // --- KEUANGAN ---
@@ -319,7 +308,6 @@
             } else {
                 dbKeuangan.push({ id: Date.now(), tanaman, keterangan: ket, jumlah: parseInt(nominal), tipe: jenis, tanggal: new Date().toLocaleDateString('id-ID') });
             }
-            
             localStorage.setItem('dbKeuangan', JSON.stringify(dbKeuangan));
             batalEdit(); refreshSemuaData();
         }
@@ -333,130 +321,75 @@
             setEditMode('keuangan', data, 'btn-simpan-keuangan', 'judul-form-keuangan', 'Keuangan');
         }
 
-        // --- JADWAL ---
-        function simpanJadwal() {
-            const tanaman = document.getElementById('jadwal-tanaman').value;
-            const kegiatan = document.getElementById('jadwal-kegiatan').value;
-            const tanggal = document.getElementById('jadwal-tanggal').value;
-            if (!tanaman || !tanggal) return alert('Lengkapi data!');
-
-            if (editState.mode && editState.type === 'jadwal') {
-                let index = dbJadwal.findIndex(k => k.id === editState.id);
-                dbJadwal[index] = { ...dbJadwal[index], tanaman, kegiatan, tanggal };
-            } else {
-                dbJadwal.push({ id: Date.now(), tanaman, kegiatan, tanggal });
-            }
-            dbJadwal.sort((a, b) => new Date(a.tanggal) - new Date(b.tanggal));
-            localStorage.setItem('dbJadwal', JSON.stringify(dbJadwal));
-            batalEdit(); refreshSemuaData();
-        }
-
-        function formEditJadwal(id) {
-            let data = dbJadwal.find(k => k.id === id);
-            document.getElementById('jadwal-tanaman').value = data.tanaman;
-            document.getElementById('jadwal-kegiatan').value = data.kegiatan;
-            document.getElementById('jadwal-tanggal').value = data.tanggal;
-            setEditMode('jadwal', data, 'btn-simpan-jadwal', 'judul-form-jadwal', 'Jadwal');
-        }
-
-        // --- PERAWATAN (BARU) ---
-        function simpanPerawatan() {
-            const tanaman = document.getElementById('rawat-tanaman').value;
-            const jenis = document.getElementById('rawat-jenis').value;
-            const bahan = document.getElementById('rawat-bahan').value;
-            const dosis = document.getElementById('rawat-dosis').value;
-            const tanggal = document.getElementById('rawat-tanggal').value || getToday();
-            
-            if (!tanaman || !bahan) return alert('Tanaman dan Bahan wajib diisi!');
-
-            if (editState.mode && editState.type === 'perawatan') {
-                let index = dbPerawatan.findIndex(k => k.id === editState.id);
-                dbPerawatan[index] = { ...dbPerawatan[index], tanaman, jenis, bahan, dosis, tanggal };
-            } else {
-                dbPerawatan.push({ id: Date.now(), tanaman, jenis, bahan, dosis, tanggal });
-            }
-            localStorage.setItem('dbPerawatan', JSON.stringify(dbPerawatan));
-            batalEdit(); refreshSemuaData();
-        }
-
-        function formEditPerawatan(id) {
-            let data = dbPerawatan.find(k => k.id === id);
-            document.getElementById('rawat-tanaman').value = data.tanaman;
-            document.getElementById('rawat-jenis').value = data.jenis;
-            document.getElementById('rawat-bahan').value = data.bahan;
-            document.getElementById('rawat-dosis').value = data.dosis;
-            document.getElementById('rawat-tanggal').value = data.tanggal;
-            setEditMode('perawatan', data, 'btn-simpan-perawatan', 'judul-form-perawatan', 'Perawatan');
-        }
-
         // --- RENDER UI ---
         function refreshSemuaData() {
             // Update Select
             document.querySelectorAll('.select-tanaman').forEach(select => {
-                select.innerHTML = dbKategori.length ? '' : '<option value="">- Buat Kategori Dulu -</option>';
+                select.innerHTML = dbKategori.length ? '' : '<option value="">- Buat Kategori -</option>';
                 dbKategori.forEach(k => select.innerHTML += `<option value="${k}">${k}</option>`);
             });
 
-            // Update List Kategori
-            document.getElementById('list-kategori').innerHTML = dbKategori.map(k => 
-                `<li><strong>${k}</strong><span onclick="hapusKategori('${k}')" style="color:var(--rugi);cursor:pointer;">✖</span></li>`
-            ).join('');
+            document.getElementById('list-kategori').innerHTML = dbKategori.map(k => `<li><strong>${k}</strong><span onclick="hapusKategori('${k}')" style="color:var(--rugi);">✖</span></li>`).join('');
 
-            // Rekap Beranda
+            // --- DASHBOARD RENDER ---
             let totalMsk = 0, totalKlr = 0;
             const wdhBeranda = document.getElementById('container-kategori-beranda');
-            wdhBeranda.innerHTML = dbKategori.length ? '' : '<p style="text-align:center; color:var(--text-light); font-size:14px;">Belum ada kategori.</p>';
+            wdhBeranda.innerHTML = '';
 
+            // Render Mini Cards per Tanaman
             dbKategori.forEach(kat => {
                 let mKat = 0, kKat = 0;
                 dbKeuangan.filter(k => k.tanaman === kat).forEach(u => { u.tipe==='masuk' ? mKat+=u.jumlah : kKat+=u.jumlah; });
                 totalMsk += mKat; totalKlr += kKat;
-
-                let lRugi = mKat - kKat;
-                let cWarna = lRugi >= 0 ? 'laba' : 'rugi';
+                let cWarna = (mKat - kKat) >= 0 ? 'laba' : 'rugi';
 
                 wdhBeranda.innerHTML += `
-                    <div class="kategori-card">
-                        <div class="kategori-header"><span>🌱 ${kat}</span> <span class="${cWarna}">Rp ${lRugi.toLocaleString()}</span></div>
-                        <div style="display:flex; justify-content:space-between; font-size:12px; color:var(--text-light); margin-bottom:10px;">
-                            <span>Modal: Rp ${kKat.toLocaleString()}</span><span>Hasil: Rp ${mKat.toLocaleString()}</span>
+                    <div class="dash-card">
+                        <div style="font-weight:700; margin-bottom:5px;">🌱 ${kat} <span class="${cWarna}" style="float:right;">Rp ${(mKat - kKat).toLocaleString()}</span></div>
+                        <div style="display:flex; justify-content:space-between; color:var(--text-light);">
+                            <span>M: Rp ${kKat.toLocaleString()}</span><span>H: Rp ${mKat.toLocaleString()}</span>
                         </div>
                     </div>`;
             });
 
-            // Update Grafik CSS
+            // Update Donut Chart
             document.getElementById('chart-masuk').innerText = `Rp ${totalMsk.toLocaleString()}`;
             document.getElementById('chart-keluar').innerText = `Rp ${totalKlr.toLocaleString()}`;
             let labaNet = totalMsk - totalKlr;
             let elLaba = document.getElementById('chart-laba-bersih');
-            elLaba.innerText = `Rp ${labaNet.toLocaleString()}`;
-            elLaba.className = labaNet >= 0 ? 'laba' : 'rugi';
-
-            let totUang = totalMsk + totalKlr;
-            let pRugi = totUang === 0 ? 50 : (totalKlr / totUang) * 100;
+            elLaba.innerText = `Rp ${labaNet.toLocaleString()}`; elLaba.className = labaNet >= 0 ? 'laba' : 'rugi';
+            let pRugi = (totalMsk + totalKlr) === 0 ? 50 : (totalKlr / (totalMsk + totalKlr)) * 100;
             document.getElementById('main-chart').style.background = `conic-gradient(var(--rugi) 0% ${pRugi}%, var(--laba) ${pRugi}% 100%)`;
 
-            // List Perawatan
-            document.getElementById('list-perawatan').innerHTML = [...dbPerawatan].reverse().map(p => `
-                <li>
-                    <div><span class="badge" style="background:var(--secondary)">${p.jenis}</span><br>
-                    <strong style="font-size:14px; display:block; margin-top:4px;">${p.tanaman}</strong>
-                    <small style="color:var(--text-light)">Bahan: ${p.bahan} (${p.dosis})</small></div>
-                    <div style="text-align:right">
-                        <small style="color:var(--text-light);display:block;margin-bottom:8px;">${p.tanggal}</small>
-                        <div class="action-btns"><span onclick="formEditPerawatan(${p.id})">✏️</span><span onclick="hapusData('perawatan', ${p.id})">🗑️</span></div>
-                    </div>
-                </li>`).join('');
+            // Agenda Mendatang (Dashboard)
+            const todayDateStr = new Date().toISOString().split('T')[0];
+            let agendaHtml = '';
+            dbAktivitas.filter(a => a.status === 'jadwal').slice(0, 3).forEach(a => {
+                agendaHtml += `<div class="dash-card" style="display:flex; justify-content:space-between; align-items:center; border-left:3px solid var(--secondary);">
+                    <div><strong>${a.kegiatan}</strong><br>${a.tanaman}</div>
+                    <div style="text-align:right;">${a.tanggal}</div>
+                </div>`;
+            });
+            document.getElementById('dash-agenda').innerHTML = agendaHtml || '<p style="text-align:center;">Tidak ada jadwal terencana.</p>';
 
-            // List Jadwal
-            document.getElementById('list-jadwal-semua').innerHTML = dbJadwal.map(j => `
-                <li>
-                    <div><span class="badge" style="background:#f59e0b">${j.kegiatan}</span><br><strong style="font-size:14px; display:block; margin-top:4px;">${j.tanaman}</strong></div>
-                    <div style="text-align:right">
-                        <small style="color:var(--text-light);display:block;margin-bottom:8px;">${j.tanggal}</small>
-                        <div class="action-btns"><span onclick="formEditJadwal(${j.id})">✏️</span><span onclick="hapusData('jadwal', ${j.id})">🗑️</span></div>
+            // List Aktivitas (Tab Aktivitas)
+            document.getElementById('list-aktivitas').innerHTML = dbAktivitas.map(a => {
+                let isJadwal = a.status === 'jadwal';
+                let iconStatus = isJadwal ? '⏳ Rencana' : '✅ Selesai';
+                let bgBadge = isJadwal ? '#f59e0b' : 'var(--primary)';
+                
+                return `<li>
+                    <div>
+                        <span class="badge" style="background:${bgBadge}">${iconStatus}</span>
+                        <strong style="font-size:14px; display:block; margin-top:6px;">${a.kegiatan} - ${a.tanaman}</strong>
+                        <small style="color:var(--text-light)">Bahan: ${a.bahan}</small>
                     </div>
-                </li>`).join('');
+                    <div style="text-align:right">
+                        <small style="display:block; margin-bottom:8px;">${a.tanggal}</small>
+                        <div class="action-btns"><span onclick="formEditAktivitas(${a.id})">✏️</span><span onclick="hapusData('aktivitas', ${a.id})">🗑️</span></div>
+                    </div>
+                </li>`;
+            }).join('');
 
             // List Keuangan
             document.getElementById('riwayat-list').innerHTML = [...dbKeuangan].reverse().map(u => {
@@ -465,13 +398,13 @@
                     <div><strong style="font-size:14px;">${u.keterangan}</strong><br><small style="color:var(--text-light)">${u.tanaman} • ${u.tanggal}</small></div>
                     <div style="text-align:right">
                         <span class="${isMsk?'laba':'rugi'}" style="display:block;margin-bottom:8px;">${isMsk?'+':'-'} Rp ${u.jumlah.toLocaleString()}</span>
-                        <div class="action-btns" style="justify-content:flex-end"><span onclick="formEditKeuangan(${u.id})">✏️</span><span onclick="hapusData('keuangan', ${u.id})">🗑️</span></div>
+                        <div class="action-btns"><span onclick="formEditKeuangan(${u.id})">✏️</span><span onclick="hapusData('keuangan', ${u.id})">🗑️</span></div>
                     </div>
                 </li>`;
             }).join('');
         }
 
-        initApp();
+        refreshSemuaData();
     </script>
 </body>
 </html>
