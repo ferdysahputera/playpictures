@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asisten Petani Sayur</title>
+    <style>
+        :root {
+            --primary: #2e7d32;
+            --secondary: #fb8c00;
+            --bg: #f1f8e9;
+            --text: #333;
+            --white: #ffffff;
+            --gray: #e0e0e0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            padding-bottom: 70px; /* Ruang untuk navbar bawah */
+        }
+
+        /* Navigasi Bawah */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background: var(--white);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+
+        .nav-item {
+            text-align: center;
+            color: #757575;
+            font-size: 12px;
+            cursor: pointer;
+            flex: 1;
+        }
+
+        .nav-item.active {
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        .nav-icon {
+            font-size: 24px;
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        /* Kontainer Halaman */
+        .page {
+            display: none;
+            padding: 15px;
+            animation: fadeIn 0.3s;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Header & Kartu */
+        header {
+            background: var(--primary);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .card {
+            background: var(--white);
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            margin-bottom: 15px;
+        }
+
+        input, select, button {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+
+        button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* Grafik Sederhana CSS */
+        .chart-container {
+            margin-top: 10px;
+        }
+        
+        .bar-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .bar-track {
+            width: 100%;
+            background-color: var(--gray);
+            border-radius: 10px;
+            height: 20px;
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+
+        .bar-fill {
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.5s ease-in-out;
+        }
+
+        .fill-masuk { background-color: var(--primary); width: 0%; }
+        .fill-keluar { background-color: #d32f2f; width: 0%; }
+
+        .laba { color: var(--primary); }
+        .rugi { color: #d32f2f; }
+
+        .item-list { list-style: none; padding: 0; margin: 0; }
+        .item-list li {
+            background: #f9f9f9;
+            margin-bottom: 8px;
+            padding: 12px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            border-left: 4px solid var(--primary);
+        }
+    </style>
+</head>
+<body>
+
+    <div id="page-welcome" class="page">
+        <div style="text-align: center; margin-top: 50px;">
+            <h1>🌾 TaniSayur</h1>
+            <p>Selamat datang! Silakan isi profil Anda untuk memulai.</p>
+        </div>
+        <div class="card">
+            <input type="text" id="input-nama" placeholder="Nama Lengkap Anda">
+            <input type="text" id="input-alamat" placeholder="Alamat / Lokasi Lahan (Contoh: Desa Suka Maju)">
+            <button onclick="simpanProfil()">Mulai Aplikasi</button>
+        </div>
+    </div>
+
+    <div id="page-home" class="page">
+        <header>
+            <h2 style="margin:0">Halo, <span id="nama-user">Petani</span>!</h2>
+            <small id="alamat-user">Lokasi Lahan</small>
+        </header>
+
+        <div class="card">
+            <h3 style="margin-top: 0;">Grafik Keuangan</h3>
+            
+            <div class="chart-container">
+                <div class="bar-label">
+                    <span>Penghasilan (Panen)</span>
+                    <span id="label-masuk" class="laba">Rp 0</span>
+                </div>
+                <div class="bar-track">
+                    <div id="bar-masuk" class="bar-fill fill-masuk"></div>
+                </div>
+
+                <div class="bar-label">
+                    <span>Pengeluaran (Modal)</span>
+                    <span id="label-keluar" class="rugi">Rp 0</span>
+                </div>
+                <div class="bar-track">
+                    <div id="bar-keluar" class="bar-fill fill-keluar"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="page-transaksi" class="page">
+        <div class="card">
+            <h3 style="margin-top: 0;">Catat Aktivitas</h3>
+            <input type="text" id="ket" placeholder="Keterangan (Contoh: Jual Kangkung)">
+            <input type="number" id="nominal" placeholder="Jumlah Rupiah">
+            <select id="jenis">
+                <option value="masuk">Penghasilan (Jual Sayur)</option>
+                <option value="keluar">Pengeluaran (Bibit/Pupuk/Tenaga)</option>
+            </select>
+            <button onclick="tambahTransaksi()">Simpan Data</button>
+        </div>
+
+        <div class="card">
+            <h3 style="margin-top: 0;">Riwayat Terakhir</h3>
+            <ul class="item-list" id="riwayat-list"></ul>
+        </div>
+    </div>
+
+    <nav class="bottom-nav" id="navbar" style="display: none;">
+        <div class="nav-item active" onclick="pindahHalaman('home', this)">
+            <span class="nav-icon">🏠</span>
+            Beranda
+        </div>
+        <div class="nav-item" onclick="pindahHalaman('transaksi', this)">
+            <span class="nav-icon">📝</span>
+            Catat
+        </div>
+        <div class="nav-item" onclick="hapusProfil()">
+            <span class="nav-icon">⚙️</span>
+            Reset
+        </div>
+    </nav>
+
+    <script>
+        let dataTani = JSON.parse(localStorage.getItem('dataTani')) || [];
+        let profilTani = JSON.parse(localStorage.getItem('profilTani')) || null;
+
+        // Inisialisasi Aplikasi
+        function initApp() {
+            if (profilTani) {
+                document.getElementById('nama-user').innerText = profilTani.nama;
+                document.getElementById('alamat-user').innerText = profilTani.alamat;
+                document.getElementById('navbar').style.display = 'flex';
+                pindahHalaman('home', document.querySelector('.nav-item'));
+                updateData();
+            } else {
+                // Sembunyikan navbar jika belum ada profil
+                document.getElementById('navbar').style.display = 'none';
+                pindahHalaman('welcome', null);
+            }
+        }
+
+        // Navigasi Pindah Halaman
+        function pindahHalaman(halamanId, elemenTab) {
+            // Sembunyikan semua halaman
+            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+            // Tampilkan halaman yang dipilih
+            document.getElementById('page-' + halamanId).classList.add('active');
+
+            // Update warna menu navbar
+            if (elemenTab) {
+                document.querySelectorAll('.nav-item').forEach(tab => tab.classList.remove('active'));
+                elemenTab.classList.add('active');
+            }
+        }
+
+        // Simpan Profil
+        function simpanProfil() {
+            const nama = document.getElementById('input-nama').value;
+            const alamat = document.getElementById('input-alamat').value;
+
+            if (nama === '' || alamat === '') {
+                alert('Nama dan Alamat harus diisi!');
+                return;
+            }
+
+            profilTani = { nama: nama, alamat: alamat };
+            localStorage.setItem('profilTani', JSON.stringify(profilTani));
+            initApp();
+        }
+
+        // Hapus Profil (Untuk keperluan testing)
+        function hapusProfil() {
+            if(confirm("Yakin ingin menghapus semua data dan profil?")) {
+                localStorage.clear();
+                profilTani = null;
+                dataTani = [];
+                initApp();
+            }
+        }
+
+        // Transaksi & Update Grafik
+        function tambahTransaksi() {
+            const ket = document.getElementById('ket').value;
+            const nominal = document.getElementById('nominal').value;
+            const jenis = document.getElementById('jenis').value;
+
+            if (ket === '' || nominal === '') {
+                alert('Isi data dengan lengkap');
+                return;
+            }
+
+            dataTani.push({
+                keterangan: ket,
+                jumlah: parseInt(nominal),
+                tipe: jenis,
+                tanggal: new Date().toLocaleDateString('id-ID')
+            });
+
+            localStorage.setItem('dataTani', JSON.stringify(dataTani));
+            
+            document.getElementById('ket').value = '';
+            document.getElementById('nominal').value = '';
+            alert('Data Berhasil Disimpan!');
+            updateData();
+        }
+
+        function updateData() {
+            const listRiwayat = document.getElementById('riwayat-list');
+            listRiwayat.innerHTML = '';
+            
+            let totalKeluar = 0;
+            let totalMasuk = 0;
+
+            // Render List
+            // Dibalik agar data terbaru di atas
+            [...dataTani].reverse().forEach(item => {
+                const li = document.createElement('li');
+                const warna = item.tipe === 'masuk' ? 'laba' : 'rugi';
+                const simbol = item.tipe === 'masuk' ? '+' : '-';
+                
+                li.innerHTML = `
+                    <div>
+                        <strong>${item.keterangan}</strong><br>
+                        <small>${item.tanggal}</small>
+                    </div>
+                    <span class="${warna}" style="font-weight:bold; margin-top:10px;">${simbol} Rp ${item.jumlah.toLocaleString()}</span>
+                `;
+                listRiwayat.appendChild(li);
+            });
+
+            // Hitung Total
+            dataTani.forEach(item => {
+                if (item.tipe === 'masuk') totalMasuk += item.jumlah;
+                else totalKeluar += item.jumlah;
+            });
+
+            // Update Label Grafik
+            document.getElementById('label-masuk').innerText = `Rp ${totalMasuk.toLocaleString()}`;
+            document.getElementById('label-keluar').innerText = `Rp ${totalKeluar.toLocaleString()}`;
+
+            // Hitung Persentase Lebar Bar (Grafik Sederhana)
+            let maxNilai = Math.max(totalMasuk, totalKeluar);
+            if (maxNilai === 0) maxNilai = 1; // Mencegah pembagian dengan 0
+
+            let persenMasuk = (totalMasuk / maxNilai) * 100;
+            let persenKeluar = (totalKeluar / maxNilai) * 100;
+
+            // Animasi lebar bar
+            document.getElementById('bar-masuk').style.width = persenMasuk + '%';
+            document.getElementById('bar-keluar').style.width = persenKeluar + '%';
+        }
+
+        // Jalankan saat pertama kali dibuka
+        initApp();
+    </script>
+</body>
+</html>
