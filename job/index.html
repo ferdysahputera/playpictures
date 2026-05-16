@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="id" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WedMate - WO Manager</title>
+    
+    <!-- CDNs -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.css"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <!-- Tailwind Config for iOS Colors & Glassmorphism -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        iosBlue: '#007AFF',
+                        iosDarkBlue: '#0A84FF',
+                        glassLight: 'rgba(255, 255, 255, 0.65)',
+                        glassDark: 'rgba(30, 30, 30, 0.65)'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Glassmorphism Utilities */
+        .glass {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .dark .glass {
+            background: rgba(30, 30, 30, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Smooth Transitions */
+        body, .glass, button { transition: background-color 0.3s ease, color 0.3s ease; }
+        
+        /* Hide sections */
+        .hidden-section { display: none !important; }
+        
+        /* Bottom Nav Safe Area */
+        .pb-nav { padding-bottom: 80px; }
+    </style>
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100 min-h-screen">
+
+    <!-- Theme Toggle Floating -->
+    <button id="themeToggle" class="fixed top-4 right-4 z-50 glass p-3 rounded-full shadow-lg text-iosBlue dark:text-iosDarkBlue">
+        <i class="fas fa-moon dark:hidden"></i>
+        <i class="fas fa-sun hidden dark:block"></i>
+    </button>
+
+    <!-- ================= 1. ONBOARDING SCREEN ================= -->
+    <section id="onboardingScreen" class="min-h-screen flex items-center justify-center p-4">
+        <div class="glass p-8 rounded-3xl w-full max-w-md shadow-xl text-center">
+            <h1 class="text-3xl font-bold mb-2">Selamat Datang di <span class="text-iosBlue dark:text-iosDarkBlue">WedMate</span></h1>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">Kelola Keuangan dan Agenda Wedding Organizer Anda dengan mudah.</p>
+            
+            <form id="onboardingForm" class="space-y-4 text-left">
+                <div>
+                    <label class="block text-sm font-medium mb-1">Nama Brand WO</label>
+                    <input type="text" id="woName" required class="w-full p-3 rounded-xl border dark:bg-gray-800 dark:border-gray-700 focus:ring-2 focus:ring-iosBlue outline-none">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Alamat</label>
+                    <textarea id="woAddress" required class="w-full p-3 rounded-xl border dark:bg-gray-800 dark:border-gray-700 focus:ring-2 focus:ring-iosBlue outline-none"></textarea>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Deskripsi Singkat</label>
+                    <input type="text" id="woDesc" class="w-full p-3 rounded-xl border dark:bg-gray-800 dark:border-gray-700 focus:ring-2 focus:ring-iosBlue outline-none">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Link Media Sosial (Opsional)</label>
+                    <input type="url" id="woSocial" placeholder="https://instagram.com/..." class="w-full p-3 rounded-xl border dark:bg-gray-800 dark:border-gray-700 focus:ring-2 focus:ring-iosBlue outline-none">
+                </div>
+                <button type="submit" class="w-full bg-iosBlue dark:bg-iosDarkBlue text-white font-bold py-3 rounded-xl shadow-lg hover:opacity-90">Mulai Aplikasi</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- ================= 2. MAIN APP SCREEN ================= -->
+    <section id="mainApp" class="hidden-section min-h-screen pb-nav">
+        
+        <!-- Header -->
+        <header class="glass sticky top-0 z-40 px-6 py-4 shadow-sm flex justify-between items-center">
+            <div>
+                <p class="text-xs text-gray-500 dark:text-gray-400">Halo, <span id="headerGreeting">Selamat Pagi</span></p>
+                <h2 id="headerBrandName" class="text-xl font-bold text-iosBlue dark:text-iosDarkBlue">Brand WO</h2>
+            </div>
+            <div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-xl">
+                💍
+            </div>
+        </header>
+
+        <!-- VIEWS / PAGES -->
+        <main class="p-4 space-y-6">
+            
+            <!-- A. DASHBOARD VIEW -->
+            <div id="view-dashboard" class="view-section">
+                <!-- Saldo Card -->
+                <div class="glass p-6 rounded-3xl shadow-lg mb-6">
+                    <div class="flex justify-between items-center mb-2">
+                        <h3 class="font-medium">Total Saldo</h3>
+                        <select id="filterSaldo" class="bg-transparent text-sm font-bold text-iosBlue outline-none">
+                            <option value="total">Total Keseluruhan</option>
+                            <option value="month">Bulan Ini</option>
+                        </select>
+                    </div>
+                    <h1 id="totalBalanceDisplay" class="text-4xl font-bold tracking-tight">Rp 0</h1>
+                </div>
+
+                <!-- Charts -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <div class="glass p-4 rounded-2xl shadow-sm">
+                        <h4 class="text-sm font-bold mb-4 text-center">Pemasukan vs Pengeluaran</h4>
+                        <canvas id="donutChart"></canvas>
+                    </div>
+                    <div class="glass p-4 rounded-2xl shadow-sm">
+                        <div class="flex justify-between items-center mb-4">
+                            <h4 class="text-sm font-bold">Tren Keuangan</h4>
+                            <select id="filterTrend" class="bg-transparent text-xs outline-none">
+                                <option value="day">Per Hari</option>
+                                <option value="month">Per Bulan</option>
+                            </select>
+                        </div>
+                        <canvas id="barChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Recent Lists -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="glass p-4 rounded-2xl">
+                        <h4 class="text-sm font-bold mb-3 border-b dark:border-gray-700 pb-2">3 Pengeluaran Terakhir</h4>
+                        <ul id="recentExpenses" class="space-y-3 text-sm"></ul>
+                    </div>
+                    <div class="glass p-4 rounded-2xl">
+                        <h4 class="text-sm font-bold mb-3 border-b dark:border-gray-700 pb-2">3 Agenda Terdekat</h4>
+                        <ul id="recentAgendas" class="space-y-3 text-sm"></ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- B. TRANSACTIONS VIEW -->
+            <div id="view-transactions" class="view-section hidden-section">
+                <h2 class="text-2xl font-bold mb-4">Transaksi Universal</h2>
+                <div class="glass p-6 rounded-3xl shadow-lg">
+                    <form id="formTransaction" class="space-y-4">
+                        <div class="grid grid-cols-2 gap-4">
+                            <button type="button" class="tab-btn bg-iosBlue text-white p-2 rounded-xl" data-type="income">Pemasukan</button>
+                            <button type="button" class="tab-btn bg-gray-200 dark:bg-gray-700 p-2 rounded-xl" data-type="expense">Pengeluaran</button>
+                        </div>
+                        <input type="hidden" id="transType" value="income">
+                        
+                        <div>
+                            <label class="block text-sm mb-1">Nominal (Rp)</label>
+                            <input type="number" id="transAmount" required class="w-full p-3 rounded-xl border dark:bg-gray-800 dark:border-gray-700">
+                        </div>
+                        <div>
+                            <label class="block text-sm mb-1">Kategori</label>
+                            <select id="transCategory" class="w-full p-3 rounded-xl border dark:bg-gray-800 dark:border-gray-700">
+                                <option>DP Paket</option>
+                                <option>Pelunasan</option>
+                                <option>Operasional</option>
+                                <option>Vendor</option>
+                                <option>Lainnya</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm mb-1">Tanggal</label>
+                            <input type="date" id="transDate" required class="w-full p-3 rounded-xl border dark:bg-gray-800 dark:border-gray-700">
+                        </div>
+                        <button type="submit" class="w-full bg-iosBlue text-white font-bold py-3 rounded-xl">Simpan Transaksi</button>
+                    </form>
+                </div>
+                
+                <h3 class="font-bold mt-6 mb-2">Riwayat Transaksi</h3>
+                <div class="glass rounded-2xl p-4">
+                    <ul id="transactionHistory" class="space-y-3 text-sm"></ul>
+                </div>
+            </div>
+
+            <!-- C. AGENDA & INVOICE VIEW -->
+            <div id="view-agenda" class="view-section hidden-section">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-2xl font-bold">Manajemen Agenda</h2>
+                    <button id="btnManagePackages" class="text-sm bg-gray-200 dark:bg-gray-700 px-3 py-1 rounded-lg"><i class="fas fa-box"></i> Paket</button>
+                </div>
+                
+                <!-- Form Add Agenda -->
+                <div class="glass p-6 rounded-3xl shadow-lg mb-6">
+                    <form id="formAgenda" class="space-y-4">
+                        <div>
+                            <label class="block text-sm mb-1">Nama Pengantin / Klien</label>
+                            <input type="text" id="agendaClient" required class="w-full p-3 rounded-xl border dark:bg-gray-800 outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm mb-1">Alamat Acara</label>
+                            <textarea id="agendaAddress" required class="w-full p-3 rounded-xl border dark:bg-gray-800 outline-none"></textarea>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm mb-1">Tanggal Acara</label>
+                                <input type="date" id="agendaDate" required class="w-full p-3 rounded-xl border dark:bg-gray-800 outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-sm mb-1">Pilih Paket</label>
+                                <select id="agendaPackage" required class="w-full p-3 rounded-xl border dark:bg-gray-800 outline-none"></select>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm mb-1">DP (Rp)</label>
+                                <input type="number" id="agendaDP" required class="w-full p-3 rounded-xl border dark:bg-gray-800 outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-sm mb-1">Sisa Tagihan (Otomatis)</label>
+                                <input type="text" id="agendaSisa" readonly class="w-full p-3 rounded-xl bg-gray-100 dark:bg-gray-700 outline-none cursor-not-allowed">
+                            </div>
+                        </div>
+                        <button type="submit" class="w-full bg-iosBlue text-white font-bold py-3 rounded-xl">Simpan Agenda</button>
+                    </form>
+                </div>
+
+                <!-- Agenda List -->
+                <h3 class="font-bold mb-2">Daftar Agenda</h3>
+                <div id="agendaListContainer" class="space-y-4"></div>
+            </div>
+
+            <!-- D. ANALYSIS VIEW -->
+            <div id="view-analysis" class="view-section hidden-section">
+                <h2 class="text-2xl font-bold mb-4">Analisis Proyek</h2>
+                <div class="glass p-4 rounded-2xl shadow-lg mb-4">
+                    <label class="block text-sm mb-2">Filter Berdasarkan Job/Agenda</label>
+                    <select id="analysisJobSelect" class="w-full p-3 rounded-xl border dark:bg-gray-800 outline-none"></select>
+                </div>
+                <div id="analysisResult" class="glass p-6 rounded-3xl shadow-lg hidden-section">
+                    <h3 id="analysisClientName" class="text-xl font-bold mb-4 text-iosBlue border-b pb-2"></h3>
+                    <div class="grid grid-cols-2 gap-4 mb-4 text-center">
+                        <div class="bg-green-100 dark:bg-green-900/30 p-3 rounded-xl">
+                            <p class="text-xs mb-1">Pemasukan (DP/Lunas)</p>
+                            <p id="analysisIncome" class="font-bold text-green-600 dark:text-green-400">Rp 0</p>
+                        </div>
+                        <div class="bg-red-100 dark:bg-red-900/30 p-3 rounded-xl">
+                            <p class="text-xs mb-1">Pengeluaran Vendor/Operasional</p>
+                            <p id="analysisExpense" class="font-bold text-red-600 dark:text-red-400">Rp 0</p>
+                        </div>
+                    </div>
+                    <div class="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-xl text-center">
+                        <p class="text-sm mb-1">Margin Keuntungan</p>
+                        <p id="analysisMargin" class="text-2xl font-bold text-iosBlue">Rp 0</p>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+
+        <!-- BOTTOM NAVIGATION -->
+        <nav class="glass fixed bottom-0 w-full px-6 py-2 flex justify-between items-center rounded-t-3xl shadow-[0_-4px_20px_rgba(0,0,0,0.05)] z-50">
+            <button class="nav-btn flex flex-col items-center text-iosBlue dark:text-iosDarkBlue" data-target="dashboard">
+                <i class="fas fa-home text-xl mb-1"></i>
+                <span class="text-[10px]">Beranda</span>
+            </button>
+            <button class="nav-btn flex flex-col items-center text-gray-400 hover:text-iosBlue" data-target="transactions">
+                <i class="fas fa-wallet text-xl mb-1"></i>
+                <span class="text-[10px]">Transaksi</span>
+            </button>
+            
+            <!-- FAB Center -->
+            <div class="relative -top-6">
+                <button id="fabBtn" class="bg-iosBlue dark:bg-iosDarkBlue text-white w-14 h-14 rounded-full flex items-center justify-center text-2xl shadow-xl shadow-blue-500/30 transform transition active:scale-95">
+                    <i class="fas fa-plus"></i>
+                </button>
+            </div>
+
+            <button class="nav-btn flex flex-col items-center text-gray-400 hover:text-iosBlue" data-target="agenda">
+                <i class="fas fa-calendar-check text-xl mb-1"></i>
+                <span class="text-[10px]">Agenda</span>
+            </button>
+            <button class="nav-btn flex flex-col items-center text-gray-400 hover:text-iosBlue" data-target="analysis">
+                <i class="fas fa-chart-pie text-xl mb-1"></i>
+                <span class="text-[10px]">Analisis</span>
+            </button>
+        </nav>
+
+        <!-- FAB MODAL (Pop-up) -->
+        <div id="fabModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[60] flex items-end justify-center hidden-section">
+            <div class="glass w-full max-w-md rounded-t-3xl p-6 transform translate-y-0 transition-transform">
+                <div class="w-12 h-1 bg-gray-300 mx-auto rounded-full mb-6"></div>
+                <h3 class="text-xl font-bold mb-4 text-center">Pilih Aksi</h3>
+                <div class="space-y-3">
+                    <button class="w-full glass p-4 rounded-xl flex items-center shadow-sm text-left hover:bg-gray-100 dark:hover:bg-gray-800" onclick="switchTab('transactions'); closeFabModal();">
+                        <div class="w-10 h-10 rounded-full bg-green-100 text-green-600 flex items-center justify-center mr-4"><i class="fas fa-money-bill-wave"></i></div>
+                        <div>
+                            <p class="font-bold">Tambah Keuangan</p>
+                            <p class="text-xs text-gray-500">Catat pemasukan atau pengeluaran</p>
+                        </div>
+                    </button>
+                    <button class="w-full glass p-4 rounded-xl flex items-center shadow-sm text-left hover:bg-gray-100 dark:hover:bg-gray-800" onclick="switchTab('agenda'); closeFabModal();">
+                        <div class="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center mr-4"><i class="fas fa-calendar-plus"></i></div>
+                        <div>
+                            <p class="font-bold">Tambah Agenda Job</p>
+                            <p class="text-xs text-gray-500">Jadwalkan proyek wedding baru</p>
+                        </div>
+                    </button>
+                </div>
+                <button class="w-full mt-4 p-3 rounded-xl text-gray-500 font-bold" onclick="closeFabModal()">Batal</button>
+            </div>
+        </div>
+
+        <!-- PACKAGE MANAGER MODAL -->
+        <div id="packageModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[60] flex items-center justify-center hidden-section p-4">
+            <div class="glass w-full max-w-md rounded-3xl p-6">
+                <h3 class="text-xl font-bold mb-4 border-b pb-2">Master Paket Wedding</h3>
+                <form id="formPackage" class="mb-4 space-y-3">
+                    <input type="text" id="pkgName" placeholder="Nama Paket (cth: Silver)" required class="w-full p-2 border rounded-lg dark:bg-gray-800 outline-none text-sm">
+                    <input type="number" id="pkgPrice" placeholder="Harga (Rp)" required class="w-full p-2 border rounded-lg dark:bg-gray-800 outline-none text-sm">
+                    <button type="submit" class="w-full bg-gray-800 text-white dark:bg-gray-200 dark:text-black py-2 rounded-lg text-sm font-bold">Tambah Paket</button>
+                </form>
+                <ul id="packageList" class="space-y-2 text-sm max-h-40 overflow-y-auto"></ul>
+                <button onclick="document.getElementById('packageModal').classList.add('hidden-section')" class="w-full mt-4 p-2 bg-red-100 text-red-600 rounded-lg text-sm font-bold">Tutup</button>
+            </div>
+        </div>
+
+        <!-- HIDDEN INVOICE TEMPLATE (For PDF Generation) -->
+        <div id="invoiceTemplate" class="hidden-section bg-white text-black p-8" style="width: 800px;">
+            <div class="flex justify-between items-center border-b-2 border-gray-800 pb-4 mb-6">
+                <div>
+                    <h1 class="text-4xl font-bold text-blue-600" id="invWoName">Brand WO</h1>
+                    <p class="text-sm text-gray-600" id="invWoAddress">Alamat WO</p>
+                </div>
+                <div class="text-right">
+                    <h2 class="text-2xl font-bold text-gray-800">INVOICE</h2>
+                    <p class="text-sm" id="invDate">Tanggal: -</p>
+                </div>
+            </div>
+            <div class="mb-6">
+                <p class="text-gray-600 text-sm">Ditagihkan Kepada:</p>
+                <h3 class="text-xl font-bold" id="invClient">Nama Klien</h3>
+                <p class="text-sm" id="invEventDate">Tanggal Acara: -</p>
+                <p class="text-sm" id="invEventAddress">Lokasi: -</p>
+            </div>
+            <table class="w-full text-left mb-8 border-collapse">
+                <thead>
+                    <tr class="bg-gray-200">
+                        <th class="p-3 border">Deskripsi Layanan</th>
+                        <th class="p-3 border text-right">Harga</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="p-3 border" id="invPackageName">Paket Wedding</td>
+                        <td class="p-3 border text-right font-bold" id="invPackagePrice">Rp 0</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="flex justify-end">
+                <div class="w-1/2">
+                    <div class="flex justify-between py-2 border-b">
+                        <span class="font-bold">Total Pembayaran</span>
+                        <span class="font-bold" id="invTotal">Rp 0</span>
+                    </div>
+                    <div class="flex justify-between py-2 border-b">
+                        <span>Down Payment (DP)</span>
+                        <span id="invDP">Rp 0</span>
+                    </div>
+                    <div class="flex justify-between py-2 bg-blue-50 text-blue-800 p-2 rounded mt-2">
+                        <span class="font-bold">Sisa Tagihan</span>
+                        <span class="font-bold text-xl" id="invSisa">Rp 0</span>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-12 text-center text-sm text-gray-500">
+                <p>Terima kasih atas kepercayaan Anda menggunakan layanan kami.</p>
+            </div>
+        </div>
+
+    </section>
+
+#### 2. JavaScript Logic
+
+```javascript
+    <!-- Script Logic -->
+    <script>
+        // --- DATA & STATE MANAGEMENT ---
+        let appData = JSON.parse(localStorage.getItem('wedMateData')) || {
+            profile: null,
+            transactions: [],
+            packages: [
+                { id: 1, name: 'Paket Basic', price: 15000000 },
+                { id: 2, name: 'Paket Eksklusif', price: 35000000 }
+            ],
+            agendas: []
+        };
+
+        const formatRp = (num) => 'Rp ' + parseInt(num).toLocaleString('id-ID');
+        const saveData = () => localStorage.setItem('wedMateData', JSON.stringify(appData));
+
+        // --- INIT & THEME ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // Theme setup
+            const html = document.documentElement;
+            const themeToggle = document.getElementById('themeToggle');
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            if (savedTheme === 'dark') html.classList.add('dark');
+            
+            themeToggle.addEventListener('click', () => {
+                html.classList.toggle('dark');
+                localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light');
+                renderCharts(); // Re-render for color adaptation
+            });
+
+            // Route Logic
+            if (!appData.profile) {
+                document.getElementById('onboardingScreen').classList.remove('hidden-section');
+            } else {
+                initMainApp();
+            }
+        });
+
+        // --- ONBOARDING LOGIC ---
+        document.getElementById('onboardingForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            appData.profile = {
+                name: document.getElementById('woName').value,
+                address: document.getElementById('woAddress').value,
+                desc: document.getElementById('woDesc').value,
+                social: document.getElementById('woSocial').value
+            };
+            saveData();
+            document.getElementById('onboardingScreen').classList.add('hidden-section');
+            initMainApp();
+        });
+
+        // --- MAIN APP INITIALIZATION ---
+        function initMainApp() {
+            document.getElementById('mainApp').classList.remove('hidden-section');
+            document.getElementById('headerBrandName').innerText = appData.profile.name;
+            
+            // Set Greeting
+            const hour = new Date().getHours();
+            let greeting = "Selamat Malam";
+            if (hour < 11) greeting = "Selamat Pagi";
+            else if (hour < 15) greeting = "Selamat Siang";
+            else if (hour < 18) greeting = "Selamat Sore";
+            document.getElementById('headerGreeting').innerText = greeting;
+
+            setupNavigation();
+            updateDashboard();
+            setupAgendaPackageLogic();
+        }
+
+        // --- NAVIGATION LOGIC ---
+        function setupNavigation() {
+            const navBtns = document.querySelectorAll('.nav-btn');
+            navBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    // Update active styling
+                    navBtns.forEach(b => {
+                        b.classList.remove('text-iosBlue', 'dark:text-iosDarkBlue');
+                        b.classList.add('text-gray-400');
+                    });
+                    btn.classList.remove('text-gray-400');
+                    btn.classList.add('text-iosBlue', 'dark:text-iosDarkBlue');
+                    
+                    switchTab(btn.dataset.target);
+                });
+            });
+
+            // FAB Logic
+            const fabBtn = document.getElementById('fabBtn');
+            const fabModal = document.getElementById('fabModal');
+            fabBtn.addEventListener('click', () => fabModal.classList.remove('hidden-section'));
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.view-section').forEach(el => el.classList.add('hidden-section'));
+            document.getElementById(`view-${tabId}`).classList.remove('hidden-section');
+            
+            if(tabId === 'dashboard') updateDashboard();
+            if(tabId === 'transactions') renderTransactions();
+            if(tabId === 'agenda') renderAgendas();
+            if(tabId === 'analysis') setupAnalysisView();
+        }
+
+        function closeFabModal() {
+            document.getElementById('fabModal').classList.add('hidden-section');
+        }
+
+        // --- DASHBOARD & CHARTS LOGIC ---
+        let donutChartInst = null;
+        let barChartInst = null;
+
+        function updateDashboard() {
+            // Calculate Balance
+            const filter = document.getElementById('filterSaldo').value;
+            let totalIn = 0, totalOut = 0;
+            const currentMonth = new Date().getMonth();
+            
+            appData.transactions.forEach(t => {
+                const tMonth = new Date(t.date).getMonth();
+                if (filter === 'month' && tMonth !== currentMonth) return;
+                if (t.type === 'income') totalIn += t.amount;
+                else totalOut += t.amount;
+            });
+            
+            document.getElementById('totalBalanceDisplay').innerText = formatRp(totalIn - totalOut);
+
+            // Render Recent Lists
+            const expList = document.getElementById('recentExpenses');
+            const expenses = appData.transactions.filter(t => t.type === 'expense').slice(-3).reverse();
+            expList.innerHTML = expenses.length ? expenses.map(e => `
+                <li class="flex justify-between items-center bg-white/50 dark:bg-gray-800/50 p-2 rounded-lg">
+                    <span>${e.category}</span>
+                    <span class="text-red-500 font-bold">-${formatRp(e.amount)}</span>
+                </li>
+            `).join('') : '<li class="text-gray-500 text-xs">Belum ada pengeluaran.</li>';
+
+            const agdList = document.getElementById('recentAgendas');
+            const agendas = appData.agendas.slice(-3).reverse();
+            agdList.innerHTML = agendas.length ? agendas.map(a => `
+                <li class="flex justify-between items-center bg-white/50 dark:bg-gray-800/50 p-2 rounded-lg">
+                    <div><p class="font-bold">${a.client}</p><p class="text-[10px] text-gray-500">${a.date}</p></div>
+                    <button onclick="switchTab('agenda')" class="text-iosBlue text-xs"><i class="fas fa-arrow-right"></i></button>
+                </li>
+            `).join('') : '<li class="text-gray-500 text-xs">Belum ada agenda.</li>';
+
+            renderCharts(totalIn, totalOut);
+        }
+
+        document.getElementById('filterSaldo').addEventListener('change', updateDashboard);
+
+        function renderCharts(income = 0, expense = 0) {
+            const isDark = document.documentElement.classList.contains('dark');
+            const textColor = isDark ? '#fff' : '#333';
+
+            // Donut Chart
+            if (donutChartInst) donutChartInst.destroy();
+            const ctxDonut = document.getElementById('donutChart').getContext('2d');
+            donutChartInst = new Chart(ctxDonut, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Pemasukan', 'Pengeluaran'],
+                    datasets: [{
+                        data: [income, expense],
+                        backgroundColor: ['#34C759', '#FF3B30'],
+                        borderWidth: 0
+                    }]
+                },
+                options: { plugins: { legend: { labels: { color: textColor } } }, cutout: '70%' }
+            });
+
+            // Bar Chart (Mocked Trend for demonstration)
+            if (barChartInst) barChartInst.destroy();
+            const ctxBar = document.getElementById('barChart').getContext('2d');
+            barChartInst = new Chart(ctxBar, {
+                type: 'bar',
+                data: {
+                    labels: ['Minggu 1', 'Minggu 2', 'Minggu 3', 'Minggu 4'],
+                    datasets: [
+                        { label: 'In', data: [income*0.2, income*0.3, income*0.1, income*0.4], backgroundColor: '#34C759' },
+                        { label: 'Out', data: [expense*0.1, expense*0.4, expense*0.2, expense*0.3], backgroundColor: '#FF3B30' }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: { ticks: { color: textColor } },
+                        y: { ticks: { color: textColor } }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+        // --- TRANSACTIONS LOGIC ---
+        // Tab Input Switch
+        const transTabs = document.querySelectorAll('.tab-btn');
+        transTabs.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const type = e.target.dataset.type;
+                document.getElementById('transType').value = type;
+                transTabs.forEach(b => { b.classList.remove('bg-iosBlue', 'text-white'); b.classList.add('bg-gray-200', 'dark:bg-gray-700', 'text-black', 'dark:text-white'); });
+                if(type === 'income') {
+                    transTabs[0].classList.add('bg-iosBlue', 'text-white');
+                    transTabs[0].classList.remove('bg-gray-200', 'dark:bg-gray-700', 'text-black');
+                } else {
+                    transTabs[1].classList.add('bg-iosBlue', 'text-white');
+                    transTabs[1].classList.remove('bg-gray-200', 'dark:bg-gray-700', 'text-black');
+                }
+            });
+        });
+
+        document.getElementById('formTransaction').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const type = document.getElementById('transType').value;
+            const amount = parseInt(document.getElementById('transAmount').value);
+            const category = document.getElementById('transCategory').value;
+            const date = document.getElementById('transDate').value;
+
+            appData.transactions.push({ id: Date.now(), type, amount, category, date });
+            saveData();
+            e.target.reset();
+            alert('Transaksi berhasil disimpan!');
+            renderTransactions();
+            updateDashboard();
+        });
+
+        function renderTransactions() {
+            const list = document.getElementById('transactionHistory');
+            list.innerHTML = appData.transactions.slice().reverse().map(t => `
+                <li class="flex justify-between items-center border-b dark:border-gray-700 pb-2">
+                    <div>
+                        <p class="font-bold text-sm">${t.category}</p>
+                        <p class="text-xs text-gray-500">${t.date}</p>
+                    </div>
+                    <span class="font-bold ${t.type === 'income' ? 'text-green-500' : 'text-red-500'}">
+                        ${t.type === 'income' ? '+' : '-'}${formatRp(t.amount)}
+                    </span>
+                </li>
+            `).join('');
+        }
+
+        // --- AGENDA & PACKAGE LOGIC ---
+        function setupAgendaPackageLogic() {
+            renderPackageDropdown();
+            renderPackageList();
+
+            // Auto calculate DP & Sisa
+            const pkgSelect = document.getElementById('agendaPackage');
+            const dpInput = document.getElementById('agendaDP');
+            const sisaInput = document.getElementById('agendaSisa');
+
+            const calcSisa = () => {
+                const pkgId = parseInt(pkgSelect.value);
+                const pkg = appData.packages.find(p => p.id === pkgId);
+                const dp = parseInt(dpInput.value) || 0;
+                if (pkg) {
+                    const sisa = pkg.price - dp;
+                    sisaInput.value = formatRp(sisa > 0 ? sisa : 0);
+                }
+            };
+            pkgSelect.addEventListener('change', calcSisa);
+            dpInput.addEventListener('input', calcSisa);
+
+            // Modals Logic
+            document.getElementById('btnManagePackages').addEventListener('click', () => {
+                document.getElementById('packageModal').classList.remove('hidden-section');
+            });
+        }
+
+        function renderPackageDropdown() {
+            const select = document.getElementById('agendaPackage');
+            select.innerHTML = '<option value="">Pilih Paket...</option>' + 
+                appData.packages.map(p => `<option value="${p.id}">${p.name} - ${formatRp(p.price)}</option>`).join('');
+        }
+
+        function renderPackageList() {
+            const list = document.getElementById('packageList');
+            list.innerHTML = appData.packages.map(p => `
+                <li class="flex justify-between items-center bg-gray-100 dark:bg-gray-700 p-2 rounded">
+                    <span>${p.name}</span> <span class="font-bold">${formatRp(p.price)}</span>
+                </li>
+            `).join('');
+        }
+
+        document.getElementById('formPackage').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('pkgName').value;
+            const price = parseInt(document.getElementById('pkgPrice').value);
+            appData.packages.push({ id: Date.now(), name, price });
+            saveData();
+            renderPackageDropdown();
+            renderPackageList();
+            e.target.reset();
+        });
+
+        document.getElementById('formAgenda').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const pkgId = parseInt(document.getElementById('agendaPackage').value);
+            const dpAmount = parseInt(document.getElementById('agendaDP').value);
+            
+            const agenda = {
+                id: Date.now(),
+                client: document.getElementById('agendaClient').value,
+                address: document.getElementById('agendaAddress').value,
+                date: document.getElementById('agendaDate').value,
+                packageId: pkgId,
+                dp: dpAmount
+            };
+
+            appData.agendas.push(agenda);
+            
+            // Auto add DP to transaction
+            appData.transactions.push({
+                id: Date.now() + 1,
+                type: 'income',
+                amount: dpAmount,
+                category: `DP: ${agenda.client}`,
+                date: agenda.date,
+                jobId: agenda.id
+            });
+
+            saveData();
+            e.target.reset();
+            document.getElementById('agendaSisa').value = '';
+            alert('Agenda & DP berhasil disimpan!');
+            renderAgendas();
+        });
+
+        function renderAgendas() {
+            const container = document.getElementById('agendaListContainer');
+            container.innerHTML = appData.agendas.slice().reverse().map(a => {
+                const pkg = appData.packages.find(p => p.id === a.packageId);
+                const sisa = pkg.price - a.dp;
+                return `
+                <div class="glass p-4 rounded-2xl shadow-sm border-l-4 border-iosBlue">
+                    <div class="flex justify-between">
+                        <h4 class="font-bold text-lg">${a.client}</h4>
+                        <span class="text-xs bg-gray-200 dark:bg-gray-700 px-2 py-1 rounded">${a.date}</span>
+                    </div>
+                    <p class="text-sm text-gray-500 mb-2">${a.address}</p>
+                    <div class="bg-white/50 dark:bg-gray-800/50 p-2 rounded-lg text-sm mb-3">
+                        <p>Paket: <span class="font-bold">${pkg.name}</span></p>
+                        <p>Sisa Tagihan: <span class="font-bold text-red-500">${formatRp(sisa)}</span></p>
+                    </div>
+                    <button onclick="generateInvoice(${a.id})" class="w-full bg-blue-100 text-iosBlue dark:bg-blue-900/40 dark:text-blue-300 py-2 rounded-xl text-sm font-bold shadow-sm">
+                        <i class="fas fa-file-pdf mr-1"></i> Cetak Invoice
+                    </button>
+                </div>
+            `}).join('');
+        }
+
+        // --- INVOICE GENERATOR (html2pdf) ---
+        function generateInvoice(agendaId) {
+            const agenda = appData.agendas.find(a => a.id === agendaId);
+            const pkg = appData.packages.find(p => p.id === agenda.packageId);
+            const sisa = pkg.price - agenda.dp;
+
+            // Populate Template
+            document.getElementById('invWoName').innerText = appData.profile.name;
+            document.getElementById('invWoAddress').innerText = appData.profile.address;
+            document.getElementById('invDate').innerText = `Tanggal Cetak: ${new Date().toLocaleDateString('id-ID')}`;
+            document.getElementById('invClient').innerText = agenda.client;
+            document.getElementById('invEventDate').innerText = `Tanggal Acara: ${agenda.date}`;
+            document.getElementById('invEventAddress').innerText = `Lokasi: ${agenda.address}`;
+            document.getElementById('invPackageName').innerText = pkg.name;
+            document.getElementById('invPackagePrice').innerText = formatRp(pkg.price);
+            document.getElementById('invTotal').innerText = formatRp(pkg.price);
+            document.getElementById('invDP').innerText = formatRp(agenda.dp);
+            document.getElementById('invSisa').innerText = formatRp(sisa);
+
+            // Render PDF
+            const element = document.getElementById('invoiceTemplate');
+            element.classList.remove('hidden-section'); // Unhide temporarily to render
+            
+            const opt = {
+                margin:       0.5,
+                filename:     `Invoice_${agenda.client.replace(/\s+/g, '_')}.pdf`,
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true },
+                jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+            };
+
+            // Using html2pdf promise
+            html2pdf().set(opt).from(element).save().then(() => {
+                element.classList.add('hidden-section'); // Hide again
+            });
+        }
+
+        // --- PROJECT ANALYSIS LOGIC ---
+        function setupAnalysisView() {
+            const select = document.getElementById('analysisJobSelect');
+            select.innerHTML = '<option value="">Pilih Agenda Job...</option>' + 
+                appData.agendas.map(a => `<option value="${a.id}">${a.client} (${a.date})</option>`).join('');
+
+            select.addEventListener('change', (e) => {
+                const jobId = parseInt(e.target.value);
+                const resultDiv = document.getElementById('analysisResult');
+                
+                if (!jobId) {
+                    resultDiv.classList.add('hidden-section');
+                    return;
+                }
+
+                const agenda = appData.agendas.find(a => a.id === jobId);
+                
+                // Analisis Transaksi terkait job ini (Income: DP/Pelunasan, Expense: Vendor dll)
+                // Filter berdasarkan nama klien pada kategori atau jika kita implementasikan relasi jobId
+                let jobIncome = 0;
+                let jobExpense = 0;
+
+                appData.transactions.forEach(t => {
+                    // Cek jika transaksi ditautkan ke jobId, atau string kategorinya mengandung nama klien (pendekatan sederhana)
+                    if (t.jobId === jobId || t.category.includes(agenda.client)) {
+                        if (t.type === 'income') jobIncome += t.amount;
+                        else jobExpense += t.amount;
+                    }
+                });
+
+                document.getElementById('analysisClientName').innerText = `Proyek: ${agenda.client}`;
+                document.getElementById('analysisIncome').innerText = formatRp(jobIncome);
+                document.getElementById('analysisExpense').innerText = formatRp(jobExpense);
+                document.getElementById('analysisMargin').innerText = formatRp(jobIncome - jobExpense);
+                
+                resultDiv.classList.remove('hidden-section');
+            });
+        }
+    </script>
+</body>
+</html>
