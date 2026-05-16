@@ -46,7 +46,7 @@
         /* Hide sections */
         .hidden-section { display: none !important; }
         
-        /* Bottom Nav Safe Area (Ditingkatkan untuk Floating Nav) */
+        /* Bottom Nav Safe Area */
         .pb-nav { padding-bottom: 120px; }
     </style>
 </head>
@@ -252,22 +252,41 @@
 
         <!-- PRICE LIST MANAGER MODAL -->
         <div id="packageModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[60] flex items-center justify-center hidden-section p-4">
-            <div class="glass w-full max-w-md rounded-3xl p-6 shadow-2xl">
+            <div class="glass w-full max-w-md rounded-3xl p-6 shadow-2xl max-h-[90vh] overflow-y-auto">
                 <div class="flex justify-between items-center border-b dark:border-gray-700 pb-3 mb-4">
                     <h3 class="text-xl font-bold text-iosBlue" id="pkgFormTitle">Kelola Price List</h3>
                     <button onclick="document.getElementById('packageModal').classList.add('hidden-section'); resetPkgForm();" class="text-gray-400 hover:text-red-500"><i class="fas fa-times text-xl"></i></button>
                 </div>
                 
                 <form id="formPackage" class="mb-6 space-y-3 bg-white/50 dark:bg-gray-800/50 p-4 rounded-2xl border dark:border-gray-700">
-                    <input type="text" id="pkgName" placeholder="Nama Paket (Cth: Diamond)" required class="w-full p-2.5 border rounded-xl dark:bg-gray-900 outline-none text-sm">
-                    <input type="number" id="pkgPrice" placeholder="Harga (Rp)" required min="1" class="w-full p-2.5 border rounded-xl dark:bg-gray-900 outline-none text-sm">
-                    <div class="flex gap-2">
+                    <div>
+                        <label class="block text-xs font-medium mb-1">Nama Paket</label>
+                        <input type="text" id="pkgName" placeholder="Cth: Paket Diamond" required class="w-full p-2.5 border rounded-xl dark:bg-gray-900 outline-none text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium mb-1">Harga (Rp)</label>
+                        <input type="number" id="pkgPrice" placeholder="Cth: 25000000" required min="1" class="w-full p-2.5 border rounded-xl dark:bg-gray-900 outline-none text-sm">
+                    </div>
+                    
+                    <!-- Dynamic Details Input Section -->
+                    <div class="border-t border-gray-300 dark:border-gray-600 pt-3 mt-3">
+                        <div class="flex justify-between items-center mb-2">
+                            <label class="block text-xs font-bold text-iosBlue">Rincian / Layanan</label>
+                            <button type="button" onclick="addDetailInput()" class="text-xs bg-blue-100 text-iosBlue px-2 py-1 rounded-lg font-bold hover:bg-blue-200"><i class="fas fa-plus"></i> Item</button>
+                        </div>
+                        <div id="pkgDetailsContainer" class="space-y-2">
+                            <!-- Dynamic inputs injected here via JS -->
+                        </div>
+                    </div>
+
+                    <div class="flex gap-2 pt-2">
                         <button type="submit" id="btnSubmitPkg" class="w-full bg-gray-800 text-white dark:bg-gray-200 dark:text-black py-2.5 rounded-xl text-sm font-bold">Simpan</button>
                         <button type="button" id="btnCancelEditPkg" class="hidden-section bg-red-100 text-red-600 px-4 rounded-xl text-sm font-bold" onclick="resetPkgForm()"><i class="fas fa-times"></i></button>
                     </div>
                 </form>
 
-                <ul id="packageList" class="space-y-2 text-sm max-h-48 overflow-y-auto pr-1"></ul>
+                <h4 class="text-sm font-bold mb-2">Daftar Paket:</h4>
+                <ul id="packageList" class="space-y-2 text-sm"></ul>
             </div>
         </div>
 
@@ -279,8 +298,16 @@
             </div>
             <div class="mb-6"><p class="text-gray-600 text-sm">Tagihan Kepada:</p><h3 class="text-xl font-bold" id="invClient">Klien</h3></div>
             <table class="w-full text-left mb-8 border-collapse">
-                <tr class="bg-gray-200"><th class="p-3 border">Deskripsi</th><th class="p-3 border text-right">Harga</th></tr>
-                <tr><td class="p-3 border" id="invPackageName">Paket</td><td class="p-3 border text-right font-bold" id="invPackagePrice">Rp 0</td></tr>
+                <tr class="bg-gray-200"><th class="p-3 border border-gray-300">Deskripsi Layanan</th><th class="p-3 border border-gray-300 text-right">Harga</th></tr>
+                <tr>
+                    <td class="p-3 border border-gray-300 align-top">
+                        <span id="invPackageName" class="font-bold text-lg block mb-2">Paket Wedding</span>
+                        <ul id="invPackageDetails" class="list-disc ml-5 text-sm text-gray-700">
+                            <!-- Injected Items -->
+                        </ul>
+                    </td>
+                    <td class="p-3 border border-gray-300 text-right font-bold align-top" id="invPackagePrice">Rp 0</td>
+                </tr>
             </table>
             <div class="flex justify-end">
                 <div class="w-1/2">
@@ -295,6 +322,7 @@
     <!-- LOGIKA JAVASCRIPT -->
     <script>
         // --- DATA & STATE ---
+        // Penambahan 'details' (Array) pada packages
         let appData = JSON.parse(localStorage.getItem('wedMateData')) || { profile: null, transactions: [], packages: [], agendas: [] };
         const formatRp = (num) => 'Rp ' + parseInt(num).toLocaleString('id-ID');
         const saveData = () => localStorage.setItem('wedMateData', JSON.stringify(appData));
@@ -326,6 +354,7 @@
             document.getElementById('mainApp').classList.remove('hidden-section');
             document.getElementById('headerBrandName').innerText = appData.profile.name;
             setupNavigation(); updateDashboard(); setupAgendaPackageLogic(); renderJobDropdownForTransaction(); setupAnalysisView();
+            resetPkgForm(); // init detail input pertama
         }
 
         // --- NAV LOGIC ---
@@ -456,7 +485,7 @@
             document.getElementById('transDate').value = t.date;
             document.getElementById('transJob').value = t.jobId;
             document.getElementById('transFormTitle').innerText = "Edit Transaksi";
-            document.getElementById('btnSubmitTrans').innerText = "Update Transaksi";
+            document.getElementById('btnSubmitTrans').innerText = "Update";
             document.getElementById('btnSubmitTrans').classList.replace('bg-iosBlue', 'bg-orange-500');
             document.getElementById('btnCancelEditTrans').classList.remove('hidden-section');
             window.scrollTo({top: 0, behavior: 'smooth'});
@@ -474,31 +503,51 @@
         document.getElementById('btnCancelEditTrans').addEventListener('click', resetTransForm);
 
 
-        // --- PACKAGE LOGIC (CRUD) ---
+        // --- PACKAGE LOGIC (CRUD & DYNAMIC DETAILS) ---
+        function addDetailInput(val = '') {
+            const container = document.getElementById('pkgDetailsContainer');
+            const div = document.createElement('div');
+            div.className = 'flex gap-2 items-center';
+            div.innerHTML = `
+                <input type="text" placeholder="Cth: Cetak Album 4x6" value="${val}" required class="detail-input w-full p-2 border rounded-xl dark:bg-gray-900 dark:border-gray-700 outline-none text-xs">
+                <button type="button" class="text-red-500 hover:text-red-700 w-8 flex items-center justify-center" onclick="this.parentElement.remove()"><i class="fas fa-minus-circle"></i></button>
+            `;
+            container.appendChild(div);
+        }
+
         function renderPackageDropdown() {
             document.getElementById('agendaPackage').innerHTML = '<option value="">Pilih Paket...</option>' + appData.packages.map(p => `<option value="${p.id}">${p.name} - ${formatRp(p.price)}</option>`).join('');
         }
 
         function renderPackageList() {
             document.getElementById('packageList').innerHTML = appData.packages.map(p => `
-                <li class="flex justify-between items-center bg-gray-100 dark:bg-gray-700 p-3 rounded-xl shadow-sm">
-                    <div><p class="font-bold text-iosBlue">${p.name}</p><p class="text-xs">${formatRp(p.price)}</p></div>
-                    <div class="flex gap-3">
-                        <button onclick="editPackage(${p.id})" class="text-orange-500 hover:text-orange-700"><i class="fas fa-edit"></i></button>
-                        <button onclick="deletePackage(${p.id})" class="text-red-500 hover:text-red-700"><i class="fas fa-trash"></i></button>
+                <li class="bg-gray-100 dark:bg-gray-700 p-3 rounded-xl shadow-sm mb-2">
+                    <div class="flex justify-between items-center mb-1">
+                        <div><p class="font-bold text-iosBlue">${p.name}</p><p class="text-xs font-bold">${formatRp(p.price)}</p></div>
+                        <div class="flex gap-3">
+                            <button onclick="editPackage(${p.id})" class="text-orange-500 hover:text-orange-700"><i class="fas fa-edit"></i></button>
+                            <button onclick="deletePackage(${p.id})" class="text-red-500 hover:text-red-700"><i class="fas fa-trash"></i></button>
+                        </div>
                     </div>
+                    ${p.details && p.details.length > 0 ? `<ul class="list-disc ml-4 text-[10px] text-gray-600 dark:text-gray-300">${p.details.map(d=>`<li>${d}</li>`).join('')}</ul>` : ''}
                 </li>
             `).join('');
         }
 
         document.getElementById('formPackage').addEventListener('submit', (e) => {
             e.preventDefault();
-            const name = document.getElementById('pkgName').value; const price = parseInt(document.getElementById('pkgPrice').value);
+            const name = document.getElementById('pkgName').value; 
+            const price = parseInt(document.getElementById('pkgPrice').value);
+            
+            // Gather details
+            const detailNodes = document.querySelectorAll('.detail-input');
+            const details = Array.from(detailNodes).map(input => input.value).filter(val => val.trim() !== '');
+
             if(editModes.package) {
                 const idx = appData.packages.findIndex(p => p.id === editModes.package);
-                if(idx > -1) appData.packages[idx] = { id: editModes.package, name, price };
+                if(idx > -1) appData.packages[idx] = { id: editModes.package, name, price, details };
             } else {
-                appData.packages.push({ id: Date.now(), name, price });
+                appData.packages.push({ id: Date.now(), name, price, details });
             }
             saveData(); resetPkgForm(); renderPackageDropdown(); renderPackageList(); renderAgendas();
         });
@@ -506,7 +555,18 @@
         function editPackage(id) {
             const p = appData.packages.find(x => x.id === id); if(!p) return;
             editModes.package = id;
-            document.getElementById('pkgName').value = p.name; document.getElementById('pkgPrice').value = p.price;
+            document.getElementById('pkgName').value = p.name; 
+            document.getElementById('pkgPrice').value = p.price;
+            
+            // Render details
+            const container = document.getElementById('pkgDetailsContainer');
+            container.innerHTML = '';
+            if(p.details && p.details.length > 0) {
+                p.details.forEach(d => addDetailInput(d));
+            } else {
+                addDetailInput(); // at least one empty
+            }
+
             document.getElementById('btnSubmitPkg').innerText = "Update"; document.getElementById('btnSubmitPkg').classList.replace('bg-gray-800', 'bg-orange-500');
             document.getElementById('btnCancelEditPkg').classList.remove('hidden-section');
         }
@@ -517,6 +577,8 @@
 
         function resetPkgForm() {
             editModes.package = null; document.getElementById('formPackage').reset();
+            document.getElementById('pkgDetailsContainer').innerHTML = '';
+            addDetailInput(); // Beri 1 kolom detail kosong sebagai default
             document.getElementById('btnSubmitPkg').innerText = "Simpan"; document.getElementById('btnSubmitPkg').classList.replace('bg-orange-500', 'bg-gray-800');
             document.getElementById('btnCancelEditPkg').classList.add('hidden-section');
         }
@@ -585,7 +647,7 @@
             document.getElementById('agendaClient').value = a.client; document.getElementById('agendaAddress').value = a.address;
             document.getElementById('agendaDate').value = a.date; document.getElementById('agendaPackage').value = a.packageId;
             document.getElementById('agendaDP').value = a.dp;
-            document.getElementById('agendaPackage').dispatchEvent(new Event('change')); // Trigger hitung sisa
+            document.getElementById('agendaPackage').dispatchEvent(new Event('change'));
             
             document.getElementById('agendaFormTitle').innerText = "Edit Agenda Job";
             document.getElementById('btnSubmitAgenda').innerText = "Update Agenda"; document.getElementById('btnSubmitAgenda').classList.replace('bg-iosBlue', 'bg-orange-500');
@@ -629,7 +691,6 @@
                 document.getElementById('analysisExpense').innerText = formatRp(exp);
                 document.getElementById('analysisMargin').innerText = formatRp(inc - exp);
                 
-                // Render Grafik Pie Analisis
                 const ctx = document.getElementById('analysisChartCanvas').getContext('2d');
                 if(analysisChartInst) analysisChartInst.destroy();
                 analysisChartInst = new Chart(ctx, {
@@ -650,6 +711,15 @@
             document.getElementById('invWoName').innerText = appData.profile.name; document.getElementById('invWoAddress').innerText = appData.profile.address;
             document.getElementById('invDate').innerText = `Tanggal: ${new Date().toLocaleDateString('id-ID')}`; document.getElementById('invClient').innerText = agenda.client;
             document.getElementById('invPackageName').innerText = pkg.name; document.getElementById('invPackagePrice').innerText = formatRp(pkg.price);
+            
+            // Render Invoice Details
+            const detailUl = document.getElementById('invPackageDetails');
+            if(pkg.details && pkg.details.length > 0) {
+                detailUl.innerHTML = pkg.details.map(d => `<li>${d}</li>`).join('');
+            } else {
+                detailUl.innerHTML = `<li><i class="text-gray-400">Tidak ada rincian</i></li>`;
+            }
+
             document.getElementById('invTotal').innerText = formatRp(pkg.price); document.getElementById('invDP').innerText = formatRp(agenda.dp); document.getElementById('invSisa').innerText = formatRp(pkg.price - agenda.dp);
 
             const element = document.getElementById('invoiceTemplate'); element.classList.remove('hidden-section');
