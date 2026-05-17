@@ -1316,9 +1316,8 @@
         }
 
         // --- 9. SHARE & JPG GENERATORS ---
-        // Fungsi utama untuk mengonversi elemen HTML menjadi JPG (Ganti PDF)
+        // Fungsi utama untuk mengonversi elemen HTML menjadi JPG tanpa kedip
         function exportAsJPG(elementId, filename, action = 'download') {
-            // Update Logo untuk cetak
             const invLogo = document.getElementById('invLogo');
             const arLogo = document.getElementById('arLogo');
             const erLogo = document.getElementById('erLogo');
@@ -1333,39 +1332,40 @@
                 if(erLogo) erLogo.classList.add('hidden-section');
             }
 
-            // 1. Ambil elemen template asli
             const originalEl = document.getElementById(elementId);
-            
-            // 2. Gandakan (Clone) elemen agar tidak merusak UI yang asli
             const cloneEl = originalEl.cloneNode(true);
             cloneEl.classList.remove('hidden-section'); 
             cloneEl.style.display = 'block'; 
             
-            // 3. Buat wrapper tempat menampung clone
+            // WRAPPER: Simpan tepat di posisi scroll saat ini
             const wrapper = document.createElement('div');
             wrapper.style.position = 'absolute'; 
             wrapper.style.left = '0px';
-            
-            // TITIK KUNCI 1: Taruh wrapper sejajar dengan titik di mana user sedang melihat layar (scrollY)
-            // Ini membuat html2canvas BISA memproses elemen karena berada dalam viewport aktif
             wrapper.style.top = (window.scrollY || window.pageYOffset) + 'px';
-            
-            // TITIK KUNCI 2: Sembunyikan jauh di belakang background body (-9999) agar user TIDAK melihatnya
-            wrapper.style.zIndex = '-9999'; 
+            wrapper.style.zIndex = '-2000'; // Diletakkan jauh di belakang UI
             wrapper.style.pointerEvents = 'none'; 
             
+            // TEMBOK SOLID: Mencegah efek transparan/glass UI menembus ke wrapper
+            const solidWall = document.createElement('div');
+            solidWall.style.position = 'fixed';
+            solidWall.style.top = '0px';
+            solidWall.style.left = '0px';
+            solidWall.style.width = '100vw';
+            solidWall.style.height = '100vh';
+            // Warnanya sama persis dengan warna background aplikasi agar terlihat tidak ada apa-apa
+            solidWall.style.backgroundColor = document.documentElement.classList.contains('dark') ? '#111827' : '#f9fafb';
+            solidWall.style.zIndex = '-1000'; // Di depan wrapper, tapi di belakang aplikasi
+
             wrapper.appendChild(cloneEl);
+            document.body.appendChild(wrapper);
+            document.body.appendChild(solidWall);
             
-            // TITIK KUNCI 3: Mencegah Kedip/Flash akibat scrollbar horizontal muncul sesaat 
-            // karena template lebarnya 710px. Kita sembunyikan overflowX-nya sebentar.
+            // Sembunyikan overflow horizontal agar tidak muncul scrollbar berkedip
             const originalOverflow = document.documentElement.style.overflowX;
             document.documentElement.style.overflowX = 'hidden';
-            
-            document.body.appendChild(wrapper);
-            
+
             showToast("Menyiapkan Gambar...");
 
-            // 4. Proses render HTML menjadi Gambar
             setTimeout(() => {
                 html2canvas(cloneEl, { 
                     scale: 2, 
@@ -1388,11 +1388,16 @@
                             forceDownload(blob, finalFilename);
                         }
                         
-                        // Bersihkan gandaan dari aplikasi & kembalikan state scrollbar
+                        // Bersihkan seluruh DOM setelah selesai
                         document.body.removeChild(wrapper);
+                        document.body.removeChild(solidWall);
                         document.documentElement.style.overflowX = originalOverflow;
                         
                     }, 'image/jpeg', 0.98);
+                }).catch(err => {
+                    document.body.removeChild(wrapper);
+                    document.body.removeChild(solidWall);
+                    document.documentElement.style.overflowX = originalOverflow;
                 });
             }, 150); 
         }
