@@ -10,9 +10,19 @@
     <meta name="apple-mobile-web-app-title" content="WedMate">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#007AFF" id="themeColorMeta">
-    
-    <link rel="icon" type="image/png" href="./logo.png">
-    <link rel="apple-touch-icon" href="./logo.png">
+
+<!-- Menghubungkan Web App Manifest -->
+<link rel="manifest" href="/manifest.json">
+
+<!-- Favicon standar untuk tab browser -->
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+
+<!-- Tag khusus untuk perangkat Apple (iOS/iPhone/iPad) -->
+<link rel="apple-touch-icon" href="/icon-192x192.png">
+
+<!-- Tema warna browser HP agar serasi dengan aplikasi -->
+<meta name="theme-color" content="#000000">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
