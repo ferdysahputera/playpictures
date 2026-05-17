@@ -439,44 +439,44 @@
         <div id="invoiceTemplate" class="hidden-section bg-white text-black p-10 flex flex-col relative" style="font-family: 'Calibri', Arial, sans-serif; width: 794px; min-height: 1123px; box-sizing: border-box;">
             <div class="flex-grow">
                 <!-- Kop Surat -->
-                <div class="flex items-center border-b-4 border-black pb-4 mb-6">
-                    <div class="w-1/5 flex justify-center">
-                        <img id="invLogo" class="max-h-24 max-w-full object-contain hidden-section bg-white rounded-md">
+                <div class="relative border-b-[5px] border-double border-black pb-5 mb-8 flex items-center min-h-[120px]">
+                    <div class="absolute left-0 top-0 bottom-0 flex items-center justify-start w-1/4 pr-4">
+                        <img id="invLogo" class="max-h-24 max-w-full object-contain hidden-section bg-white">
                     </div>
-                    <div class="w-4/5 text-center px-4">
-                        <h1 class="text-3xl font-bold text-black uppercase tracking-wide" id="invWoName">Brand WO</h1>
-                        <p class="text-sm mt-1 text-black whitespace-normal break-words" id="invWoAddress">Alamat</p>
-                        <div id="invContacts" class="flex flex-wrap justify-center gap-3 text-xs mt-2 text-black font-medium"></div>
+                    <div class="w-full text-center flex flex-col items-center justify-center z-10 px-[20%]">
+                        <h1 class="text-4xl font-extrabold text-black uppercase tracking-[0.15em] leading-tight" id="invWoName">Brand WO</h1>
+                        <p class="text-sm mt-1 text-black font-medium w-full" id="invWoAddress">Alamat</p>
+                        <div id="invContacts" class="flex flex-wrap justify-center gap-x-4 gap-y-1 text-sm mt-2 text-black font-semibold"></div>
                     </div>
                 </div>
                 
                 <!-- Judul Surat -->
                 <div class="text-center mb-8">
-                    <h2 class="text-xl font-bold text-black uppercase underline tracking-wider">INVOICE</h2>
-                    <p class="text-sm mt-1 text-black" id="invDate">Tanggal: -</p>
+                    <h2 class="text-2xl font-extrabold text-black uppercase tracking-widest border-b-2 border-black inline-block pb-1">INVOICE</h2>
+                    <p class="text-sm mt-2 text-black font-medium" id="invDate">Tanggal: -</p>
                 </div>
                 
                 <div class="mb-6"><p class="text-black text-sm">Tagihan Kepada:</p><h3 class="text-xl font-bold whitespace-normal break-words" id="invClient">Klien</h3><p class="text-sm text-black" id="invEventDate">Tgl Acara: -</p></div>
                 <table class="w-full text-left mb-8 border-collapse table-fixed break-words">
-                    <tr class="bg-gray-200">
-                        <th class="p-3 border border-black w-2/3">Deskripsi Layanan</th>
-                        <th class="p-3 border border-black w-1/3 text-right">Harga</th>
+                    <tr class="bg-gray-100 text-black uppercase text-xs tracking-wider">
+                        <th class="p-4 border border-black w-2/3">Deskripsi Layanan</th>
+                        <th class="p-4 border border-black w-1/3 text-right">Harga</th>
                     </tr>
                     <tr>
-                        <td class="p-3 border border-black align-top whitespace-normal break-words">
+                        <td class="p-4 border border-black align-top whitespace-normal break-words">
                             <span id="invPackageName" class="font-bold text-lg block mb-2 break-words">Paket</span>
-                            <ul id="invPackageDetails" class="list-disc ml-5 text-sm text-black whitespace-normal break-words"></ul>
+                            <ul id="invPackageDetails" class="list-disc ml-5 text-sm text-black whitespace-normal break-words leading-relaxed"></ul>
                         </td>
-                        <td class="p-3 border border-black text-right font-bold align-top whitespace-normal break-words" id="invPackagePrice">Rp 0</td>
+                        <td class="p-4 border border-black text-right font-bold align-top whitespace-normal break-words" id="invPackagePrice">Rp 0</td>
                     </tr>
                 </table>
-                <div class="flex justify-end"><div class="w-1/2"><div class="flex justify-between py-2 border-b border-black"><span class="font-bold">Total</span><span id="invTotal">Rp 0</span></div><div class="flex justify-between py-2 border-b border-black"><span>DP Awal</span><span id="invDP">Rp 0</span></div><div class="flex justify-between py-2 bg-gray-200 text-black p-2 rounded mt-2 border border-black"><span class="font-bold">Sisa Tagihan</span><span class="font-bold text-xl" id="invSisa">Rp 0</span></div></div></div>
+                <div class="flex justify-end"><div class="w-1/2"><div class="flex justify-between py-3 border-b border-black"><span class="font-bold">Total</span><span id="invTotal">Rp 0</span></div><div class="flex justify-between py-3 border-b border-black"><span>DP Awal</span><span id="invDP">Rp 0</span></div><div class="flex justify-between py-3 bg-gray-100 text-black px-3 rounded-lg mt-3 border border-black"><span class="font-bold">Sisa Tagihan</span><span class="font-bold text-xl" id="invSisa">Rp 0</span></div></div></div>
             </div>
             
             <div class="mt-auto pt-8">
                 <div class="flex justify-between items-end mb-6">
-                    <div class="bg-gray-100 p-4 rounded-xl border border-black hidden-section w-1/2" id="invBankInfo">
-                        <p class="font-bold text-sm text-black mb-2"><i class="fas fa-university mr-1"></i> Informasi Pembayaran / Transfer:</p>
+                    <div class="bg-white p-5 rounded-xl border-2 border-black hidden-section w-[45%]" id="invBankInfo">
+                        <p class="font-bold text-sm text-black mb-3 border-b border-gray-300 pb-2"><i class="fas fa-university mr-2"></i> INFORMASI PEMBAYARAN</p>
                         <p class="text-sm text-black mb-1">Bank: <span class="font-bold" id="invBankName">-</span></p>
                         <p class="text-sm text-black mb-1">No. Rekening: <span class="font-bold" id="invBankAcc">-</span></p>
                         <p class="text-sm text-black">Atas Nama: <span class="font-bold" id="invBankHolder">-</span></p>
@@ -487,7 +487,7 @@
                         <p class="font-bold border-t border-black pt-2 w-full whitespace-normal break-words" id="invOwnerName">( Owner )</p>
                     </div>
                 </div>
-                <div class="w-full text-right text-xs text-black italic pt-3 pb-2 font-medium">©WedMate by Dzaza App</div>
+                <div class="w-full text-right text-xs text-gray-500 italic pt-3 font-medium">©WedMate by Dzaza App</div>
             </div>
         </div>
 
@@ -495,43 +495,43 @@
         <div id="analysisReportTemplate" class="hidden-section bg-white text-black p-10 flex flex-col relative" style="font-family: 'Calibri', Arial, sans-serif; width: 794px; min-height: 1123px; box-sizing: border-box;">
             <div class="flex-grow">
                 <!-- Kop Surat -->
-                <div class="flex items-center border-b-4 border-black pb-4 mb-6">
-                    <div class="w-1/5 flex justify-start">
-                        <img id="arLogo" class="max-h-24 max-w-full object-contain hidden-section bg-white rounded-md">
+                <div class="relative border-b-[5px] border-double border-black pb-5 mb-8 flex items-center min-h-[120px]">
+                    <div class="absolute left-0 top-0 bottom-0 flex items-center justify-start w-1/4 pr-4">
+                        <img id="arLogo" class="max-h-24 max-w-full object-contain hidden-section bg-white">
                     </div>
-                    <div class="w-4/5 text-center px-4">
-                        <h1 class="text-3xl font-bold text-black uppercase tracking-wide" id="arWoName">Brand WO</h1>
-                        <p class="text-sm mt-1 text-black whitespace-normal break-words" id="arWoAddress">Alamat</p>
-                        <div id="arContacts" class="flex flex-wrap justify-center gap-3 text-xs mt-2 text-black font-medium"></div>
+                    <div class="w-full text-center flex flex-col items-center justify-center z-10 px-[20%]">
+                        <h1 class="text-4xl font-extrabold text-black uppercase tracking-[0.15em] leading-tight" id="arWoName">Brand WO</h1>
+                        <p class="text-sm mt-1 text-black font-medium w-full" id="arWoAddress">Alamat</p>
+                        <div id="arContacts" class="flex flex-wrap justify-center gap-x-4 gap-y-1 text-sm mt-2 text-black font-semibold"></div>
                     </div>
                 </div>
                 
                 <!-- Judul Surat -->
                 <div class="text-center mb-8">
-                    <h2 class="text-xl font-bold text-black uppercase underline tracking-wider">LAPORAN KEUANGAN</h2>
-                    <p class="text-sm mt-1 text-black" id="arTitle">Keseluruhan Tahun Ini</p>
+                    <h2 class="text-2xl font-extrabold text-black uppercase tracking-widest border-b-2 border-black inline-block pb-1">LAPORAN KEUANGAN</h2>
+                    <p class="text-sm mt-2 text-black font-medium" id="arTitle">Keseluruhan Tahun Ini</p>
                 </div>
                 
-                <div class="flex justify-between mb-6 bg-gray-200 p-4 rounded-lg border border-black"><div class="w-1/3 text-center"><p class="text-sm font-bold">Total Pemasukan</p><p class="font-bold text-xl text-black" id="arIncome">Rp 0</p></div><div class="w-1/3 text-center border-l border-r border-black"><p class="text-sm font-bold">Total Pengeluaran</p><p class="font-bold text-xl text-black" id="arExpense">Rp 0</p></div><div class="w-1/3 text-center"><p class="text-sm font-bold">Laba Bersih / Margin</p><p class="font-bold text-xl text-black" id="arMargin">Rp 0</p></div></div>
-                <h3 class="font-bold text-lg mb-2 border-b border-black pb-1">Rincian Transaksi Terkait:</h3>
-                <table class="w-full text-left mb-6 border-collapse text-sm table-fixed break-words">
+                <div class="flex justify-between mb-8 bg-gray-100 p-5 rounded-lg border border-black"><div class="w-1/3 text-center"><p class="text-sm font-bold uppercase tracking-wide">Total Pemasukan</p><p class="font-bold text-2xl text-black mt-1" id="arIncome">Rp 0</p></div><div class="w-1/3 text-center border-l border-r border-black"><p class="text-sm font-bold uppercase tracking-wide">Total Pengeluaran</p><p class="font-bold text-2xl text-black mt-1" id="arExpense">Rp 0</p></div><div class="w-1/3 text-center"><p class="text-sm font-bold uppercase tracking-wide">Laba / Margin</p><p class="font-bold text-2xl text-black mt-1" id="arMargin">Rp 0</p></div></div>
+                <h3 class="font-bold text-lg mb-3 border-b-2 border-black pb-1 uppercase tracking-wide">Rincian Transaksi:</h3>
+                <table class="w-full text-left mb-8 border-collapse text-sm table-fixed break-words">
                     <thead>
-                        <tr class="bg-gray-200 border-b border-black">
-                            <th class="p-2 border border-black w-[15%]">Tanggal</th>
-                            <th class="p-2 border border-black w-[25%]">Kategori</th>
-                            <th class="p-2 border border-black w-[40%]">Keterangan</th>
-                            <th class="p-2 border border-black w-[20%] text-right">Nominal</th>
+                        <tr class="bg-gray-100 text-black uppercase text-xs tracking-wider border-b-2 border-black">
+                            <th class="p-3 border border-black w-[15%]">Tanggal</th>
+                            <th class="p-3 border border-black w-[25%]">Kategori</th>
+                            <th class="p-3 border border-black w-[40%]">Keterangan</th>
+                            <th class="p-3 border border-black w-[20%] text-right">Nominal</th>
                         </tr>
                     </thead>
                     <tbody id="arTableBody"></tbody>
                 </table>
                 <div id="arTeamSection" class="hidden-section">
-                    <h3 class="font-bold text-lg mb-2 border-b border-black pb-1">Status Pembayaran Tim:</h3>
+                    <h3 class="font-bold text-lg mb-3 border-b-2 border-black pb-1 uppercase tracking-wide">Status Pembayaran Tim:</h3>
                     <table class="w-full text-left mb-8 border-collapse text-sm table-fixed break-words">
                         <thead>
-                            <tr class="bg-gray-200 border-b border-black">
-                                <th class="p-2 border border-black w-2/3">Nama Anggota Tim</th>
-                                <th class="p-2 border border-black w-1/3 text-right">Status Gaji / Nominal</th>
+                            <tr class="bg-gray-100 text-black uppercase text-xs tracking-wider border-b-2 border-black">
+                                <th class="p-3 border border-black w-2/3">Nama Anggota Tim</th>
+                                <th class="p-3 border border-black w-1/3 text-right">Status / Nominal</th>
                             </tr>
                         </thead>
                         <tbody id="arTeamTableBody"></tbody>
@@ -546,7 +546,7 @@
                         <p class="font-bold border-t border-black pt-2 w-full whitespace-normal break-words" id="arOwnerName">( Owner )</p>
                     </div>
                 </div>
-                <div class="w-full text-right text-xs text-black italic pt-3 pb-2 font-medium">©WedMate by Dzaza App</div>
+                <div class="w-full text-right text-xs text-gray-500 italic pt-3 font-medium">©WedMate by Dzaza App</div>
             </div>
         </div>
 
@@ -554,48 +554,50 @@
         <div id="empReportTemplate" class="hidden-section bg-white text-black p-10 flex flex-col relative" style="font-family: 'Calibri', Arial, sans-serif; width: 794px; min-height: 1123px; box-sizing: border-box;">
             <div class="flex-grow">
                 <!-- Kop Surat -->
-                <div class="flex items-center border-b-4 border-black pb-4 mb-6">
-                    <div class="w-1/5 flex justify-start">
-                        <img id="erLogo" class="max-h-24 max-w-full object-contain hidden-section bg-white rounded-md">
+                <div class="relative border-b-[5px] border-double border-black pb-5 mb-8 flex items-center min-h-[120px]">
+                    <div class="absolute left-0 top-0 bottom-0 flex items-center justify-start w-1/4 pr-4">
+                        <img id="erLogo" class="max-h-24 max-w-full object-contain hidden-section bg-white">
                     </div>
-                    <div class="w-4/5 text-center px-4">
-                        <h1 class="text-3xl font-bold text-black uppercase tracking-wide" id="erWoName">Brand WO</h1>
-                        <p class="text-sm mt-1 text-black whitespace-normal break-words" id="erWoAddress">Alamat</p>
-                        <div id="erContacts" class="flex flex-wrap justify-center gap-3 text-xs mt-2 text-black font-medium"></div>
+                    <div class="w-full text-center flex flex-col items-center justify-center z-10 px-[20%]">
+                        <h1 class="text-4xl font-extrabold text-black uppercase tracking-[0.15em] leading-tight" id="erWoName">Brand WO</h1>
+                        <p class="text-sm mt-1 text-black font-medium w-full" id="erWoAddress">Alamat</p>
+                        <div id="erContacts" class="flex flex-wrap justify-center gap-x-4 gap-y-1 text-sm mt-2 text-black font-semibold"></div>
                     </div>
                 </div>
                 
                 <!-- Judul Surat -->
                 <div class="text-center mb-8">
-                    <h2 class="text-xl font-bold text-black uppercase underline tracking-wider">LAPORAN GAJI TIM</h2>
-                    <p class="text-sm mt-1 text-black" id="erTitle">Semua Anggota Tim</p>
+                    <h2 class="text-2xl font-extrabold text-black uppercase tracking-widest border-b-2 border-black inline-block pb-1">LAPORAN GAJI TIM</h2>
+                    <p class="text-sm mt-2 text-black font-medium" id="erTitle">Semua Anggota Tim</p>
                 </div>
                 
-                <h3 class="font-bold text-black mb-2 mt-4">Belum Digaji (Tunggakan)</h3>
+                <h3 class="font-bold text-black mb-3 mt-4 text-lg border-b-2 border-black pb-1 uppercase tracking-wide">Tunggakan (Belum Dibayar):</h3>
                 <table class="w-full text-left mb-6 border-collapse text-sm table-fixed break-words">
                     <thead>
-                        <tr class="bg-gray-200">
-                            <th class="p-2 border border-black w-[35%]">Nama Anggota</th>
-                            <th class="p-2 border border-black w-[40%]">Nama Proyek & Tgl</th>
-                            <th class="p-2 border border-black w-[25%] text-right">Target Utang</th>
+                        <tr class="bg-gray-100 text-black uppercase text-xs tracking-wider border-b-2 border-black">
+                            <th class="p-3 border border-black w-[35%]">Nama Anggota</th>
+                            <th class="p-3 border border-black w-[40%]">Nama Proyek & Tgl</th>
+                            <th class="p-3 border border-black w-[25%] text-right">Target Utang</th>
                         </tr>
                     </thead>
                     <tbody id="erUnpaidBody"></tbody>
                 </table>
-                <div class="text-right text-sm font-bold mb-6 text-black">Total Tunggakan: <span id="erTotalUnpaid" class="text-lg">Rp 0</span></div>
+                <div class="text-right text-sm font-bold mb-8 text-black bg-gray-100 p-3 rounded border border-black inline-block float-right">Total Tunggakan: <span id="erTotalUnpaid" class="text-xl ml-2">Rp 0</span></div>
+                <div class="clear-both"></div>
                 
-                <h3 class="font-bold text-black mb-2 mt-6">Sudah Digaji (Lunas)</h3>
+                <h3 class="font-bold text-black mb-3 mt-6 text-lg border-b-2 border-black pb-1 uppercase tracking-wide">Riwayat Lunas:</h3>
                 <table class="w-full text-left mb-6 border-collapse text-sm table-fixed break-words">
                     <thead>
-                        <tr class="bg-gray-200">
-                            <th class="p-2 border border-black w-[35%]">Nama Anggota</th>
-                            <th class="p-2 border border-black w-[40%]">Nama Proyek & Tgl</th>
-                            <th class="p-2 border border-black w-[25%] text-right">Nominal</th>
+                        <tr class="bg-gray-100 text-black uppercase text-xs tracking-wider border-b-2 border-black">
+                            <th class="p-3 border border-black w-[35%]">Nama Anggota</th>
+                            <th class="p-3 border border-black w-[40%]">Nama Proyek & Tgl</th>
+                            <th class="p-3 border border-black w-[25%] text-right">Nominal</th>
                         </tr>
                     </thead>
                     <tbody id="erPaidBody"></tbody>
                 </table>
-                <div class="text-right text-sm font-bold mt-2 text-black">Total Lunas: <span id="erTotalPaid" class="text-lg">Rp 0</span></div>
+                <div class="text-right text-sm font-bold mb-8 text-black bg-gray-100 p-3 rounded border border-black inline-block float-right">Total Lunas: <span id="erTotalPaid" class="text-xl ml-2">Rp 0</span></div>
+                <div class="clear-both"></div>
             </div>
             <div class="mt-auto pt-8">
                 <div class="flex justify-end mb-6">
@@ -605,7 +607,7 @@
                         <p class="font-bold border-t border-black pt-2 w-full whitespace-normal break-words" id="erOwnerName">( Owner )</p>
                     </div>
                 </div>
-                <div class="w-full text-right text-xs text-black italic pt-3 pb-2 font-medium">©WedMate by Dzaza App</div>
+                <div class="w-full text-right text-xs text-gray-500 italic pt-3 font-medium">©WedMate by Dzaza App</div>
             </div>
         </div>
 
@@ -740,12 +742,12 @@
         function getContactsHTML() {
             const p = appData.profile || {};
             let html = '';
-            if(p.phone) html += `<span class="flex items-center gap-1"><i class="fas fa-phone-alt"></i> ${p.phone}</span>`;
-            if(p.email) html += `<span class="flex items-center gap-1"><i class="fas fa-envelope"></i> ${p.email}</span>`;
-            if(p.ig) html += `<span class="flex items-center gap-1"><i class="fab fa-instagram"></i> ${p.ig}</span>`;
-            if(p.tiktok) html += `<span class="flex items-center gap-1"><i class="fab fa-tiktok"></i> ${p.tiktok}</span>`;
-            if(p.facebook) html += `<span class="flex items-center gap-1"><i class="fab fa-facebook"></i> ${p.facebook}</span>`;
-            if(p.youtube) html += `<span class="flex items-center gap-1"><i class="fab fa-youtube"></i> ${p.youtube}</span>`;
+            if(p.phone) html += `<span class="flex items-center gap-1.5"><i class="fab fa-whatsapp text-lg"></i> ${p.phone}</span>`;
+            if(p.email) html += `<span class="flex items-center gap-1.5"><i class="fas fa-envelope text-lg"></i> ${p.email}</span>`;
+            if(p.ig) html += `<span class="flex items-center gap-1.5"><i class="fab fa-instagram text-lg"></i> ${p.ig}</span>`;
+            if(p.tiktok) html += `<span class="flex items-center gap-1.5"><i class="fab fa-tiktok text-lg"></i> ${p.tiktok}</span>`;
+            if(p.facebook) html += `<span class="flex items-center gap-1.5"><i class="fab fa-facebook text-lg"></i> ${p.facebook}</span>`;
+            if(p.youtube) html += `<span class="flex items-center gap-1.5"><i class="fab fa-youtube text-lg"></i> ${p.youtube}</span>`;
             return html;
         }
 
@@ -1609,17 +1611,17 @@
                         if (paidAmount >= expected && expected > 0 || (expected === 0 && paidAmount > 0)) status = `Lunas (${formatRp(paidAmount)})`;
                         else { const sisa = expected > paidAmount ? expected - paidAmount : 0; status = `Belum Lunas ${sisa > 0 ? '(Utang '+formatRp(sisa)+')' : ''}`; }
                         
-                        arTeamBody.innerHTML += `<tr><td class="p-2 border border-black align-top whitespace-normal break-words">${emp.name}</td><td class="p-2 border border-black text-right font-bold align-top whitespace-normal break-words ${paidAmount >= expected ? 'text-green-600' : 'text-red-600'}">${status}</td></tr>`;
+                        arTeamBody.innerHTML += `<tr><td class="p-3 border border-black align-top whitespace-normal break-words">${emp.name}</td><td class="p-3 border border-black text-right font-bold align-top whitespace-normal break-words ${paidAmount >= expected ? 'text-green-600' : 'text-red-600'}">${status}</td></tr>`;
                     });
-                } else { arTeamBody.innerHTML = `<tr><td colspan="2" class="p-2 border border-black text-center">Tidak ada tim karyawan</td></tr>`; }
+                } else { arTeamBody.innerHTML = `<tr><td colspan="2" class="p-3 border border-black text-center">Tidak ada tim karyawan</td></tr>`; }
             }
 
             filterTrans.forEach(t => { t.type === 'income' ? inc += t.amount : exp += t.amount; });
             document.getElementById('arWoName').innerText = appData.profile.name; document.getElementById('arOwnerName').innerText = `( ${appData.profile.ownerName || 'Owner'} )`; document.getElementById('arTitle').innerText = title; document.getElementById('arIncome').innerText = formatRp(inc); document.getElementById('arExpense').innerText = formatRp(exp); document.getElementById('arMargin').innerText = formatRp(inc - exp);
             document.getElementById('arWoAddress').innerText = appData.profile.address || '-';
             document.getElementById('arContacts').innerHTML = getContactsHTML();
-            document.getElementById('arTableBody').innerHTML = filterTrans.map(t => `<tr><td class="p-2 border border-black align-top whitespace-normal break-words">${t.date}</td><td class="p-2 border border-black align-top whitespace-normal break-words">${t.category}</td><td class="p-2 border border-black text-xs align-top whitespace-normal break-words">${t.notes || '-'}</td><td class="p-2 border border-black text-right align-top whitespace-normal break-words ${t.type==='income'?'text-green-600':'text-red-600'}">${t.type==='income'?'+':'-'} ${formatRp(t.amount)}</td></tr>`).join('');
-            if(filterTrans.length === 0) document.getElementById('arTableBody').innerHTML = `<tr><td colspan="4" class="p-2 border border-black text-center">Kosong</td></tr>`;
+            document.getElementById('arTableBody').innerHTML = filterTrans.map(t => `<tr><td class="p-3 border border-black align-top whitespace-normal break-words">${t.date}</td><td class="p-3 border border-black align-top whitespace-normal break-words">${t.category}</td><td class="p-3 border border-black text-xs align-top whitespace-normal break-words">${t.notes || '-'}</td><td class="p-3 border border-black text-right align-top whitespace-normal break-words ${t.type==='income'?'text-green-600':'text-red-600'}">${t.type==='income'?'+':'-'} ${formatRp(t.amount)}</td></tr>`).join('');
+            if(filterTrans.length === 0) document.getElementById('arTableBody').innerHTML = `<tr><td colspan="4" class="p-3 border border-black text-center">Kosong</td></tr>`;
             
             exportAsJPG('analysisReportTemplate', `Laporan_Proyek_${new Date().getTime()}`, action);
         }
@@ -1661,15 +1663,15 @@
             };
             unpaidArr.sort(sortFn); paidArr.sort(sortFn);
 
-            let uHTML = unpaidArr.map(i => `<tr><td class="p-2 border border-black font-bold align-top whitespace-normal break-words">${i.empName}</td><td class="p-2 border border-black align-top whitespace-normal break-words">${i.client} <br><span class="text-gray-500">(${i.date})</span></td><td class="p-2 border border-black text-right text-red-600 font-bold align-top">${i.amount > 0 ? formatRp(i.amount) : '-'}</td></tr>`).join('');
-            let pHTML = paidArr.map(i => `<tr><td class="p-2 border border-black font-bold align-top whitespace-normal break-words">${i.empName}</td><td class="p-2 border border-black align-top whitespace-normal break-words">${i.client} <br><span class="text-gray-500">(${i.date})</span></td><td class="p-2 border border-black text-right align-top">${formatRp(i.amount)}</td></tr>`).join('');
+            let uHTML = unpaidArr.map(i => `<tr><td class="p-3 border border-black font-bold align-top whitespace-normal break-words">${i.empName}</td><td class="p-3 border border-black align-top whitespace-normal break-words">${i.client} <br><span class="text-gray-500">(${i.date})</span></td><td class="p-3 border border-black text-right text-red-600 font-bold align-top">${i.amount > 0 ? formatRp(i.amount) : '-'}</td></tr>`).join('');
+            let pHTML = paidArr.map(i => `<tr><td class="p-3 border border-black font-bold align-top whitespace-normal break-words">${i.empName}</td><td class="p-3 border border-black align-top whitespace-normal break-words">${i.client} <br><span class="text-gray-500">(${i.date})</span></td><td class="p-3 border border-black text-right align-top">${formatRp(i.amount)}</td></tr>`).join('');
 
             document.getElementById('erWoName').innerText = appData.profile.name; document.getElementById('erOwnerName').innerText = `( ${appData.profile.ownerName || 'Owner'} )`; 
             document.getElementById('erTitle').innerText = `${title} | ${subtitle}`;
             document.getElementById('erWoAddress').innerText = appData.profile.address || '-';
             document.getElementById('erContacts').innerHTML = getContactsHTML();
-            document.getElementById('erUnpaidBody').innerHTML = uHTML || `<tr><td colspan="3" class="p-2 border border-black text-center text-gray-500 italic">Tidak ada tunggakan gaji</td></tr>`;
-            document.getElementById('erPaidBody').innerHTML = pHTML || `<tr><td colspan="3" class="p-2 border border-black text-center text-gray-500 italic">Belum ada riwayat lunas</td></tr>`;
+            document.getElementById('erUnpaidBody').innerHTML = uHTML || `<tr><td colspan="3" class="p-3 border border-black text-center text-gray-500 italic">Tidak ada tunggakan gaji</td></tr>`;
+            document.getElementById('erPaidBody').innerHTML = pHTML || `<tr><td colspan="3" class="p-3 border border-black text-center text-gray-500 italic">Belum ada riwayat lunas</td></tr>`;
             document.getElementById('erTotalUnpaid').innerText = formatRp(totalUnpaidAmount);
             document.getElementById('erTotalPaid').innerText = formatRp(totalPaidAmount);
 
