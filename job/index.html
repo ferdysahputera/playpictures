@@ -370,32 +370,33 @@
             <div class="glass w-full max-w-md rounded-3xl p-6 shadow-2xl max-h-[90vh] overflow-y-auto scale-in">
                 <div class="flex justify-between items-center border-b dark:border-gray-700 pb-3 mb-4"><h3 class="text-xl font-bold text-iosBlue"><i class="fas fa-cog mr-2"></i>Pengaturan</h3><button onclick="document.getElementById('settingsModal').classList.add('hidden-section');" class="text-gray-400 hover:text-red-500"><i class="fas fa-times text-xl"></i></button></div>
                 <div class="mb-6">
-                    <h4 class="font-bold text-sm mb-3">Edit Profil</h4>
                     <form id="formEditProfile" class="space-y-3">
+                        <h4 class="font-bold text-sm mb-2 text-gray-800 dark:text-white">Profil WO Utama</h4>
                         <div>
-                            <label class="block text-sm font-medium mb-1">Ubah Logo Brand</label>
+                            <label class="block text-xs font-medium mb-1">Ubah Logo Brand</label>
                             <div class="flex items-center gap-3">
                                 <input type="file" id="setWoLogo" accept="image/*" class="w-full p-2 border rounded-xl dark:bg-gray-800 outline-none text-xs">
                                 <img id="setWoLogoPreview" class="hidden-section h-10 w-10 object-contain rounded-md border border-gray-200 dark:bg-white">
                             </div>
                         </div>
-                        <div>
-                            <label class="block text-sm font-medium mb-1">Nama Brand WO *</label>
-                            <input type="text" id="setWoName" required class="w-full p-2 border rounded-xl dark:bg-gray-800 outline-none text-sm" placeholder="Contoh: WedMate Organizer">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium mb-1">Nama Owner *</label>
-                            <input type="text" id="setWoOwner" required class="w-full p-2 border rounded-xl dark:bg-gray-800 outline-none text-sm" placeholder="Contoh: Budi Santoso">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium mb-1">Alamat Kantor *</label>
-                            <textarea id="setWoAddress" required class="w-full p-2 border rounded-xl dark:bg-gray-800 outline-none text-sm" placeholder="Alamat lengkap kantor..."></textarea>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium mb-1">Deskripsi Singkat</label>
-                            <input type="text" id="setWoDesc" class="w-full p-2 border rounded-xl dark:bg-gray-800 outline-none text-sm" placeholder="Motto atau deskripsi singkat...">
-                        </div>
-                        <button type="submit" class="w-full bg-iosBlue text-white py-2 mt-2 rounded-xl text-sm font-bold shadow-md active:scale-95">Simpan Profil</button>
+                        <div><label class="block text-xs font-medium mb-1">Nama Brand WO *</label><input type="text" id="setWoName" required class="w-full p-2 border rounded-xl dark:bg-gray-800 outline-none text-sm" placeholder="Contoh: WedMate Organizer"></div>
+                        <div><label class="block text-xs font-medium mb-1">Nama Owner *</label><input type="text" id="setWoOwner" required class="w-full p-2 border rounded-xl dark:bg-gray-800 outline-none text-sm" placeholder="Contoh: Budi Santoso"></div>
+                        <div><label class="block text-xs font-medium mb-1">Alamat Kantor *</label><textarea id="setWoAddress" required class="w-full p-2 border rounded-xl dark:bg-gray-800 outline-none text-sm" placeholder="Alamat lengkap kantor..."></textarea></div>
+                        <div><label class="block text-xs font-medium mb-1">Deskripsi Singkat</label><input type="text" id="setWoDesc" class="w-full p-2 border rounded-xl dark:bg-gray-800 outline-none text-sm" placeholder="Motto atau deskripsi singkat..."></div>
+
+                        <!-- Info Kontak Tambahan -->
+                        <h4 class="font-bold text-sm mb-2 mt-4 border-t dark:border-gray-700 pt-3 text-gray-800 dark:text-white">Informasi Kontak (Kop Surat)</h4>
+                        <div><label class="block text-xs font-medium mb-1">Telepon / WhatsApp</label><input type="text" id="setWoPhone" class="w-full p-2 border rounded-xl dark:bg-gray-800 outline-none text-sm" placeholder="Contoh: 08123456789"></div>
+                        <div><label class="block text-xs font-medium mb-1">Email</label><input type="email" id="setWoEmail" class="w-full p-2 border rounded-xl dark:bg-gray-800 outline-none text-sm" placeholder="Contoh: info@wedmate.com"></div>
+                        <div><label class="block text-xs font-medium mb-1">Instagram</label><input type="text" id="setWoIg" class="w-full p-2 border rounded-xl dark:bg-gray-800 outline-none text-sm" placeholder="Contoh: @wedmate_wo"></div>
+                        
+                        <!-- Info Rekening -->
+                        <h4 class="font-bold text-sm mb-2 mt-4 border-t dark:border-gray-700 pt-3 text-gray-800 dark:text-white">Rekening Pembayaran</h4>
+                        <div><label class="block text-xs font-medium mb-1">Nama Bank</label><input type="text" id="setWoBankName" class="w-full p-2 border rounded-xl dark:bg-gray-800 outline-none text-sm" placeholder="Contoh: BCA"></div>
+                        <div><label class="block text-xs font-medium mb-1">No. Rekening</label><input type="text" id="setWoBankAcc" class="w-full p-2 border rounded-xl dark:bg-gray-800 outline-none text-sm" placeholder="Contoh: 1234567890"></div>
+                        <div><label class="block text-xs font-medium mb-1">Atas Nama</label><input type="text" id="setWoBankHolder" class="w-full p-2 border rounded-xl dark:bg-gray-800 outline-none text-sm" placeholder="Contoh: Budi Santoso"></div>
+
+                        <button type="submit" class="w-full bg-iosBlue text-white py-3 mt-4 rounded-xl text-sm font-bold shadow-md active:scale-95">Simpan Pengaturan</button>
                     </form>
                 </div>
                 <div class="border-t dark:border-gray-700 pt-4"><h4 class="font-bold text-sm mb-3">Backup Data</h4><div class="flex gap-2"><button onclick="exportJSON()" class="w-1/2 bg-green-100 text-green-700 py-2 rounded-xl text-xs font-bold active:scale-95"><i class="fas fa-download mr-1"></i> Ekspor JSON</button><button onclick="document.getElementById('importFile').click()" class="w-1/2 bg-orange-100 text-orange-700 py-2 rounded-xl text-xs font-bold active:scale-95"><i class="fas fa-upload mr-1"></i> Impor JSON</button><input type="file" id="importFile" accept=".json" class="hidden-section" onchange="importJSON(event)"></div></div>
@@ -434,6 +435,7 @@
                     <div class="w-2/4 text-center px-4">
                         <h1 class="text-3xl font-bold text-blue-600 uppercase" id="invWoName">Brand WO</h1>
                         <p class="text-sm mt-1 text-gray-700 whitespace-normal break-words" id="invWoAddress">Alamat</p>
+                        <div id="invContacts" class="flex flex-wrap justify-center gap-3 text-xs mt-2 text-gray-600 font-medium"></div>
                     </div>
                     <div class="w-1/4 text-right">
                         <h2 class="text-2xl font-bold text-gray-800">INVOICE</h2>
@@ -456,10 +458,20 @@
                     </tr>
                 </table>
                 <div class="flex justify-end"><div class="w-1/2"><div class="flex justify-between py-2 border-b"><span class="font-bold">Total</span><span id="invTotal">Rp 0</span></div><div class="flex justify-between py-2 border-b"><span>DP Awal</span><span id="invDP">Rp 0</span></div><div class="flex justify-between py-2 bg-blue-50 text-blue-800 p-2 rounded mt-2"><span class="font-bold">Sisa Tagihan</span><span class="font-bold text-xl" id="invSisa">Rp 0</span></div></div></div>
+                
+                <!-- Info Bank Section -->
+                <div class="mt-8 bg-blue-50 p-4 rounded-xl border border-blue-100 hidden-section w-1/2 float-left" id="invBankInfo">
+                    <p class="font-bold text-sm text-blue-800 mb-2"><i class="fas fa-university mr-1"></i> Informasi Pembayaran / Transfer:</p>
+                    <p class="text-sm text-gray-800 mb-1">Bank: <span class="font-bold" id="invBankName">-</span></p>
+                    <p class="text-sm text-gray-800 mb-1">No. Rekening: <span class="font-bold" id="invBankAcc">-</span></p>
+                    <p class="text-sm text-gray-800">Atas Nama: <span class="font-bold" id="invBankHolder">-</span></p>
+                </div>
+                <div class="clear-both"></div>
             </div>
-            <div class="mt-auto pt-8">
-                <div class="text-center text-sm text-gray-500"><br><br><br><p class="font-bold border-t border-black inline-block pt-2 w-48 whitespace-normal break-words" id="invOwnerName">( Owner )</p></div>
-                <div class="mt-8 text-center text-xs text-gray-400 italic border-t border-gray-200 pt-4 font-medium">dibuat dengan WedMate by Dzaza App</div>
+            
+            <div class="mt-auto pt-8 flex flex-col items-center">
+                <div class="w-full flex justify-end text-center text-sm text-gray-500 mb-8"><div class="w-48"><br><br><br><p class="font-bold border-t border-black pt-2 whitespace-normal break-words" id="invOwnerName">( Owner )</p></div></div>
+                <div class="w-full text-center text-xs text-gray-400 italic border-t border-gray-200 pt-3 pb-2 font-medium">dibuat dengan WedMate by Dzaza App</div>
             </div>
         </div>
 
@@ -473,6 +485,7 @@
                     <div class="w-2/4 text-center px-4">
                         <h1 class="text-3xl font-bold text-blue-600 uppercase" id="arWoName">Brand WO</h1>
                         <p class="text-sm mt-1 text-gray-600 font-medium whitespace-normal break-words" id="arTitle">Keseluruhan Tahun Ini</p>
+                        <div id="arContacts" class="flex flex-wrap justify-center gap-3 text-xs mt-2 text-gray-600 font-medium"></div>
                     </div>
                     <div class="w-1/4 text-right">
                         <h2 class="text-lg font-bold text-gray-800 leading-tight">LAPORAN<br>KEUANGAN</h2>
@@ -505,9 +518,9 @@
                     </table>
                 </div>
             </div>
-            <div class="mt-auto pt-8">
-                <div class="text-right text-sm"><br><br><br><p class="font-bold border-t border-black inline-block pt-2 w-48 text-center whitespace-normal break-words" id="arOwnerName">( Owner )</p></div>
-                <div class="mt-8 text-center text-xs text-gray-400 italic border-t border-gray-200 pt-4 font-medium">dibuat dengan WedMate by Dzaza App</div>
+            <div class="mt-auto pt-8 flex flex-col items-center">
+                <div class="w-full flex justify-end text-center text-sm text-gray-500 mb-8"><div class="w-48"><br><br><br><p class="font-bold border-t border-black pt-2 whitespace-normal break-words" id="arOwnerName">( Owner )</p></div></div>
+                <div class="w-full text-center text-xs text-gray-400 italic border-t border-gray-200 pt-3 pb-2 font-medium">dibuat dengan WedMate by Dzaza App</div>
             </div>
         </div>
 
@@ -521,6 +534,7 @@
                     <div class="w-2/4 text-center px-4">
                         <h1 class="text-3xl font-bold text-blue-600 uppercase" id="erWoName">Brand WO</h1>
                         <p class="text-sm mt-1 text-gray-600 font-medium whitespace-normal break-words" id="erTitle">Semua Anggota Tim</p>
+                        <div id="erContacts" class="flex flex-wrap justify-center gap-3 text-xs mt-2 text-gray-600 font-medium"></div>
                     </div>
                     <div class="w-1/4 text-right">
                         <h2 class="text-lg font-bold text-gray-800 leading-tight">LAPORAN<br>GAJI TIM</h2>
@@ -553,9 +567,9 @@
                 </table>
                 <div class="text-right text-sm font-bold mt-2">Total Lunas: <span id="erTotalPaid" class="text-green-600 text-lg">Rp 0</span></div>
             </div>
-            <div class="mt-auto pt-8">
-                <div class="text-right text-sm"><br><br><br><p class="font-bold border-t border-black inline-block pt-2 w-48 text-center whitespace-normal break-words" id="erOwnerName">( Owner )</p></div>
-                <div class="mt-8 text-center text-xs text-gray-400 italic border-t border-gray-200 pt-4 font-medium">dibuat dengan WedMate by Dzaza App</div>
+            <div class="mt-auto pt-8 flex flex-col items-center">
+                <div class="w-full flex justify-end text-center text-sm text-gray-500 mb-8"><div class="w-48"><br><br><br><p class="font-bold border-t border-black pt-2 whitespace-normal break-words" id="erOwnerName">( Owner )</p></div></div>
+                <div class="w-full text-center text-xs text-gray-400 italic border-t border-gray-200 pt-3 pb-2 font-medium">dibuat dengan WedMate by Dzaza App</div>
             </div>
         </div>
 
@@ -565,7 +579,10 @@
     <script>
         // --- 1. SETUP DATA & HISTORY HELPERS ---
         let appData = JSON.parse(localStorage.getItem('wedMateData')) || {};
-        appData = { profile: null, transactions: [], packages: [], agendas: [], employees: [], ...appData }; 
+        // Add new default fields if missing
+        appData.profile = appData.profile || {};
+        appData = { transactions: [], packages: [], agendas: [], employees: [], ...appData }; 
+        
         const formatRp = (num) => 'Rp ' + parseInt(num).toLocaleString('id-ID');
         const formatTgl = (start, end) => (!end || start === end) ? start : `${start} s/d ${end}`;
         
@@ -681,12 +698,21 @@
             }
         }
 
+        function getContactsHTML() {
+            const p = appData.profile || {};
+            let html = '';
+            if(p.phone) html += `<span class="flex items-center gap-1"><i class="fas fa-phone-alt"></i> ${p.phone}</span>`;
+            if(p.email) html += `<span class="flex items-center gap-1"><i class="fas fa-envelope"></i> ${p.email}</span>`;
+            if(p.ig) html += `<span class="flex items-center gap-1"><i class="fab fa-instagram"></i> ${p.ig}</span>`;
+            return html;
+        }
+
 
         // --- 2. INIT & THEME ---
         document.addEventListener('DOMContentLoaded', () => {
             const html = document.documentElement; if (localStorage.getItem('theme') === 'dark') html.classList.add('dark');
             document.getElementById('themeToggleBtn').addEventListener('click', () => { html.classList.toggle('dark'); localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light'); renderCharts(); });
-            if (!appData.profile) document.getElementById('onboardingScreen').classList.remove('hidden-section'); else initMainApp();
+            if (!appData.profile || !appData.profile.name) document.getElementById('onboardingScreen').classList.remove('hidden-section'); else initMainApp();
             updateGreeting();
 
             window.addEventListener('click', (e) => {
@@ -709,7 +735,8 @@
                 ownerName: document.getElementById('woOwner').value, 
                 address: document.getElementById('woAddress').value, 
                 desc: document.getElementById('woDesc').value,
-                logo: document.getElementById('woLogoPreview').dataset.b64 || null
+                logo: document.getElementById('woLogoPreview').dataset.b64 || null,
+                phone: '', email: '', ig: '', bankName: '', bankAcc: '', bankHolder: ''
             }; 
             saveData(); 
             document.getElementById('onboardingScreen').classList.add('hidden-section'); 
@@ -737,10 +764,16 @@
         function openAboutModal() { document.getElementById('aboutModal').classList.remove('hidden-section'); }
         function openSettings() { 
             document.getElementById('settingsModal').classList.remove('hidden-section'); 
-            document.getElementById('setWoName').value = appData.profile.name; 
+            document.getElementById('setWoName').value = appData.profile.name || ''; 
             document.getElementById('setWoOwner').value = appData.profile.ownerName || ''; 
-            document.getElementById('setWoAddress').value = appData.profile.address; 
+            document.getElementById('setWoAddress').value = appData.profile.address || ''; 
             document.getElementById('setWoDesc').value = appData.profile.desc || ''; 
+            document.getElementById('setWoPhone').value = appData.profile.phone || ''; 
+            document.getElementById('setWoEmail').value = appData.profile.email || ''; 
+            document.getElementById('setWoIg').value = appData.profile.ig || ''; 
+            document.getElementById('setWoBankName').value = appData.profile.bankName || ''; 
+            document.getElementById('setWoBankAcc').value = appData.profile.bankAcc || ''; 
+            document.getElementById('setWoBankHolder').value = appData.profile.bankHolder || ''; 
             
             const logoPreview = document.getElementById('setWoLogoPreview');
             if(appData.profile.logo) {
@@ -759,11 +792,17 @@
             appData.profile.address = document.getElementById('setWoAddress').value; 
             appData.profile.desc = document.getElementById('setWoDesc').value; 
             appData.profile.logo = document.getElementById('setWoLogoPreview').dataset.b64 || null;
+            appData.profile.phone = document.getElementById('setWoPhone').value; 
+            appData.profile.email = document.getElementById('setWoEmail').value; 
+            appData.profile.ig = document.getElementById('setWoIg').value; 
+            appData.profile.bankName = document.getElementById('setWoBankName').value; 
+            appData.profile.bankAcc = document.getElementById('setWoBankAcc').value; 
+            appData.profile.bankHolder = document.getElementById('setWoBankHolder').value; 
 
             saveData(); 
             updateHeaderLogo();
             document.getElementById('settingsModal').classList.add('hidden-section');
-            showToast("Profil berhasil disimpan!"); 
+            showToast("Profil dan Pengaturan berhasil disimpan!"); 
         });
         function exportJSON() { const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appData)); const dlAnchorElem = document.createElement('a'); dlAnchorElem.setAttribute("href", dataStr); dlAnchorElem.setAttribute("download", `WedMate_Backup_${new Date().toISOString().slice(0,10)}.json`); dlAnchorElem.click(); }
         function importJSON(event) { const file = event.target.files[0]; if(!file) return; const reader = new FileReader(); reader.onload = function(e) { try { saveStateToHistory(); appData = JSON.parse(e.target.result); appData.employees = appData.employees || []; saveData(); showToast("Data berhasil diimpor!"); setTimeout(()=>location.reload(), 1500); } catch(err) { alert("Format JSON tidak valid!"); } }; reader.readAsText(file); }
@@ -1064,6 +1103,7 @@
             
             document.getElementById('invWoName').innerText = appData.profile.name || 'Brand WO';
             document.getElementById('invWoAddress').innerText = appData.profile.address || '-';
+            document.getElementById('invContacts').innerHTML = getContactsHTML();
             
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('invDate').innerText = 'Tanggal: ' + formatTgl(today);
@@ -1085,6 +1125,17 @@
                 document.getElementById('invTotal').innerText = 'Rp 0';
                 document.getElementById('invDP').innerText = formatRp(agenda.dp);
                 document.getElementById('invSisa').innerText = 'Rp 0';
+            }
+
+            // Info Bank Setup
+            const bankInfo = document.getElementById('invBankInfo');
+            if (appData.profile.bankName && appData.profile.bankAcc) {
+                bankInfo.classList.remove('hidden-section');
+                document.getElementById('invBankName').innerText = appData.profile.bankName;
+                document.getElementById('invBankAcc').innerText = appData.profile.bankAcc;
+                document.getElementById('invBankHolder').innerText = appData.profile.bankHolder || appData.profile.ownerName || '-';
+            } else {
+                bankInfo.classList.add('hidden-section');
             }
             
             document.getElementById('invOwnerName').innerText = '( ' + (appData.profile.ownerName || 'Owner') + ' )';
@@ -1328,7 +1379,6 @@
         }
 
         // --- 9. SHARE & JPG GENERATORS ---
-        // Fungsi utama untuk mengonversi elemen HTML menjadi JPG tanpa kedip
         function exportAsJPG(elementId, filename, action = 'download') {
             const invLogo = document.getElementById('invLogo');
             const arLogo = document.getElementById('arLogo');
@@ -1347,42 +1397,46 @@
             const originalEl = document.getElementById(elementId);
             const cloneEl = originalEl.cloneNode(true);
             cloneEl.classList.remove('hidden-section'); 
-            cloneEl.style.display = 'block'; 
+            cloneEl.style.display = 'flex'; 
             
-            // WRAPPER: Simpan tepat di posisi scroll saat ini
             const wrapper = document.createElement('div');
             wrapper.style.position = 'absolute'; 
             wrapper.style.left = '0px';
             wrapper.style.top = (window.scrollY || window.pageYOffset) + 'px';
-            wrapper.style.zIndex = '-2000'; // Diletakkan jauh di belakang UI
+            wrapper.style.zIndex = '-2000'; 
             wrapper.style.pointerEvents = 'none'; 
             
-            // TEMBOK SOLID: Mencegah efek transparan/glass UI menembus ke wrapper
             const solidWall = document.createElement('div');
             solidWall.style.position = 'fixed';
             solidWall.style.top = '0px';
             solidWall.style.left = '0px';
             solidWall.style.width = '100vw';
             solidWall.style.height = '100vh';
-            // Warnanya sama persis dengan warna background aplikasi agar terlihat tidak ada apa-apa
             solidWall.style.backgroundColor = document.documentElement.classList.contains('dark') ? '#111827' : '#f9fafb';
-            solidWall.style.zIndex = '-1000'; // Di depan wrapper, tapi di belakang aplikasi
+            solidWall.style.zIndex = '-1000'; 
 
             wrapper.appendChild(cloneEl);
             document.body.appendChild(wrapper);
             document.body.appendChild(solidWall);
             
-            // Sembunyikan overflow horizontal agar tidak muncul scrollbar berkedip
             const originalOverflow = document.documentElement.style.overflowX;
             document.documentElement.style.overflowX = 'hidden';
 
-            showToast("Menyiapkan Gambar...");
+            showToast("Menyiapkan Gambar (A4)...");
 
             setTimeout(() => {
+                const rect = cloneEl.getBoundingClientRect();
+                
                 html2canvas(cloneEl, { 
                     scale: 2, 
                     useCORS: true, 
-                    backgroundColor: '#ffffff'
+                    backgroundColor: '#ffffff',
+                    x: rect.left,
+                    y: rect.top,
+                    width: cloneEl.offsetWidth,
+                    height: cloneEl.offsetHeight,
+                    scrollX: 0,
+                    scrollY: 0
                 }).then(canvas => {
                     canvas.toBlob(blob => {
                         const finalFilename = filename.endsWith('.jpg') ? filename : filename + '.jpg';
@@ -1400,7 +1454,6 @@
                             forceDownload(blob, finalFilename);
                         }
                         
-                        // Bersihkan seluruh DOM setelah selesai
                         document.body.removeChild(wrapper);
                         document.body.removeChild(solidWall);
                         document.documentElement.style.overflowX = originalOverflow;
@@ -1449,6 +1502,7 @@
 
             filterTrans.forEach(t => { t.type === 'income' ? inc += t.amount : exp += t.amount; });
             document.getElementById('arWoName').innerText = appData.profile.name; document.getElementById('arOwnerName').innerText = `( ${appData.profile.ownerName || 'Owner'} )`; document.getElementById('arTitle').innerText = title; document.getElementById('arIncome').innerText = formatRp(inc); document.getElementById('arExpense').innerText = formatRp(exp); document.getElementById('arMargin').innerText = formatRp(inc - exp);
+            document.getElementById('arContacts').innerHTML = getContactsHTML();
             document.getElementById('arTableBody').innerHTML = filterTrans.map(t => `<tr><td class="p-2 border align-top whitespace-normal break-words">${t.date}</td><td class="p-2 border align-top whitespace-normal break-words">${t.category}</td><td class="p-2 border text-xs align-top whitespace-normal break-words">${t.notes || '-'}</td><td class="p-2 border text-right align-top whitespace-normal break-words ${t.type==='income'?'text-green-600':'text-red-600'}">${t.type==='income'?'+':'-'} ${formatRp(t.amount)}</td></tr>`).join('');
             if(filterTrans.length === 0) document.getElementById('arTableBody').innerHTML = `<tr><td colspan="4" class="p-2 border text-center">Kosong</td></tr>`;
             
@@ -1497,6 +1551,7 @@
 
             document.getElementById('erWoName').innerText = appData.profile.name; document.getElementById('erOwnerName').innerText = `( ${appData.profile.ownerName || 'Owner'} )`; 
             document.getElementById('erTitle').innerText = `${title} | ${subtitle}`;
+            document.getElementById('erContacts').innerHTML = getContactsHTML();
             document.getElementById('erUnpaidBody').innerHTML = uHTML || `<tr><td colspan="3" class="p-2 border border-gray-300 text-center text-gray-500 italic">Tidak ada tunggakan gaji</td></tr>`;
             document.getElementById('erPaidBody').innerHTML = pHTML || `<tr><td colspan="3" class="p-2 border border-gray-300 text-center text-gray-500 italic">Belum ada riwayat lunas</td></tr>`;
             document.getElementById('erTotalUnpaid').innerText = formatRp(totalUnpaidAmount);
