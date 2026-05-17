@@ -26,8 +26,7 @@
         body, .glass, button, input, select, textarea { transition: all 0.3s ease; }
         .hidden-section { display: none !important; }
         .pb-nav { padding-bottom: 120px; }
-        /* Custom Checkbox */
-        .cb-custom { accent-color: #007AFF; transform: scale(1.2); }
+        .cb-custom { accent-color: #007AFF; transform: scale(1.2); cursor: pointer; }
     </style>
 </head>
 <body class="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100 min-h-screen">
@@ -40,8 +39,8 @@
             <form id="onboardingForm" class="space-y-4 text-left">
                 <div><label class="block text-sm font-medium mb-1">Nama Brand WO</label><input type="text" id="woName" required class="w-full p-3 rounded-xl border dark:bg-gray-800 outline-none"></div>
                 <div><label class="block text-sm font-medium mb-1">Nama Owner</label><input type="text" id="woOwner" required class="w-full p-3 rounded-xl border dark:bg-gray-800 outline-none"></div>
-                <div><label class="block text-sm font-medium mb-1">Alamat</label><textarea id="woAddress" required class="w-full p-3 rounded-xl border dark:bg-gray-800 outline-none"></textarea></div>
-                <div><label class="block text-sm font-medium mb-1">Deskripsi</label><input type="text" id="woDesc" class="w-full p-3 rounded-xl border dark:bg-gray-800 outline-none"></div>
+                <div><label class="block text-sm font-medium mb-1">Alamat Kantor</label><textarea id="woAddress" required class="w-full p-3 rounded-xl border dark:bg-gray-800 outline-none"></textarea></div>
+                <div><label class="block text-sm font-medium mb-1">Deskripsi Singkat</label><input type="text" id="woDesc" class="w-full p-3 rounded-xl border dark:bg-gray-800 outline-none"></div>
                 <button type="submit" class="w-full bg-iosBlue text-white font-bold py-3 rounded-xl shadow-lg">Mulai Aplikasi</button>
             </form>
         </div>
@@ -72,7 +71,7 @@
                 <h2 class="text-2xl font-bold mb-4" id="transFormTitle">Catat Transaksi</h2>
                 <div class="glass p-6 rounded-3xl shadow-lg">
                     <form id="formTransaction" class="space-y-4">
-                        <div class="grid grid-cols-2 gap-4"><button type="button" class="tab-btn bg-iosBlue text-white p-2 rounded-xl font-medium" data-type="income">Pemasukan</button><button type="button" class="tab-btn bg-gray-200 dark:bg-gray-700 p-2 rounded-xl font-medium" data-type="expense">Pengeluaran</button></div>
+                        <div class="grid grid-cols-2 gap-4"><button type="button" class="tab-btn bg-iosBlue text-white p-2 rounded-xl font-medium shadow-sm" data-type="income">Pemasukan</button><button type="button" class="tab-btn bg-gray-200 dark:bg-gray-700 p-2 rounded-xl font-medium shadow-sm" data-type="expense">Pengeluaran</button></div>
                         <input type="hidden" id="transType" value="income">
                         <div><label class="block text-sm mb-1 font-medium">Job / Agenda</label><select id="transJob" required class="w-full p-3 rounded-xl border dark:bg-gray-800 outline-none"></select></div>
                         <div class="grid grid-cols-2 gap-4"><div><label class="block text-sm mb-1 font-medium">Nominal (Rp) *</label><input type="number" id="transAmount" required min="1" class="w-full p-3 rounded-xl border dark:bg-gray-800 outline-none"></div><div><label class="block text-sm mb-1 font-medium">Kategori</label><select id="transCategory" class="w-full p-3 rounded-xl border dark:bg-gray-800 outline-none"></select></div></div>
@@ -86,7 +85,7 @@
 
             <!-- C. AGENDA -->
             <div id="view-agenda" class="view-section hidden-section">
-                <div class="flex justify-between items-center mb-4"><h2 class="text-2xl font-bold">Manajemen Agenda</h2><button id="btnManagePackages" class="text-sm bg-gray-200 dark:bg-gray-700 px-4 py-2 rounded-xl font-bold hover:text-iosBlue shadow"><i class="fas fa-box mr-1"></i> Master Paket</button></div>
+                <div class="flex justify-between items-center mb-4"><h2 class="text-2xl font-bold">Manajemen Agenda</h2><button id="btnManagePackages" class="text-sm bg-gray-200 dark:bg-gray-700 px-4 py-2 rounded-xl font-bold hover:text-iosBlue shadow-sm"><i class="fas fa-box mr-1"></i> Master Paket</button></div>
                 <div class="glass p-6 rounded-3xl shadow-lg mb-6">
                     <form id="formAgenda" class="space-y-4">
                         <div><label class="block text-sm mb-1 font-medium">Nama Klien</label><input type="text" id="agendaClient" required class="w-full p-3 rounded-xl border dark:bg-gray-800 outline-none"></div>
@@ -94,12 +93,9 @@
                         <div class="grid grid-cols-2 gap-4"><div><label class="block text-sm mb-1 font-medium">Tanggal</label><input type="date" id="agendaDate" required class="w-full p-3 rounded-xl border dark:bg-gray-800 outline-none"></div><div><label class="block text-sm mb-1 font-medium">Pilihan Paket</label><select id="agendaPackage" required class="w-full p-3 rounded-xl border dark:bg-gray-800 outline-none"></select></div></div>
                         <div class="grid grid-cols-2 gap-4"><div><label class="block text-sm mb-1 font-medium">DP Awal (Rp)</label><input type="number" id="agendaDP" required class="w-full p-3 rounded-xl border dark:bg-gray-800 outline-none"></div><div><label class="block text-sm mb-1 font-medium">Sisa Tagihan</label><input type="text" id="agendaSisa" readonly class="w-full p-3 rounded-xl bg-gray-100 dark:bg-gray-700 outline-none cursor-not-allowed"></div></div>
                         
-                        <!-- NEW: Pilih Tim Karyawan -->
                         <div class="border-t dark:border-gray-700 pt-3 mt-3">
-                            <label class="block text-sm mb-2 font-medium text-iosBlue"><i class="fas fa-users"></i> Tim Karyawan yang Bertugas</label>
-                            <div id="agendaEmployeeCheckboxes" class="grid grid-cols-2 gap-3 p-3 bg-white/50 dark:bg-gray-800/50 border dark:border-gray-700 rounded-xl max-h-32 overflow-y-auto">
-                                <!-- Rendered via JS -->
-                            </div>
+                            <label class="block text-sm mb-2 font-medium text-iosBlue"><i class="fas fa-users"></i> Tim Karyawan Bertugas</label>
+                            <div id="agendaEmployeeCheckboxes" class="grid grid-cols-2 gap-3 p-3 bg-white/50 dark:bg-gray-800/50 border dark:border-gray-700 rounded-xl max-h-32 overflow-y-auto"></div>
                         </div>
 
                         <div class="flex gap-2"><button type="submit" id="btnSubmitAgenda" class="w-full bg-iosBlue text-white font-bold py-3 rounded-xl shadow-md">Simpan Agenda</button><button type="button" id="btnCancelEditAgenda" class="hidden-section w-1/3 bg-gray-300 dark:bg-gray-700 font-bold py-3 rounded-xl">Batal</button></div>
@@ -115,10 +111,11 @@
                 <h2 class="text-2xl font-bold mb-4">Analisis Keuangan</h2>
                 <div class="glass p-4 rounded-2xl shadow-lg mb-4">
                     <label class="block text-sm mb-2 font-medium">Filter Laporan Proyek</label>
-                    <select id="analysisJobSelect" class="w-full p-3 rounded-xl border dark:bg-gray-800 outline-none focus:ring-2 focus:ring-iosBlue"></select>
+                    <!-- Perhatikan atribut onchange di sini -->
+                    <select id="analysisJobSelect" onchange="renderProjectAnalysis(this.value)" class="w-full p-3 rounded-xl border dark:bg-gray-800 outline-none focus:ring-2 focus:ring-iosBlue"></select>
                 </div>
                 
-                <div class="glass p-6 rounded-3xl shadow-lg mb-8">
+                <div id="analysisResult" class="glass p-6 rounded-3xl shadow-lg mb-8">
                     <div class="flex justify-between items-center border-b dark:border-gray-700 pb-2 mb-4">
                         <h3 id="analysisClientName" class="text-xl font-bold text-iosBlue">Keseluruhan (Tahun Ini)</h3>
                         <button onclick="generateAnalysisPDF()" class="text-sm bg-blue-100 text-blue-700 px-3 py-1 rounded-lg font-bold hover:bg-blue-200"><i class="fas fa-file-pdf mr-1"></i> Cetak PDF</button>
@@ -130,9 +127,9 @@
                     <div class="bg-white dark:bg-gray-800 p-4 rounded-xl mb-4 flex justify-center shadow-sm"><div style="height: 180px;"><canvas id="analysisChartCanvas"></canvas></div></div>
                     <div class="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-xl text-center mb-6 border border-blue-100 dark:border-blue-800"><p class="text-sm mb-1 font-medium">Margin / Laba Bersih</p><p id="analysisMargin" class="text-2xl font-bold text-iosBlue">Rp 0</p></div>
                     
-                    <!-- NEW: TABEL STATUS GAJI TIM PROYEK (Hanya Muncul jika Difilter Per Job) -->
+                    <!-- TABEL STATUS GAJI TIM PROYEK -->
                     <div id="analysisJobTeamContainer" class="hidden-section border-t dark:border-gray-700 pt-4 mb-6">
-                        <h4 class="font-bold text-sm mb-3 text-iosBlue"><i class="fas fa-users-cog"></i> Status Gaji Tim Proyek</h4>
+                        <h4 class="font-bold text-sm mb-3 text-iosBlue"><i class="fas fa-users-cog"></i> Status Pembayaran Tim Proyek</h4>
                         <div class="overflow-x-auto">
                             <table class="w-full text-left text-sm border-collapse bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm">
                                 <thead><tr class="bg-gray-100 dark:bg-gray-700"><th class="p-3">Nama Karyawan</th><th class="p-3">Status Gaji</th><th class="p-3 text-center">Aksi</th></tr></thead>
@@ -141,9 +138,8 @@
                         </div>
                     </div>
 
-                    <!-- Rincian Tabel Transaksi Proyek -->
                     <div class="border-t dark:border-gray-700 pt-4">
-                        <h4 class="font-bold text-sm mb-3">Tabel Rincian Transaksi Keuangan</h4>
+                        <h4 class="font-bold text-sm mb-3">Tabel Rincian Transaksi</h4>
                         <div class="overflow-x-auto">
                             <table class="w-full text-left text-sm border-collapse bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm">
                                 <thead><tr class="bg-gray-100 dark:bg-gray-700"><th class="p-3">Tanggal</th><th class="p-3">Kategori</th><th class="p-3">Keterangan</th><th class="p-3 text-right">Nominal</th></tr></thead>
@@ -163,10 +159,10 @@
                     
                     <div class="mb-4">
                         <label class="block text-sm mb-2 font-medium">Filter Berdasarkan Karyawan</label>
-                        <select id="analysisEmployeeSelect" class="w-full p-3 rounded-xl border dark:bg-gray-800 outline-none focus:ring-2 focus:ring-iosBlue"></select>
+                        <!-- Perhatikan atribut onchange di sini -->
+                        <select id="analysisEmployeeSelect" onchange="renderSalaryAnalysis(this.value)" class="w-full p-3 rounded-xl border dark:bg-gray-800 outline-none focus:ring-2 focus:ring-iosBlue"></select>
                     </div>
 
-                    <!-- Tabel Jelas untuk Gaji -->
                     <div class="overflow-x-auto mb-4">
                         <table class="w-full text-left text-sm border-collapse bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm">
                             <thead><tr class="bg-gray-100 dark:bg-gray-700"><th class="p-3 border-b dark:border-gray-600">Tanggal</th><th class="p-3 border-b dark:border-gray-600">Karyawan</th><th class="p-3 border-b dark:border-gray-600">Job / Keterangan</th><th class="p-3 text-right border-b dark:border-gray-600">Nominal</th></tr></thead>
@@ -191,7 +187,7 @@
             <button class="nav-btn flex flex-col items-center text-gray-400 hover:text-iosBlue w-12" data-target="analysis"><i class="fas fa-chart-pie text-xl mb-1"></i><span class="text-[9px] font-bold">Analisis</span></button>
         </nav>
 
-        <!-- MODAL PENGATURAN -->
+        <!-- MODALS -->
         <div id="settingsModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[60] flex items-center justify-center hidden-section p-4">
             <div class="glass w-full max-w-md rounded-3xl p-6 shadow-2xl max-h-[90vh] overflow-y-auto">
                 <div class="flex justify-between items-center border-b dark:border-gray-700 pb-3 mb-4"><h3 class="text-xl font-bold text-iosBlue"><i class="fas fa-cog mr-2"></i>Pengaturan</h3><button onclick="document.getElementById('settingsModal').classList.add('hidden-section');" class="text-gray-400 hover:text-red-500"><i class="fas fa-times text-xl"></i></button></div>
@@ -201,7 +197,6 @@
             </div>
         </div>
 
-        <!-- SEARCH, FAB, PACKAGE MODALS -->
         <div id="searchModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[70] p-4 hidden-section flex flex-col items-center pt-20"><div class="w-full max-w-md relative"><input type="text" id="searchInput" placeholder="Cari klien, agenda, transaksi..." class="w-full p-4 pl-12 rounded-2xl shadow-2xl outline-none text-lg"><i class="fas fa-search absolute left-4 top-5 text-gray-400 text-xl"></i><button onclick="document.getElementById('searchModal').classList.add('hidden-section'); document.getElementById('searchInput').value=''; document.getElementById('searchResults').innerHTML='';" class="absolute right-4 top-4 text-gray-400 hover:text-red-500 text-2xl"><i class="fas fa-times-circle"></i></button><ul id="searchResults" class="mt-4 space-y-2 max-h-[60vh] overflow-y-auto w-full"></ul></div></div>
         <div id="fabModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[60] flex items-end justify-center hidden-section"><div class="glass w-full max-w-md rounded-t-3xl p-6"><div class="w-12 h-1 bg-gray-300 dark:bg-gray-600 mx-auto rounded-full mb-6"></div><h3 class="text-xl font-bold mb-4 text-center">Pilih Aksi</h3><div class="space-y-3"><button class="w-full bg-white dark:bg-gray-800 p-4 rounded-2xl flex items-center shadow hover:bg-gray-50 dark:hover:bg-gray-700" onclick="switchTab('transactions'); closeFabModal(); resetTransForm();"><div class="w-10 h-10 rounded-full bg-green-100 text-green-600 flex items-center justify-center mr-4"><i class="fas fa-money-bill-wave"></i></div><div><p class="font-bold">Keuangan</p></div></button><button class="w-full bg-white dark:bg-gray-800 p-4 rounded-2xl flex items-center shadow hover:bg-gray-50 dark:hover:bg-gray-700" onclick="switchTab('agenda'); closeFabModal(); resetAgendaForm();"><div class="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center mr-4"><i class="fas fa-calendar-plus"></i></div><div><p class="font-bold">Agenda Baru</p></div></button></div><button class="w-full mt-4 p-3 rounded-xl bg-gray-200 dark:bg-gray-700 font-bold" onclick="closeFabModal()">Batal</button></div></div>
         <div id="packageModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[60] flex items-center justify-center hidden-section p-4"><div class="glass w-full max-w-md rounded-3xl p-6 shadow-2xl max-h-[90vh] overflow-y-auto"><div class="flex justify-between items-center border-b dark:border-gray-700 pb-3 mb-4"><h3 class="text-xl font-bold text-iosBlue">Kelola Price List</h3><button onclick="document.getElementById('packageModal').classList.add('hidden-section');" class="text-gray-400 hover:text-red-500"><i class="fas fa-times text-xl"></i></button></div><form id="formPackage" class="mb-6 space-y-3 bg-white/50 dark:bg-gray-800/50 p-4 rounded-2xl border dark:border-gray-700"><input type="text" id="pkgName" placeholder="Nama Paket" required class="w-full p-2.5 border rounded-xl dark:bg-gray-900 outline-none text-sm"><input type="number" id="pkgPrice" placeholder="Harga (Rp)" required min="1" class="w-full p-2.5 border rounded-xl dark:bg-gray-900 outline-none text-sm"><div class="border-t border-gray-300 dark:border-gray-600 pt-3 mt-3"><div class="flex justify-between items-center mb-2"><label class="text-xs font-bold text-iosBlue">Rincian</label><button type="button" onclick="addDetailInput()" class="text-xs bg-blue-100 text-iosBlue px-2 py-1 rounded-lg font-bold">+ Item</button></div><div id="pkgDetailsContainer" class="space-y-2"></div></div><button type="submit" id="btnSubmitPkg" class="w-full bg-gray-800 text-white dark:bg-gray-200 dark:text-black py-2.5 rounded-xl text-sm font-bold shadow">Simpan</button></form><ul id="packageList" class="space-y-2 text-sm"></ul></div></div>
@@ -222,13 +217,11 @@
             <div class="mt-12 flex justify-between px-12 text-center text-sm text-gray-500"><div><p>Penerima,</p><br><br><br><p class="font-bold border-t border-black inline-block pt-2 w-32" id="payEmpSign">Karyawan</p></div><div><p>Manajemen,</p><br><br><br><p class="font-bold border-t border-black inline-block pt-2 w-32" id="payOwnerName">( Owner )</p></div></div>
         </div>
 
-        <!-- Laporan Analisis Proyek -->
         <div id="analysisReportTemplate" class="hidden-section bg-white text-black p-8" style="width: 800px;">
             <div class="text-center border-b-2 border-gray-800 pb-4 mb-6"><h1 class="text-3xl font-bold text-blue-600 uppercase" id="arWoName">Brand WO</h1><h2 class="text-xl font-bold mt-2">LAPORAN KEUANGAN PROYEK</h2><p class="text-sm text-gray-600" id="arTitle">Keseluruhan Tahun Ini</p></div>
             <div class="flex justify-between mb-6 bg-gray-100 p-4 rounded-lg"><div class="w-1/3 text-center"><p class="text-sm">Total Pemasukan</p><p class="font-bold text-xl text-green-600" id="arIncome">Rp 0</p></div><div class="w-1/3 text-center border-l border-r border-gray-300"><p class="text-sm">Total Pengeluaran</p><p class="font-bold text-xl text-red-600" id="arExpense">Rp 0</p></div><div class="w-1/3 text-center"><p class="text-sm">Laba Bersih / Margin</p><p class="font-bold text-xl text-blue-600" id="arMargin">Rp 0</p></div></div>
             <h3 class="font-bold text-lg mb-2 border-b pb-1">Rincian Transaksi Terkait:</h3>
             <table class="w-full text-left mb-6 border-collapse text-sm"><thead><tr class="bg-gray-200"><th class="p-2 border">Tanggal</th><th class="p-2 border">Kategori</th><th class="p-2 border">Keterangan</th><th class="p-2 border text-right">Nominal</th></tr></thead><tbody id="arTableBody"></tbody></table>
-            <!-- Tambahan Status Tim di PDF -->
             <div id="arTeamSection" class="hidden-section">
                 <h3 class="font-bold text-lg mb-2 border-b pb-1">Status Pembayaran Tim Proyek:</h3>
                 <table class="w-full text-left mb-8 border-collapse text-sm"><thead><tr class="bg-gray-200"><th class="p-2 border">Nama Karyawan</th><th class="p-2 border text-right">Status Gaji / Nominal</th></tr></thead><tbody id="arTeamTableBody"></tbody></table>
@@ -236,7 +229,6 @@
             <div class="mt-8 text-right text-sm"><br><br><br><p class="font-bold border-t border-black inline-block pt-2 w-48 text-center" id="arOwnerName">( Owner )</p></div>
         </div>
 
-        <!-- Laporan Rekap Gaji Karyawan -->
         <div id="salaryReportTemplate" class="hidden-section bg-white text-black p-8" style="width: 800px;">
             <div class="text-center border-b-2 border-gray-800 pb-4 mb-6"><h1 class="text-3xl font-bold text-blue-600 uppercase" id="srWoName">Brand WO</h1><h2 class="text-xl font-bold mt-2">LAPORAN RINCIAN GAJI KARYAWAN</h2><p class="text-sm text-gray-600" id="srTitle">Keseluruhan (Tahun Ini)</p></div>
             <table class="w-full text-left mb-8 border-collapse text-sm"><thead><tr class="bg-gray-200"><th class="p-2 border">Tanggal</th><th class="p-2 border">Nama Karyawan</th><th class="p-2 border">Job / Keterangan</th><th class="p-2 border text-right">Nominal</th></tr></thead><tbody id="srTableBody"></tbody><tfoot><tr class="bg-gray-100 font-bold text-lg"><td colspan="3" class="p-3 border text-right">Total Gaji Dibayarkan</td><td class="p-3 border text-right text-red-600" id="srTotal">Rp 0</td></tr></tfoot></table>
@@ -245,14 +237,18 @@
 
     </section>
 
-    <!-- JAVASCRIPT -->
+    <!-- JAVASCRIPT LOGIC -->
     <script>
+        // --- 1. SETUP DATA ---
         let appData = JSON.parse(localStorage.getItem('wedMateData')) || {};
         appData = { profile: null, transactions: [], packages: [], agendas: [], employees: [], ...appData }; 
         const formatRp = (num) => 'Rp ' + parseInt(num).toLocaleString('id-ID');
         const saveData = () => localStorage.setItem('wedMateData', JSON.stringify(appData));
         let editModes = { transaction: null, package: null, agenda: null };
+        let currentAnalysisJobId = ""; 
+        let currentAnalysisEmpId = "";
 
+        // --- 2. INIT & THEME ---
         document.addEventListener('DOMContentLoaded', () => {
             const html = document.documentElement; if (localStorage.getItem('theme') === 'dark') html.classList.add('dark');
             document.getElementById('themeToggleBtn').addEventListener('click', () => { html.classList.toggle('dark'); localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light'); renderCharts(); });
@@ -263,14 +259,14 @@
 
         function initMainApp() {
             document.getElementById('mainApp').classList.remove('hidden-section'); document.getElementById('headerBrandName').innerText = appData.profile.name;
-            setupNavigation(); updateDashboard(); setupAgendaPackageLogic(); updateCategoryDropdown('income'); renderJobDropdownForTransaction(); renderEmployeeDropdown(); renderEmployeeCheckboxesForAgenda(); setupAnalysisView();
+            setupNavigation(); updateDashboard(); setupAgendaPackageLogic(); updateCategoryDropdown('income'); renderJobDropdownForTransaction(); renderEmployeeDropdown(); renderEmployeeCheckboxesForAgenda(); initAnalysisDropdowns();
         }
 
-        // --- SETTINGS & EMPLOYEES ---
+        // --- 3. SETTINGS & EMPLOYEES ---
         function openSettings() { document.getElementById('settingsModal').classList.remove('hidden-section'); document.getElementById('setWoName').value = appData.profile.name; document.getElementById('setWoOwner').value = appData.profile.ownerName || ''; document.getElementById('setWoAddress').value = appData.profile.address; document.getElementById('setWoDesc').value = appData.profile.desc || ''; renderEmployeeList(); }
         document.getElementById('formEditProfile').addEventListener('submit', (e) => { e.preventDefault(); appData.profile.name = document.getElementById('setWoName').value; appData.profile.ownerName = document.getElementById('setWoOwner').value; appData.profile.address = document.getElementById('setWoAddress').value; appData.profile.desc = document.getElementById('setWoDesc').value; saveData(); document.getElementById('headerBrandName').innerText = appData.profile.name; alert("Profil disimpan!"); });
         
-        function renderEmployeeList() { document.getElementById('employeeList').innerHTML = appData.employees.map(e => `<li class="flex justify-between items-center bg-gray-100 dark:bg-gray-800 p-2 rounded-lg"><span>${e.name}</span><button onclick="deleteEmployee(${e.id})" class="text-red-500"><i class="fas fa-trash"></i></button></li>`).join(''); renderEmployeeDropdown(); renderEmployeeCheckboxesForAgenda(); setupAnalysisView(); }
+        function renderEmployeeList() { document.getElementById('employeeList').innerHTML = appData.employees.map(e => `<li class="flex justify-between items-center bg-gray-100 dark:bg-gray-800 p-2 rounded-lg"><span>${e.name}</span><button onclick="deleteEmployee(${e.id})" class="text-red-500"><i class="fas fa-trash"></i></button></li>`).join(''); renderEmployeeDropdown(); renderEmployeeCheckboxesForAgenda(); initAnalysisDropdowns(); }
         document.getElementById('formEmployee').addEventListener('submit', (e) => { e.preventDefault(); appData.employees.push({ id: Date.now(), name: document.getElementById('empName').value }); saveData(); document.getElementById('empName').value = ''; renderEmployeeList(); });
         function deleteEmployee(id) { if(confirm("Hapus karyawan?")) { appData.employees = appData.employees.filter(e => e.id !== id); saveData(); renderEmployeeList(); } }
         
@@ -278,16 +274,16 @@
         function importJSON(event) { const file = event.target.files[0]; if(!file) return; const reader = new FileReader(); reader.onload = function(e) { try { appData = JSON.parse(e.target.result); appData.employees = appData.employees || []; saveData(); alert("Data diimpor!"); location.reload(); } catch(err) { alert("Format tidak valid!"); } }; reader.readAsText(file); }
         document.getElementById('searchInput').addEventListener('input', (e) => { const kw = e.target.value.toLowerCase(); const res = document.getElementById('searchResults'); if(kw.length < 2) { res.innerHTML = ''; return; } let html = ''; appData.agendas.forEach(a => { if(a.client.toLowerCase().includes(kw) || a.address.toLowerCase().includes(kw)) html += `<li onclick="switchTab('agenda'); document.getElementById('searchModal').classList.add('hidden-section');" class="bg-white dark:bg-gray-800 p-3 rounded-xl shadow cursor-pointer border-l-4 border-blue-500"><p class="text-xs text-blue-500 font-bold mb-1">Agenda Job</p><p class="font-bold">${a.client}</p><p class="text-xs text-gray-500">${a.date}</p></li>`; }); appData.transactions.forEach(t => { if(t.category.toLowerCase().includes(kw) || (t.notes && t.notes.toLowerCase().includes(kw))) html += `<li onclick="switchTab('transactions'); document.getElementById('searchModal').classList.add('hidden-section');" class="bg-white dark:bg-gray-800 p-3 rounded-xl shadow cursor-pointer border-l-4 ${t.type==='income'?'border-green-500':'border-red-500'}"><p class="text-xs font-bold mb-1 ${t.type==='income'?'text-green-500':'text-red-500'}">Transaksi ${t.type==='income'?'Masuk':'Keluar'}</p><p class="font-bold">${t.category} - ${formatRp(t.amount)}</p><p class="text-xs text-gray-500">${t.notes || ''}</p></li>`; }); res.innerHTML = html || '<li class="text-center text-gray-500 p-4">Tidak ada hasil.</li>'; });
 
-        // --- NAVIGATION & DASHBOARD ---
+        // --- 4. NAVIGATION & DASHBOARD ---
         function setupNavigation() { const navBtns = document.querySelectorAll('.nav-btn'); navBtns.forEach(btn => { btn.addEventListener('click', () => { navBtns.forEach(b => { b.classList.remove('text-iosBlue'); b.classList.add('text-gray-400'); }); btn.classList.remove('text-gray-400'); btn.classList.add('text-iosBlue'); switchTab(btn.dataset.target); }); }); document.getElementById('fabBtn').addEventListener('click', () => document.getElementById('fabModal').classList.remove('hidden-section')); }
-        function switchTab(tabId) { document.querySelectorAll('.view-section').forEach(el => el.classList.add('hidden-section')); document.getElementById(`view-${tabId}`).classList.remove('hidden-section'); if(tabId === 'dashboard') updateDashboard(); if(tabId === 'transactions') renderTransactions(); if(tabId === 'agenda') renderAgendas(); if(tabId === 'analysis') setupAnalysisView(); window.scrollTo({top: 0, behavior: 'smooth'}); }
+        function switchTab(tabId) { document.querySelectorAll('.view-section').forEach(el => el.classList.add('hidden-section')); document.getElementById(`view-${tabId}`).classList.remove('hidden-section'); if(tabId === 'dashboard') updateDashboard(); if(tabId === 'transactions') renderTransactions(); if(tabId === 'agenda') renderAgendas(); if(tabId === 'analysis') { renderProjectAnalysis(currentAnalysisJobId); renderSalaryAnalysis(currentAnalysisEmpId); } window.scrollTo({top: 0, behavior: 'smooth'}); }
         function closeFabModal() { document.getElementById('fabModal').classList.add('hidden-section'); }
         let donutChartInst = null, barChartInst = null;
         function updateDashboard() { const filter = document.getElementById('filterSaldo').value; let totalIn = 0, totalOut = 0; const currentMonth = new Date().getMonth(); appData.transactions.forEach(t => { if (filter === 'month' && new Date(t.date).getMonth() !== currentMonth) return; t.type === 'income' ? totalIn += t.amount : totalOut += t.amount; }); document.getElementById('totalBalanceDisplay').innerText = formatRp(totalIn - totalOut); renderCharts(totalIn, totalOut); }
         document.getElementById('filterSaldo').addEventListener('change', updateDashboard);
         function renderCharts(inc, exp) { if (donutChartInst) donutChartInst.destroy(); donutChartInst = new Chart(document.getElementById('donutChart').getContext('2d'), { type: 'doughnut', data: { labels: ['Masuk', 'Keluar'], datasets: [{ data: [inc, exp], backgroundColor: ['#34C759', '#FF3B30'], borderWidth: 0 }] }, options: { cutout: '70%', plugins: { legend: { labels: { color: document.documentElement.classList.contains('dark') ? '#fff' : '#000'} } } } }); if (barChartInst) barChartInst.destroy(); barChartInst = new Chart(document.getElementById('barChart').getContext('2d'), { type: 'bar', data: { labels: ['Tren'], datasets: [{ label: 'Masuk', data: [inc], backgroundColor: '#34C759' }, { label: 'Keluar', data: [exp], backgroundColor: '#FF3B30' }] }, options: { scales: { y: { beginAtZero: true, ticks: { color: document.documentElement.classList.contains('dark') ? '#fff' : '#000'} }, x: { ticks: { color: document.documentElement.classList.contains('dark') ? '#fff' : '#000'} } }, plugins: { legend: { display: false } } } }); }
 
-        // --- TRANSACTIONS ---
+        // --- 5. TRANSACTIONS ---
         const transTabs = document.querySelectorAll('.tab-btn');
         function updateCategoryDropdown(type) { const catSelect = document.getElementById('transCategory'); if(type === 'income') catSelect.innerHTML = '<option value="DP Paket">DP Paket</option><option value="Pelunasan">Pelunasan</option><option value="Pemasukan Lain">Pemasukan Lain</option>'; else catSelect.innerHTML = '<option value="Operasional">Operasional</option><option value="Gaji Karyawan">Gaji Karyawan</option><option value="Sewa Alat / Vendor">Sewa Alat / Vendor</option><option value="Pengeluaran Lain">Pengeluaran Lain</option>'; document.getElementById('containerEmployee').classList.add('hidden-section'); }
         function setTransTab(type) { document.getElementById('transType').value = type; transTabs.forEach(b => { b.classList.remove('bg-iosBlue', 'text-white'); b.classList.add('bg-gray-200', 'dark:bg-gray-700', 'text-gray-800', 'dark:text-white'); }); const target = type === 'income' ? transTabs[0] : transTabs[1]; target.classList.add('bg-iosBlue', 'text-white'); target.classList.remove('bg-gray-200', 'dark:bg-gray-700', 'text-gray-800'); updateCategoryDropdown(type); }
@@ -296,32 +292,26 @@
         function renderJobDropdownForTransaction() { document.getElementById('transJob').innerHTML = '<option value="operasional">Umum / Internal</option>' + appData.agendas.map(a => `<option value="${a.id}">${a.client} - ${a.date}</option>`).join(''); }
         function renderEmployeeDropdown() { document.getElementById('transEmployee').innerHTML = '<option value="">-- Pilih Karyawan --</option>' + appData.employees.map(e => `<option value="${e.id}">${e.name}</option>`).join(''); }
         
-        // PAY BUTTON LOGIC
+        // PAY BUTTON LOGIC (TANPA TIMEOUT)
         function payEmployee(jobId, empId) {
             switchTab('transactions'); resetTransForm(); setTransTab('expense');
-            setTimeout(() => {
-                document.getElementById('transCategory').value = 'Gaji Karyawan'; document.getElementById('transCategory').dispatchEvent(new Event('change'));
-                document.getElementById('transJob').value = jobId; document.getElementById('transEmployee').value = empId;
-                document.getElementById('transAmount').focus();
-            }, 50);
+            document.getElementById('transCategory').value = 'Gaji Karyawan'; document.getElementById('transCategory').dispatchEvent(new Event('change'));
+            document.getElementById('transJob').value = jobId; document.getElementById('transEmployee').value = empId;
+            document.getElementById('transAmount').focus();
         }
 
-        document.getElementById('formTransaction').addEventListener('submit', (e) => { e.preventDefault(); const payload = { type: document.getElementById('transType').value, amount: parseInt(document.getElementById('transAmount').value), category: document.getElementById('transCategory').value, date: document.getElementById('transDate').value, notes: document.getElementById('transNotes').value, jobId: document.getElementById('transJob').value === 'operasional' ? 'operasional' : parseInt(document.getElementById('transJob').value), empId: document.getElementById('transCategory').value === 'Gaji Karyawan' ? parseInt(document.getElementById('transEmployee').value) : null }; if(payload.category === 'Gaji Karyawan' && !payload.empId) { alert("Pilih karyawan!"); return; } if (editModes.transaction) { const idx = appData.transactions.findIndex(t => t.id === editModes.transaction); if(idx > -1) appData.transactions[idx] = { id: editModes.transaction, ...payload }; } else appData.transactions.push({ id: Date.now(), ...payload }); saveData(); resetTransForm(); renderTransactions(); updateDashboard(); setupAnalysisView(); });
+        document.getElementById('formTransaction').addEventListener('submit', (e) => { e.preventDefault(); const payload = { type: document.getElementById('transType').value, amount: parseInt(document.getElementById('transAmount').value), category: document.getElementById('transCategory').value, date: document.getElementById('transDate').value, notes: document.getElementById('transNotes').value, jobId: document.getElementById('transJob').value === 'operasional' ? 'operasional' : parseInt(document.getElementById('transJob').value), empId: document.getElementById('transCategory').value === 'Gaji Karyawan' ? parseInt(document.getElementById('transEmployee').value) : null }; if(payload.category === 'Gaji Karyawan' && !payload.empId) { alert("Pilih karyawan!"); return; } if (editModes.transaction) { const idx = appData.transactions.findIndex(t => t.id === editModes.transaction); if(idx > -1) appData.transactions[idx] = { id: editModes.transaction, ...payload }; } else appData.transactions.push({ id: Date.now(), ...payload }); saveData(); resetTransForm(); renderTransactions(); updateDashboard(); renderProjectAnalysis(currentAnalysisJobId); renderSalaryAnalysis(currentAnalysisEmpId); });
         function renderTransactions() { document.getElementById('transactionHistory').innerHTML = appData.transactions.slice().reverse().map(t => { const jobName = t.jobId === 'operasional' ? 'Internal' : (appData.agendas.find(a => a.id === t.jobId)?.client || 'Dihapus'); const empName = t.empId ? (appData.employees.find(e => e.id === t.empId)?.name || '') : ''; return `<li class="flex justify-between items-center bg-white dark:bg-gray-800 p-3 rounded-xl shadow-sm mb-2 border border-gray-100 dark:border-gray-700"><div class="w-1/2"><p class="font-bold text-sm truncate">${t.category} ${empName ? `<span class="text-blue-500">(${empName})</span>` : ''}</p><p class="text-[10px] text-gray-500 bg-gray-100 dark:bg-gray-700 inline-block px-1 rounded">${jobName}</p>${t.notes ? `<p class="text-[10px] text-gray-400 mt-1 italic">"${t.notes}"</p>` : ''}<p class="text-xs text-gray-400 mt-1">${t.date}</p></div><div class="text-right flex flex-col items-end gap-1"><span class="font-bold ${t.type === 'income' ? 'text-green-500' : 'text-red-500'}">${t.type === 'income' ? '+' : '-'}${formatRp(t.amount)}</span><div class="flex gap-2 mt-2">${t.category === 'Gaji Karyawan' ? `<button onclick="generatePayslip(${t.id})" class="text-[10px] bg-blue-100 text-blue-600 px-2 py-1 rounded font-bold mr-2"><i class="fas fa-file-invoice"></i> Slip</button>` : ''}<button onclick="editTransaction(${t.id})" class="text-orange-500"><i class="fas fa-edit"></i></button><button onclick="deleteTransaction(${t.id})" class="text-red-500"><i class="fas fa-trash"></i></button></div></div></li>` }).join(''); }
-        function editTransaction(id) { const t = appData.transactions.find(x => x.id === id); if(!t) return; editModes.transaction = id; setTransTab(t.type); setTimeout(() => { document.getElementById('transCategory').value = t.category; document.getElementById('transCategory').dispatchEvent(new Event('change')); document.getElementById('transAmount').value = t.amount; document.getElementById('transDate').value = t.date; document.getElementById('transJob').value = t.jobId; document.getElementById('transNotes').value = t.notes || ''; if(t.empId) document.getElementById('transEmployee').value = t.empId; document.getElementById('btnSubmitTrans').innerText = "Update"; document.getElementById('btnCancelEditTrans').classList.remove('hidden-section'); window.scrollTo({top: 0, behavior: 'smooth'}); }, 50); }
-        function deleteTransaction(id) { if(confirm('Hapus transaksi?')) { appData.transactions = appData.transactions.filter(t => t.id !== id); saveData(); renderTransactions(); setupAnalysisView(); updateDashboard(); } }
+        function editTransaction(id) { const t = appData.transactions.find(x => x.id === id); if(!t) return; editModes.transaction = id; setTransTab(t.type); document.getElementById('transCategory').value = t.category; document.getElementById('transCategory').dispatchEvent(new Event('change')); document.getElementById('transAmount').value = t.amount; document.getElementById('transDate').value = t.date; document.getElementById('transJob').value = t.jobId; document.getElementById('transNotes').value = t.notes || ''; if(t.empId) document.getElementById('transEmployee').value = t.empId; document.getElementById('btnSubmitTrans').innerText = "Update"; document.getElementById('btnCancelEditTrans').classList.remove('hidden-section'); window.scrollTo({top: 0, behavior: 'smooth'}); }
+        function deleteTransaction(id) { if(confirm('Hapus transaksi?')) { appData.transactions = appData.transactions.filter(t => t.id !== id); saveData(); renderTransactions(); renderProjectAnalysis(currentAnalysisJobId); renderSalaryAnalysis(currentAnalysisEmpId); updateDashboard(); } }
         function resetTransForm() { editModes.transaction = null; document.getElementById('formTransaction').reset(); setTransTab('income'); document.getElementById('btnSubmitTrans').innerText = "Simpan Transaksi"; document.getElementById('btnCancelEditTrans').classList.add('hidden-section'); }
         document.getElementById('btnCancelEditTrans').addEventListener('click', resetTransForm);
 
-        // --- AGENDA & PACKAGE ---
+        // --- 6. AGENDA & PACKAGE ---
         function renderEmployeeCheckboxesForAgenda() {
             const container = document.getElementById('agendaEmployeeCheckboxes');
-            if(appData.employees.length === 0) { container.innerHTML = `<span class="text-xs text-gray-500">Belum ada data karyawan.</span>`; return; }
-            container.innerHTML = appData.employees.map(e => `
-                <label class="flex items-center gap-2 cursor-pointer text-sm">
-                    <input type="checkbox" value="${e.id}" class="emp-checkbox cb-custom"> <span class="truncate">${e.name}</span>
-                </label>
-            `).join('');
+            if(appData.employees.length === 0) { container.innerHTML = `<span class="text-xs text-gray-500">Belum ada karyawan. Tambahkan di Pengaturan.</span>`; return; }
+            container.innerHTML = appData.employees.map(e => `<label class="flex items-center gap-2 cursor-pointer text-sm bg-white dark:bg-gray-800 p-2 rounded shadow-sm"><input type="checkbox" value="${e.id}" class="emp-checkbox cb-custom"> <span class="truncate">${e.name}</span></label>`).join('');
         }
         function addDetailInput(val = '') { const div = document.createElement('div'); div.className = 'flex gap-2 mb-1'; div.innerHTML = `<input type="text" value="${val}" required class="detail-input w-full p-2 border rounded-lg dark:bg-gray-900 outline-none text-xs"><button type="button" class="text-red-500" onclick="this.parentElement.remove()"><i class="fas fa-minus-circle"></i></button>`; document.getElementById('pkgDetailsContainer').appendChild(div); }
         function setupAgendaPackageLogic() { renderPackageDropdown(); renderAgendas(); document.getElementById('btnManagePackages').addEventListener('click', () => { document.getElementById('packageModal').classList.remove('hidden-section'); addDetailInput(); renderPackageList(); }); const calcSisa = () => { const pkg = appData.packages.find(p => p.id === parseInt(document.getElementById('agendaPackage').value)); document.getElementById('agendaSisa').value = pkg ? formatRp(Math.max(0, pkg.price - (parseInt(document.getElementById('agendaDP').value) || 0))) : ''; }; document.getElementById('agendaPackage').addEventListener('change', calcSisa); document.getElementById('agendaDP').addEventListener('input', calcSisa); }
@@ -329,40 +319,20 @@
         function renderPackageDropdown() { document.getElementById('agendaPackage').innerHTML = '<option value="">Pilih Paket...</option>' + appData.packages.map(p => `<option value="${p.id}">${p.name} - ${formatRp(p.price)}</option>`).join(''); }
         function renderPackageList() { document.getElementById('packageList').innerHTML = appData.packages.map(p => `<li class="bg-gray-100 dark:bg-gray-800 p-2 rounded mb-2 flex justify-between"><div><b>${p.name}</b><br><span class="text-xs">${formatRp(p.price)}</span></div><button onclick="appData.packages=appData.packages.filter(x=>x.id!==${p.id});saveData();renderPackageList();renderPackageDropdown();" class="text-red-500"><i class="fas fa-trash"></i></button></li>`).join(''); }
         document.getElementById('formAgenda').addEventListener('submit', (e) => { 
-            e.preventDefault(); 
-            // Gather Selected Employees
-            const checkedBoxes = document.querySelectorAll('.emp-checkbox:checked');
-            const involvedEmployees = Array.from(checkedBoxes).map(cb => parseInt(cb.value));
-
+            e.preventDefault(); const checkedBoxes = document.querySelectorAll('.emp-checkbox:checked'); const involvedEmployees = Array.from(checkedBoxes).map(cb => parseInt(cb.value));
             const payload = { client: document.getElementById('agendaClient').value, address: document.getElementById('agendaAddress').value, date: document.getElementById('agendaDate').value, packageId: parseInt(document.getElementById('agendaPackage').value), dp: parseInt(document.getElementById('agendaDP').value), involvedEmployees }; 
-            
             if(editModes.agenda) { const idx = appData.agendas.findIndex(a => a.id === editModes.agenda); if(idx > -1) appData.agendas[idx] = { ...appData.agendas[idx], ...payload }; } 
             else { const newId = Date.now(); appData.agendas.push({ id: newId, ...payload }); appData.transactions.push({ id: Date.now()+1, type: 'income', amount: payload.dp, category: 'DP Paket', notes: `DP ${payload.client}`, date: payload.date, jobId: newId }); } 
-            saveData(); resetAgendaForm(); renderAgendas(); renderJobDropdownForTransaction(); setupAnalysisView(); updateDashboard(); 
+            saveData(); resetAgendaForm(); renderAgendas(); renderJobDropdownForTransaction(); initAnalysisDropdowns(); updateDashboard(); 
         });
         function renderAgendas() { document.getElementById('agendaListContainer').innerHTML = appData.agendas.slice().reverse().map(a => { const pkg = appData.packages.find(p => p.id === a.packageId); return `<div class="glass p-4 rounded-2xl shadow-sm border-l-4 border-iosBlue relative"><div class="absolute top-4 right-4 flex gap-3"><button onclick="editAgenda(${a.id})" class="text-orange-500"><i class="fas fa-edit"></i></button><button onclick="deleteAgenda(${a.id})" class="text-red-500"><i class="fas fa-trash"></i></button></div><h4 class="font-bold text-lg w-3/4 truncate">${a.client}</h4><p class="text-xs text-gray-500 mb-2">${a.date}</p><div class="bg-white/50 dark:bg-gray-800/50 p-3 rounded-lg text-sm mb-3"><p>Paket: <b>${pkg?.name||'Dihapus'}</b></p><p>Sisa: <span class="font-bold text-red-500">${pkg?formatRp(pkg.price-a.dp):0}</span></p></div><button onclick="generateInvoice(${a.id})" class="w-full bg-blue-100 text-iosBlue py-2 rounded-xl text-sm font-bold shadow-sm"><i class="fas fa-file-pdf"></i> Cetak Invoice</button></div>` }).join(''); }
-        function editAgenda(id) { 
-            const a = appData.agendas.find(x => x.id === id); if(!a) return; editModes.agenda = id; 
-            document.getElementById('agendaClient').value = a.client; document.getElementById('agendaAddress').value = a.address; document.getElementById('agendaDate').value = a.date; document.getElementById('agendaPackage').value = a.packageId; document.getElementById('agendaDP').value = a.dp; document.getElementById('agendaPackage').dispatchEvent(new Event('change')); 
-            
-            // Re-check employees
-            const checkboxes = document.querySelectorAll('.emp-checkbox');
-            checkboxes.forEach(cb => { cb.checked = (a.involvedEmployees || []).includes(parseInt(cb.value)); });
-
-            document.getElementById('btnSubmitAgenda').innerText = "Update"; document.getElementById('btnCancelEditAgenda').classList.remove('hidden-section'); window.scrollTo({top: 0, behavior: 'smooth'}); 
-        }
-        function deleteAgenda(id) { if(confirm("Hapus agenda? (Transaksi DP & Gaji untuk Proyek ini juga terhapus)")) { appData.agendas = appData.agendas.filter(a => a.id !== id); appData.transactions = appData.transactions.filter(t => t.jobId !== id); saveData(); renderAgendas(); renderJobDropdownForTransaction(); setupAnalysisView(); updateDashboard(); renderTransactions(); } }
-        function resetAgendaForm() { 
-            editModes.agenda = null; document.getElementById('formAgenda').reset(); document.getElementById('agendaSisa').value = ''; 
-            const checkboxes = document.querySelectorAll('.emp-checkbox'); checkboxes.forEach(cb => cb.checked = false);
-            document.getElementById('btnSubmitAgenda').innerText = "Simpan Agenda"; document.getElementById('btnCancelEditAgenda').classList.add('hidden-section'); 
-        }
+        function editAgenda(id) { const a = appData.agendas.find(x => x.id === id); if(!a) return; editModes.agenda = id; document.getElementById('agendaClient').value = a.client; document.getElementById('agendaAddress').value = a.address; document.getElementById('agendaDate').value = a.date; document.getElementById('agendaPackage').value = a.packageId; document.getElementById('agendaDP').value = a.dp; document.getElementById('agendaPackage').dispatchEvent(new Event('change')); const checkboxes = document.querySelectorAll('.emp-checkbox'); checkboxes.forEach(cb => { cb.checked = (a.involvedEmployees || []).includes(parseInt(cb.value)); }); document.getElementById('btnSubmitAgenda').innerText = "Update"; document.getElementById('btnCancelEditAgenda').classList.remove('hidden-section'); window.scrollTo({top: 0, behavior: 'smooth'}); }
+        function deleteAgenda(id) { if(confirm("Hapus agenda? (Transaksi DP & Gaji untuk Proyek ini juga terhapus)")) { appData.agendas = appData.agendas.filter(a => a.id !== id); appData.transactions = appData.transactions.filter(t => t.jobId !== id); saveData(); renderAgendas(); renderJobDropdownForTransaction(); initAnalysisDropdowns(); updateDashboard(); renderTransactions(); } }
+        function resetAgendaForm() { editModes.agenda = null; document.getElementById('formAgenda').reset(); document.getElementById('agendaSisa').value = ''; const checkboxes = document.querySelectorAll('.emp-checkbox'); checkboxes.forEach(cb => cb.checked = false); document.getElementById('btnSubmitAgenda').innerText = "Simpan Agenda"; document.getElementById('btnCancelEditAgenda').classList.add('hidden-section'); }
         document.getElementById('btnCancelEditAgenda').addEventListener('click', resetAgendaForm);
 
-        // --- ANALYSIS LOGIC ---
-        let analysisChartInst = null; let currentAnalysisJobId = ""; let currentAnalysisEmpId = "";
-
-        function setupAnalysisView() {
+        // --- 7. ANALYSIS LOGIC ---
+        function initAnalysisDropdowns() {
             const selJob = document.getElementById('analysisJobSelect'); const prevJobVal = selJob.value;
             selJob.innerHTML = '<option value="">Keseluruhan (Tahun Ini)</option>' + appData.agendas.map(a => `<option value="${a.id}">Proyek: ${a.client}</option>`).join('');
             selJob.value = prevJobVal || ""; 
@@ -371,54 +341,55 @@
             selEmp.innerHTML = '<option value="">Semua Karyawan (Tahun Ini)</option>' + appData.employees.map(e => `<option value="${e.id}">${e.name}</option>`).join('');
             selEmp.value = prevEmpVal || "";
 
-            renderProjectAnalysis(selJob.value); renderSalaryAnalysis(selEmp.value); 
-            selJob.addEventListener('change', (e) => renderProjectAnalysis(e.target.value));
-            selEmp.addEventListener('change', (e) => renderSalaryAnalysis(e.target.value));
+            // Init renders based on current selection
+            renderProjectAnalysis(selJob.value); 
+            renderSalaryAnalysis(selEmp.value); 
         }
 
         function renderProjectAnalysis(jobIdRaw) {
             currentAnalysisJobId = jobIdRaw;
-            const currentYear = new Date().getFullYear();
+            const currentYearStr = new Date().getFullYear().toString();
             let inc = 0, exp = 0; let titleName = ""; let filterTrans = [];
             const teamDiv = document.getElementById('analysisJobTeamContainer');
             const tbodyTeam = document.getElementById('analysisJobTeamTableBody');
             
             if (!jobIdRaw) {
-                titleName = `Keseluruhan (Tahun ${currentYear})`;
-                filterTrans = appData.transactions.filter(t => new Date(t.date).getFullYear() === currentYear);
-                teamDiv.classList.add('hidden-section'); // Hide Team table if overall
+                titleName = `Keseluruhan (Tahun ${currentYearStr})`;
+                // Filter menggunakan String StartsWith menghindari Timezone bug
+                filterTrans = appData.transactions.filter(t => t.date && t.date.substring(0,4) === currentYearStr);
+                teamDiv.classList.add('hidden-section');
             } else {
                 const jobId = parseInt(jobIdRaw);
                 const agenda = appData.agendas.find(a => a.id === jobId); if(!agenda) return;
                 titleName = `Proyek: ${agenda.client}`;
                 filterTrans = appData.transactions.filter(t => t.jobId === jobId);
 
-                // Setup Team Table
                 teamDiv.classList.remove('hidden-section');
-                tbodyTeam.innerHTML = '';
+                let rowsTeam = '';
                 if(agenda.involvedEmployees && agenda.involvedEmployees.length > 0) {
                     agenda.involvedEmployees.forEach(empId => {
                         const emp = appData.employees.find(e => e.id === empId); if(!emp) return;
                         let paidAmount = 0;
                         appData.transactions.forEach(t => { if(t.jobId === agenda.id && t.empId === emp.id && t.category === 'Gaji Karyawan') paidAmount += t.amount; });
                         
-                        const statusBadge = paidAmount > 0 ? `<span class="bg-green-100 text-green-700 px-2 py-1 rounded text-xs font-bold whitespace-nowrap">Dibayar ${formatRp(paidAmount)}</span>` : `<span class="bg-red-100 text-red-700 px-2 py-1 rounded text-xs font-bold whitespace-nowrap">Belum Digaji</span>`;
+                        const statusBadge = paidAmount > 0 ? `<span class="bg-green-100 text-green-700 px-2 py-1 rounded text-[10px] font-bold whitespace-nowrap">Dibayar ${formatRp(paidAmount)}</span>` : `<span class="bg-red-100 text-red-700 px-2 py-1 rounded text-[10px] font-bold whitespace-nowrap">Belum Digaji</span>`;
                         const actionBtn = paidAmount === 0 ? `<button onclick="payEmployee(${agenda.id}, ${emp.id})" class="text-[10px] bg-blue-100 text-blue-600 px-3 py-1 rounded font-bold shadow-sm hover:bg-blue-200">Bayar</button>` : `<i class="fas fa-check-circle text-green-500 text-lg"></i>`;
                         
-                        tbodyTeam.innerHTML += `<tr class="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50"><td class="p-3 font-medium">${emp.name}</td><td class="p-3">${statusBadge}</td><td class="p-3 text-center">${actionBtn}</td></tr>`;
+                        rowsTeam += `<tr class="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50"><td class="p-3 font-medium">${emp.name}</td><td class="p-3">${statusBadge}</td><td class="p-3 text-center">${actionBtn}</td></tr>`;
                     });
                 } else {
-                    tbodyTeam.innerHTML = `<tr><td colspan="3" class="p-4 text-center text-gray-500 italic">Tidak ada tim yang dipilih untuk proyek ini</td></tr>`;
+                    rowsTeam = `<tr><td colspan="3" class="p-4 text-center text-gray-500 italic">Tidak ada tim ditugaskan di proyek ini</td></tr>`;
                 }
+                tbodyTeam.innerHTML = rowsTeam;
             }
 
             // Populate Finance Table
-            const tbodyProj = document.getElementById('analysisProjectTableBody'); tbodyProj.innerHTML = '';
+            let rowsProj = '';
             filterTrans.forEach(t => {
                 t.type === 'income' ? inc += t.amount : exp += t.amount;
-                tbodyProj.innerHTML += `<tr class="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50"><td class="p-3 whitespace-nowrap">${t.date}</td><td class="p-3 font-medium ${t.type==='income'?'text-green-600':'text-red-600'}">${t.category}</td><td class="p-3 text-xs text-gray-500 max-w-[100px] truncate">${t.notes || '-'}</td><td class="p-3 text-right font-bold">${formatRp(t.amount)}</td></tr>`;
+                rowsProj += `<tr class="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50"><td class="p-3 whitespace-nowrap">${t.date}</td><td class="p-3 font-medium ${t.type==='income'?'text-green-600':'text-red-600'}">${t.category}</td><td class="p-3 text-xs text-gray-500 max-w-[100px] truncate">${t.notes || '-'}</td><td class="p-3 text-right font-bold">${formatRp(t.amount)}</td></tr>`;
             });
-            if(filterTrans.length === 0) tbodyProj.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-gray-500 italic">Belum ada transaksi</td></tr>`;
+            document.getElementById('analysisProjectTableBody').innerHTML = filterTrans.length === 0 ? `<tr><td colspan="4" class="p-4 text-center text-gray-500 italic">Belum ada transaksi</td></tr>` : rowsProj;
 
             document.getElementById('analysisClientName').innerText = titleName;
             document.getElementById('analysisIncome').innerText = formatRp(inc); document.getElementById('analysisExpense').innerText = formatRp(exp); document.getElementById('analysisMargin').innerText = formatRp(inc - exp);
@@ -426,49 +397,53 @@
             const ctx = document.getElementById('analysisChartCanvas').getContext('2d');
             if(analysisChartInst) analysisChartInst.destroy();
             analysisChartInst = new Chart(ctx, { type: 'pie', data: { labels: ['Pemasukan', 'Pengeluaran'], datasets: [{ data: [inc, exp], backgroundColor: ['#34C759', '#FF3B30'], borderWidth: 2, borderColor: document.documentElement.classList.contains('dark') ? '#1f2937' : '#fff' }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels:{ color: document.documentElement.classList.contains('dark') ? '#fff' : '#000'} } } } });
-            document.getElementById('analysisResult').classList.remove('hidden-section');
         }
 
         function renderSalaryAnalysis(empIdRaw) {
-            currentAnalysisEmpId = empIdRaw; let totalBeban = 0; const currentYear = new Date().getFullYear();
-            let salaryTrans = appData.transactions.filter(t => t.category === 'Gaji Karyawan' && new Date(t.date).getFullYear() === currentYear);
-            if (empIdRaw) { const empId = parseInt(empIdRaw); salaryTrans = salaryTrans.filter(t => t.empId === empId); }
-            const tbody = document.getElementById('salaryAnalysisTableBody'); tbody.innerHTML = '';
+            currentAnalysisEmpId = empIdRaw; let totalBeban = 0; 
+            const currentYearStr = new Date().getFullYear().toString();
+            // Filter ketat memastikan tahun dibaca dengan benar
+            let salaryTrans = appData.transactions.filter(t => t.category === 'Gaji Karyawan' && t.date && t.date.substring(0,4) === currentYearStr);
             
+            if (empIdRaw) { 
+                const empId = parseInt(empIdRaw); 
+                salaryTrans = salaryTrans.filter(t => t.empId === empId); 
+            }
+            
+            let rowsSal = '';
             salaryTrans.forEach(t => {
-                const emp = appData.employees.find(e => e.id === t.empId); const jobName = t.jobId === 'operasional' ? 'Internal' : (appData.agendas.find(a => a.id === t.jobId)?.client || 'Dihapus'); totalBeban += t.amount;
-                tbody.innerHTML += `<tr class="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50"><td class="p-3 whitespace-nowrap">${t.date}</td><td class="p-3 font-bold text-iosBlue">${emp ? emp.name : 'Unknown'}</td><td class="p-3 text-xs"><span class="bg-gray-200 dark:bg-gray-700 px-2 py-1 rounded">${jobName}</span> ${t.notes ? `<br><span class="text-gray-500 italic mt-1 inline-block">"${t.notes}"</span>` : ''}</td><td class="p-3 text-right font-bold text-red-600 whitespace-nowrap">${formatRp(t.amount)}</td></tr>`;
+                const emp = appData.employees.find(e => e.id === t.empId); 
+                const jobName = t.jobId === 'operasional' ? 'Internal' : (appData.agendas.find(a => a.id === t.jobId)?.client || 'Dihapus'); 
+                totalBeban += t.amount;
+                rowsSal += `<tr class="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50"><td class="p-3 whitespace-nowrap">${t.date}</td><td class="p-3 font-bold text-iosBlue">${emp ? emp.name : 'Unknown'}</td><td class="p-3 text-xs"><span class="bg-gray-200 dark:bg-gray-700 px-2 py-1 rounded">${jobName}</span> ${t.notes ? `<br><span class="text-gray-500 italic mt-1 inline-block">"${t.notes}"</span>` : ''}</td><td class="p-3 text-right font-bold text-red-600 whitespace-nowrap">${formatRp(t.amount)}</td></tr>`;
             });
-            if(salaryTrans.length === 0) tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-gray-500 italic">Belum ada riwayat gaji</td></tr>`;
+            
+            document.getElementById('salaryAnalysisTableBody').innerHTML = salaryTrans.length === 0 ? `<tr><td colspan="4" class="p-4 text-center text-gray-500 italic">Belum ada riwayat gaji terdeteksi</td></tr>` : rowsSal;
             document.getElementById('salaryTotalExpense').innerText = formatRp(totalBeban);
         }
 
-        // --- PDF GENERATORS ---
+        // --- 8. PDF GENERATORS ---
         function generateInvoice(agendaId) { const agenda = appData.agendas.find(a => a.id === agendaId); const pkg = appData.packages.find(p => p.id === agenda.packageId); if(!pkg) { alert("Paket dihapus!"); return; } document.getElementById('invWoName').innerText = appData.profile.name; document.getElementById('invOwnerName').innerText = `( ${appData.profile.ownerName || 'Owner'} )`; document.getElementById('invWoAddress').innerText = appData.profile.address; document.getElementById('invDate').innerText = `Tanggal: ${new Date().toLocaleDateString('id-ID')}`; document.getElementById('invClient').innerText = agenda.client; document.getElementById('invPackageName').innerText = pkg.name; document.getElementById('invPackagePrice').innerText = formatRp(pkg.price); document.getElementById('invPackageDetails').innerHTML = pkg.details && pkg.details.length ? pkg.details.map(d => `<li>${d}</li>`).join('') : '<li>Tidak ada rincian</li>'; document.getElementById('invTotal').innerText = formatRp(pkg.price); document.getElementById('invDP').innerText = formatRp(agenda.dp); document.getElementById('invSisa').innerText = formatRp(pkg.price - agenda.dp); const el = document.getElementById('invoiceTemplate'); el.classList.remove('hidden-section'); html2pdf().set({ margin: 0.5, filename: `Invoice_${agenda.client}.pdf`, html2canvas: { scale: 2 }, jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' } }).from(el).save().then(() => el.classList.add('hidden-section')); }
         function generatePayslip(transId) { const t = appData.transactions.find(x => x.id === transId); const emp = appData.employees.find(e => e.id === t.empId); const jobName = t.jobId === 'operasional' ? 'Operasional Internal' : (appData.agendas.find(a => a.id === t.jobId)?.client || '-'); document.getElementById('payWoName').innerText = appData.profile.name; document.getElementById('payOwnerName').innerText = `( ${appData.profile.ownerName || 'Owner'} )`; document.getElementById('payDate').innerText = `Tanggal: ${t.date}`; document.getElementById('payEmpName').innerText = emp ? emp.name : 'Unknown'; document.getElementById('payEmpSign').innerText = `( ${emp ? emp.name : 'Karyawan'} )`; document.getElementById('payNotes').innerText = `${jobName} ${t.notes ? `(${t.notes})` : ''}`; document.getElementById('payAmount').innerText = formatRp(t.amount); const el = document.getElementById('payslipTemplate'); el.classList.remove('hidden-section'); html2pdf().set({ margin: 0.5, filename: `Slip_Gaji_${emp?.name || 'Karyawan'}_${t.date}.pdf`, html2canvas: { scale: 2 }, jsPDF: { unit: 'in', format: 'letter', orientation: 'landscape' } }).from(el).save().then(() => el.classList.add('hidden-section')); }
         
         function generateAnalysisPDF() {
-            const currentYear = new Date().getFullYear(); let title = "", inc = 0, exp = 0, filterTrans = [];
+            const currentYearStr = new Date().getFullYear().toString(); let title = "", inc = 0, exp = 0, filterTrans = [];
             const arTeamSection = document.getElementById('arTeamSection'); const arTeamBody = document.getElementById('arTeamTableBody'); arTeamBody.innerHTML = '';
             
             if (!currentAnalysisJobId) { 
-                title = `Keseluruhan (${currentYear})`; filterTrans = appData.transactions.filter(t => new Date(t.date).getFullYear() === currentYear); 
-                arTeamSection.classList.add('hidden-section'); // Sembunyikan tabel tim di PDF jika keseluruhan
+                title = `Keseluruhan (${currentYearStr})`; filterTrans = appData.transactions.filter(t => t.date && t.date.substring(0,4) === currentYearStr); 
+                arTeamSection.classList.add('hidden-section'); 
             } else { 
                 const jobId = parseInt(currentAnalysisJobId); const agenda = appData.agendas.find(a => a.id === jobId); title = `Proyek: ${agenda.client}`; filterTrans = appData.transactions.filter(t => t.jobId === jobId); 
-                
-                // Tambahkan rekap pembayaran tim ke PDF
                 arTeamSection.classList.remove('hidden-section');
                 if(agenda.involvedEmployees && agenda.involvedEmployees.length > 0) {
                     agenda.involvedEmployees.forEach(empId => {
                         const emp = appData.employees.find(e => e.id === empId); if(!emp) return; let paidAmount = 0;
                         appData.transactions.forEach(t => { if(t.jobId === agenda.id && t.empId === emp.id && t.category === 'Gaji Karyawan') paidAmount += t.amount; });
-                        const status = paidAmount > 0 ? `Lunas (${formatRp(paidAmount)})` : `Belum Dibayar`;
+                        const status = paidAmount > 0 ? `Dibayar (${formatRp(paidAmount)})` : `Belum Dibayar`;
                         arTeamBody.innerHTML += `<tr><td class="p-2 border">${emp.name}</td><td class="p-2 border text-right font-bold ${paidAmount > 0 ? 'text-green-600' : 'text-red-600'}">${status}</td></tr>`;
                     });
-                } else {
-                    arTeamBody.innerHTML = `<tr><td colspan="2" class="p-2 border text-center">Tidak ada tim karyawan</td></tr>`;
-                }
+                } else { arTeamBody.innerHTML = `<tr><td colspan="2" class="p-2 border text-center">Tidak ada tim karyawan</td></tr>`; }
             }
 
             filterTrans.forEach(t => { t.type === 'income' ? inc += t.amount : exp += t.amount; });
@@ -480,12 +455,12 @@
         }
 
         function generateSalaryPDF() {
-            const currentYear = new Date().getFullYear(); let totalBeban = 0; let title = "Keseluruhan (Tahun Ini)";
-            let salaryTrans = appData.transactions.filter(t => t.category === 'Gaji Karyawan' && new Date(t.date).getFullYear() === currentYear);
+            const currentYearStr = new Date().getFullYear().toString(); let totalBeban = 0; let title = "Keseluruhan (Tahun Ini)";
+            let salaryTrans = appData.transactions.filter(t => t.category === 'Gaji Karyawan' && t.date && t.date.substring(0,4) === currentYearStr);
             if (currentAnalysisEmpId) { const empId = parseInt(currentAnalysisEmpId); const emp = appData.employees.find(e => e.id === empId); title = `Karyawan: ${emp ? emp.name : 'Unknown'}`; salaryTrans = salaryTrans.filter(t => t.empId === empId); }
             let rows = ''; salaryTrans.forEach(t => { const emp = appData.employees.find(e => e.id === t.empId); const jobName = t.jobId === 'operasional' ? 'Internal' : (appData.agendas.find(a => a.id === t.jobId)?.client || 'Dihapus'); totalBeban += t.amount; rows += `<tr><td class="p-2 border">${t.date}</td><td class="p-2 border font-bold">${emp ? emp.name : '-'}</td><td class="p-2 border text-xs">${jobName} ${t.notes ? `(${t.notes})` : ''}</td><td class="p-2 border text-right font-bold">${formatRp(t.amount)}</td></tr>`; });
             document.getElementById('srWoName').innerText = appData.profile.name; document.getElementById('srOwnerName').innerText = `( ${appData.profile.ownerName || 'Owner'} )`; document.getElementById('srTitle').innerText = title; document.getElementById('srTableBody').innerHTML = rows || `<tr><td colspan="4" class="p-4 text-center">Tidak ada riwayat</td></tr>`; document.getElementById('srTotal').innerText = formatRp(totalBeban);
-            const el = document.getElementById('salaryReportTemplate'); el.classList.remove('hidden-section'); html2pdf().set({ margin: 0.5, filename: `Rekap_Gaji_${currentYear}.pdf`, html2canvas: { scale: 2 }, jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' } }).from(el).save().then(() => el.classList.add('hidden-section'));
+            const el = document.getElementById('salaryReportTemplate'); el.classList.remove('hidden-section'); html2pdf().set({ margin: 0.5, filename: `Rekap_Gaji_${currentYearStr}.pdf`, html2canvas: { scale: 2 }, jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' } }).from(el).save().then(() => el.classList.add('hidden-section'));
         }
     </script>
 </body>
