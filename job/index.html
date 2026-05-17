@@ -31,7 +31,7 @@
         .pb-nav { padding-bottom: 120px; }
         .cb-custom { accent-color: #007AFF; transform: scale(1.2); cursor: pointer; }
         
-        /* Animasi Transisi Halus (Tidak Lebay) */
+        /* Animasi Transisi Halus */
         @keyframes fadeInSmooth {
             from { opacity: 0; transform: translateY(5px); }
             to { opacity: 1; transform: translateY(0); }
@@ -93,10 +93,7 @@
         <header class="glass sticky top-0 z-40 px-6 py-4 shadow-sm flex justify-between items-center">
             <div>
                 <p class="text-xs text-gray-500 dark:text-gray-400">Halo, <span id="headerGreeting">Selamat</span></p>
-                <div class="flex items-center gap-2">
-                    <img id="headerLogo" src="" class="h-6 w-6 object-contain hidden-section rounded bg-white p-0.5 shadow-sm">
-                    <h2 id="headerBrandName" class="text-xl font-bold text-iosBlue">Brand WO</h2>
-                </div>
+                <h2 id="headerBrandName" class="text-xl font-bold text-iosBlue">Brand WO</h2>
             </div>
             <div class="flex gap-3 items-center">
                 <!-- TOMBOL UNDO -->
@@ -106,8 +103,10 @@
                 <button id="themeToggleBtn" class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-iosBlue active:scale-95"><i class="fas fa-moon dark:hidden"></i><i class="fas fa-sun hidden dark:block"></i></button>
                 
                 <div class="relative">
-                    <button onclick="toggleDropdownMenu()" id="dropdownBtn" class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-gray-600 dark:text-gray-200 focus:outline-none active:scale-95">
-                        <i class="fas fa-user-circle text-xl"></i>
+                    <!-- ICON DROPDOWN DI SEBELAH KANAN ATAS - MENGGUNAKAN LOGO ATAU ICON -->
+                    <button onclick="toggleDropdownMenu()" id="dropdownBtn" class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-gray-600 dark:text-gray-200 focus:outline-none active:scale-95 overflow-hidden shadow-sm border border-gray-300 dark:border-gray-600">
+                        <img id="headerLogo" src="" class="h-full w-full object-cover hidden-section bg-white">
+                        <i id="headerDefaultIcon" class="fas fa-user-circle text-2xl"></i>
                     </button>
                     <!-- Dropdown Menu -->
                     <div id="headerDropdownMenu" class="hidden-section absolute right-0 mt-2 w-48 rounded-2xl shadow-xl glass z-50 overflow-hidden py-1 border border-gray-200/50 dark:border-gray-700/50 fade-in">
@@ -320,7 +319,7 @@
         </main>
 
         <!-- FLOATING BOTTOM NAVIGATION & FAB -->
-        <button id="fabBtn" class="fixed bottom-24 right-6 bg-gradient-to-r from-iosBlue to-blue-400 text-white w-14 h-14 rounded-full flex items-center justify-center text-2xl shadow-[0_8px_20px_rgba(0,122,255,0.4)] border-2 border-gray-50 dark:border-gray-900 active:scale-90 z-50">
+        <button id="fabBtn" class="fixed bottom-24 right-6 bg-gradient-to-r from-iosBlue to-blue-400 text-white w-14 h-14 rounded-full flex items-center justify-center text-2xl shadow-[0_8px_20px_rgba(0,122,255,0.4)] border-2 border-gray-50 dark:border-gray-900 active:scale-90 z-50 transition-transform">
             <i class="fas fa-plus"></i>
         </button>
 
@@ -390,14 +389,23 @@
         <div id="packageModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[60] flex items-center justify-center hidden-section p-4"><div class="glass w-full max-w-md rounded-3xl p-6 shadow-2xl max-h-[90vh] overflow-y-auto scale-in"><div class="flex justify-between items-center border-b dark:border-gray-700 pb-3 mb-4"><h3 class="text-xl font-bold text-iosBlue">Kelola Daftar Paket</h3><button onclick="document.getElementById('packageModal').classList.add('hidden-section'); resetPkgForm();" class="text-gray-400 hover:text-red-500"><i class="fas fa-times text-xl"></i></button></div><form id="formPackage" class="mb-6 space-y-3 bg-white/50 dark:bg-gray-800/50 p-4 rounded-2xl border dark:border-gray-700"><input type="text" id="pkgName" placeholder="Nama Paket (Cth: Gold)" required class="w-full p-2.5 border rounded-xl dark:bg-gray-900 outline-none text-sm"><input type="number" id="pkgPrice" placeholder="Harga (Rp)" required min="1" class="w-full p-2.5 border rounded-xl dark:bg-gray-900 outline-none text-sm"><div class="border-t border-gray-300 dark:border-gray-600 pt-3 mt-3"><div class="flex justify-between items-center mb-2"><label class="text-xs font-bold text-iosBlue">Rincian Paket</label><button type="button" onclick="addDetailInput()" class="text-xs bg-blue-100 text-iosBlue px-2 py-1 rounded-lg font-bold active:scale-95">+ Item</button></div><div id="pkgDetailsContainer" class="space-y-2"></div></div><div class="flex gap-2"><button type="submit" id="btnSubmitPkg" class="w-full bg-gray-800 text-white dark:bg-gray-200 dark:text-black py-2.5 rounded-xl text-sm font-bold shadow active:scale-95">Simpan Paket</button><button type="button" id="btnCancelEditPkg" class="hidden-section bg-gray-300 dark:bg-gray-600 text-gray-800 dark:text-white px-4 py-2.5 rounded-xl text-sm font-bold active:scale-95" onclick="resetPkgForm()"><i class="fas fa-times"></i></button></div></form><ul id="packageList" class="space-y-2 text-sm"></ul></div></div>
 
         <!-- ================= HIDDEN TEMPLATES FOR PDF ================= -->
-        <div id="invoiceTemplate" class="hidden-section bg-white text-black p-8" style="width: 800px;">
-            <div class="flex justify-between items-center border-b-2 border-gray-800 pb-4 mb-6">
-                <div class="flex items-center gap-4">
-                    <img id="invLogo" class="h-16 w-16 object-contain hidden-section bg-white rounded-md">
-                    <div><h1 class="text-4xl font-bold text-blue-600" id="invWoName">Brand WO</h1><p class="text-sm" id="invWoAddress">Alamat</p></div>
+        
+        <!-- INVOICE TEMPLATE -->
+        <div id="invoiceTemplate" class="hidden-section bg-white text-black p-8" style="width: 794px;">
+            <div class="flex items-center justify-between border-b-4 border-double border-gray-800 pb-4 mb-6">
+                <div class="w-1/4 flex justify-start">
+                    <img id="invLogo" class="max-h-20 max-w-full object-contain hidden-section bg-white rounded-md">
                 </div>
-                <div class="text-right"><h2 class="text-2xl font-bold">INVOICE</h2><p class="text-sm" id="invDate">Tanggal: -</p></div>
+                <div class="w-2/4 text-center px-4">
+                    <h1 class="text-3xl font-bold text-blue-600 uppercase" id="invWoName">Brand WO</h1>
+                    <p class="text-sm mt-1 text-gray-700" id="invWoAddress">Alamat</p>
+                </div>
+                <div class="w-1/4 text-right">
+                    <h2 class="text-2xl font-bold text-gray-800">INVOICE</h2>
+                    <p class="text-sm mt-1" id="invDate">Tanggal: -</p>
+                </div>
             </div>
+            
             <div class="mb-6"><p class="text-gray-600 text-sm">Tagihan Kepada:</p><h3 class="text-xl font-bold" id="invClient">Klien</h3><p class="text-sm text-gray-500" id="invEventDate">Tgl Acara: -</p></div>
             <table class="w-full text-left mb-8 border-collapse"><tr class="bg-gray-200"><th class="p-3 border">Deskripsi Layanan</th><th class="p-3 border text-right">Harga</th></tr><tr><td class="p-3 border align-top"><span id="invPackageName" class="font-bold text-lg block mb-2">Paket</span><ul id="invPackageDetails" class="list-disc ml-5 text-sm text-gray-700"></ul></td><td class="p-3 border text-right font-bold align-top" id="invPackagePrice">Rp 0</td></tr></table>
             <div class="flex justify-end"><div class="w-1/2"><div class="flex justify-between py-2 border-b"><span class="font-bold">Total</span><span id="invTotal">Rp 0</span></div><div class="flex justify-between py-2 border-b"><span>DP Awal</span><span id="invDP">Rp 0</span></div><div class="flex justify-between py-2 bg-blue-50 text-blue-800 p-2 rounded mt-2"><span class="font-bold">Sisa Tagihan</span><span class="font-bold text-xl" id="invSisa">Rp 0</span></div></div></div>
@@ -405,12 +413,21 @@
             <div class="mt-8 text-center text-xs text-gray-400 italic border-t border-gray-200 pt-4 font-medium">dibuat dengan WedMate by Dzaza App</div>
         </div>
 
-        <div id="analysisReportTemplate" class="hidden-section bg-white text-black p-8" style="width: 800px;">
-            <div class="text-center border-b-2 border-gray-800 pb-4 mb-6">
-                <img id="arLogo" class="h-16 w-16 object-contain hidden-section mx-auto mb-2 bg-white rounded-md">
-                <h1 class="text-3xl font-bold text-blue-600 uppercase" id="arWoName">Brand WO</h1>
-                <h2 class="text-xl font-bold mt-2">LAPORAN KEUANGAN PROYEK</h2><p class="text-sm text-gray-600" id="arTitle">Keseluruhan Tahun Ini</p>
+        <!-- ANALYSIS REPORT TEMPLATE -->
+        <div id="analysisReportTemplate" class="hidden-section bg-white text-black p-8" style="width: 794px;">
+            <div class="flex items-center justify-between border-b-4 border-double border-gray-800 pb-4 mb-6">
+                <div class="w-1/4 flex justify-start">
+                    <img id="arLogo" class="max-h-20 max-w-full object-contain hidden-section bg-white rounded-md">
+                </div>
+                <div class="w-2/4 text-center px-4">
+                    <h1 class="text-3xl font-bold text-blue-600 uppercase" id="arWoName">Brand WO</h1>
+                    <p class="text-sm mt-1 text-gray-600 font-medium" id="arTitle">Keseluruhan Tahun Ini</p>
+                </div>
+                <div class="w-1/4 text-right">
+                    <h2 class="text-lg font-bold text-gray-800 leading-tight">LAPORAN<br>KEUANGAN</h2>
+                </div>
             </div>
+            
             <div class="flex justify-between mb-6 bg-gray-100 p-4 rounded-lg"><div class="w-1/3 text-center"><p class="text-sm">Total Pemasukan</p><p class="font-bold text-xl text-green-600" id="arIncome">Rp 0</p></div><div class="w-1/3 text-center border-l border-r border-gray-300"><p class="text-sm">Total Pengeluaran</p><p class="font-bold text-xl text-red-600" id="arExpense">Rp 0</p></div><div class="w-1/3 text-center"><p class="text-sm">Laba Bersih / Margin</p><p class="font-bold text-xl text-blue-600" id="arMargin">Rp 0</p></div></div>
             <h3 class="font-bold text-lg mb-2 border-b pb-1">Rincian Transaksi Terkait:</h3>
             <table class="w-full text-left mb-6 border-collapse text-sm"><thead><tr class="bg-gray-200"><th class="p-2 border">Tanggal</th><th class="p-2 border">Kategori</th><th class="p-2 border">Keterangan</th><th class="p-2 border text-right">Nominal</th></tr></thead><tbody id="arTableBody"></tbody></table>
@@ -419,12 +436,21 @@
             <div class="mt-8 text-center text-xs text-gray-400 italic border-t border-gray-200 pt-4 font-medium">dibuat dengan WedMate by Dzaza App</div>
         </div>
 
-        <div id="empReportTemplate" class="hidden-section bg-white text-black p-8" style="width: 800px;">
-            <div class="text-center border-b-2 border-gray-800 pb-4 mb-6">
-                <img id="erLogo" class="h-16 w-16 object-contain hidden-section mx-auto mb-2 bg-white rounded-md">
-                <h1 class="text-3xl font-bold text-blue-600 uppercase" id="erWoName">Brand WO</h1>
-                <h2 class="text-xl font-bold mt-2">LAPORAN RINCIAN GAJI TIM</h2><p class="text-sm text-gray-600" id="erTitle">Semua Anggota Tim</p>
+        <!-- EMPLOYEE REPORT TEMPLATE -->
+        <div id="empReportTemplate" class="hidden-section bg-white text-black p-8" style="width: 794px;">
+            <div class="flex items-center justify-between border-b-4 border-double border-gray-800 pb-4 mb-6">
+                <div class="w-1/4 flex justify-start">
+                    <img id="erLogo" class="max-h-20 max-w-full object-contain hidden-section bg-white rounded-md">
+                </div>
+                <div class="w-2/4 text-center px-4">
+                    <h1 class="text-3xl font-bold text-blue-600 uppercase" id="erWoName">Brand WO</h1>
+                    <p class="text-sm mt-1 text-gray-600 font-medium" id="erTitle">Semua Anggota Tim</p>
+                </div>
+                <div class="w-1/4 text-right">
+                    <h2 class="text-lg font-bold text-gray-800 leading-tight">LAPORAN<br>GAJI TIM</h2>
+                </div>
             </div>
+            
             <h3 class="font-bold text-red-600 mb-2 mt-4">Belum Digaji (Tunggakan)</h3>
             <table class="w-full text-left mb-6 border-collapse text-sm"><thead><tr class="bg-red-100"><th class="p-2 border border-gray-300">Nama Anggota</th><th class="p-2 border border-gray-300">Nama Proyek & Tgl</th><th class="p-2 border border-gray-300 text-right">Target Utang</th></tr></thead><tbody id="erUnpaidBody"></tbody></table>
             <div class="text-right text-sm font-bold mb-6 text-red-600">Total Tunggakan: <span id="erTotalUnpaid" class="text-lg">Rp 0</span></div>
@@ -546,11 +572,15 @@
         function updateHeaderLogo() {
             document.getElementById('headerBrandName').innerText = appData.profile.name;
             const hl = document.getElementById('headerLogo');
+            const defIcon = document.getElementById('headerDefaultIcon');
+            
             if(appData.profile.logo) {
                 hl.src = appData.profile.logo;
                 hl.classList.remove('hidden-section');
+                if(defIcon) defIcon.classList.add('hidden-section');
             } else {
                 hl.classList.add('hidden-section');
+                if(defIcon) defIcon.classList.remove('hidden-section');
             }
         }
 
@@ -1121,7 +1151,7 @@
 
             const el = document.getElementById(elementId);
             el.classList.remove('hidden-section');
-            const opt = { margin: 0.5, filename: filename, html2canvas: { scale: 2, useCORS: true }, jsPDF: { unit: 'in', format: 'letter', orientation: isLandscape ? 'landscape' : 'portrait' } };
+            const opt = { margin: 0.3, filename: filename, html2canvas: { scale: 2, useCORS: true }, jsPDF: { unit: 'in', format: 'a4', orientation: isLandscape ? 'landscape' : 'portrait' } };
             
             html2pdf().set(opt).from(el).outputPdf('blob').then(blob => {
                 const file = new File([blob], filename, { type: 'application/pdf' });
