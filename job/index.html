@@ -389,12 +389,22 @@
                         <div><label class="block text-xs font-medium mb-1">Telepon / WhatsApp</label><input type="text" id="setWoPhone" class="w-full p-2 border rounded-xl dark:bg-gray-800 outline-none text-sm" placeholder="Contoh: 08123456789"></div>
                         <div><label class="block text-xs font-medium mb-1">Email</label><input type="email" id="setWoEmail" class="w-full p-2 border rounded-xl dark:bg-gray-800 outline-none text-sm" placeholder="Contoh: info@wedmate.com"></div>
                         <div><label class="block text-xs font-medium mb-1">Instagram</label><input type="text" id="setWoIg" class="w-full p-2 border rounded-xl dark:bg-gray-800 outline-none text-sm" placeholder="Contoh: @wedmate_wo"></div>
+                        <div><label class="block text-xs font-medium mb-1">TikTok</label><input type="text" id="setWoTiktok" class="w-full p-2 border rounded-xl dark:bg-gray-800 outline-none text-sm" placeholder="Contoh: @wedmate_tiktok"></div>
+                        <div><label class="block text-xs font-medium mb-1">Facebook</label><input type="text" id="setWoFb" class="w-full p-2 border rounded-xl dark:bg-gray-800 outline-none text-sm" placeholder="Contoh: WedMate Official"></div>
+                        <div><label class="block text-xs font-medium mb-1">YouTube</label><input type="text" id="setWoYt" class="w-full p-2 border rounded-xl dark:bg-gray-800 outline-none text-sm" placeholder="Contoh: WedMate Channel"></div>
                         
                         <!-- Info Rekening -->
                         <h4 class="font-bold text-sm mb-2 mt-4 border-t dark:border-gray-700 pt-3 text-gray-800 dark:text-white">Rekening Pembayaran</h4>
                         <div><label class="block text-xs font-medium mb-1">Nama Bank</label><input type="text" id="setWoBankName" class="w-full p-2 border rounded-xl dark:bg-gray-800 outline-none text-sm" placeholder="Contoh: BCA"></div>
                         <div><label class="block text-xs font-medium mb-1">No. Rekening</label><input type="text" id="setWoBankAcc" class="w-full p-2 border rounded-xl dark:bg-gray-800 outline-none text-sm" placeholder="Contoh: 1234567890"></div>
                         <div><label class="block text-xs font-medium mb-1">Atas Nama</label><input type="text" id="setWoBankHolder" class="w-full p-2 border rounded-xl dark:bg-gray-800 outline-none text-sm" placeholder="Contoh: Budi Santoso"></div>
+
+                        <!-- Info Tanda Tangan -->
+                        <h4 class="font-bold text-sm mb-2 mt-4 border-t dark:border-gray-700 pt-3 text-gray-800 dark:text-white">Tanda Tangan Digital</h4>
+                        <div class="border rounded-xl p-2 dark:bg-gray-800 bg-white dark:border-gray-700 shadow-inner">
+                            <canvas id="signatureCanvas" width="350" height="150" class="w-full bg-white rounded-lg cursor-crosshair touch-none border border-dashed border-gray-300"></canvas>
+                            <button type="button" onclick="clearSignature()" class="w-full mt-2 bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-white py-2 rounded-lg text-xs font-bold active:scale-95"><i class="fas fa-eraser"></i> Bersihkan Coretan</button>
+                        </div>
 
                         <button type="submit" class="w-full bg-iosBlue text-white py-3 mt-4 rounded-xl text-sm font-bold shadow-md active:scale-95">Simpan Pengaturan</button>
                     </form>
@@ -426,7 +436,7 @@
         <!-- ================= HIDDEN TEMPLATES FOR EXPORT JPG ================= -->
         
         <!-- INVOICE TEMPLATE -->
-        <div id="invoiceTemplate" class="hidden-section bg-white text-black p-10 flex flex-col" style="width: 794px; min-height: 1123px; box-sizing: border-box;">
+        <div id="invoiceTemplate" class="hidden-section bg-white text-black p-10 flex flex-col relative" style="width: 794px; min-height: 1123px; box-sizing: border-box;">
             <div class="flex-grow">
                 <div class="flex items-center justify-between border-b-4 border-double border-gray-800 pb-4 mb-6">
                     <div class="w-1/4 flex justify-start">
@@ -458,25 +468,28 @@
                     </tr>
                 </table>
                 <div class="flex justify-end"><div class="w-1/2"><div class="flex justify-between py-2 border-b"><span class="font-bold">Total</span><span id="invTotal">Rp 0</span></div><div class="flex justify-between py-2 border-b"><span>DP Awal</span><span id="invDP">Rp 0</span></div><div class="flex justify-between py-2 bg-blue-50 text-blue-800 p-2 rounded mt-2"><span class="font-bold">Sisa Tagihan</span><span class="font-bold text-xl" id="invSisa">Rp 0</span></div></div></div>
-                
-                <!-- Info Bank Section -->
-                <div class="mt-8 bg-blue-50 p-4 rounded-xl border border-blue-100 hidden-section w-1/2 float-left" id="invBankInfo">
-                    <p class="font-bold text-sm text-blue-800 mb-2"><i class="fas fa-university mr-1"></i> Informasi Pembayaran / Transfer:</p>
-                    <p class="text-sm text-gray-800 mb-1">Bank: <span class="font-bold" id="invBankName">-</span></p>
-                    <p class="text-sm text-gray-800 mb-1">No. Rekening: <span class="font-bold" id="invBankAcc">-</span></p>
-                    <p class="text-sm text-gray-800">Atas Nama: <span class="font-bold" id="invBankHolder">-</span></p>
-                </div>
-                <div class="clear-both"></div>
             </div>
             
-            <div class="mt-auto pt-8 flex flex-col items-center">
-                <div class="w-full flex justify-end text-center text-sm text-gray-500 mb-8"><div class="w-48"><br><br><br><p class="font-bold border-t border-black pt-2 whitespace-normal break-words" id="invOwnerName">( Owner )</p></div></div>
-                <div class="w-full text-center text-xs text-gray-400 italic border-t border-gray-200 pt-3 pb-2 font-medium">dibuat dengan WedMate by Dzaza App</div>
+            <div class="mt-auto pt-8">
+                <div class="flex justify-between items-end mb-6">
+                    <div class="bg-blue-50 p-4 rounded-xl border border-blue-200 hidden-section w-1/2" id="invBankInfo">
+                        <p class="font-bold text-sm text-blue-800 mb-2"><i class="fas fa-university mr-1"></i> Informasi Pembayaran / Transfer:</p>
+                        <p class="text-sm text-gray-800 mb-1">Bank: <span class="font-bold" id="invBankName">-</span></p>
+                        <p class="text-sm text-gray-800 mb-1">No. Rekening: <span class="font-bold" id="invBankAcc">-</span></p>
+                        <p class="text-sm text-gray-800">Atas Nama: <span class="font-bold" id="invBankHolder">-</span></p>
+                    </div>
+                    <div class="w-48 text-center text-sm text-gray-800 flex flex-col items-center ml-auto">
+                        <img id="invSignature" class="h-20 w-auto object-contain hidden-section mb-1" src="">
+                        <div id="invSigSpacer" class="h-20 w-full mb-1"></div>
+                        <p class="font-bold border-t border-black pt-2 w-full whitespace-normal break-words" id="invOwnerName">( Owner )</p>
+                    </div>
+                </div>
+                <div class="w-full text-right text-xs text-gray-400 italic border-t border-gray-200 pt-3 pb-2 font-medium">©WedMate by Dzaza App</div>
             </div>
         </div>
 
         <!-- ANALYSIS REPORT TEMPLATE -->
-        <div id="analysisReportTemplate" class="hidden-section bg-white text-black p-10 flex flex-col" style="width: 794px; min-height: 1123px; box-sizing: border-box;">
+        <div id="analysisReportTemplate" class="hidden-section bg-white text-black p-10 flex flex-col relative" style="width: 794px; min-height: 1123px; box-sizing: border-box;">
             <div class="flex-grow">
                 <div class="flex items-center justify-between border-b-4 border-double border-gray-800 pb-4 mb-6">
                     <div class="w-1/4 flex justify-start">
@@ -518,14 +531,20 @@
                     </table>
                 </div>
             </div>
-            <div class="mt-auto pt-8 flex flex-col items-center">
-                <div class="w-full flex justify-end text-center text-sm text-gray-500 mb-8"><div class="w-48"><br><br><br><p class="font-bold border-t border-black pt-2 whitespace-normal break-words" id="arOwnerName">( Owner )</p></div></div>
-                <div class="w-full text-center text-xs text-gray-400 italic border-t border-gray-200 pt-3 pb-2 font-medium">dibuat dengan WedMate by Dzaza App</div>
+            <div class="mt-auto pt-8">
+                <div class="flex justify-end mb-6">
+                    <div class="w-48 text-center text-sm text-gray-800 flex flex-col items-center">
+                        <img id="arSignature" class="h-20 w-auto object-contain hidden-section mb-1" src="">
+                        <div id="arSigSpacer" class="h-20 w-full mb-1"></div>
+                        <p class="font-bold border-t border-black pt-2 w-full whitespace-normal break-words" id="arOwnerName">( Owner )</p>
+                    </div>
+                </div>
+                <div class="w-full text-right text-xs text-gray-400 italic border-t border-gray-200 pt-3 pb-2 font-medium">©WedMate by Dzaza App</div>
             </div>
         </div>
 
         <!-- EMPLOYEE REPORT TEMPLATE -->
-        <div id="empReportTemplate" class="hidden-section bg-white text-black p-10 flex flex-col" style="width: 794px; min-height: 1123px; box-sizing: border-box;">
+        <div id="empReportTemplate" class="hidden-section bg-white text-black p-10 flex flex-col relative" style="width: 794px; min-height: 1123px; box-sizing: border-box;">
             <div class="flex-grow">
                 <div class="flex items-center justify-between border-b-4 border-double border-gray-800 pb-4 mb-6">
                     <div class="w-1/4 flex justify-start">
@@ -567,9 +586,15 @@
                 </table>
                 <div class="text-right text-sm font-bold mt-2">Total Lunas: <span id="erTotalPaid" class="text-green-600 text-lg">Rp 0</span></div>
             </div>
-            <div class="mt-auto pt-8 flex flex-col items-center">
-                <div class="w-full flex justify-end text-center text-sm text-gray-500 mb-8"><div class="w-48"><br><br><br><p class="font-bold border-t border-black pt-2 whitespace-normal break-words" id="erOwnerName">( Owner )</p></div></div>
-                <div class="w-full text-center text-xs text-gray-400 italic border-t border-gray-200 pt-3 pb-2 font-medium">dibuat dengan WedMate by Dzaza App</div>
+            <div class="mt-auto pt-8">
+                <div class="flex justify-end mb-6">
+                    <div class="w-48 text-center text-sm text-gray-800 flex flex-col items-center">
+                        <img id="erSignature" class="h-20 w-auto object-contain hidden-section mb-1" src="">
+                        <div id="erSigSpacer" class="h-20 w-full mb-1"></div>
+                        <p class="font-bold border-t border-black pt-2 w-full whitespace-normal break-words" id="erOwnerName">( Owner )</p>
+                    </div>
+                </div>
+                <div class="w-full text-right text-xs text-gray-400 italic border-t border-gray-200 pt-3 pb-2 font-medium">©WedMate by Dzaza App</div>
             </div>
         </div>
 
@@ -579,7 +604,6 @@
     <script>
         // --- 1. SETUP DATA & HISTORY HELPERS ---
         let appData = JSON.parse(localStorage.getItem('wedMateData')) || {};
-        // Add new default fields if missing
         appData.profile = appData.profile || {};
         appData = { transactions: [], packages: [], agendas: [], employees: [], ...appData }; 
         
@@ -647,7 +671,7 @@
             if(pendingConfirmAction) { pendingConfirmAction(); closeConfirmModal(); }
         });
 
-        // --- 1.B LOGO UPLOAD & RESIZE HELPER ---
+        // --- 1.B LOGO & SIGNATURE UPLOAD HELPER ---
         function resizeImage(file, maxSize = 250) {
             return new Promise((resolve) => {
                 const reader = new FileReader();
@@ -701,12 +725,54 @@
         function getContactsHTML() {
             const p = appData.profile || {};
             let html = '';
-            if(p.phone) html += `<span class="flex items-center gap-1"><i class="fas fa-phone-alt"></i> ${p.phone}</span>`;
-            if(p.email) html += `<span class="flex items-center gap-1"><i class="fas fa-envelope"></i> ${p.email}</span>`;
-            if(p.ig) html += `<span class="flex items-center gap-1"><i class="fab fa-instagram"></i> ${p.ig}</span>`;
+            if(p.phone) html += `<span class="flex items-center gap-1"><i class="fas fa-phone-alt text-gray-400"></i> ${p.phone}</span>`;
+            if(p.email) html += `<span class="flex items-center gap-1"><i class="fas fa-envelope text-gray-400"></i> ${p.email}</span>`;
+            if(p.ig) html += `<span class="flex items-center gap-1"><i class="fab fa-instagram text-gray-400"></i> ${p.ig}</span>`;
+            if(p.tiktok) html += `<span class="flex items-center gap-1"><i class="fab fa-tiktok text-gray-400"></i> ${p.tiktok}</span>`;
+            if(p.facebook) html += `<span class="flex items-center gap-1"><i class="fab fa-facebook text-gray-400"></i> ${p.facebook}</span>`;
+            if(p.youtube) html += `<span class="flex items-center gap-1"><i class="fab fa-youtube text-gray-400"></i> ${p.youtube}</span>`;
             return html;
         }
 
+        // --- SIGNATURE CANVAS LOGIC ---
+        const sigCanvas = document.getElementById('signatureCanvas');
+        const sigCtx = sigCanvas.getContext('2d');
+        let isDrawingSig = false;
+
+        function getMousePos(canvas, evt) {
+            const rect = canvas.getBoundingClientRect();
+            return { x: (evt.clientX - rect.left) / (rect.right - rect.left) * canvas.width, y: (evt.clientY - rect.top) / (rect.bottom - rect.top) * canvas.height };
+        }
+        function getTouchPos(canvas, evt) {
+            const rect = canvas.getBoundingClientRect();
+            return { x: (evt.touches[0].clientX - rect.left) / (rect.right - rect.left) * canvas.width, y: (evt.touches[0].clientY - rect.top) / (rect.bottom - rect.top) * canvas.height };
+        }
+
+        sigCanvas.addEventListener('mousedown', (e) => { isDrawingSig = true; drawSig(e, getMousePos); });
+        sigCanvas.addEventListener('mouseup', () => { isDrawingSig = false; sigCtx.beginPath(); });
+        sigCanvas.addEventListener('mousemove', (e) => { if(isDrawingSig) drawSig(e, getMousePos); });
+
+        sigCanvas.addEventListener('touchstart', (e) => { e.preventDefault(); isDrawingSig = true; drawSig(e, getTouchPos); }, { passive: false });
+        sigCanvas.addEventListener('touchend', (e) => { e.preventDefault(); isDrawingSig = false; sigCtx.beginPath(); }, { passive: false });
+        sigCanvas.addEventListener('touchmove', (e) => { e.preventDefault(); if(isDrawingSig) drawSig(e, getTouchPos); }, { passive: false });
+
+        function drawSig(e, posFn) {
+            const pos = posFn(sigCanvas, e);
+            sigCtx.lineWidth = 3;
+            sigCtx.lineCap = 'round';
+            sigCtx.strokeStyle = '#000000'; // Tinta hitam
+            sigCtx.lineTo(pos.x, pos.y);
+            sigCtx.stroke();
+            sigCtx.beginPath();
+            sigCtx.moveTo(pos.x, pos.y);
+            sigCanvas.dataset.drawn = "true";
+        }
+
+        function clearSignature() {
+            sigCtx.clearRect(0, 0, sigCanvas.width, sigCanvas.height);
+            sigCanvas.dataset.drawn = "false";
+            sigCtx.beginPath();
+        }
 
         // --- 2. INIT & THEME ---
         document.addEventListener('DOMContentLoaded', () => {
@@ -736,7 +802,7 @@
                 address: document.getElementById('woAddress').value, 
                 desc: document.getElementById('woDesc').value,
                 logo: document.getElementById('woLogoPreview').dataset.b64 || null,
-                phone: '', email: '', ig: '', bankName: '', bankAcc: '', bankHolder: ''
+                phone: '', email: '', ig: '', tiktok: '', facebook: '', youtube: '', bankName: '', bankAcc: '', bankHolder: '', signature: null
             }; 
             saveData(); 
             document.getElementById('onboardingScreen').classList.add('hidden-section'); 
@@ -762,6 +828,7 @@
         }
         function closeDropdownMenu() { document.getElementById('headerDropdownMenu').classList.add('hidden-section'); }
         function openAboutModal() { document.getElementById('aboutModal').classList.remove('hidden-section'); }
+        
         function openSettings() { 
             document.getElementById('settingsModal').classList.remove('hidden-section'); 
             document.getElementById('setWoName').value = appData.profile.name || ''; 
@@ -771,6 +838,9 @@
             document.getElementById('setWoPhone').value = appData.profile.phone || ''; 
             document.getElementById('setWoEmail').value = appData.profile.email || ''; 
             document.getElementById('setWoIg').value = appData.profile.ig || ''; 
+            document.getElementById('setWoTiktok').value = appData.profile.tiktok || ''; 
+            document.getElementById('setWoFb').value = appData.profile.facebook || ''; 
+            document.getElementById('setWoYt').value = appData.profile.youtube || ''; 
             document.getElementById('setWoBankName').value = appData.profile.bankName || ''; 
             document.getElementById('setWoBankAcc').value = appData.profile.bankAcc || ''; 
             document.getElementById('setWoBankHolder').value = appData.profile.bankHolder || ''; 
@@ -783,7 +853,18 @@
             } else {
                 logoPreview.src = ''; logoPreview.dataset.b64 = ''; logoPreview.classList.add('hidden-section');
             }
+
+            clearSignature();
+            if(appData.profile.signature) {
+                const img = new Image();
+                img.onload = () => {
+                    sigCtx.drawImage(img, 0, 0, sigCanvas.width, sigCanvas.height);
+                    sigCanvas.dataset.drawn = "true";
+                };
+                img.src = appData.profile.signature;
+            }
         }
+        
         document.getElementById('formEditProfile').addEventListener('submit', (e) => { 
             e.preventDefault(); 
             saveStateToHistory();
@@ -795,15 +876,25 @@
             appData.profile.phone = document.getElementById('setWoPhone').value; 
             appData.profile.email = document.getElementById('setWoEmail').value; 
             appData.profile.ig = document.getElementById('setWoIg').value; 
+            appData.profile.tiktok = document.getElementById('setWoTiktok').value; 
+            appData.profile.facebook = document.getElementById('setWoFb').value; 
+            appData.profile.youtube = document.getElementById('setWoYt').value; 
             appData.profile.bankName = document.getElementById('setWoBankName').value; 
             appData.profile.bankAcc = document.getElementById('setWoBankAcc').value; 
             appData.profile.bankHolder = document.getElementById('setWoBankHolder').value; 
+            
+            if (sigCanvas.dataset.drawn === "true") {
+                appData.profile.signature = sigCanvas.toDataURL("image/png");
+            } else {
+                appData.profile.signature = null;
+            }
 
             saveData(); 
             updateHeaderLogo();
             document.getElementById('settingsModal').classList.add('hidden-section');
             showToast("Profil dan Pengaturan berhasil disimpan!"); 
         });
+        
         function exportJSON() { const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appData)); const dlAnchorElem = document.createElement('a'); dlAnchorElem.setAttribute("href", dataStr); dlAnchorElem.setAttribute("download", `WedMate_Backup_${new Date().toISOString().slice(0,10)}.json`); dlAnchorElem.click(); }
         function importJSON(event) { const file = event.target.files[0]; if(!file) return; const reader = new FileReader(); reader.onload = function(e) { try { saveStateToHistory(); appData = JSON.parse(e.target.result); appData.employees = appData.employees || []; saveData(); showToast("Data berhasil diimpor!"); setTimeout(()=>location.reload(), 1500); } catch(err) { alert("Format JSON tidak valid!"); } }; reader.readAsText(file); }
         document.getElementById('searchInput').addEventListener('input', (e) => { const kw = e.target.value.toLowerCase(); const res = document.getElementById('searchResults'); if(kw.length < 2) { res.innerHTML = ''; return; } let html = ''; appData.agendas.forEach(a => { if(a.client.toLowerCase().includes(kw) || a.address.toLowerCase().includes(kw)) html += `<li onclick="switchTab('agenda'); document.getElementById('searchModal').classList.add('hidden-section');" class="bg-white dark:bg-gray-800 p-3 rounded-xl shadow cursor-pointer border-l-4 border-blue-500"><p class="text-xs text-blue-500 font-bold mb-1">Agenda Proyek</p><p class="font-bold">${a.client}</p><p class="text-xs text-gray-500">${formatTgl(a.date, a.endDate)}</p></li>`; }); appData.transactions.forEach(t => { if(t.category.toLowerCase().includes(kw) || (t.notes && t.notes.toLowerCase().includes(kw))) html += `<li onclick="switchTab('transactions'); document.getElementById('searchModal').classList.add('hidden-section');" class="bg-white dark:bg-gray-800 p-3 rounded-xl shadow cursor-pointer border-l-4 ${t.type==='income'?'border-green-500':'border-red-500'}"><p class="text-xs font-bold mb-1 ${t.type==='income'?'text-green-500':'text-red-500'}">Transaksi ${t.type==='income'?'Masuk':'Keluar'}</p><p class="font-bold">${t.category} - ${formatRp(t.amount)}</p><p class="text-xs text-gray-500">${t.notes || ''}</p></li>`; }); res.innerHTML = html || '<li class="text-center text-gray-500 p-4">Tidak ada hasil pencarian.</li>'; });
@@ -1380,19 +1471,27 @@
 
         // --- 9. SHARE & JPG GENERATORS ---
         function exportAsJPG(elementId, filename, action = 'download') {
-            const invLogo = document.getElementById('invLogo');
-            const arLogo = document.getElementById('arLogo');
-            const erLogo = document.getElementById('erLogo');
-            
-            if(appData.profile.logo) {
-                if(invLogo) { invLogo.src = appData.profile.logo; invLogo.classList.remove('hidden-section'); }
-                if(arLogo) { arLogo.src = appData.profile.logo; arLogo.classList.remove('hidden-section'); }
-                if(erLogo) { erLogo.src = appData.profile.logo; erLogo.classList.remove('hidden-section'); }
-            } else {
-                if(invLogo) invLogo.classList.add('hidden-section');
-                if(arLogo) arLogo.classList.add('hidden-section');
-                if(erLogo) erLogo.classList.add('hidden-section');
-            }
+            const prefixes = ['inv', 'ar', 'er'];
+            prefixes.forEach(prefix => {
+                const logo = document.getElementById(`${prefix}Logo`);
+                if(logo) {
+                    if(appData.profile.logo) { logo.src = appData.profile.logo; logo.classList.remove('hidden-section'); } 
+                    else { logo.classList.add('hidden-section'); }
+                }
+                
+                const sigImg = document.getElementById(`${prefix}Signature`);
+                const sigSpacer = document.getElementById(`${prefix}SigSpacer`);
+                if(sigImg && sigSpacer) {
+                    if(appData.profile.signature) {
+                        sigImg.src = appData.profile.signature;
+                        sigImg.classList.remove('hidden-section');
+                        sigSpacer.classList.add('hidden-section');
+                    } else {
+                        sigImg.classList.add('hidden-section');
+                        sigSpacer.classList.remove('hidden-section');
+                    }
+                }
+            });
 
             const originalEl = document.getElementById(elementId);
             const cloneEl = originalEl.cloneNode(true);
