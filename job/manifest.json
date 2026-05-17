@@ -2,7 +2,7 @@
   "name": "WedMate - WO Manager",
   "short_name": "WedMate",
   "description": "Atur keuangan dan Jadwal Kerjamu disini gratis",
-  "start_url": "/",
+  "start_url": "./",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#000000",
