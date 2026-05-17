@@ -346,11 +346,23 @@
                                 <img id="setWoLogoPreview" class="hidden-section h-10 w-10 object-contain rounded-md border border-gray-200 dark:bg-white">
                             </div>
                         </div>
-                        <input type="text" id="setWoName" required class="w-full p-2 border rounded-xl dark:bg-gray-800 outline-none text-sm" placeholder="Nama WO">
-                        <input type="text" id="setWoOwner" required class="w-full p-2 border rounded-xl dark:bg-gray-800 outline-none text-sm" placeholder="Nama Owner">
-                        <textarea id="setWoAddress" required class="w-full p-2 border rounded-xl dark:bg-gray-800 outline-none text-sm" placeholder="Alamat"></textarea>
-                        <input type="text" id="setWoDesc" class="w-full p-2 border rounded-xl dark:bg-gray-800 outline-none text-sm" placeholder="Deskripsi">
-                        <button type="submit" class="w-full bg-iosBlue text-white py-2 rounded-xl text-sm font-bold shadow-md active:scale-95">Simpan Profil</button>
+                        <div>
+                            <label class="block text-sm font-medium mb-1">Nama Brand WO *</label>
+                            <input type="text" id="setWoName" required class="w-full p-2 border rounded-xl dark:bg-gray-800 outline-none text-sm" placeholder="Contoh: WedMate Organizer">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-1">Nama Owner *</label>
+                            <input type="text" id="setWoOwner" required class="w-full p-2 border rounded-xl dark:bg-gray-800 outline-none text-sm" placeholder="Contoh: Budi Santoso">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-1">Alamat Kantor *</label>
+                            <textarea id="setWoAddress" required class="w-full p-2 border rounded-xl dark:bg-gray-800 outline-none text-sm" placeholder="Alamat lengkap kantor..."></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-1">Deskripsi Singkat</label>
+                            <input type="text" id="setWoDesc" class="w-full p-2 border rounded-xl dark:bg-gray-800 outline-none text-sm" placeholder="Motto atau deskripsi singkat...">
+                        </div>
+                        <button type="submit" class="w-full bg-iosBlue text-white py-2 mt-2 rounded-xl text-sm font-bold shadow-md active:scale-95">Simpan Profil</button>
                     </form>
                 </div>
                 <div class="border-t dark:border-gray-700 pt-4"><h4 class="font-bold text-sm mb-3">Backup Data</h4><div class="flex gap-2"><button onclick="exportJSON()" class="w-1/2 bg-green-100 text-green-700 py-2 rounded-xl text-xs font-bold active:scale-95"><i class="fas fa-download mr-1"></i> Ekspor JSON</button><button onclick="document.getElementById('importFile').click()" class="w-1/2 bg-orange-100 text-orange-700 py-2 rounded-xl text-xs font-bold active:scale-95"><i class="fas fa-upload mr-1"></i> Impor JSON</button><input type="file" id="importFile" accept=".json" class="hidden-section" onchange="importJSON(event)"></div></div>
