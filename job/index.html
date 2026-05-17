@@ -1294,7 +1294,7 @@
 
         // --- 9. SHARE & PDF GENERATORS ---
         function downloadOrSharePDF(elementId, filename, isLandscape = false) {
-            // Update Logo for PDF before exporting
+            // Update Logo untuk PDF
             const invLogo = document.getElementById('invLogo');
             const arLogo = document.getElementById('arLogo');
             const erLogo = document.getElementById('erLogo');
@@ -1309,40 +1309,58 @@
                 if(erLogo) erLogo.classList.add('hidden-section');
             }
 
-            const el = document.getElementById(elementId);
+            // 1. Ambil elemen template asli
+            const originalEl = document.getElementById(elementId);
             
-            el.style.position = 'absolute';
-            el.style.top = '0px';
-            el.style.left = '0px';
-            el.style.zIndex = '-9999';
-            el.classList.remove('hidden-section');
+            // 2. Gandakan (Clone) elemen agar tidak merusak UI yang asli
+            const cloneEl = originalEl.cloneNode(true);
+            cloneEl.classList.remove('hidden-section'); 
+            cloneEl.style.display = 'block'; 
             
+            // 3. Buat wrapper transparan di posisi atas agar ditangkap sempurna oleh canvas
+            const wrapper = document.createElement('div');
+            wrapper.style.position = 'fixed'; 
+            wrapper.style.top = '0px';
+            wrapper.style.left = '0px';
+            wrapper.style.zIndex = '-1000'; 
+            wrapper.style.pointerEvents = 'none'; 
+            
+            // Masukkan gandaan ke wrapper, lalu ke body
+            wrapper.appendChild(cloneEl);
+            document.body.appendChild(wrapper);
+
+            // 4. Siapkan Opsi PDF
+            const opt = { 
+                margin: 0.4, 
+                filename: filename, 
+                image: { type: 'jpeg', quality: 0.98 }, 
+                html2canvas: { scale: 2, useCORS: true }, 
+                jsPDF: { unit: 'in', format: 'a4', orientation: isLandscape ? 'landscape' : 'portrait' } 
+            };
+            
+            // Beri jeda kecil agar DOM selesai merender cloneEl
             setTimeout(() => {
-                const opt = { 
-                    margin: 0.4, 
-                    filename: filename, 
-                    image: { type: 'jpeg', quality: 0.98 }, 
-                    html2canvas: { scale: 2, useCORS: true, scrollY: 0, scrollX: 0 }, 
-                    jsPDF: { unit: 'in', format: 'a4', orientation: isLandscape ? 'landscape' : 'portrait' } 
-                };
-                
-                html2pdf().set(opt).from(el).outputPdf('blob').then(blob => {
+                html2pdf().set(opt).from(cloneEl).outputPdf('blob').then(blob => {
                     const file = new File([blob], filename, { type: 'application/pdf' });
+                    
                     if (navigator.canShare && navigator.canShare({ files: [file] })) {
                         navigator.share({ title: filename, files: [file] }).catch(err => { forceDownload(blob, filename); });
                     } else {
                         forceDownload(blob, filename);
                     }
                     
-                    el.classList.add('hidden-section');
-                    el.style.position = 'static';
-                    el.style.top = 'auto';
-                    el.style.left = 'auto';
-                    el.style.zIndex = 'auto';
+                    // 5. Cleanup: Hapus wrapper dan clone dari background (Sangat Penting)
+                    document.body.removeChild(wrapper);
                 });
-            }, 150); 
+            }, 100);
         }
-        function forceDownload(blob, filename) { const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = filename; a.click(); URL.revokeObjectURL(url); }
+
+        function forceDownload(blob, filename) { 
+            const url = URL.createObjectURL(blob); 
+            const a = document.createElement('a'); 
+            a.href = url; a.download = filename; a.click(); 
+            URL.revokeObjectURL(url); 
+        }
 
         function generateAnalysisPDF() {
             let title = "", inc = 0, exp = 0, filterTrans = [];
