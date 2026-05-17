@@ -99,8 +99,8 @@
                         <div class="grid grid-cols-2 gap-4"><div><label class="block text-sm mb-1 font-medium">DP Awal (Rp)</label><input type="number" id="agendaDP" required class="w-full p-3 rounded-xl border dark:bg-gray-800 outline-none"></div><div><label class="block text-sm mb-1 font-medium">Sisa Tagihan</label><input type="text" id="agendaSisa" readonly class="w-full p-3 rounded-xl bg-gray-100 dark:bg-gray-700 outline-none cursor-not-allowed"></div></div>
                         
                         <div class="border-t dark:border-gray-700 pt-3 mt-3">
-                            <label class="block text-sm mb-2 font-medium text-iosBlue"><i class="fas fa-users"></i> Tim yang Bertugas</label>
-                            <div id="agendaEmployeeCheckboxes" class="grid grid-cols-2 gap-3 p-3 bg-white/50 dark:bg-gray-800/50 border dark:border-gray-700 rounded-xl max-h-32 overflow-y-auto"></div>
+                            <label class="block text-sm mb-2 font-medium text-iosBlue"><i class="fas fa-users"></i> Tim & Alokasi Gaji</label>
+                            <div id="agendaEmployeeCheckboxes" class="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3 bg-white/50 dark:bg-gray-800/50 border dark:border-gray-700 rounded-xl max-h-48 overflow-y-auto"></div>
                         </div>
 
                         <div class="flex gap-2"><button type="submit" id="btnSubmitAgenda" class="w-full bg-iosBlue text-white font-bold py-3 rounded-xl shadow-md">Simpan Agenda</button><button type="button" id="btnCancelEditAgenda" class="hidden-section w-1/3 bg-gray-300 dark:bg-gray-700 font-bold py-3 rounded-xl">Batal</button></div>
@@ -113,24 +113,21 @@
             <div id="view-employee" class="view-section hidden-section">
                 <h2 class="text-2xl font-bold mb-4">Manajemen Tim & Gaji</h2>
                 
-                <!-- Master Tim -->
                 <div class="glass p-6 rounded-3xl shadow-lg mb-6">
                     <h3 class="text-lg font-bold text-iosBlue mb-3">Master Tim</h3>
                     <form id="formEmployee" class="flex gap-3 mb-4">
-                        <input type="text" id="empName" required placeholder="Nama Anggota Tim..." class="w-full p-3 border rounded-xl dark:bg-gray-800 outline-none">
+                        <input type="text" id="empName" required placeholder="Nama Anggota Tim Baru..." class="w-full p-3 border rounded-xl dark:bg-gray-800 outline-none">
                         <button type="submit" class="bg-gray-800 text-white dark:bg-gray-200 dark:text-black px-6 rounded-xl font-bold">Tambah</button>
                     </form>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-2" id="empManageList"></div>
                 </div>
 
-                <!-- Laporan Gaji & Filter -->
                 <div class="glass p-6 rounded-3xl shadow-lg mb-6">
                     <div class="flex justify-between items-center border-b dark:border-gray-700 pb-3 mb-4">
                         <h3 class="text-lg font-bold text-iosBlue">Status Penggajian</h3>
-                        <button onclick="generateEmpReportPDF()" class="text-sm bg-blue-100 text-blue-700 px-3 py-2 rounded-lg font-bold hover:bg-blue-200 shadow-sm"><i class="fas fa-file-pdf mr-1"></i> Cetak Laporan</button>
+                        <button onclick="generateEmpReportPDF()" class="text-sm bg-blue-100 text-blue-700 px-3 py-2 rounded-lg font-bold hover:bg-blue-200 shadow-sm"><i class="fas fa-share-nodes mr-1"></i> Bagikan / Unduh</button>
                     </div>
 
-                    <!-- Filter Options -->
                     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 mb-5 p-3 border dark:border-gray-700 rounded-xl bg-gray-50/50 dark:bg-gray-800/50">
                         <div>
                             <label class="block text-xs mb-1 font-medium">Filter Anggota</label>
@@ -159,20 +156,18 @@
                         </div>
                     </div>
 
-                    <!-- Tabel Belum Digaji -->
-                    <h4 class="font-bold text-sm mb-2 text-red-500"><i class="fas fa-exclamation-circle"></i> Belum Digaji (Tunggakan)</h4>
+                    <h4 class="font-bold text-sm mb-2 text-red-500"><i class="fas fa-exclamation-circle"></i> Belum Lunas (Tunggakan Gaji)</h4>
                     <div class="overflow-x-auto mb-6">
                         <table class="w-full text-left text-sm border-collapse bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm">
-                            <thead><tr class="bg-red-50 dark:bg-red-900/20 text-gray-700 dark:text-gray-200"><th class="p-3">Nama Anggota</th><th class="p-3">Nama Proyek & Tanggal</th><th class="p-3 text-right">Aksi</th></tr></thead>
+                            <thead><tr class="bg-red-50 dark:bg-red-900/20 text-gray-700 dark:text-gray-200"><th class="p-3">Nama Anggota</th><th class="p-3">Proyek & Tanggal</th><th class="p-3 text-right">Utang & Aksi</th></tr></thead>
                             <tbody id="unpaidTableBody"></tbody>
                         </table>
                     </div>
 
-                    <!-- Tabel Sudah Digaji -->
                     <h4 class="font-bold text-sm mb-2 text-green-600"><i class="fas fa-check-circle"></i> Sudah Digaji (Lunas)</h4>
                     <div class="overflow-x-auto mb-2">
                         <table class="w-full text-left text-sm border-collapse bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm">
-                            <thead><tr class="bg-green-50 dark:bg-green-900/20 text-gray-700 dark:text-gray-200"><th class="p-3">Nama Anggota</th><th class="p-3">Nama Proyek & Tanggal</th><th class="p-3 text-right">Nominal Dibayar</th></tr></thead>
+                            <thead><tr class="bg-green-50 dark:bg-green-900/20 text-gray-700 dark:text-gray-200"><th class="p-3">Nama Anggota</th><th class="p-3">Proyek & Tanggal</th><th class="p-3 text-right">Nominal Dibayar</th></tr></thead>
                             <tbody id="paidTableBody"></tbody>
                         </table>
                     </div>
@@ -191,7 +186,7 @@
                 <div id="analysisResult" class="glass p-6 rounded-3xl shadow-lg mb-8">
                     <div class="flex justify-between items-center border-b dark:border-gray-700 pb-2 mb-4">
                         <h3 id="analysisClientName" class="text-xl font-bold text-iosBlue">Keseluruhan (Tahun Ini)</h3>
-                        <button onclick="generateAnalysisPDF()" class="text-sm bg-blue-100 text-blue-700 px-3 py-1 rounded-lg font-bold hover:bg-blue-200"><i class="fas fa-file-pdf mr-1"></i> Cetak PDF</button>
+                        <button onclick="generateAnalysisPDF()" class="text-sm bg-blue-100 text-blue-700 px-3 py-1 rounded-lg font-bold hover:bg-blue-200"><i class="fas fa-share-nodes mr-1"></i> Bagikan Laporan</button>
                     </div>
                     <div class="grid grid-cols-2 gap-4 mb-4 text-center">
                         <div class="bg-green-100 dark:bg-green-900/30 p-3 rounded-xl border border-green-200"><p class="text-xs mb-1">Total Pemasukan</p><p id="analysisIncome" class="font-bold text-green-600">Rp 0</p></div>
@@ -200,7 +195,6 @@
                     <div class="bg-white dark:bg-gray-800 p-4 rounded-xl mb-4 flex justify-center shadow-sm"><div style="height: 180px;"><canvas id="analysisChartCanvas"></canvas></div></div>
                     <div class="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-xl text-center mb-6 border border-blue-100 dark:border-blue-800"><p class="text-sm mb-1 font-medium">Margin / Laba Bersih</p><p id="analysisMargin" class="text-2xl font-bold text-iosBlue">Rp 0</p></div>
                     
-                    <!-- TABEL STATUS GAJI TIM PROYEK -->
                     <div id="analysisJobTeamContainer" class="hidden-section border-t dark:border-gray-700 pt-4 mb-6">
                         <h4 class="font-bold text-sm mb-3 text-iosBlue"><i class="fas fa-users-cog"></i> Status Pembayaran Tim</h4>
                         <div class="overflow-x-auto">
@@ -229,7 +223,6 @@
             <i class="fas fa-plus"></i>
         </button>
 
-        <!-- Nav: Removed Text, Icons Only, Center Aligned -->
         <nav class="glass fixed bottom-6 left-1/2 transform -translate-x-1/2 w-[92%] max-w-md px-4 py-4 flex justify-between items-center rounded-full shadow-2xl z-40">
             <button class="nav-btn flex flex-col items-center justify-center text-iosBlue w-1/5" data-target="dashboard"><i class="fas fa-home text-2xl"></i></button>
             <button class="nav-btn flex flex-col items-center justify-center text-gray-400 hover:text-iosBlue w-1/5" data-target="transactions"><i class="fas fa-wallet text-2xl"></i></button>
@@ -238,29 +231,26 @@
             <button class="nav-btn flex flex-col items-center justify-center text-gray-400 hover:text-iosBlue w-1/5" data-target="analysis"><i class="fas fa-chart-pie text-2xl"></i></button>
         </nav>
 
-        <!-- MODALS -->
-        <!-- Pengaturan -->
+        <!-- MODAL PENGATURAN -->
         <div id="settingsModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[60] flex items-center justify-center hidden-section p-4">
             <div class="glass w-full max-w-md rounded-3xl p-6 shadow-2xl max-h-[90vh] overflow-y-auto">
                 <div class="flex justify-between items-center border-b dark:border-gray-700 pb-3 mb-4"><h3 class="text-xl font-bold text-iosBlue"><i class="fas fa-cog mr-2"></i>Pengaturan</h3><button onclick="document.getElementById('settingsModal').classList.add('hidden-section');" class="text-gray-400 hover:text-red-500"><i class="fas fa-times text-xl"></i></button></div>
                 <div class="mb-6"><h4 class="font-bold text-sm mb-3">Edit Profil</h4><form id="formEditProfile" class="space-y-3"><input type="text" id="setWoName" required class="w-full p-2 border rounded-xl dark:bg-gray-800 outline-none text-sm" placeholder="Nama WO"><input type="text" id="setWoOwner" required class="w-full p-2 border rounded-xl dark:bg-gray-800 outline-none text-sm" placeholder="Nama Owner"><textarea id="setWoAddress" required class="w-full p-2 border rounded-xl dark:bg-gray-800 outline-none text-sm" placeholder="Alamat"></textarea><input type="text" id="setWoDesc" class="w-full p-2 border rounded-xl dark:bg-gray-800 outline-none text-sm" placeholder="Deskripsi"><button type="submit" class="w-full bg-iosBlue text-white py-2 rounded-xl text-sm font-bold shadow-md">Simpan Profil</button></form></div>
-                <div class="border-t dark:border-gray-700 pt-4"><h4 class="font-bold text-sm mb-3">Backup Data</h4><div class="flex gap-2"><button onclick="exportJSON()" class="w-1/2 bg-green-100 text-green-700 py-2 rounded-xl text-xs font-bold hover:bg-green-200"><i class="fas fa-download mr-1"></i> Ekspor</button><button onclick="document.getElementById('importFile').click()" class="w-1/2 bg-orange-100 text-orange-700 py-2 rounded-xl text-xs font-bold hover:bg-orange-200"><i class="fas fa-upload mr-1"></i> Impor</button><input type="file" id="importFile" accept=".json" class="hidden-section" onchange="importJSON(event)"></div></div>
+                <div class="border-t dark:border-gray-700 pt-4"><h4 class="font-bold text-sm mb-3">Backup Data</h4><div class="flex gap-2"><button onclick="exportJSON()" class="w-1/2 bg-green-100 text-green-700 py-2 rounded-xl text-xs font-bold hover:bg-green-200"><i class="fas fa-download mr-1"></i> Ekspor JSON</button><button onclick="document.getElementById('importFile').click()" class="w-1/2 bg-orange-100 text-orange-700 py-2 rounded-xl text-xs font-bold hover:bg-orange-200"><i class="fas fa-upload mr-1"></i> Impor JSON</button><input type="file" id="importFile" accept=".json" class="hidden-section" onchange="importJSON(event)"></div></div>
             </div>
         </div>
 
-        <!-- Search & FAB -->
-        <div id="searchModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[70] p-4 hidden-section flex flex-col items-center pt-20"><div class="w-full max-w-md relative"><input type="text" id="searchInput" placeholder="Cari proyek, transaksi..." class="w-full p-4 pl-12 rounded-2xl shadow-2xl outline-none text-lg"><i class="fas fa-search absolute left-4 top-5 text-gray-400 text-xl"></i><button onclick="document.getElementById('searchModal').classList.add('hidden-section'); document.getElementById('searchInput').value=''; document.getElementById('searchResults').innerHTML='';" class="absolute right-4 top-4 text-gray-400 hover:text-red-500 text-2xl"><i class="fas fa-times-circle"></i></button><ul id="searchResults" class="mt-4 space-y-2 max-h-[60vh] overflow-y-auto w-full"></ul></div></div>
+        <!-- SEARCH, FAB, PACKAGE MODALS -->
+        <div id="searchModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[70] p-4 hidden-section flex flex-col items-center pt-20"><div class="w-full max-w-md relative"><input type="text" id="searchInput" placeholder="Cari klien, proyek, transaksi..." class="w-full p-4 pl-12 rounded-2xl shadow-2xl outline-none text-lg"><i class="fas fa-search absolute left-4 top-5 text-gray-400 text-xl"></i><button onclick="document.getElementById('searchModal').classList.add('hidden-section'); document.getElementById('searchInput').value=''; document.getElementById('searchResults').innerHTML='';" class="absolute right-4 top-4 text-gray-400 hover:text-red-500 text-2xl"><i class="fas fa-times-circle"></i></button><ul id="searchResults" class="mt-4 space-y-2 max-h-[60vh] overflow-y-auto w-full"></ul></div></div>
         <div id="fabModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[60] flex items-end justify-center hidden-section"><div class="glass w-full max-w-md rounded-3xl p-6 transform transition-transform"><h3 class="text-xl font-bold mb-4 text-center">Pilih Aksi</h3><div class="space-y-3"><button class="w-full bg-white dark:bg-gray-800 p-4 rounded-2xl flex items-center shadow hover:bg-gray-50 dark:hover:bg-gray-700" onclick="switchTab('transactions'); closeFabModal(); resetTransForm();"><div class="w-10 h-10 rounded-full bg-green-100 text-green-600 flex items-center justify-center mr-4"><i class="fas fa-money-bill-wave"></i></div><div><p class="font-bold">Catat Keuangan</p></div></button><button class="w-full bg-white dark:bg-gray-800 p-4 rounded-2xl flex items-center shadow hover:bg-gray-50 dark:hover:bg-gray-700" onclick="switchTab('agenda'); closeFabModal(); resetAgendaForm();"><div class="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center mr-4"><i class="fas fa-calendar-plus"></i></div><div><p class="font-bold">Agenda Baru</p></div></button></div><button class="w-full mt-4 p-3 rounded-xl bg-gray-200 dark:bg-gray-700 font-bold" onclick="closeFabModal()">Batal</button></div></div>
-        
-        <!-- Package / Daftar Paket Modal -->
-        <div id="packageModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[60] flex items-center justify-center hidden-section p-4"><div class="glass w-full max-w-md rounded-3xl p-6 shadow-2xl max-h-[90vh] overflow-y-auto"><div class="flex justify-between items-center border-b dark:border-gray-700 pb-3 mb-4"><h3 class="text-xl font-bold text-iosBlue">Daftar Paket</h3><button onclick="document.getElementById('packageModal').classList.add('hidden-section'); resetPkgForm();" class="text-gray-400 hover:text-red-500"><i class="fas fa-times text-xl"></i></button></div><form id="formPackage" class="mb-6 space-y-3 bg-white/50 dark:bg-gray-800/50 p-4 rounded-2xl border dark:border-gray-700"><input type="text" id="pkgName" placeholder="Nama Paket" required class="w-full p-2.5 border rounded-xl dark:bg-gray-900 outline-none text-sm"><input type="number" id="pkgPrice" placeholder="Harga (Rp)" required min="1" class="w-full p-2.5 border rounded-xl dark:bg-gray-900 outline-none text-sm"><div class="border-t border-gray-300 dark:border-gray-600 pt-3 mt-3"><div class="flex justify-between items-center mb-2"><label class="text-xs font-bold text-iosBlue">Rincian Paket</label><button type="button" onclick="addDetailInput()" class="text-xs bg-blue-100 text-iosBlue px-2 py-1 rounded-lg font-bold">+ Item</button></div><div id="pkgDetailsContainer" class="space-y-2"></div></div><div class="flex gap-2"><button type="submit" id="btnSubmitPkg" class="w-full bg-gray-800 text-white dark:bg-gray-200 dark:text-black py-2.5 rounded-xl text-sm font-bold shadow">Simpan Paket</button><button type="button" id="btnCancelEditPkg" class="hidden-section bg-gray-300 dark:bg-gray-600 text-gray-800 dark:text-white px-4 py-2.5 rounded-xl text-sm font-bold" onclick="resetPkgForm()"><i class="fas fa-times"></i></button></div></form><ul id="packageList" class="space-y-2 text-sm"></ul></div></div>
+        <div id="packageModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[60] flex items-center justify-center hidden-section p-4"><div class="glass w-full max-w-md rounded-3xl p-6 shadow-2xl max-h-[90vh] overflow-y-auto"><div class="flex justify-between items-center border-b dark:border-gray-700 pb-3 mb-4"><h3 class="text-xl font-bold text-iosBlue">Kelola Daftar Paket</h3><button onclick="document.getElementById('packageModal').classList.add('hidden-section'); resetPkgForm();" class="text-gray-400 hover:text-red-500"><i class="fas fa-times text-xl"></i></button></div><form id="formPackage" class="mb-6 space-y-3 bg-white/50 dark:bg-gray-800/50 p-4 rounded-2xl border dark:border-gray-700"><input type="text" id="pkgName" placeholder="Nama Paket (Cth: Gold)" required class="w-full p-2.5 border rounded-xl dark:bg-gray-900 outline-none text-sm"><input type="number" id="pkgPrice" placeholder="Harga (Rp)" required min="1" class="w-full p-2.5 border rounded-xl dark:bg-gray-900 outline-none text-sm"><div class="border-t border-gray-300 dark:border-gray-600 pt-3 mt-3"><div class="flex justify-between items-center mb-2"><label class="text-xs font-bold text-iosBlue">Rincian Paket</label><button type="button" onclick="addDetailInput()" class="text-xs bg-blue-100 text-iosBlue px-2 py-1 rounded-lg font-bold">+ Item</button></div><div id="pkgDetailsContainer" class="space-y-2"></div></div><div class="flex gap-2"><button type="submit" id="btnSubmitPkg" class="w-full bg-gray-800 text-white dark:bg-gray-200 dark:text-black py-2.5 rounded-xl text-sm font-bold shadow">Simpan Paket</button><button type="button" id="btnCancelEditPkg" class="hidden-section bg-gray-300 dark:bg-gray-600 text-gray-800 dark:text-white px-4 py-2.5 rounded-xl text-sm font-bold" onclick="resetPkgForm()"><i class="fas fa-times"></i></button></div></form><ul id="packageList" class="space-y-2 text-sm"></ul></div></div>
 
         <!-- ================= HIDDEN TEMPLATES FOR PDF ================= -->
         <div id="invoiceTemplate" class="hidden-section bg-white text-black p-8" style="width: 800px;">
             <div class="flex justify-between items-center border-b-2 border-gray-800 pb-4 mb-6"><div><h1 class="text-4xl font-bold text-blue-600" id="invWoName">Brand WO</h1><p class="text-sm" id="invWoAddress">Alamat</p></div><div class="text-right"><h2 class="text-2xl font-bold">INVOICE</h2><p class="text-sm" id="invDate">Tanggal: -</p></div></div>
             <div class="mb-6"><p class="text-gray-600 text-sm">Tagihan Kepada:</p><h3 class="text-xl font-bold" id="invClient">Klien</h3></div>
             <table class="w-full text-left mb-8 border-collapse"><tr class="bg-gray-200"><th class="p-3 border">Deskripsi Layanan</th><th class="p-3 border text-right">Harga</th></tr><tr><td class="p-3 border align-top"><span id="invPackageName" class="font-bold text-lg block mb-2">Paket</span><ul id="invPackageDetails" class="list-disc ml-5 text-sm text-gray-700"></ul></td><td class="p-3 border text-right font-bold align-top" id="invPackagePrice">Rp 0</td></tr></table>
-            <div class="flex justify-end"><div class="w-1/2"><div class="flex justify-between py-2 border-b"><span class="font-bold">Total</span><span id="invTotal">Rp 0</span></div><div class="flex justify-between py-2 border-b"><span>DP</span><span id="invDP">Rp 0</span></div><div class="flex justify-between py-2 bg-blue-50 text-blue-800 p-2 rounded mt-2"><span class="font-bold">Sisa</span><span class="font-bold text-xl" id="invSisa">Rp 0</span></div></div></div>
+            <div class="flex justify-end"><div class="w-1/2"><div class="flex justify-between py-2 border-b"><span class="font-bold">Total</span><span id="invTotal">Rp 0</span></div><div class="flex justify-between py-2 border-b"><span>DP Awal</span><span id="invDP">Rp 0</span></div><div class="flex justify-between py-2 bg-blue-50 text-blue-800 p-2 rounded mt-2"><span class="font-bold">Sisa Tagihan</span><span class="font-bold text-xl" id="invSisa">Rp 0</span></div></div></div>
             <div class="mt-12 text-center text-sm text-gray-500"><br><br><br><p class="font-bold border-t border-black inline-block pt-2 w-48" id="invOwnerName">( Owner )</p></div>
         </div>
 
@@ -286,7 +276,7 @@
         <div id="empReportTemplate" class="hidden-section bg-white text-black p-8" style="width: 800px;">
             <div class="text-center border-b-2 border-gray-800 pb-4 mb-6"><h1 class="text-3xl font-bold text-blue-600 uppercase" id="erWoName">Brand WO</h1><h2 class="text-xl font-bold mt-2">LAPORAN RINCIAN GAJI TIM</h2><p class="text-sm text-gray-600" id="erTitle">Semua Anggota Tim</p></div>
             <h3 class="font-bold text-red-600 mb-2 mt-4">Belum Digaji (Tunggakan)</h3>
-            <table class="w-full text-left mb-6 border-collapse text-sm"><thead><tr class="bg-red-100"><th class="p-2 border border-gray-300">Nama Anggota</th><th class="p-2 border border-gray-300">Nama Proyek & Tgl</th></tr></thead><tbody id="erUnpaidBody"></tbody></table>
+            <table class="w-full text-left mb-6 border-collapse text-sm"><thead><tr class="bg-red-100"><th class="p-2 border border-gray-300">Nama Anggota</th><th class="p-2 border border-gray-300">Nama Proyek & Tgl</th><th class="p-2 border border-gray-300 text-right">Target Utang</th></tr></thead><tbody id="erUnpaidBody"></tbody></table>
             <h3 class="font-bold text-green-600 mb-2 mt-6">Sudah Digaji (Lunas)</h3>
             <table class="w-full text-left mb-6 border-collapse text-sm"><thead><tr class="bg-green-100"><th class="p-2 border border-gray-300">Nama Anggota</th><th class="p-2 border border-gray-300">Nama Proyek & Tgl</th><th class="p-2 border border-gray-300 text-right">Nominal</th></tr></thead><tbody id="erPaidBody"></tbody></table>
             <div class="text-right text-sm font-bold mt-2">Total Lunas: <span id="erTotalPaid" class="text-green-600 text-lg">Rp 0</span></div>
@@ -297,6 +287,7 @@
 
     <!-- JAVASCRIPT LOGIC -->
     <script>
+        // --- 1. SETUP DATA ---
         let appData = JSON.parse(localStorage.getItem('wedMateData')) || {};
         appData = { profile: null, transactions: [], packages: [], agendas: [], employees: [], ...appData }; 
         const formatRp = (num) => 'Rp ' + parseInt(num).toLocaleString('id-ID');
@@ -304,6 +295,7 @@
         let editModes = { transaction: null, package: null, agenda: null };
         let currentAnalysisJobId = ""; 
 
+        // --- 2. INIT & THEME ---
         document.addEventListener('DOMContentLoaded', () => {
             const html = document.documentElement; if (localStorage.getItem('theme') === 'dark') html.classList.add('dark');
             document.getElementById('themeToggleBtn').addEventListener('click', () => { html.classList.toggle('dark'); localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light'); renderCharts(); });
@@ -319,12 +311,14 @@
             renderEmployeeView(); renderEmployeeCheckboxesForAgenda(); renderProjectAnalysis(""); 
         }
 
+        // --- 3. SETTINGS & OTHERS ---
         function openSettings() { document.getElementById('settingsModal').classList.remove('hidden-section'); document.getElementById('setWoName').value = appData.profile.name; document.getElementById('setWoOwner').value = appData.profile.ownerName || ''; document.getElementById('setWoAddress').value = appData.profile.address; document.getElementById('setWoDesc').value = appData.profile.desc || ''; }
         document.getElementById('formEditProfile').addEventListener('submit', (e) => { e.preventDefault(); appData.profile.name = document.getElementById('setWoName').value; appData.profile.ownerName = document.getElementById('setWoOwner').value; appData.profile.address = document.getElementById('setWoAddress').value; appData.profile.desc = document.getElementById('setWoDesc').value; saveData(); document.getElementById('headerBrandName').innerText = appData.profile.name; alert("Profil disimpan!"); });
         function exportJSON() { const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appData)); const dlAnchorElem = document.createElement('a'); dlAnchorElem.setAttribute("href", dataStr); dlAnchorElem.setAttribute("download", `WedMate_Backup_${new Date().toISOString().slice(0,10)}.json`); dlAnchorElem.click(); }
         function importJSON(event) { const file = event.target.files[0]; if(!file) return; const reader = new FileReader(); reader.onload = function(e) { try { appData = JSON.parse(e.target.result); appData.employees = appData.employees || []; saveData(); alert("Data diimpor!"); location.reload(); } catch(err) { alert("Format tidak valid!"); } }; reader.readAsText(file); }
         document.getElementById('searchInput').addEventListener('input', (e) => { const kw = e.target.value.toLowerCase(); const res = document.getElementById('searchResults'); if(kw.length < 2) { res.innerHTML = ''; return; } let html = ''; appData.agendas.forEach(a => { if(a.client.toLowerCase().includes(kw) || a.address.toLowerCase().includes(kw)) html += `<li onclick="switchTab('agenda'); document.getElementById('searchModal').classList.add('hidden-section');" class="bg-white dark:bg-gray-800 p-3 rounded-xl shadow cursor-pointer border-l-4 border-blue-500"><p class="text-xs text-blue-500 font-bold mb-1">Agenda Proyek</p><p class="font-bold">${a.client}</p><p class="text-xs text-gray-500">${a.date}</p></li>`; }); appData.transactions.forEach(t => { if(t.category.toLowerCase().includes(kw) || (t.notes && t.notes.toLowerCase().includes(kw))) html += `<li onclick="switchTab('transactions'); document.getElementById('searchModal').classList.add('hidden-section');" class="bg-white dark:bg-gray-800 p-3 rounded-xl shadow cursor-pointer border-l-4 ${t.type==='income'?'border-green-500':'border-red-500'}"><p class="text-xs font-bold mb-1 ${t.type==='income'?'text-green-500':'text-red-500'}">Transaksi ${t.type==='income'?'Masuk':'Keluar'}</p><p class="font-bold">${t.category} - ${formatRp(t.amount)}</p><p class="text-xs text-gray-500">${t.notes || ''}</p></li>`; }); res.innerHTML = html || '<li class="text-center text-gray-500 p-4">Tidak ada hasil.</li>'; });
 
+        // --- 4. NAVIGATION & DASHBOARD ---
         function setupNavigation() { const navBtns = document.querySelectorAll('.nav-btn'); navBtns.forEach(btn => { btn.addEventListener('click', () => { navBtns.forEach(b => { b.classList.remove('text-iosBlue'); b.classList.add('text-gray-400'); }); btn.classList.remove('text-gray-400'); btn.classList.add('text-iosBlue'); switchTab(btn.dataset.target); }); }); document.getElementById('fabBtn').addEventListener('click', () => document.getElementById('fabModal').classList.remove('hidden-section')); }
         function switchTab(tabId) { document.querySelectorAll('.view-section').forEach(el => el.classList.add('hidden-section')); document.getElementById(`view-${tabId}`).classList.remove('hidden-section'); if(tabId === 'dashboard') updateDashboard(); if(tabId === 'transactions') renderTransactions(); if(tabId === 'agenda') renderAgendas(); if(tabId === 'employee') renderEmployeeView(); if(tabId === 'analysis') renderProjectAnalysis(currentAnalysisJobId); window.scrollTo({top: 0, behavior: 'smooth'}); }
         function closeFabModal() { document.getElementById('fabModal').classList.add('hidden-section'); }
@@ -333,6 +327,7 @@
         document.getElementById('filterSaldo').addEventListener('change', updateDashboard);
         function renderCharts(inc, exp) { if (donutChartInst) donutChartInst.destroy(); donutChartInst = new Chart(document.getElementById('donutChart').getContext('2d'), { type: 'doughnut', data: { labels: ['Masuk', 'Keluar'], datasets: [{ data: [inc, exp], backgroundColor: ['#34C759', '#FF3B30'], borderWidth: 0 }] }, options: { cutout: '70%', plugins: { legend: { labels: { color: document.documentElement.classList.contains('dark') ? '#fff' : '#000'} } } } }); if (barChartInst) barChartInst.destroy(); barChartInst = new Chart(document.getElementById('barChart').getContext('2d'), { type: 'bar', data: { labels: ['Tren'], datasets: [{ label: 'Masuk', data: [inc], backgroundColor: '#34C759' }, { label: 'Keluar', data: [exp], backgroundColor: '#FF3B30' }] }, options: { scales: { y: { beginAtZero: true, ticks: { color: document.documentElement.classList.contains('dark') ? '#fff' : '#000'} }, x: { ticks: { color: document.documentElement.classList.contains('dark') ? '#fff' : '#000'} } }, plugins: { legend: { display: false } } } }); }
 
+        // --- 5. TRANSACTIONS ---
         const transTabs = document.querySelectorAll('.tab-btn');
         function updateCategoryDropdown(type) { const catSelect = document.getElementById('transCategory'); if(type === 'income') catSelect.innerHTML = '<option value="DP Paket">DP Paket</option><option value="Pelunasan">Pelunasan</option><option value="Pemasukan Lain">Pemasukan Lain</option>'; else catSelect.innerHTML = '<option value="Operasional">Operasional</option><option value="Gaji Tim">Gaji Tim</option><option value="Sewa Alat / Vendor">Sewa Alat / Vendor</option><option value="Pengeluaran Lain">Pengeluaran Lain</option>'; document.getElementById('containerEmployee').classList.add('hidden-section'); }
         function setTransTab(type) { document.getElementById('transType').value = type; transTabs.forEach(b => { b.classList.remove('bg-iosBlue', 'text-white'); b.classList.add('bg-gray-200', 'dark:bg-gray-700', 'text-gray-800', 'dark:text-white'); }); const target = type === 'income' ? transTabs[0] : transTabs[1]; target.classList.add('bg-iosBlue', 'text-white'); target.classList.remove('bg-gray-200', 'dark:bg-gray-700', 'text-gray-800'); updateCategoryDropdown(type); }
@@ -342,12 +337,14 @@
             else { document.getElementById('containerEmployee').classList.add('hidden-section'); }
         });
         function renderJobDropdownForTransaction() { document.getElementById('transJob').innerHTML = '<option value="operasional">Umum / Internal</option>' + appData.agendas.map(a => `<option value="${a.id}">${a.client} - ${a.date}</option>`).join(''); }
-        function renderEmployeeDropdown() { document.getElementById('transEmployee').innerHTML = '<option value="">-- Pilih Anggota --</option>' + appData.employees.map(e => `<option value="${e.id}">${e.name}</option>`).join(''); }
+        function renderEmployeeDropdown() { document.getElementById('transEmployee').innerHTML = '<option value="">-- Pilih Anggota Tim --</option>' + appData.employees.map(e => `<option value="${e.id}">${e.name}</option>`).join(''); }
         
-        function payEmployee(jobId, empId) {
+        function payEmployee(jobId, empId, suggestedAmount = 0) {
             switchTab('transactions'); resetTransForm(); setTransTab('expense');
             document.getElementById('transCategory').value = 'Gaji Tim'; document.getElementById('transCategory').dispatchEvent(new Event('change'));
-            document.getElementById('transJob').value = jobId; document.getElementById('transEmployee').value = empId; document.getElementById('transAmount').focus();
+            document.getElementById('transJob').value = jobId; document.getElementById('transEmployee').value = empId; 
+            if(suggestedAmount > 0) document.getElementById('transAmount').value = suggestedAmount;
+            document.getElementById('transAmount').focus();
         }
 
         document.getElementById('formTransaction').addEventListener('submit', (e) => { 
@@ -356,22 +353,43 @@
             const empVal = document.getElementById('transEmployee').value;
             const empIdParsed = (isGaji && empVal) ? parseInt(empVal) : null;
             if(isGaji && !empIdParsed) { alert("Pilih Anggota Tim Penerima Gaji!"); return; }
+
             const payload = { type: document.getElementById('transType').value, amount: parseInt(document.getElementById('transAmount').value), category: document.getElementById('transCategory').value, date: document.getElementById('transDate').value, notes: document.getElementById('transNotes').value, jobId: document.getElementById('transJob').value === 'operasional' ? 'operasional' : parseInt(document.getElementById('transJob').value), empId: empIdParsed }; 
             if (editModes.transaction) { const idx = appData.transactions.findIndex(t => t.id === editModes.transaction); if(idx > -1) appData.transactions[idx] = { id: editModes.transaction, ...payload }; } 
             else appData.transactions.push({ id: Date.now(), ...payload }); 
             saveData(); resetTransForm(); renderTransactions(); updateDashboard(); renderProjectAnalysis(currentAnalysisJobId); renderEmployeeView(); 
         });
         
-        function renderTransactions() { document.getElementById('transactionHistory').innerHTML = appData.transactions.slice().reverse().map(t => { const jobName = t.jobId === 'operasional' ? 'Internal' : (appData.agendas.find(a => a.id === t.jobId)?.client || 'Dihapus'); const empName = t.empId ? (appData.employees.find(e => e.id === t.empId)?.name || '') : ''; return `<li class="flex justify-between items-center bg-white dark:bg-gray-800 p-3 rounded-xl shadow-sm mb-2 border border-gray-100 dark:border-gray-700"><div class="w-1/2"><p class="font-bold text-sm truncate">${t.category} ${empName ? `<span class="text-blue-500">(${empName})</span>` : ''}</p><p class="text-[10px] text-gray-500 bg-gray-100 dark:bg-gray-700 inline-block px-1 rounded">${jobName}</p>${t.notes ? `<p class="text-[10px] text-gray-400 mt-1 italic">"${t.notes}"</p>` : ''}<p class="text-xs text-gray-400 mt-1">${t.date}</p></div><div class="text-right flex flex-col items-end gap-1"><span class="font-bold ${t.type === 'income' ? 'text-green-500' : 'text-red-500'}">${t.type === 'income' ? '+' : '-'}${formatRp(t.amount)}</span><div class="flex gap-2 mt-2">${t.category.includes('Gaji') ? `<button onclick="generatePayslip(${t.id})" class="text-[10px] bg-blue-100 text-blue-600 px-2 py-1 rounded font-bold mr-2"><i class="fas fa-file-invoice"></i> Slip</button>` : ''}<button onclick="editTransaction(${t.id})" class="text-orange-500"><i class="fas fa-edit"></i></button><button onclick="deleteTransaction(${t.id})" class="text-red-500"><i class="fas fa-trash"></i></button></div></div></li>` }).join(''); }
+        function renderTransactions() { document.getElementById('transactionHistory').innerHTML = appData.transactions.slice().reverse().map(t => { const jobName = t.jobId === 'operasional' ? 'Internal' : (appData.agendas.find(a => a.id === t.jobId)?.client || 'Dihapus'); const empName = t.empId ? (appData.employees.find(e => e.id === t.empId)?.name || '') : ''; return `<li class="flex justify-between items-center bg-white dark:bg-gray-800 p-3 rounded-xl shadow-sm mb-2 border border-gray-100 dark:border-gray-700"><div class="w-1/2"><p class="font-bold text-sm truncate">${t.category} ${empName ? `<span class="text-blue-500">(${empName})</span>` : ''}</p><p class="text-[10px] text-gray-500 bg-gray-100 dark:bg-gray-700 inline-block px-1 rounded">${jobName}</p>${t.notes ? `<p class="text-[10px] text-gray-400 mt-1 italic">"${t.notes}"</p>` : ''}<p class="text-xs text-gray-400 mt-1">${t.date}</p></div><div class="text-right flex flex-col items-end gap-1"><span class="font-bold ${t.type === 'income' ? 'text-green-500' : 'text-red-500'}">${t.type === 'income' ? '+' : '-'}${formatRp(t.amount)}</span><div class="flex gap-2 mt-2">${t.category.includes('Gaji') ? `<button onclick="generatePayslip(${t.id})" class="text-[10px] bg-blue-100 text-blue-600 px-2 py-1 rounded font-bold mr-2"><i class="fas fa-share-nodes"></i> Bagikan PDF</button>` : ''}<button onclick="editTransaction(${t.id})" class="text-orange-500"><i class="fas fa-edit"></i></button><button onclick="deleteTransaction(${t.id})" class="text-red-500"><i class="fas fa-trash"></i></button></div></div></li>` }).join(''); }
         function editTransaction(id) { const t = appData.transactions.find(x => x.id === id); if(!t) return; editModes.transaction = id; setTransTab(t.type); setTimeout(() => { document.getElementById('transCategory').value = t.category; document.getElementById('transCategory').dispatchEvent(new Event('change')); document.getElementById('transAmount').value = t.amount; document.getElementById('transDate').value = t.date; document.getElementById('transJob').value = t.jobId; document.getElementById('transNotes').value = t.notes || ''; if(t.empId) document.getElementById('transEmployee').value = t.empId; document.getElementById('btnSubmitTrans').innerText = "Update"; document.getElementById('btnCancelEditTrans').classList.remove('hidden-section'); window.scrollTo({top: 0, behavior: 'smooth'}); }, 50); }
         function deleteTransaction(id) { if(confirm('Hapus transaksi?')) { appData.transactions = appData.transactions.filter(t => t.id !== id); saveData(); renderTransactions(); renderProjectAnalysis(currentAnalysisJobId); renderEmployeeView(); updateDashboard(); } }
         function resetTransForm() { editModes.transaction = null; document.getElementById('formTransaction').reset(); setTransTab('income'); document.getElementById('btnSubmitTrans').innerText = "Simpan Transaksi"; document.getElementById('btnCancelEditTrans').classList.add('hidden-section'); }
         document.getElementById('btnCancelEditTrans').addEventListener('click', resetTransForm);
 
-        function renderEmployeeCheckboxesForAgenda() { const container = document.getElementById('agendaEmployeeCheckboxes'); if(appData.employees.length === 0) { container.innerHTML = `<span class="text-xs text-gray-500">Belum ada tim. Tambahkan di menu Tim.</span>`; return; } container.innerHTML = appData.employees.map(e => `<label class="flex items-center gap-2 cursor-pointer text-sm bg-white dark:bg-gray-800 p-2 rounded shadow-sm"><input type="checkbox" value="${e.id}" class="emp-checkbox cb-custom"> <span class="truncate">${e.name}</span></label>`).join(''); }
+        // --- 6. AGENDA & PACKAGE ---
+        function renderEmployeeCheckboxesForAgenda() { 
+            const container = document.getElementById('agendaEmployeeCheckboxes'); 
+            if(appData.employees.length === 0) { container.innerHTML = `<span class="text-xs text-gray-500">Belum ada tim. Tambahkan di menu Tim.</span>`; return; } 
+            container.innerHTML = appData.employees.map(e => `
+                <div class="p-2 border dark:border-gray-700 rounded bg-white dark:bg-gray-800 shadow-sm">
+                    <label class="flex items-center gap-2 cursor-pointer text-sm mb-1">
+                        <input type="checkbox" value="${e.id}" class="emp-checkbox cb-custom" onchange="document.getElementById('emp_salary_${e.id}').classList.toggle('hidden-section', !this.checked)"> 
+                        <span class="truncate font-medium">${e.name}</span>
+                    </label>
+                    <input type="number" id="emp_salary_${e.id}" placeholder="Target Gaji (Rp)..." class="hidden-section w-full p-1.5 border border-iosBlue/30 rounded text-xs outline-none dark:bg-gray-900 mt-1 focus:ring-1 focus:ring-iosBlue">
+                </div>
+            `).join(''); 
+        }
+
         function addDetailInput(val = '') { const div = document.createElement('div'); div.className = 'flex gap-2 mb-1'; div.innerHTML = `<input type="text" value="${val}" required class="detail-input w-full p-2 border rounded-lg dark:bg-gray-900 outline-none text-xs"><button type="button" class="text-red-500" onclick="this.parentElement.remove()"><i class="fas fa-minus-circle"></i></button>`; document.getElementById('pkgDetailsContainer').appendChild(div); }
         function setupAgendaPackageLogic() { renderPackageDropdown(); renderAgendas(); document.getElementById('btnManagePackages').addEventListener('click', () => { document.getElementById('packageModal').classList.remove('hidden-section'); resetPkgForm(); renderPackageList(); }); const calcSisa = () => { const pkg = appData.packages.find(p => p.id === parseInt(document.getElementById('agendaPackage').value)); document.getElementById('agendaSisa').value = pkg ? formatRp(Math.max(0, pkg.price - (parseInt(document.getElementById('agendaDP').value) || 0))) : ''; }; document.getElementById('agendaPackage').addEventListener('change', calcSisa); document.getElementById('agendaDP').addEventListener('input', calcSisa); }
-        document.getElementById('formPackage').addEventListener('submit', (e) => { e.preventDefault(); const name = document.getElementById('pkgName').value; const price = parseInt(document.getElementById('pkgPrice').value); const details = Array.from(document.querySelectorAll('.detail-input')).map(i => i.value).filter(v => v); if(editModes.package) { const idx = appData.packages.findIndex(p => p.id === editModes.package); if(idx > -1) appData.packages[idx] = { id: editModes.package, name, price, details }; } else { appData.packages.push({ id: Date.now(), name, price, details }); } saveData(); resetPkgForm(); renderPackageDropdown(); renderPackageList(); });
+        
+        document.getElementById('formPackage').addEventListener('submit', (e) => { 
+            e.preventDefault(); const name = document.getElementById('pkgName').value; const price = parseInt(document.getElementById('pkgPrice').value); const details = Array.from(document.querySelectorAll('.detail-input')).map(i => i.value).filter(v => v); 
+            if(editModes.package) { const idx = appData.packages.findIndex(p => p.id === editModes.package); if(idx > -1) appData.packages[idx] = { id: editModes.package, name, price, details }; } 
+            else { appData.packages.push({ id: Date.now(), name, price, details }); } 
+            saveData(); resetPkgForm(); renderPackageDropdown(); renderPackageList(); 
+        });
         function renderPackageDropdown() { document.getElementById('agendaPackage').innerHTML = '<option value="">Pilih Daftar Paket...</option>' + appData.packages.map(p => `<option value="${p.id}">${p.name} - ${formatRp(p.price)}</option>`).join(''); }
         function renderPackageList() { document.getElementById('packageList').innerHTML = appData.packages.map(p => `<li class="bg-gray-100 dark:bg-gray-800 p-2 rounded mb-2 flex justify-between items-center"><div><b>${p.name}</b><br><span class="text-xs">${formatRp(p.price)}</span></div><div class="flex gap-3"><button onclick="editPackage(${p.id})" class="text-orange-500"><i class="fas fa-edit"></i></button><button onclick="deletePackage(${p.id})" class="text-red-500"><i class="fas fa-trash"></i></button></div></li>`).join(''); }
         function editPackage(id) { const p = appData.packages.find(x => x.id === id); if(!p) return; editModes.package = id; document.getElementById('pkgName').value = p.name; document.getElementById('pkgPrice').value = p.price; const container = document.getElementById('pkgDetailsContainer'); container.innerHTML = ''; if(p.details && p.details.length > 0) { p.details.forEach(d => addDetailInput(d)); } else { addDetailInput(); } document.getElementById('btnSubmitPkg').innerText = "Update Paket"; document.getElementById('btnSubmitPkg').classList.replace('bg-gray-800', 'bg-orange-500'); document.getElementById('btnCancelEditPkg').classList.remove('hidden-section'); }
@@ -379,19 +397,50 @@
         function resetPkgForm() { editModes.package = null; document.getElementById('formPackage').reset(); document.getElementById('pkgDetailsContainer').innerHTML = ''; addDetailInput(); document.getElementById('btnSubmitPkg').innerText = "Simpan Paket"; document.getElementById('btnSubmitPkg').classList.replace('bg-orange-500', 'bg-gray-800'); document.getElementById('btnCancelEditPkg').classList.add('hidden-section'); }
 
         document.getElementById('formAgenda').addEventListener('submit', (e) => { 
-            e.preventDefault(); const checkedBoxes = document.querySelectorAll('.emp-checkbox:checked'); const involvedEmployees = Array.from(checkedBoxes).map(cb => parseInt(cb.value));
+            e.preventDefault(); 
+            const checkedBoxes = document.querySelectorAll('.emp-checkbox:checked'); 
+            const involvedEmployees = Array.from(checkedBoxes).map(cb => {
+                const empId = parseInt(cb.value);
+                const expectedSalary = parseInt(document.getElementById(`emp_salary_${empId}`).value) || 0;
+                return { empId, expectedSalary };
+            });
+
             const payload = { client: document.getElementById('agendaClient').value, address: document.getElementById('agendaAddress').value, date: document.getElementById('agendaDate').value, packageId: parseInt(document.getElementById('agendaPackage').value), dp: parseInt(document.getElementById('agendaDP').value), involvedEmployees }; 
+            
             if(editModes.agenda) { const idx = appData.agendas.findIndex(a => a.id === editModes.agenda); if(idx > -1) appData.agendas[idx] = { ...appData.agendas[idx], ...payload }; } 
             else { const newId = Date.now(); appData.agendas.push({ id: newId, ...payload }); appData.transactions.push({ id: Date.now()+1, type: 'income', amount: payload.dp, category: 'DP Paket', notes: `DP ${payload.client}`, date: payload.date, jobId: newId }); } 
             saveData(); resetAgendaForm(); renderAgendas(); renderJobDropdownForTransaction(); initAnalysisDropdowns(); renderEmployeeView(); updateDashboard(); 
         });
-        function renderAgendas() { document.getElementById('agendaListContainer').innerHTML = appData.agendas.slice().reverse().map(a => { const pkg = appData.packages.find(p => p.id === a.packageId); return `<div class="glass p-4 rounded-2xl shadow-sm border-l-4 border-iosBlue relative"><div class="absolute top-4 right-4 flex gap-3"><button onclick="editAgenda(${a.id})" class="text-orange-500"><i class="fas fa-edit"></i></button><button onclick="deleteAgenda(${a.id})" class="text-red-500"><i class="fas fa-trash"></i></button></div><h4 class="font-bold text-lg w-3/4 truncate">${a.client}</h4><p class="text-xs text-gray-500 mb-2">${a.date}</p><div class="bg-white/50 dark:bg-gray-800/50 p-3 rounded-lg text-sm mb-3"><p>Daftar Paket: <b>${pkg?.name||'Dihapus'}</b></p><p>Sisa: <span class="font-bold text-red-500">${pkg?formatRp(pkg.price-a.dp):0}</span></p></div><button onclick="generateInvoice(${a.id})" class="w-full bg-blue-100 text-iosBlue py-2 rounded-xl text-sm font-bold shadow-sm"><i class="fas fa-file-pdf"></i> Cetak Invoice</button></div>` }).join(''); }
-        function editAgenda(id) { const a = appData.agendas.find(x => x.id === id); if(!a) return; editModes.agenda = id; document.getElementById('agendaClient').value = a.client; document.getElementById('agendaAddress').value = a.address; document.getElementById('agendaDate').value = a.date; document.getElementById('agendaPackage').value = a.packageId; document.getElementById('agendaDP').value = a.dp; document.getElementById('agendaPackage').dispatchEvent(new Event('change')); const checkboxes = document.querySelectorAll('.emp-checkbox'); checkboxes.forEach(cb => { cb.checked = (a.involvedEmployees || []).includes(parseInt(cb.value)); }); document.getElementById('btnSubmitAgenda').innerText = "Update"; document.getElementById('btnCancelEditAgenda').classList.remove('hidden-section'); window.scrollTo({top: 0, behavior: 'smooth'}); }
+
+        function renderAgendas() { document.getElementById('agendaListContainer').innerHTML = appData.agendas.slice().reverse().map(a => { const pkg = appData.packages.find(p => p.id === a.packageId); return `<div class="glass p-4 rounded-2xl shadow-sm border-l-4 border-iosBlue relative"><div class="absolute top-4 right-4 flex gap-3"><button onclick="editAgenda(${a.id})" class="text-orange-500"><i class="fas fa-edit"></i></button><button onclick="deleteAgenda(${a.id})" class="text-red-500"><i class="fas fa-trash"></i></button></div><h4 class="font-bold text-lg w-3/4 truncate">${a.client}</h4><p class="text-xs text-gray-500 mb-2">${a.date}</p><div class="bg-white/50 dark:bg-gray-800/50 p-3 rounded-lg text-sm mb-3"><p>Daftar Paket: <b>${pkg?.name||'Dihapus'}</b></p><p>Sisa: <span class="font-bold text-red-500">${pkg?formatRp(pkg.price-a.dp):0}</span></p></div><button onclick="generateInvoice(${a.id})" class="w-full bg-blue-100 text-iosBlue py-2 rounded-xl text-sm font-bold shadow-sm"><i class="fas fa-share-nodes"></i> Bagikan Invoice PDF</button></div>` }).join(''); }
+        function editAgenda(id) { 
+            const a = appData.agendas.find(x => x.id === id); if(!a) return; editModes.agenda = id; 
+            document.getElementById('agendaClient').value = a.client; document.getElementById('agendaAddress').value = a.address; document.getElementById('agendaDate').value = a.date; document.getElementById('agendaPackage').value = a.packageId; document.getElementById('agendaDP').value = a.dp; document.getElementById('agendaPackage').dispatchEvent(new Event('change')); 
+            
+            const checkboxes = document.querySelectorAll('.emp-checkbox'); 
+            checkboxes.forEach(cb => { 
+                const empId = parseInt(cb.value);
+                const involved = (a.involvedEmployees || []).find(ie => (typeof ie === 'object' ? ie.empId === empId : ie === empId));
+                if (involved) {
+                    cb.checked = true;
+                    const input = document.getElementById(`emp_salary_${empId}`);
+                    input.classList.remove('hidden-section');
+                    input.value = typeof involved === 'object' ? (involved.expectedSalary || '') : '';
+                } else {
+                    cb.checked = false;
+                    const input = document.getElementById(`emp_salary_${empId}`);
+                    input.classList.add('hidden-section');
+                    input.value = '';
+                }
+            });
+            document.getElementById('btnSubmitAgenda').innerText = "Update"; document.getElementById('btnCancelEditAgenda').classList.remove('hidden-section'); window.scrollTo({top: 0, behavior: 'smooth'}); 
+        }
         function deleteAgenda(id) { if(confirm("Hapus agenda? (Transaksi DP & Gaji untuk Proyek ini juga terhapus)")) { appData.agendas = appData.agendas.filter(a => a.id !== id); appData.transactions = appData.transactions.filter(t => t.jobId !== id); saveData(); renderAgendas(); renderJobDropdownForTransaction(); initAnalysisDropdowns(); renderEmployeeView(); updateDashboard(); renderTransactions(); } }
-        function resetAgendaForm() { editModes.agenda = null; document.getElementById('formAgenda').reset(); document.getElementById('agendaSisa').value = ''; const checkboxes = document.querySelectorAll('.emp-checkbox'); checkboxes.forEach(cb => cb.checked = false); document.getElementById('btnSubmitAgenda').innerText = "Simpan Agenda"; document.getElementById('btnCancelEditAgenda').classList.add('hidden-section'); }
+        function resetAgendaForm() { editModes.agenda = null; document.getElementById('formAgenda').reset(); document.getElementById('agendaSisa').value = ''; const checkboxes = document.querySelectorAll('.emp-checkbox'); checkboxes.forEach(cb => { cb.checked = false; document.getElementById(`emp_salary_${cb.value}`).classList.add('hidden-section'); }); document.getElementById('btnSubmitAgenda').innerText = "Simpan Agenda"; document.getElementById('btnCancelEditAgenda').classList.add('hidden-section'); }
         document.getElementById('btnCancelEditAgenda').addEventListener('click', resetAgendaForm);
 
 
+        // --- 7. EMPLOYEE (TIM) PAGE LOGIC ---
         document.getElementById('formEmployee').addEventListener('submit', (e) => { 
             e.preventDefault(); appData.employees.push({ id: Date.now(), name: document.getElementById('empName').value }); 
             appData.employees.sort((a, b) => a.name.localeCompare(b.name)); 
@@ -413,10 +462,18 @@
                 appData.agendas.forEach(agenda => {
                     const aDate = new Date(agenda.date); const aM = String(aDate.getMonth() + 1).padStart(2, '0'); const aY = String(aDate.getFullYear());
                     if (selMonth && aM !== selMonth) return; if (selYear && aY !== selYear) return;
-                    if(agenda.involvedEmployees && agenda.involvedEmployees.includes(emp.id)) {
+                    
+                    const invObj = (agenda.involvedEmployees || []).find(ie => (typeof ie === 'object' ? ie.empId === emp.id : ie === emp.id));
+                    if(invObj) {
+                        const expected = typeof invObj === 'object' ? (invObj.expectedSalary || 0) : 0;
                         let paid = 0; appData.transactions.forEach(t => { if(t.jobId === agenda.id && t.empId === emp.id && t.category.includes('Gaji')) paid += t.amount; });
-                        if(paid === 0) unpaidArr.push({ empName: emp.name, empId: emp.id, client: agenda.client, date: agenda.date, agendaId: agenda.id, amount: 0 });
-                        else { totalPaidAmount += paid; paidArr.push({ empName: emp.name, empId: emp.id, client: agenda.client, date: agenda.date, agendaId: agenda.id, amount: paid }); }
+                        
+                        if(paid < expected || (expected === 0 && paid === 0)) {
+                            const sisa = expected > paid ? expected - paid : 0;
+                            unpaidArr.push({ empName: emp.name, empId: emp.id, client: agenda.client, date: agenda.date, agendaId: agenda.id, amount: sisa, expected });
+                        } else {
+                            totalPaidAmount += paid; paidArr.push({ empName: emp.name, empId: emp.id, client: agenda.client, date: agenda.date, agendaId: agenda.id, amount: paid }); 
+                        }
                     }
                 });
             });
@@ -430,14 +487,15 @@
             };
             unpaidArr.sort(sortFn); paidArr.sort(sortFn);
 
-            let unpaidHTML = unpaidArr.map(i => `<tr class="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50"><td class="p-3 font-medium">${i.empName}</td><td class="p-3">${i.client} <br><span class="text-xs text-gray-500">${i.date}</span></td><td class="p-3 text-right"><button onclick="payEmployee(${i.agendaId}, ${i.empId})" class="bg-blue-100 text-blue-600 px-3 py-1 rounded text-xs font-bold shadow-sm">Bayar</button></td></tr>`).join('');
+            let unpaidHTML = unpaidArr.map(i => `<tr class="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50"><td class="p-3 font-medium">${i.empName}</td><td class="p-3">${i.client} <br><span class="text-xs text-gray-500">${i.date}</span></td><td class="p-3 text-right">${i.amount > 0 ? `<div class="text-[10px] text-red-500 mb-1 font-bold">Utang: ${formatRp(i.amount)}</div>` : ''}<button onclick="payEmployee(${i.agendaId}, ${i.empId}, ${i.amount})" class="bg-blue-100 text-blue-600 px-3 py-1 rounded text-xs font-bold shadow-sm">Bayar</button></td></tr>`).join('');
             let paidHTML = paidArr.map(i => `<tr class="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50"><td class="p-3 font-medium">${i.empName}</td><td class="p-3">${i.client} <br><span class="text-xs text-gray-500">${i.date}</span></td><td class="p-3 text-right font-bold text-green-600">${formatRp(i.amount)}</td></tr>`).join('');
 
             document.getElementById('unpaidTableBody').innerHTML = unpaidHTML || `<tr><td colspan="3" class="p-4 text-center text-gray-500 text-sm italic">Tidak ada tunggakan gaji</td></tr>`;
-            document.getElementById('paidTableBody').innerHTML = paidHTML || `<tr><td colspan="3" class="p-4 text-center text-gray-500 text-sm italic">Belum ada riwayat gaji terbayar</td></tr>`;
+            document.getElementById('paidTableBody').innerHTML = paidHTML || `<tr><td colspan="3" class="p-4 text-center text-gray-500 text-sm italic">Belum ada riwayat lunas</td></tr>`;
             document.getElementById('totalPaidDisplay').innerText = formatRp(totalPaidAmount);
         }
 
+        // --- 8. ANALYSIS LOGIC ---
         function initAnalysisDropdowns() {
             const selJob = document.getElementById('analysisJobSelect'); const prevJobVal = selJob.value;
             selJob.innerHTML = '<option value="">Keseluruhan (Tahun Ini)</option>' + appData.agendas.map(a => `<option value="${a.id}">Proyek: ${a.client}</option>`).join('');
@@ -448,13 +506,38 @@
             currentAnalysisJobId = jobIdRaw; const currentYearStr = new Date().getFullYear().toString();
             let inc = 0, exp = 0; let titleName = ""; let filterTrans = [];
             const tbodyProj = document.getElementById('analysisProjectTableBody'); tbodyProj.innerHTML = '';
+            const teamDiv = document.getElementById('analysisJobTeamContainer'); const tbodyTeam = document.getElementById('analysisJobTeamTableBody');
             
             if (!jobIdRaw) {
                 titleName = `Keseluruhan (Tahun ${currentYearStr})`;
                 filterTrans = appData.transactions.filter(t => t.date && t.date.substring(0,4) === currentYearStr);
+                teamDiv.classList.add('hidden-section');
             } else {
                 const jobId = parseInt(jobIdRaw); const agenda = appData.agendas.find(a => a.id === jobId); if(!agenda) return;
                 titleName = `Proyek: ${agenda.client}`; filterTrans = appData.transactions.filter(t => t.jobId === jobId);
+                
+                teamDiv.classList.remove('hidden-section'); let rowsTeam = '';
+                if(agenda.involvedEmployees && agenda.involvedEmployees.length > 0) {
+                    agenda.involvedEmployees.forEach(invObj => {
+                        const empId = typeof invObj === 'object' ? invObj.empId : invObj;
+                        const expected = typeof invObj === 'object' ? invObj.expectedSalary : 0;
+                        const emp = appData.employees.find(e => e.id === empId); if(!emp) return;
+                        let paidAmount = 0;
+                        appData.transactions.forEach(t => { if(t.jobId === agenda.id && t.empId === emp.id && t.category.includes('Gaji')) paidAmount += t.amount; });
+                        
+                        let statusBadge = ""; let actionBtn = "";
+                        if (paidAmount >= expected && expected > 0 || (expected === 0 && paidAmount > 0)) {
+                            statusBadge = `<span class="bg-green-100 text-green-700 px-2 py-1 rounded text-[10px] font-bold whitespace-nowrap">Lunas (${formatRp(paidAmount)})</span>`;
+                            actionBtn = `<i class="fas fa-check-circle text-green-500 text-lg"></i>`;
+                        } else {
+                            const sisa = expected > paidAmount ? expected - paidAmount : 0;
+                            statusBadge = `<span class="bg-red-100 text-red-700 px-2 py-1 rounded text-[10px] font-bold whitespace-nowrap">Belum Lunas ${sisa > 0 ? '<br>(Utang '+formatRp(sisa)+')' : ''}</span>`;
+                            actionBtn = `<button onclick="payEmployee(${agenda.id}, ${emp.id}, ${sisa})" class="text-[10px] bg-blue-100 text-blue-600 px-3 py-1 rounded font-bold shadow-sm hover:bg-blue-200">Bayar</button>`;
+                        }
+                        rowsTeam += `<tr class="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50"><td class="p-3 font-medium">${emp.name}</td><td class="p-3">${statusBadge}</td><td class="p-3 text-center">${actionBtn}</td></tr>`;
+                    });
+                } else { rowsTeam = `<tr><td colspan="3" class="p-4 text-center text-gray-500 italic">Tidak ada tim ditugaskan</td></tr>`; }
+                tbodyTeam.innerHTML = rowsTeam;
             }
 
             let rowsProj = '';
@@ -472,19 +555,58 @@
             analysisChartInst = new Chart(ctx, { type: 'pie', data: { labels: ['Pemasukan', 'Pengeluaran'], datasets: [{ data: [inc, exp], backgroundColor: ['#34C759', '#FF3B30'], borderWidth: 2, borderColor: document.documentElement.classList.contains('dark') ? '#1f2937' : '#fff' }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels:{ color: document.documentElement.classList.contains('dark') ? '#fff' : '#000'} } } } });
         }
 
-        // --- 9. PDF GENERATORS ---
-        function generateInvoice(agendaId) { const agenda = appData.agendas.find(a => a.id === agendaId); const pkg = appData.packages.find(p => p.id === agenda.packageId); if(!pkg) { alert("Daftar Paket dihapus!"); return; } document.getElementById('invWoName').innerText = appData.profile.name; document.getElementById('invOwnerName').innerText = `( ${appData.profile.ownerName || 'Owner'} )`; document.getElementById('invWoAddress').innerText = appData.profile.address; document.getElementById('invDate').innerText = `Tanggal: ${new Date().toLocaleDateString('id-ID')}`; document.getElementById('invClient').innerText = agenda.client; document.getElementById('invPackageName').innerText = pkg.name; document.getElementById('invPackagePrice').innerText = formatRp(pkg.price); document.getElementById('invPackageDetails').innerHTML = pkg.details && pkg.details.length ? pkg.details.map(d => `<li>${d}</li>`).join('') : '<li>Tidak ada rincian</li>'; document.getElementById('invTotal').innerText = formatRp(pkg.price); document.getElementById('invDP').innerText = formatRp(agenda.dp); document.getElementById('invSisa').innerText = formatRp(pkg.price - agenda.dp); const el = document.getElementById('invoiceTemplate'); el.classList.remove('hidden-section'); html2pdf().set({ margin: 0.5, filename: `Invoice_${agenda.client}.pdf`, html2canvas: { scale: 2 }, jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' } }).from(el).save().then(() => el.classList.add('hidden-section')); }
-        function generatePayslip(transId) { const t = appData.transactions.find(x => x.id === transId); const emp = appData.employees.find(e => e.id === t.empId); const jobName = t.jobId === 'operasional' ? 'Operasional Internal' : (appData.agendas.find(a => a.id === t.jobId)?.client || '-'); document.getElementById('payWoName').innerText = appData.profile.name; document.getElementById('payOwnerName').innerText = `( ${appData.profile.ownerName || 'Owner'} )`; document.getElementById('payDate').innerText = `Tanggal: ${t.date}`; document.getElementById('payEmpName').innerText = emp ? emp.name : 'Unknown'; document.getElementById('payEmpSign').innerText = `( ${emp ? emp.name : 'Anggota Tim'} )`; document.getElementById('payNotes').innerText = `${jobName} ${t.notes ? `(${t.notes})` : ''}`; document.getElementById('payAmount').innerText = formatRp(t.amount); const el = document.getElementById('payslipTemplate'); el.classList.remove('hidden-section'); html2pdf().set({ margin: 0.5, filename: `Slip_Gaji_${emp?.name || 'Tim'}_${t.date}.pdf`, html2canvas: { scale: 2 }, jsPDF: { unit: 'in', format: 'letter', orientation: 'landscape' } }).from(el).save().then(() => el.classList.add('hidden-section')); }
+
+        // --- 9. SHARE & PDF GENERATORS ---
+        function downloadOrSharePDF(elementId, filename, isLandscape = false) {
+            const el = document.getElementById(elementId);
+            el.classList.remove('hidden-section');
+            const opt = { margin: 0.5, filename: filename, html2canvas: { scale: 2, useCORS: true }, jsPDF: { unit: 'in', format: 'letter', orientation: isLandscape ? 'landscape' : 'portrait' } };
+            
+            html2pdf().set(opt).from(el).outputPdf('blob').then(blob => {
+                const file = new File([blob], filename, { type: 'application/pdf' });
+                if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                    navigator.share({ title: filename, files: [file] }).catch(err => { forceDownload(blob, filename); });
+                } else {
+                    forceDownload(blob, filename);
+                }
+                el.classList.add('hidden-section');
+            });
+        }
+        function forceDownload(blob, filename) { const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = filename; a.click(); URL.revokeObjectURL(url); }
+
+        function generateInvoice(agendaId) { const agenda = appData.agendas.find(a => a.id === agendaId); const pkg = appData.packages.find(p => p.id === agenda.packageId); if(!pkg) { alert("Daftar Paket dihapus!"); return; } document.getElementById('invWoName').innerText = appData.profile.name; document.getElementById('invOwnerName').innerText = `( ${appData.profile.ownerName || 'Owner'} )`; document.getElementById('invWoAddress').innerText = appData.profile.address; document.getElementById('invDate').innerText = `Tanggal: ${new Date().toLocaleDateString('id-ID')}`; document.getElementById('invClient').innerText = agenda.client; document.getElementById('invPackageName').innerText = pkg.name; document.getElementById('invPackagePrice').innerText = formatRp(pkg.price); document.getElementById('invPackageDetails').innerHTML = pkg.details && pkg.details.length ? pkg.details.map(d => `<li>${d}</li>`).join('') : '<li>Tidak ada rincian</li>'; document.getElementById('invTotal').innerText = formatRp(pkg.price); document.getElementById('invDP').innerText = formatRp(agenda.dp); document.getElementById('invSisa').innerText = formatRp(pkg.price - agenda.dp); downloadOrSharePDF('invoiceTemplate', `Invoice_${agenda.client}.pdf`); }
+        function generatePayslip(transId) { const t = appData.transactions.find(x => x.id === transId); const emp = appData.employees.find(e => e.id === t.empId); const jobName = t.jobId === 'operasional' ? 'Operasional Internal' : (appData.agendas.find(a => a.id === t.jobId)?.client || '-'); document.getElementById('payWoName').innerText = appData.profile.name; document.getElementById('payOwnerName').innerText = `( ${appData.profile.ownerName || 'Owner'} )`; document.getElementById('payDate').innerText = `Tanggal: ${t.date}`; document.getElementById('payEmpName').innerText = emp ? emp.name : 'Unknown'; document.getElementById('payEmpSign').innerText = `( ${emp ? emp.name : 'Anggota Tim'} )`; document.getElementById('payNotes').innerText = `${jobName} ${t.notes ? `(${t.notes})` : ''}`; document.getElementById('payAmount').innerText = formatRp(t.amount); downloadOrSharePDF('payslipTemplate', `Slip_Gaji_${emp?.name || 'Tim'}_${t.date}.pdf`, true); }
         
         function generateAnalysisPDF() {
             const currentYearStr = new Date().getFullYear().toString(); let title = "", inc = 0, exp = 0, filterTrans = [];
-            if (!currentAnalysisJobId) { title = `Keseluruhan (${currentYearStr})`; filterTrans = appData.transactions.filter(t => t.date && t.date.substring(0,4) === currentYearStr); } 
-            else { const jobId = parseInt(currentAnalysisJobId); const agenda = appData.agendas.find(a => a.id === jobId); title = `Proyek: ${agenda.client}`; filterTrans = appData.transactions.filter(t => t.jobId === jobId); }
+            const arTeamSection = document.getElementById('arTeamSection'); const arTeamBody = document.getElementById('arTeamTableBody'); arTeamBody.innerHTML = '';
+            
+            if (!currentAnalysisJobId) { 
+                title = `Keseluruhan (${currentYearStr})`; filterTrans = appData.transactions.filter(t => t.date && t.date.substring(0,4) === currentYearStr); 
+                arTeamSection.classList.add('hidden-section'); 
+            } else { 
+                const jobId = parseInt(currentAnalysisJobId); const agenda = appData.agendas.find(a => a.id === jobId); title = `Proyek: ${agenda.client}`; filterTrans = appData.transactions.filter(t => t.jobId === jobId); 
+                arTeamSection.classList.remove('hidden-section');
+                if(agenda.involvedEmployees && agenda.involvedEmployees.length > 0) {
+                    agenda.involvedEmployees.forEach(invObj => {
+                        const empId = typeof invObj === 'object' ? invObj.empId : invObj; const expected = typeof invObj === 'object' ? invObj.expectedSalary : 0;
+                        const emp = appData.employees.find(e => e.id === empId); if(!emp) return; let paidAmount = 0;
+                        appData.transactions.forEach(t => { if(t.jobId === agenda.id && t.empId === emp.id && t.category.includes('Gaji')) paidAmount += t.amount; });
+                        
+                        let status = "";
+                        if (paidAmount >= expected && expected > 0 || (expected === 0 && paidAmount > 0)) status = `Lunas (${formatRp(paidAmount)})`;
+                        else { const sisa = expected > paidAmount ? expected - paidAmount : 0; status = `Belum Lunas ${sisa > 0 ? '(Utang '+formatRp(sisa)+')' : ''}`; }
+                        
+                        arTeamBody.innerHTML += `<tr><td class="p-2 border">${emp.name}</td><td class="p-2 border text-right font-bold ${paidAmount >= expected ? 'text-green-600' : 'text-red-600'}">${status}</td></tr>`;
+                    });
+                } else { arTeamBody.innerHTML = `<tr><td colspan="2" class="p-2 border text-center">Tidak ada tim karyawan</td></tr>`; }
+            }
+
             filterTrans.forEach(t => { t.type === 'income' ? inc += t.amount : exp += t.amount; });
             document.getElementById('arWoName').innerText = appData.profile.name; document.getElementById('arOwnerName').innerText = `( ${appData.profile.ownerName || 'Owner'} )`; document.getElementById('arTitle').innerText = title; document.getElementById('arIncome').innerText = formatRp(inc); document.getElementById('arExpense').innerText = formatRp(exp); document.getElementById('arMargin').innerText = formatRp(inc - exp);
             document.getElementById('arTableBody').innerHTML = filterTrans.map(t => `<tr><td class="p-2 border">${t.date}</td><td class="p-2 border">${t.category}</td><td class="p-2 border text-xs">${t.notes || '-'}</td><td class="p-2 border text-right ${t.type==='income'?'text-green-600':'text-red-600'}">${t.type==='income'?'+':'-'} ${formatRp(t.amount)}</td></tr>`).join('');
             if(filterTrans.length === 0) document.getElementById('arTableBody').innerHTML = `<tr><td colspan="4" class="p-2 border text-center">Kosong</td></tr>`;
-            const el = document.getElementById('analysisReportTemplate'); el.classList.remove('hidden-section'); html2pdf().set({ margin: 0.5, filename: `Laporan_Proyek_${new Date().getTime()}.pdf`, html2canvas: { scale: 2 }, jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' } }).from(el).save().then(() => el.classList.add('hidden-section'));
+            downloadOrSharePDF('analysisReportTemplate', `Laporan_Proyek_${new Date().getTime()}.pdf`);
         }
 
         function generateEmpReportPDF() {
@@ -499,10 +621,18 @@
                     const aDate = new Date(agenda.date);
                     if (selMonth && String(aDate.getMonth() + 1).padStart(2, '0') !== selMonth) return;
                     if (selYear && String(aDate.getFullYear()) !== selYear) return;
-                    if(agenda.involvedEmployees && agenda.involvedEmployees.includes(emp.id)) {
+                    
+                    const invObj = (agenda.involvedEmployees || []).find(ie => (typeof ie === 'object' ? ie.empId === emp.id : ie === emp.id));
+                    if(invObj) {
+                        const expected = typeof invObj === 'object' ? (invObj.expectedSalary || 0) : 0;
                         let paid = 0; appData.transactions.forEach(t => { if(t.jobId === agenda.id && t.empId === emp.id && t.category.includes('Gaji')) paid += t.amount; });
-                        if(paid === 0) unpaidArr.push({ empName: emp.name, empId: emp.id, client: agenda.client, date: agenda.date, agendaId: agenda.id, amount: 0 });
-                        else { totalPaidAmount += paid; paidArr.push({ empName: emp.name, empId: emp.id, client: agenda.client, date: agenda.date, agendaId: agenda.id, amount: paid }); }
+                        
+                        if(paid < expected || (expected === 0 && paid === 0)) {
+                            const sisa = expected > paid ? expected - paid : 0;
+                            unpaidArr.push({ empName: emp.name, empId: emp.id, client: agenda.client, date: agenda.date, agendaId: agenda.id, amount: sisa });
+                        } else {
+                            totalPaidAmount += paid; paidArr.push({ empName: emp.name, empId: emp.id, client: agenda.client, date: agenda.date, agendaId: agenda.id, amount: paid }); 
+                        }
                     }
                 });
             });
@@ -516,16 +646,16 @@
             };
             unpaidArr.sort(sortFn); paidArr.sort(sortFn);
 
-            let uHTML = unpaidArr.map(i => `<tr><td class="p-2 border border-gray-300 font-bold">${i.empName}</td><td class="p-2 border border-gray-300">${i.client} <span class="text-gray-500">(${i.date})</span></td></tr>`).join('');
+            let uHTML = unpaidArr.map(i => `<tr><td class="p-2 border border-gray-300 font-bold">${i.empName}</td><td class="p-2 border border-gray-300">${i.client} <span class="text-gray-500">(${i.date})</span></td><td class="p-2 border border-gray-300 text-right text-red-600 font-bold">${i.amount > 0 ? formatRp(i.amount) : '-'}</td></tr>`).join('');
             let pHTML = paidArr.map(i => `<tr><td class="p-2 border border-gray-300 font-bold">${i.empName}</td><td class="p-2 border border-gray-300">${i.client} <span class="text-gray-500">(${i.date})</span></td><td class="p-2 border border-gray-300 text-right">${formatRp(i.amount)}</td></tr>`).join('');
 
             document.getElementById('erWoName').innerText = appData.profile.name; document.getElementById('erOwnerName').innerText = `( ${appData.profile.ownerName || 'Owner'} )`; 
             document.getElementById('erTitle').innerText = `${title} | ${subtitle}`;
-            document.getElementById('erUnpaidBody').innerHTML = uHTML || `<tr><td colspan="2" class="p-2 border border-gray-300 text-center text-gray-500 italic">Tidak ada tunggakan gaji</td></tr>`;
+            document.getElementById('erUnpaidBody').innerHTML = uHTML || `<tr><td colspan="3" class="p-2 border border-gray-300 text-center text-gray-500 italic">Tidak ada tunggakan gaji</td></tr>`;
             document.getElementById('erPaidBody').innerHTML = pHTML || `<tr><td colspan="3" class="p-2 border border-gray-300 text-center text-gray-500 italic">Belum ada riwayat lunas</td></tr>`;
             document.getElementById('erTotalPaid').innerText = formatRp(totalPaidAmount);
 
-            const el = document.getElementById('empReportTemplate'); el.classList.remove('hidden-section'); html2pdf().set({ margin: 0.5, filename: `Laporan_Gaji_Tim_${new Date().getTime()}.pdf`, html2canvas: { scale: 2 }, jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' } }).from(el).save().then(() => el.classList.add('hidden-section'));
+            downloadOrSharePDF('empReportTemplate', `Laporan_Gaji_Tim_${new Date().getTime()}.pdf`);
         }
     </script>
 </body>
