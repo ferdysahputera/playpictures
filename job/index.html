@@ -425,126 +425,138 @@
         <!-- ================= HIDDEN TEMPLATES FOR EXPORT JPG ================= -->
         
         <!-- INVOICE TEMPLATE -->
-        <div id="invoiceTemplate" class="hidden-section bg-white text-black p-8" style="width: 710px; box-sizing: border-box;">
-            <div class="flex items-center justify-between border-b-4 border-double border-gray-800 pb-4 mb-6">
-                <div class="w-1/4 flex justify-start">
-                    <img id="invLogo" class="max-h-20 max-w-full object-contain hidden-section bg-white rounded-md">
+        <div id="invoiceTemplate" class="hidden-section bg-white text-black p-10 flex flex-col" style="width: 794px; min-height: 1123px; box-sizing: border-box;">
+            <div class="flex-grow">
+                <div class="flex items-center justify-between border-b-4 border-double border-gray-800 pb-4 mb-6">
+                    <div class="w-1/4 flex justify-start">
+                        <img id="invLogo" class="max-h-20 max-w-full object-contain hidden-section bg-white rounded-md">
+                    </div>
+                    <div class="w-2/4 text-center px-4">
+                        <h1 class="text-3xl font-bold text-blue-600 uppercase" id="invWoName">Brand WO</h1>
+                        <p class="text-sm mt-1 text-gray-700 whitespace-normal break-words" id="invWoAddress">Alamat</p>
+                    </div>
+                    <div class="w-1/4 text-right">
+                        <h2 class="text-2xl font-bold text-gray-800">INVOICE</h2>
+                        <p class="text-sm mt-1" id="invDate">Tanggal: -</p>
+                    </div>
                 </div>
-                <div class="w-2/4 text-center px-4">
-                    <h1 class="text-3xl font-bold text-blue-600 uppercase" id="invWoName">Brand WO</h1>
-                    <p class="text-sm mt-1 text-gray-700 whitespace-normal break-words" id="invWoAddress">Alamat</p>
-                </div>
-                <div class="w-1/4 text-right">
-                    <h2 class="text-2xl font-bold text-gray-800">INVOICE</h2>
-                    <p class="text-sm mt-1" id="invDate">Tanggal: -</p>
-                </div>
+                
+                <div class="mb-6"><p class="text-gray-600 text-sm">Tagihan Kepada:</p><h3 class="text-xl font-bold whitespace-normal break-words" id="invClient">Klien</h3><p class="text-sm text-gray-500" id="invEventDate">Tgl Acara: -</p></div>
+                <table class="w-full text-left mb-8 border-collapse table-fixed break-words">
+                    <tr class="bg-gray-200">
+                        <th class="p-3 border w-2/3">Deskripsi Layanan</th>
+                        <th class="p-3 border w-1/3 text-right">Harga</th>
+                    </tr>
+                    <tr>
+                        <td class="p-3 border align-top whitespace-normal break-words">
+                            <span id="invPackageName" class="font-bold text-lg block mb-2 break-words">Paket</span>
+                            <ul id="invPackageDetails" class="list-disc ml-5 text-sm text-gray-700 whitespace-normal break-words"></ul>
+                        </td>
+                        <td class="p-3 border text-right font-bold align-top whitespace-normal break-words" id="invPackagePrice">Rp 0</td>
+                    </tr>
+                </table>
+                <div class="flex justify-end"><div class="w-1/2"><div class="flex justify-between py-2 border-b"><span class="font-bold">Total</span><span id="invTotal">Rp 0</span></div><div class="flex justify-between py-2 border-b"><span>DP Awal</span><span id="invDP">Rp 0</span></div><div class="flex justify-between py-2 bg-blue-50 text-blue-800 p-2 rounded mt-2"><span class="font-bold">Sisa Tagihan</span><span class="font-bold text-xl" id="invSisa">Rp 0</span></div></div></div>
             </div>
-            
-            <div class="mb-6"><p class="text-gray-600 text-sm">Tagihan Kepada:</p><h3 class="text-xl font-bold whitespace-normal break-words" id="invClient">Klien</h3><p class="text-sm text-gray-500" id="invEventDate">Tgl Acara: -</p></div>
-            <table class="w-full text-left mb-8 border-collapse table-fixed break-words">
-                <tr class="bg-gray-200">
-                    <th class="p-3 border w-2/3">Deskripsi Layanan</th>
-                    <th class="p-3 border w-1/3 text-right">Harga</th>
-                </tr>
-                <tr>
-                    <td class="p-3 border align-top whitespace-normal break-words">
-                        <span id="invPackageName" class="font-bold text-lg block mb-2 break-words">Paket</span>
-                        <ul id="invPackageDetails" class="list-disc ml-5 text-sm text-gray-700 whitespace-normal break-words"></ul>
-                    </td>
-                    <td class="p-3 border text-right font-bold align-top whitespace-normal break-words" id="invPackagePrice">Rp 0</td>
-                </tr>
-            </table>
-            <div class="flex justify-end"><div class="w-1/2"><div class="flex justify-between py-2 border-b"><span class="font-bold">Total</span><span id="invTotal">Rp 0</span></div><div class="flex justify-between py-2 border-b"><span>DP Awal</span><span id="invDP">Rp 0</span></div><div class="flex justify-between py-2 bg-blue-50 text-blue-800 p-2 rounded mt-2"><span class="font-bold">Sisa Tagihan</span><span class="font-bold text-xl" id="invSisa">Rp 0</span></div></div></div>
-            <div class="mt-12 text-center text-sm text-gray-500"><br><br><br><p class="font-bold border-t border-black inline-block pt-2 w-48 whitespace-normal break-words" id="invOwnerName">( Owner )</p></div>
-            <div class="mt-8 text-center text-xs text-gray-400 italic border-t border-gray-200 pt-4 font-medium">dibuat dengan WedMate by Dzaza App</div>
+            <div class="mt-auto pt-8">
+                <div class="text-center text-sm text-gray-500"><br><br><br><p class="font-bold border-t border-black inline-block pt-2 w-48 whitespace-normal break-words" id="invOwnerName">( Owner )</p></div>
+                <div class="mt-8 text-center text-xs text-gray-400 italic border-t border-gray-200 pt-4 font-medium">dibuat dengan WedMate by Dzaza App</div>
+            </div>
         </div>
 
         <!-- ANALYSIS REPORT TEMPLATE -->
-        <div id="analysisReportTemplate" class="hidden-section bg-white text-black p-8" style="width: 710px; box-sizing: border-box;">
-            <div class="flex items-center justify-between border-b-4 border-double border-gray-800 pb-4 mb-6">
-                <div class="w-1/4 flex justify-start">
-                    <img id="arLogo" class="max-h-20 max-w-full object-contain hidden-section bg-white rounded-md">
+        <div id="analysisReportTemplate" class="hidden-section bg-white text-black p-10 flex flex-col" style="width: 794px; min-height: 1123px; box-sizing: border-box;">
+            <div class="flex-grow">
+                <div class="flex items-center justify-between border-b-4 border-double border-gray-800 pb-4 mb-6">
+                    <div class="w-1/4 flex justify-start">
+                        <img id="arLogo" class="max-h-20 max-w-full object-contain hidden-section bg-white rounded-md">
+                    </div>
+                    <div class="w-2/4 text-center px-4">
+                        <h1 class="text-3xl font-bold text-blue-600 uppercase" id="arWoName">Brand WO</h1>
+                        <p class="text-sm mt-1 text-gray-600 font-medium whitespace-normal break-words" id="arTitle">Keseluruhan Tahun Ini</p>
+                    </div>
+                    <div class="w-1/4 text-right">
+                        <h2 class="text-lg font-bold text-gray-800 leading-tight">LAPORAN<br>KEUANGAN</h2>
+                    </div>
                 </div>
-                <div class="w-2/4 text-center px-4">
-                    <h1 class="text-3xl font-bold text-blue-600 uppercase" id="arWoName">Brand WO</h1>
-                    <p class="text-sm mt-1 text-gray-600 font-medium whitespace-normal break-words" id="arTitle">Keseluruhan Tahun Ini</p>
-                </div>
-                <div class="w-1/4 text-right">
-                    <h2 class="text-lg font-bold text-gray-800 leading-tight">LAPORAN<br>KEUANGAN</h2>
-                </div>
-            </div>
-            
-            <div class="flex justify-between mb-6 bg-gray-100 p-4 rounded-lg"><div class="w-1/3 text-center"><p class="text-sm">Total Pemasukan</p><p class="font-bold text-xl text-green-600" id="arIncome">Rp 0</p></div><div class="w-1/3 text-center border-l border-r border-gray-300"><p class="text-sm">Total Pengeluaran</p><p class="font-bold text-xl text-red-600" id="arExpense">Rp 0</p></div><div class="w-1/3 text-center"><p class="text-sm">Laba Bersih / Margin</p><p class="font-bold text-xl text-blue-600" id="arMargin">Rp 0</p></div></div>
-            <h3 class="font-bold text-lg mb-2 border-b pb-1">Rincian Transaksi Terkait:</h3>
-            <table class="w-full text-left mb-6 border-collapse text-sm table-fixed break-words">
-                <thead>
-                    <tr class="bg-gray-200">
-                        <th class="p-2 border w-[15%]">Tanggal</th>
-                        <th class="p-2 border w-[25%]">Kategori</th>
-                        <th class="p-2 border w-[40%]">Keterangan</th>
-                        <th class="p-2 border w-[20%] text-right">Nominal</th>
-                    </tr>
-                </thead>
-                <tbody id="arTableBody"></tbody>
-            </table>
-            <div id="arTeamSection" class="hidden-section">
-                <h3 class="font-bold text-lg mb-2 border-b pb-1">Status Pembayaran Tim:</h3>
-                <table class="w-full text-left mb-8 border-collapse text-sm table-fixed break-words">
+                
+                <div class="flex justify-between mb-6 bg-gray-100 p-4 rounded-lg"><div class="w-1/3 text-center"><p class="text-sm">Total Pemasukan</p><p class="font-bold text-xl text-green-600" id="arIncome">Rp 0</p></div><div class="w-1/3 text-center border-l border-r border-gray-300"><p class="text-sm">Total Pengeluaran</p><p class="font-bold text-xl text-red-600" id="arExpense">Rp 0</p></div><div class="w-1/3 text-center"><p class="text-sm">Laba Bersih / Margin</p><p class="font-bold text-xl text-blue-600" id="arMargin">Rp 0</p></div></div>
+                <h3 class="font-bold text-lg mb-2 border-b pb-1">Rincian Transaksi Terkait:</h3>
+                <table class="w-full text-left mb-6 border-collapse text-sm table-fixed break-words">
                     <thead>
                         <tr class="bg-gray-200">
-                            <th class="p-2 border w-2/3">Nama Anggota Tim</th>
-                            <th class="p-2 border w-1/3 text-right">Status Gaji / Nominal</th>
+                            <th class="p-2 border w-[15%]">Tanggal</th>
+                            <th class="p-2 border w-[25%]">Kategori</th>
+                            <th class="p-2 border w-[40%]">Keterangan</th>
+                            <th class="p-2 border w-[20%] text-right">Nominal</th>
                         </tr>
                     </thead>
-                    <tbody id="arTeamTableBody"></tbody>
+                    <tbody id="arTableBody"></tbody>
                 </table>
+                <div id="arTeamSection" class="hidden-section">
+                    <h3 class="font-bold text-lg mb-2 border-b pb-1">Status Pembayaran Tim:</h3>
+                    <table class="w-full text-left mb-8 border-collapse text-sm table-fixed break-words">
+                        <thead>
+                            <tr class="bg-gray-200">
+                                <th class="p-2 border w-2/3">Nama Anggota Tim</th>
+                                <th class="p-2 border w-1/3 text-right">Status Gaji / Nominal</th>
+                            </tr>
+                        </thead>
+                        <tbody id="arTeamTableBody"></tbody>
+                    </table>
+                </div>
             </div>
-            <div class="mt-8 text-right text-sm"><br><br><br><p class="font-bold border-t border-black inline-block pt-2 w-48 text-center whitespace-normal break-words" id="arOwnerName">( Owner )</p></div>
-            <div class="mt-8 text-center text-xs text-gray-400 italic border-t border-gray-200 pt-4 font-medium">dibuat dengan WedMate by Dzaza App</div>
+            <div class="mt-auto pt-8">
+                <div class="text-right text-sm"><br><br><br><p class="font-bold border-t border-black inline-block pt-2 w-48 text-center whitespace-normal break-words" id="arOwnerName">( Owner )</p></div>
+                <div class="mt-8 text-center text-xs text-gray-400 italic border-t border-gray-200 pt-4 font-medium">dibuat dengan WedMate by Dzaza App</div>
+            </div>
         </div>
 
         <!-- EMPLOYEE REPORT TEMPLATE -->
-        <div id="empReportTemplate" class="hidden-section bg-white text-black p-8" style="width: 710px; box-sizing: border-box;">
-            <div class="flex items-center justify-between border-b-4 border-double border-gray-800 pb-4 mb-6">
-                <div class="w-1/4 flex justify-start">
-                    <img id="erLogo" class="max-h-20 max-w-full object-contain hidden-section bg-white rounded-md">
+        <div id="empReportTemplate" class="hidden-section bg-white text-black p-10 flex flex-col" style="width: 794px; min-height: 1123px; box-sizing: border-box;">
+            <div class="flex-grow">
+                <div class="flex items-center justify-between border-b-4 border-double border-gray-800 pb-4 mb-6">
+                    <div class="w-1/4 flex justify-start">
+                        <img id="erLogo" class="max-h-20 max-w-full object-contain hidden-section bg-white rounded-md">
+                    </div>
+                    <div class="w-2/4 text-center px-4">
+                        <h1 class="text-3xl font-bold text-blue-600 uppercase" id="erWoName">Brand WO</h1>
+                        <p class="text-sm mt-1 text-gray-600 font-medium whitespace-normal break-words" id="erTitle">Semua Anggota Tim</p>
+                    </div>
+                    <div class="w-1/4 text-right">
+                        <h2 class="text-lg font-bold text-gray-800 leading-tight">LAPORAN<br>GAJI TIM</h2>
+                    </div>
                 </div>
-                <div class="w-2/4 text-center px-4">
-                    <h1 class="text-3xl font-bold text-blue-600 uppercase" id="erWoName">Brand WO</h1>
-                    <p class="text-sm mt-1 text-gray-600 font-medium whitespace-normal break-words" id="erTitle">Semua Anggota Tim</p>
-                </div>
-                <div class="w-1/4 text-right">
-                    <h2 class="text-lg font-bold text-gray-800 leading-tight">LAPORAN<br>GAJI TIM</h2>
-                </div>
+                
+                <h3 class="font-bold text-red-600 mb-2 mt-4">Belum Digaji (Tunggakan)</h3>
+                <table class="w-full text-left mb-6 border-collapse text-sm table-fixed break-words">
+                    <thead>
+                        <tr class="bg-red-100">
+                            <th class="p-2 border border-gray-300 w-[35%]">Nama Anggota</th>
+                            <th class="p-2 border border-gray-300 w-[40%]">Nama Proyek & Tgl</th>
+                            <th class="p-2 border border-gray-300 w-[25%] text-right">Target Utang</th>
+                        </tr>
+                    </thead>
+                    <tbody id="erUnpaidBody"></tbody>
+                </table>
+                <div class="text-right text-sm font-bold mb-6 text-red-600">Total Tunggakan: <span id="erTotalUnpaid" class="text-lg">Rp 0</span></div>
+                
+                <h3 class="font-bold text-green-600 mb-2 mt-6">Sudah Digaji (Lunas)</h3>
+                <table class="w-full text-left mb-6 border-collapse text-sm table-fixed break-words">
+                    <thead>
+                        <tr class="bg-green-100">
+                            <th class="p-2 border border-gray-300 w-[35%]">Nama Anggota</th>
+                            <th class="p-2 border border-gray-300 w-[40%]">Nama Proyek & Tgl</th>
+                            <th class="p-2 border border-gray-300 w-[25%] text-right">Nominal</th>
+                        </tr>
+                    </thead>
+                    <tbody id="erPaidBody"></tbody>
+                </table>
+                <div class="text-right text-sm font-bold mt-2">Total Lunas: <span id="erTotalPaid" class="text-green-600 text-lg">Rp 0</span></div>
             </div>
-            
-            <h3 class="font-bold text-red-600 mb-2 mt-4">Belum Digaji (Tunggakan)</h3>
-            <table class="w-full text-left mb-6 border-collapse text-sm table-fixed break-words">
-                <thead>
-                    <tr class="bg-red-100">
-                        <th class="p-2 border border-gray-300 w-[35%]">Nama Anggota</th>
-                        <th class="p-2 border border-gray-300 w-[40%]">Nama Proyek & Tgl</th>
-                        <th class="p-2 border border-gray-300 w-[25%] text-right">Target Utang</th>
-                    </tr>
-                </thead>
-                <tbody id="erUnpaidBody"></tbody>
-            </table>
-            <div class="text-right text-sm font-bold mb-6 text-red-600">Total Tunggakan: <span id="erTotalUnpaid" class="text-lg">Rp 0</span></div>
-            
-            <h3 class="font-bold text-green-600 mb-2 mt-6">Sudah Digaji (Lunas)</h3>
-            <table class="w-full text-left mb-6 border-collapse text-sm table-fixed break-words">
-                <thead>
-                    <tr class="bg-green-100">
-                        <th class="p-2 border border-gray-300 w-[35%]">Nama Anggota</th>
-                        <th class="p-2 border border-gray-300 w-[40%]">Nama Proyek & Tgl</th>
-                        <th class="p-2 border border-gray-300 w-[25%] text-right">Nominal</th>
-                    </tr>
-                </thead>
-                <tbody id="erPaidBody"></tbody>
-            </table>
-            <div class="text-right text-sm font-bold mt-2">Total Lunas: <span id="erTotalPaid" class="text-green-600 text-lg">Rp 0</span></div>
-            <div class="mt-12 text-right text-sm"><br><br><br><p class="font-bold border-t border-black inline-block pt-2 w-48 text-center whitespace-normal break-words" id="erOwnerName">( Owner )</p></div>
-            <div class="mt-8 text-center text-xs text-gray-400 italic border-t border-gray-200 pt-4 font-medium">dibuat dengan WedMate by Dzaza App</div>
+            <div class="mt-auto pt-8">
+                <div class="text-right text-sm"><br><br><br><p class="font-bold border-t border-black inline-block pt-2 w-48 text-center whitespace-normal break-words" id="erOwnerName">( Owner )</p></div>
+                <div class="mt-8 text-center text-xs text-gray-400 italic border-t border-gray-200 pt-4 font-medium">dibuat dengan WedMate by Dzaza App</div>
+            </div>
         </div>
 
     </section>
