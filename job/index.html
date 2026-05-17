@@ -1292,13 +1292,13 @@
             }
         }
 
-
         // --- 9. SHARE & PDF GENERATORS ---
         function downloadOrSharePDF(elementId, filename, isLandscape = false) {
             // Update Logo for PDF before exporting
             const invLogo = document.getElementById('invLogo');
             const arLogo = document.getElementById('arLogo');
             const erLogo = document.getElementById('erLogo');
+            
             if(appData.profile.logo) {
                 if(invLogo) { invLogo.src = appData.profile.logo; invLogo.classList.remove('hidden-section'); }
                 if(arLogo) { arLogo.src = appData.profile.logo; arLogo.classList.remove('hidden-section'); }
@@ -1311,13 +1311,20 @@
 
             const el = document.getElementById(elementId);
             
-            // Pindahkan elemen ke kiri agar tetap berukuran 800px dan ter-render sebelum dicapture
             el.style.position = 'absolute';
-            el.style.left = '-9999px';
+            el.style.top = '0px';
+            el.style.left = '0px';
+            el.style.zIndex = '-9999';
             el.classList.remove('hidden-section');
             
             setTimeout(() => {
-                const opt = { margin: 0.4, filename: filename, image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2, useCORS: true }, jsPDF: { unit: 'in', format: 'a4', orientation: isLandscape ? 'landscape' : 'portrait' } };
+                const opt = { 
+                    margin: 0.4, 
+                    filename: filename, 
+                    image: { type: 'jpeg', quality: 0.98 }, 
+                    html2canvas: { scale: 2, useCORS: true, scrollY: 0, scrollX: 0 }, 
+                    jsPDF: { unit: 'in', format: 'a4', orientation: isLandscape ? 'landscape' : 'portrait' } 
+                };
                 
                 html2pdf().set(opt).from(el).outputPdf('blob').then(blob => {
                     const file = new File([blob], filename, { type: 'application/pdf' });
@@ -1326,11 +1333,14 @@
                     } else {
                         forceDownload(blob, filename);
                     }
+                    
                     el.classList.add('hidden-section');
                     el.style.position = 'static';
+                    el.style.top = 'auto';
                     el.style.left = 'auto';
+                    el.style.zIndex = 'auto';
                 });
-            }, 100);
+            }, 150); 
         }
         function forceDownload(blob, filename) { const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = filename; a.click(); URL.revokeObjectURL(url); }
 
