@@ -778,7 +778,17 @@
             if(e.target.value === 'Gaji Tim') { document.getElementById('containerEmployee').classList.remove('hidden-section'); renderEmployeeDropdown(); }
             else { document.getElementById('containerEmployee').classList.add('hidden-section'); }
         });
-        function renderJobDropdownForTransaction() { document.getElementById('transJob').innerHTML = '<option value="operasional">Umum / Internal</option>' + appData.agendas.map(a => `<option value="${a.id}">${a.client} - ${formatTgl(a.date, a.endDate)}</option>`).join(''); }
+        function renderJobDropdownForTransaction() { 
+            const jobOptions = appData.agendas.map(a => `<option value="${a.id}">${a.client} - ${formatTgl(a.date, a.endDate)}</option>`).join('');
+            document.getElementById('transJob').innerHTML = '<option value="operasional">Umum / Internal</option>' + jobOptions; 
+            
+            const filterEl = document.getElementById('filterTransJob');
+            if(filterEl) {
+                const prevVal = filterEl.value;
+                filterEl.innerHTML = '<option value="all">Semua Proyek</option><option value="operasional">Internal / Umum</option>' + jobOptions;
+                if(prevVal) filterEl.value = prevVal;
+            }
+        }
         function renderEmployeeDropdown() { document.getElementById('transEmployee').innerHTML = '<option value="">-- Pilih Anggota Tim --</option>' + appData.employees.map(e => `<option value="${e.id}">${e.name}</option>`).join(''); }
         
         function toggleTransForm() {
