@@ -9,7 +9,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="WedMate">
     <meta name="mobile-web-app-capable" content="yes">
-    <meta name="theme-color" content="#8a4af3" id="themeColorMeta">
+    <meta name="theme-color" content="#007AFF" id="themeColorMeta">
     
     <link rel="icon" type="image/png" href="./logo.png">
     <link rel="apple-touch-icon" href="./logo.png">
@@ -25,11 +25,8 @@
             theme: { 
                 extend: { 
                     colors: { 
-                        wedPink: '#ff8ba7',    
-                        wedPurple: '#c454f0',  
-                        wedBlue: '#4a3aff',    
-                        iosBlue: '#8a4af3',    
-                        iosDarkBlue: '#4a3aff' 
+                        iosBlue: '#007AFF',    
+                        iosDarkBlue: '#0A84FF' 
                     } 
                 } 
             }
@@ -44,7 +41,7 @@
         button, input, select, textarea { transition: background-color 0.2s ease, border-color 0.2s ease, opacity 0.2s ease, transform 0.1s ease; }
         .hidden-section { display: none !important; }
         .pb-nav { padding-bottom: 120px; }
-        .cb-custom { accent-color: #8a4af3; transform: scale(1.2); cursor: pointer; }
+        .cb-custom { accent-color: #007AFF; transform: scale(1.2); cursor: pointer; }
         
         @keyframes fadeInSmooth { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
         .fade-in { animation: fadeInSmooth 0.25s ease-out forwards; }
@@ -294,7 +291,7 @@
             </div>
         </main>
 
-        <button id="fabBtn" class="fixed bottom-24 right-6 bg-gradient-to-br from-[#c454f0] via-[#8a4af3] to-[#4a3aff] text-white w-14 h-14 rounded-full flex items-center justify-center text-2xl shadow-[0_8px_20px_rgba(138,74,243,0.4)] border-2 border-gray-50 dark:border-gray-900 active:scale-90 z-50 transition-transform">
+        <button id="fabBtn" class="fixed bottom-24 right-6 bg-gradient-to-r from-iosBlue to-blue-400 text-white w-14 h-14 rounded-full flex items-center justify-center text-2xl shadow-[0_8px_20px_rgba(0,122,255,0.4)] border-2 border-gray-50 dark:border-gray-900 active:scale-90 z-50 transition-transform">
             <i class="fas fa-plus"></i>
         </button>
 
@@ -328,7 +325,7 @@
             "start_url": ".",
             "display": "standalone",
             "background_color": "#f9fafb",
-            "theme_color": "#8a4af3",
+            "theme_color": "#007AFF",
             "icons": [
                 {
                     "src": "./logo.png",
@@ -369,6 +366,7 @@
             const btnPwa = document.getElementById('btnPwaInstall'); if(btnPwa) btnPwa.classList.remove('hidden-section');
         });
 
+        // Panduan Install Berdasarkan Browser / OS
         function openInstallModal() {
             const modal = document.getElementById('installModal'); const instructions = document.getElementById('installInstructions');
             const btnPwa = document.getElementById('btnPwaInstall'); const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
@@ -501,7 +499,11 @@
         function resetAgendaForm() { editModes.agenda = null; document.getElementById('formAgenda').reset(); document.getElementById('agendaSisa').value = ''; const checkboxes = document.querySelectorAll('.emp-checkbox'); checkboxes.forEach(cb => { cb.checked = false; document.getElementById(`emp_salary_${cb.value}`).classList.add('hidden-section'); }); document.getElementById('btnSubmitAgenda').innerText = "Simpan Agenda"; document.getElementById('btnCancelEditAgenda').classList.add('hidden-section'); document.getElementById('containerAgendaForm').classList.add('hidden-section'); const btn = document.getElementById('btnToggleAgendaForm'); btn.innerHTML = '<i class="fas fa-plus"></i> Agenda Baru'; btn.classList.replace('bg-gray-500', 'bg-iosBlue'); }
 
         // --- MASTER TEAM & WAGES LOGIC ---
+        document.getElementById('formEmployee').addEventListener('submit', (e) => { e.preventDefault(); saveStateToHistory(); if(editModes.employee) { const idx = appData.employees.findIndex(em => em.id === editModes.employee); if(idx > -1) appData.employees[idx].name = document.getElementById('empName').value; } else { appData.employees.push({ id: Date.now(), name: document.getElementById('empName').value }); } appData.employees.sort((a, b) => a.name.localeCompare(b.name)); saveData(); resetEmpForm(); renderEmployeeView(); renderEmployeeDropdown(); renderEmployeeCheckboxesForAgenda(); showToast("Anggota tim disimpan!"); });
+        function editEmployee(id) { const emp = appData.employees.find(e => e.id === id); if(!emp) return; editModes.employee = id; document.getElementById('empName').value = emp.name; document.getElementById('btnSubmitEmp').innerText = "Update"; document.getElementById('btnSubmitEmp').classList.replace('bg-gray-800', 'bg-orange-500'); document.getElementById('btnCancelEditEmp').classList.remove('hidden-section'); document.getElementById('empName').focus(); }
         function resetEmpForm() { editModes.employee = null; document.getElementById('empName').value = ''; document.getElementById('btnSubmitEmp').innerText = "Tambah"; document.getElementById('btnSubmitEmp').classList.replace('bg-orange-500', 'bg-gray-800'); document.getElementById('btnCancelEditEmp').classList.add('hidden-section'); }
+        function deleteEmployee(id) { showConfirm("Hapus Anggota Tim?", () => { saveStateToHistory(); appData.employees = appData.employees.filter(e => e.id !== id); saveData(); renderEmployeeView(); renderEmployeeDropdown(); renderEmployeeCheckboxesForAgenda(); showToast("Anggota dihapus."); }); }
+
         function renderEmployeeView() {
             document.getElementById('empManageList').innerHTML = appData.employees.map(e => `<div class="flex justify-between items-center bg-gray-100 dark:bg-gray-800 p-3 rounded-xl fade-in"><span class="font-bold text-sm">${e.name}</span><div><button onclick="editEmployee(${e.id})" class="text-orange-500 mr-3 active:scale-90"><i class="fas fa-edit"></i></button><button onclick="deleteEmployee(${e.id})" class="text-red-500 active:scale-90"><i class="fas fa-trash"></i></button></div></div>`).join('');
             const selFilter = document.getElementById('empFilterSelect'); const filterVal = selFilter.value; selFilter.innerHTML = '<option value="">Semua Anggota</option>' + appData.employees.map(e => `<option value="${e.id}">${e.name}</option>`).join(''); selFilter.value = filterVal || "";
@@ -513,28 +515,14 @@
             document.getElementById('unpaidTableBody').innerHTML = unpaidHTML || `<tr><td colspan="3" class="p-4 text-center text-gray-500 text-sm italic">Tidak ada tunggakan gaji</td></tr>`; document.getElementById('totalUnpaidDisplay').innerText = formatRp(totalUnpaidAmount);
             document.getElementById('paidTableBody').innerHTML = paidHTML || `<tr><td colspan="3" class="p-4 text-center text-gray-500 text-sm italic">Belum ada riwayat lunas</td></tr>`; document.getElementById('totalPaidDisplay').innerText = formatRp(totalPaidAmount);
         }
-        function editEmployee(id) { const emp = appData.employees.find(e => e.id === id); if(!emp) return; editModes.employee = id; document.getElementById('empName').value = emp.name; document.getElementById('btnSubmitEmp').innerText = "Update"; document.getElementById('btnSubmitEmp').classList.replace('bg-gray-800', 'bg-orange-500'); document.getElementById('btnCancelEditEmp').classList.remove('hidden-section'); document.getElementById('empName').focus(); }
-        function deleteEmployee(id) { showConfirm("Hapus Anggota Tim?", () => { saveStateToHistory(); appData.employees = appData.employees.filter(e => e.id !== id); saveData(); renderEmployeeView(); renderEmployeeDropdown(); renderEmployeeCheckboxesForAgenda(); showToast("Anggota dihapus."); }); }
 
         // --- REAL-TIME ANALYSIS LOGIC ---
         function initAnalysisDropdowns() { const selJob = document.getElementById('analysisJobSelect'); const prevJobVal = selJob.value; selJob.innerHTML = '<option value="">Keseluruhan (Semua Waktu)</option>' + appData.agendas.map(a => `<option value="${a.id}">Proyek: ${a.client}</option>`).join(''); selJob.value = prevJobVal || ""; }
         function renderProjectAnalysis(jobIdRaw) {
             currentAnalysisJobId = jobIdRaw; let inc = 0, exp = 0; let titleName = ""; let filterTrans = []; const chartContainer = document.getElementById('analysisChartContainer'); if(analysisChartInst) { analysisChartInst.destroy(); analysisChartInst = null; } chartContainer.innerHTML = '<canvas id="analysisChartCanvas"></canvas>'; const tbodyProj = document.getElementById('analysisProjectTableBody'); tbodyProj.innerHTML = ''; const teamDiv = document.getElementById('analysisJobTeamContainer'); const tbodyTeam = document.getElementById('analysisJobTeamTableBody');
-            if (!jobIdRaw) { titleName = `Keseluruhan Proyek (Semua Waktu)`; filterTrans = appData.transactions; teamDiv.classList.add('hidden-section'); } 
-            else {
-                const jobId = parseInt(jobIdRaw); const agenda = appData.agendas.find(a => a.id === jobId); if(!agenda) return; titleName = `Proyek: ${agenda.client}`; filterTrans = appData.transactions.filter(t => t.jobId === jobId); teamDiv.classList.remove('hidden-section'); let rowsTeam = '';
-                if(agenda.involvedEmployees && agenda.involvedEmployees.length > 0) {
-                    agenda.involvedEmployees.forEach(invObj => {
-                        const empId = typeof invObj === 'object' ? invObj.empId : invObj; const expected = typeof invObj === 'object' ? invObj.expectedSalary : 0; const emp = appData.employees.find(e => e.id === empId); if(!emp) return; let paidAmount = 0; appData.transactions.forEach(t => { if(t.jobId === agenda.id && t.empId === emp.id && t.category.includes('Gaji')) paidAmount += t.amount; }); let statusBadge = ""; let actionBtn = "";
-                        if (paidAmount >= expected && expected > 0 || (expected === 0 && paidAmount > 0)) { statusBadge = `<span class="bg-green-100 text-green-700 px-2 py-1 rounded text-[10px] font-bold whitespace-nowrap">Lunas (${formatRp(paidAmount)})</span>`; actionBtn = `<i class="fas fa-check-circle text-green-500 text-lg"></i>`; } 
-                        else { const sisa = expected > paidAmount ? expected - paidAmount : 0; statusBadge = `<span class="bg-red-100 text-red-700 px-2 py-1 rounded text-[10px] font-bold whitespace-nowrap">Belum Lunas ${sisa > 0 ? '<br>(Utang '+formatRp(sisa)+')' : ''}</span>`; actionBtn = `<button onclick="payEmployee(${agenda.id}, ${emp.id}, ${sisa})" class="text-[10px] bg-blue-100 text-blue-600 px-3 py-1 rounded font-bold shadow-sm active:scale-95">Bayar</button>`; }
-                        rowsTeam += `<tr class="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 fade-in"><td class="p-3 font-medium align-top whitespace-normal break-words">${emp.name}</td><td class="p-3 align-top">${statusBadge}</td><td class="p-3 text-center align-top">${actionBtn}</td></tr>`;
-                    });
-                } else { rowsTeam = `<tr><td colspan="3" class="p-4 text-center text-gray-500 italic">Tidak ada tim ditugaskan</td></tr>`; } tbodyTeam.innerHTML = rowsTeam;
-            }
+            if (!jobIdRaw) { titleName = `Keseluruhan Proyek (Semua Waktu)`; filterTrans = appData.transactions; teamDiv.classList.add('hidden-section'); } else { const jobId = parseInt(jobIdRaw); const agenda = appData.agendas.find(a => a.id === jobId); if(!agenda) return; titleName = `Proyek: ${agenda.client}`; filterTrans = appData.transactions.filter(t => t.jobId === jobId); teamDiv.classList.remove('hidden-section'); let rowsTeam = ''; if(agenda.involvedEmployees && agenda.involvedEmployees.length > 0) { agenda.involvedEmployees.forEach(invObj => { const empId = typeof invObj === 'object' ? invObj.empId : invObj; const expected = typeof invObj === 'object' ? invObj.expectedSalary : 0; const emp = appData.employees.find(e => e.id === empId); if(!emp) return; let paidAmount = 0; appData.transactions.forEach(t => { if(t.jobId === agenda.id && t.empId === emp.id && t.category.includes('Gaji')) paidAmount += t.amount; }); let statusBadge = ""; let actionBtn = ""; if (paidAmount >= expected && expected > 0 || (expected === 0 && paidAmount > 0)) { statusBadge = `<span class="bg-green-100 text-green-700 px-2 py-1 rounded text-[10px] font-bold whitespace-nowrap">Lunas (${formatRp(paidAmount)})</span>`; actionBtn = `<i class="fas fa-check-circle text-green-500 text-lg"></i>`; } else { const sisa = expected > paidAmount ? expected - paidAmount : 0; statusBadge = `<span class="bg-red-100 text-red-700 px-2 py-1 rounded text-[10px] font-bold whitespace-nowrap">Belum Lunas ${sisa > 0 ? '<br>(Utang '+formatRp(sisa)+')' : ''}</span>`; actionBtn = `<button onclick="payEmployee(${agenda.id}, ${emp.id}, ${sisa})" class="text-[10px] bg-blue-100 text-blue-600 px-3 py-1 rounded font-bold shadow-sm active:scale-95">Bayar</button>`; } rowsTeam += `<tr class="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 fade-in"><td class="p-3 font-medium align-top whitespace-normal break-words">${emp.name}</td><td class="p-3 align-top">${statusBadge}</td><td class="p-3 text-center align-top">${actionBtn}</td></tr>`; }); } else { rowsTeam = `<tr><td colspan="3" class="p-4 text-center text-gray-500 italic">Tidak ada tim ditugaskan</td></tr>`; } tbodyTeam.innerHTML = rowsTeam; }
             let rowsProj = ''; filterTrans.forEach(t => { t.type === 'income' ? inc += t.amount : exp += t.amount; rowsProj += `<tr class="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 fade-in"><td class="p-3 whitespace-nowrap align-top">${formatTglIndo(t.date)}</td><td class="p-3 font-medium align-top whitespace-normal break-words ${t.type==='income'?'text-green-600':'text-red-600'}"><i class="fas fa-arrow-${t.type==='income'?'down':'up'} mr-1"></i> ${t.category}</td><td class="p-3 text-xs text-gray-500 align-top whitespace-normal break-words">${t.notes || '-'}</td><td class="p-3 text-right font-bold align-top">${formatRp(t.amount)}</td></tr>`; }); tbodyProj.innerHTML = filterTrans.length === 0 ? `<tr><td colspan="4" class="p-4 text-center text-gray-500 italic">Belum ada transaksi</td></tr>` : rowsProj; document.getElementById('analysisClientName').innerText = titleName; document.getElementById('analysisIncome').innerText = formatRp(inc); document.getElementById('analysisExpense').innerText = formatRp(exp); document.getElementById('analysisMargin').innerText = formatRp(inc - exp);
-            if (inc === 0 && exp === 0) { chartContainer.innerHTML = '<div class="flex items-center justify-center h-full w-full text-gray-400 italic text-sm">Belum ada data keuangan.</div>'; } 
-            else { setTimeout(() => { const canvasEl = document.getElementById('analysisChartCanvas'); if (canvasEl) { const ctx = canvasEl.getContext('2d'); analysisChartInst = new Chart(ctx, { type: 'doughnut', data: { labels: ['Pemasukan', 'Pengeluaran'], datasets: [{ data: [inc, exp], backgroundColor: ['#34C759', '#FF3B30'], borderWidth: 2, borderColor: document.documentElement.classList.contains('dark') ? '#1f2937' : '#fff' }] }, options: { animation: { duration: 1500, easing: 'easeOutQuart' }, responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels:{ color: document.documentElement.classList.contains('dark') ? '#fff' : '#000'} } } } }); } }, 100); }
+            if (inc === 0 && exp === 0) { chartContainer.innerHTML = '<div class="flex items-center justify-center h-full w-full text-gray-400 italic text-sm">Belum ada data keuangan.</div>'; } else { setTimeout(() => { const canvasEl = document.getElementById('analysisChartCanvas'); if (canvasEl) { const ctx = canvasEl.getContext('2d'); analysisChartInst = new Chart(ctx, { type: 'doughnut', data: { labels: ['Pemasukan', 'Pengeluaran'], datasets: [{ data: [inc, exp], backgroundColor: ['#34C759', '#FF3B30'], borderWidth: 2, borderColor: document.documentElement.classList.contains('dark') ? '#1f2937' : '#fff' }] }, options: { animation: { duration: 1500, easing: 'easeOutQuart' }, responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels:{ color: document.documentElement.classList.contains('dark') ? '#fff' : '#000'} } } } }); } }, 100); }
         }
 
         // --- EXPORT HQ JPG ENGINE ---
