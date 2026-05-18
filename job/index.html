@@ -203,10 +203,14 @@
                         <h4 class="font-bold text-sm mb-2 mt-4 border-t dark:border-gray-700 pt-3 text-gray-800 dark:text-white">Pengaturan Cetak Invoice</h4>
                         <div>
                             <label class="block text-xs font-medium mb-1">Warna Aksen Invoice</label>
-                            <div class="flex items-center gap-3">
+                            <div class="flex items-center gap-3 mb-2">
                                 <input type="color" id="setInvColor" value="#2563eb" class="w-10 h-10 border-0 p-0 rounded-lg cursor-pointer bg-transparent">
-                                <span class="text-xs text-gray-500">Pilih warna untuk *header*, teks tabel, dan garis pada hasil render JPG.</span>
+                                <span class="text-xs text-gray-500">Warna garis dan tabel PDF/JPG.</span>
                             </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium mb-1">Syarat & Ketentuan (Tampil di Invoice)</label>
+                            <textarea id="setInvTerms" class="w-full p-2 border rounded-xl dark:bg-gray-800 outline-none text-sm" placeholder="Contoh: Harap pelunasan H-1 acara..."></textarea>
                         </div>
 
                         <h4 class="font-bold text-sm mb-2 mt-4 border-t dark:border-gray-700 pt-3 text-gray-800 dark:text-white">Informasi Kontak (Kop Surat)</h4>
@@ -242,7 +246,7 @@
                     <img id="invLogo" class="max-h-16 max-w-[120px] object-contain hidden-section bg-white">
                     <div class="flex flex-col">
                         <h1 class="text-2xl font-black text-gray-900 tracking-wide uppercase leading-none" id="invWoName">BRAND WO</h1>
-                        <p class="text-xs text-gray-500 tracking-widest uppercase mt-1">WEDDING ORGANIZER</p>
+                        <p class="text-xs text-gray-500 uppercase mt-1 break-words max-w-xs" id="invWoAddressHeader">ALAMAT WO</p>
                     </div>
                 </div>
                 <div class="w-1/2 text-right">
@@ -330,7 +334,7 @@
                     <h4 class="font-bold text-gray-900 mb-2">Thank you for your business!</h4>
                     <div class="mt-4">
                         <p class="font-bold text-sm text-gray-900 mb-1">Term and Conditions :</p>
-                        <p class="text-xs text-gray-500 leading-relaxed pr-10">Harap lakukan pelunasan maksimal H-1 sebelum acara. Terdapat biaya tambahan apabila ada *request* di luar rincian paket di atas.</p>
+                        <p class="text-xs text-gray-500 leading-relaxed pr-10" id="invTermsText">Harap lakukan pelunasan maksimal H-1 sebelum acara.</p>
                     </div>
                 </div>
                 <div class="w-64 text-center flex flex-col items-center">
@@ -341,17 +345,15 @@
                 </div>
             </div>
 
-            <div class="pt-2">
+            <div class="pt-2 relative">
                 <div class="flex w-full mb-4">
                     <div class="h-[2px] w-12 inv-color-bg"></div>
                     <div class="h-[2px] flex-grow bg-gray-300"></div>
                     <div class="h-[2px] w-12 inv-color-bg"></div>
                 </div>
-                <div class="flex justify-between items-center text-xs text-gray-500 px-4">
-                    <div class="flex items-center gap-2"><i class="fas fa-phone-alt text-base inv-color-text"></i> <span id="invPhoneFooter">-</span></div>
-                    <div class="flex items-center gap-2"><i class="fas fa-envelope text-base inv-color-text"></i> <span id="invEmailFooter">-</span></div>
-                    <div class="flex items-center gap-2"><i class="fab fa-instagram text-base inv-color-text"></i> <span id="invIgFooter">-</span></div>
+                <div id="invFooterContacts" class="flex flex-wrap justify-center items-center gap-x-6 gap-y-2 text-xs text-gray-600 px-4 mb-2">
                 </div>
+                <div class="absolute bottom-[-10px] right-0 text-[10px] text-gray-400 italic font-medium">©WedMate by DzazaApp</div>
             </div>
         </div>
 
@@ -416,7 +418,20 @@
 
         function updateGreeting() { const hour = new Date().getHours(); let greeting = "Selamat Malam"; if (hour < 11) greeting = "Selamat Pagi"; else if (hour < 15) greeting = "Selamat Siang"; else if (hour < 18) greeting = "Selamat Sore"; document.getElementById('headerGreeting').innerText = greeting; }
         
-        document.getElementById('onboardingForm').addEventListener('submit', (e) => { e.preventDefault(); saveStateToHistory(); appData.profile = { name: document.getElementById('woName').value, ownerName: document.getElementById('woOwner').value, address: document.getElementById('woAddress').value, desc: document.getElementById('woDesc').value, logo: document.getElementById('woLogoPreview').dataset.b64 || null, phone: '', email: '', ig: '', tiktok: '', facebook: '', youtube: '', bankName: '', bankAcc: '', bankHolder: '', signature: null, invoiceColor: '#2563eb' }; saveData(); document.getElementById('onboardingScreen').classList.add('hidden-section'); initMainApp(); showToast("Aplikasi siap digunakan!"); });
+        document.getElementById('onboardingForm').addEventListener('submit', (e) => { 
+            e.preventDefault(); saveStateToHistory(); 
+            appData.profile = { 
+                name: document.getElementById('woName').value, 
+                ownerName: document.getElementById('woOwner').value, 
+                address: document.getElementById('woAddress').value, 
+                desc: document.getElementById('woDesc').value, 
+                logo: document.getElementById('woLogoPreview').dataset.b64 || null, 
+                phone: '', email: '', ig: '', tiktok: '', facebook: '', youtube: '', 
+                bankName: '', bankAcc: '', bankHolder: '', signature: null, invoiceColor: '#2563eb',
+                invTerms: 'Harap lakukan pelunasan maksimal H-1 sebelum acara. Terdapat biaya tambahan apabila ada request di luar rincian paket di atas.'
+            }; 
+            saveData(); document.getElementById('onboardingScreen').classList.add('hidden-section'); initMainApp(); showToast("Aplikasi siap digunakan!"); 
+        });
 
         function initMainApp() { document.getElementById('mainApp').classList.remove('hidden-section'); updateHeaderLogo(); setupNavigation(); updateDashboard(); setupAgendaPackageLogic(); updateCategoryDropdown('income'); renderJobDropdownForTransaction(); appData.employees.sort((a, b) => a.name.localeCompare(b.name)); renderEmployeeView(); renderEmployeeCheckboxesForAgenda(); initAnalysisDropdowns(); renderCalendar(); }
 
@@ -431,6 +446,7 @@
             document.getElementById('setWoAddress').value = appData.profile.address || ''; 
             document.getElementById('setWoDesc').value = appData.profile.desc || ''; 
             document.getElementById('setInvColor').value = appData.profile.invoiceColor || '#2563eb';
+            document.getElementById('setInvTerms').value = appData.profile.invTerms || 'Harap lakukan pelunasan maksimal H-1 sebelum acara. Terdapat biaya tambahan apabila ada request di luar rincian paket di atas.';
             document.getElementById('setWoPhone').value = appData.profile.phone || ''; 
             document.getElementById('setWoEmail').value = appData.profile.email || ''; 
             document.getElementById('setWoIg').value = appData.profile.ig || ''; 
@@ -450,6 +466,7 @@
             appData.profile.address = document.getElementById('setWoAddress').value; 
             appData.profile.desc = document.getElementById('setWoDesc').value; 
             appData.profile.invoiceColor = document.getElementById('setInvColor').value;
+            appData.profile.invTerms = document.getElementById('setInvTerms').value;
             appData.profile.logo = document.getElementById('setWoLogoPreview').dataset.b64 || null; 
             appData.profile.phone = document.getElementById('setWoPhone').value; 
             appData.profile.email = document.getElementById('setWoEmail').value; 
@@ -522,7 +539,7 @@
         function generateAnalysisJPG(action) { let title = "", inc = 0, exp = 0, filterTrans = []; const arTeamSection = document.getElementById('arTeamSection'); const arTeamBody = document.getElementById('arTeamTableBody'); arTeamBody.innerHTML = ''; if (!currentAnalysisJobId) { title = `Keseluruhan (Semua Waktu)`; filterTrans = appData.transactions; arTeamSection.classList.add('hidden-section'); } else { const jobId = parseInt(currentAnalysisJobId); const agenda = appData.agendas.find(a => a.id === jobId); title = `Proyek: ${agenda.client}`; filterTrans = appData.transactions.filter(t => t.jobId === jobId); arTeamSection.classList.remove('hidden-section'); if(agenda.involvedEmployees && agenda.involvedEmployees.length > 0) { agenda.involvedEmployees.forEach(invObj => { const empId = typeof invObj === 'object' ? invObj.empId : invObj; const expected = typeof invObj === 'object' ? invObj.expectedSalary : 0; const emp = appData.employees.find(e => e.id === empId); if(!emp) return; let paidAmount = 0; appData.transactions.forEach(t => { if(t.jobId === agenda.id && t.empId === emp.id && t.category.includes('Gaji')) paidAmount += t.amount; }); let status = ""; if (paidAmount >= expected && expected > 0 || (expected === 0 && paidAmount > 0)) status = `Lunas (${formatRp(paidAmount)})`; else { const sisa = expected > paidAmount ? expected - paidAmount : 0; status = `Belum Lunas ${sisa > 0 ? '(Utang '+formatRp(sisa)+')' : ''}`; } arTeamBody.innerHTML += `<tr><td class="p-3 border border-black align-top whitespace-normal break-words">${emp.name}</td><td class="p-3 border border-black text-right font-bold align-top whitespace-normal break-words ${paidAmount >= expected ? 'text-green-600' : 'text-red-600'}">${status}</td></tr>`; }); } else { arTeamBody.innerHTML = `<tr><td colspan="2" class="p-3 border border-black text-center">Tidak ada tim karyawan</td></tr>`; } } filterTrans.forEach(t => { t.type === 'income' ? inc += t.amount : exp += t.amount; }); document.getElementById('arWoName').innerText = appData.profile.name; document.getElementById('arOwnerName').innerText = `( ${appData.profile.ownerName || 'Owner'} )`; document.getElementById('arTitle').innerText = title; document.getElementById('arIncome').innerText = formatRp(inc); document.getElementById('arExpense').innerText = formatRp(exp); document.getElementById('arMargin').innerText = formatRp(inc - exp); document.getElementById('arWoAddress').innerText = appData.profile.address || '-'; document.getElementById('arContacts').innerHTML = getContactsHTML(); document.getElementById('arTableBody').innerHTML = filterTrans.map(t => `<tr><td class="p-3 border border-black align-top whitespace-normal break-words">${formatTglIndo(t.date)}</td><td class="p-3 border border-black align-top whitespace-normal break-words">${t.category}</td><td class="p-3 border border-black text-xs align-top whitespace-normal break-words">${t.notes || '-'}</td><td class="p-3 border border-black text-right align-top whitespace-normal break-words ${t.type==='income'?'text-green-600':'text-red-600'}">${t.type==='income'?'+':'-'} ${formatRp(t.amount)}</td></tr>`).join(''); if(filterTrans.length === 0) document.getElementById('arTableBody').innerHTML = `<tr><td colspan="4" class="p-3 border border-black text-center">Kosong</td></tr>`; exportAsJPG('analysisReportTemplate', `Laporan_Proyek_${new Date().getTime()}`, action); }
         function generateEmpReportJPG(action) { const selFilter = document.getElementById('empFilterSelect'); const filterVal = selFilter.value; const empMonthSelect = document.getElementById('empFilterMonth'); const selMonth = empMonthSelect.value; const selMonthText = selMonth ? empMonthSelect.options[empMonthSelect.selectedIndex].text : 'Semua Bulan'; const selYear = document.getElementById('empFilterYear').value; const selYearText = selYear ? selYear : 'Semua Tahun'; let title = filterVal ? `Anggota Tim: ${selFilter.options[selFilter.selectedIndex].text}` : "Semua Anggota Tim"; let subtitle = `Periode: ${selMonthText} ${selYearText}`; let unpaidArr = []; let paidArr = []; let totalPaidAmount = 0; let totalUnpaidAmount = 0; appData.employees.forEach(emp => { if(filterVal && emp.id !== parseInt(filterVal)) return; appData.agendas.forEach(agenda => { const aDate = new Date(agenda.date); if (selMonth && String(aDate.getMonth() + 1).padStart(2, '0') !== selMonth) return; if (selYear && String(aDate.getFullYear()) !== selYear) return; const invObj = (agenda.involvedEmployees || []).find(ie => (typeof ie === 'object' ? ie.empId === emp.id : ie === emp.id)); if(invObj) { const expected = typeof invObj === 'object' ? (invObj.expectedSalary || 0) : 0; let paid = 0; appData.transactions.forEach(t => { if(t.jobId === agenda.id && t.empId === emp.id && t.category.includes('Gaji')) paid += t.amount; }); if(paid < expected || (expected === 0 && paid === 0)) { const sisa = expected > paid ? expected - paid : 0; totalUnpaidAmount += sisa; unpaidArr.push({ empName: emp.name, empId: emp.id, client: agenda.client, date: agenda.date, agendaId: agenda.id, amount: sisa }); } else { totalPaidAmount += paid; paidArr.push({ empName: emp.name, empId: emp.id, client: agenda.client, date: agenda.date, agendaId: agenda.id, amount: paid }); } } }); }); const sortVal = document.getElementById('empSortSelect').value; const sortFn = (a, b) => { if(sortVal === 'name-asc') return a.empName.localeCompare(b.empName) || new Date(b.date) - new Date(a.date); if(sortVal === 'name-desc') return b.empName.localeCompare(a.empName) || new Date(b.date) - new Date(a.date); if(sortVal === 'date-asc') return new Date(a.date) - new Date(b.date); return new Date(b.date) - new Date(a.date); }; unpaidArr.sort(sortFn); paidArr.sort(sortFn); let uHTML = unpaidArr.map(i => `<tr><td class="p-3 border border-black font-bold align-top whitespace-normal break-words">${i.empName}</td><td class="p-3 border border-black align-top whitespace-normal break-words">${i.client} <br><span class="text-gray-500">(${formatTglIndo(i.date)})</span></td><td class="p-3 border border-black text-right text-red-600 font-bold align-top">${i.amount > 0 ? formatRp(i.amount) : '-'}</td></tr>`).join(''); let pHTML = paidArr.map(i => `<tr><td class="p-3 border border-black font-bold align-top whitespace-normal break-words">${i.empName}</td><td class="p-3 border border-black align-top whitespace-normal break-words">${i.client} <br><span class="text-gray-500">(${formatTglIndo(i.date)})</span></td><td class="p-3 border border-black text-right align-top">${formatRp(i.amount)}</td></tr>`).join(''); document.getElementById('erWoName').innerText = appData.profile.name; document.getElementById('erOwnerName').innerText = `( ${appData.profile.ownerName || 'Owner'} )`; document.getElementById('erTitle').innerText = `${title} | ${subtitle}`; document.getElementById('erWoAddress').innerText = appData.profile.address || '-'; document.getElementById('erContacts').innerHTML = getContactsHTML(); document.getElementById('erUnpaidBody').innerHTML = uHTML || `<tr><td colspan="3" class="p-3 border border-black text-center text-gray-500 italic">Tidak ada tunggakan gaji</td></tr>`; document.getElementById('erPaidBody').innerHTML = pHTML || `<tr><td colspan="3" class="p-3 border border-black text-center text-gray-500 italic">Belum ada riwayat lunas</td></tr>`; document.getElementById('erTotalUnpaid').innerText = formatRp(totalUnpaidAmount); document.getElementById('erTotalPaid').innerText = formatRp(totalPaidAmount); exportAsJPG('empReportTemplate', `Laporan_Gaji_Tim_${new Date().getTime()}`, action); }
 
-        // EXPORT INVOICE DENGAN WARNA DINAMIS
+        // EXPORT INVOICE DENGAN WARNA DINAMIS & KONTAK DB
         function generateInvoiceJPG(agendaId, action) {
             const agenda = appData.agendas.find(a => a.id === agendaId);
             if(!agenda) return;
@@ -535,12 +552,13 @@
             document.querySelectorAll('.inv-color-border').forEach(el => el.style.borderColor = invColor);
             
             // Konversi hex ke rgba untuk baris tabel yang transparan
-            const hexToRgb = hex => {
-                let c; if(/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)){ c= hex.substring(1).split(''); if(c.length== 3){ c= [c[0], c[0], c[1], c[1], c[2], c[2]]; } c= '0x'+c.join(''); return 'rgba('+[(c>>16)&255, (c>>8)&255, c&255].join(',')+',0.1)'; } return 'rgba(37, 99, 235, 0.1)';
-            }
+            const hexToRgb = hex => { let c; if(/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)){ c= hex.substring(1).split(''); if(c.length== 3){ c= [c[0], c[0], c[1], c[1], c[2], c[2]]; } c= '0x'+c.join(''); return 'rgba('+[(c>>16)&255, (c>>8)&255, c&255].join(',')+',0.1)'; } return 'rgba(37, 99, 235, 0.1)'; }
             document.getElementById('invRowBg').style.backgroundColor = hexToRgb(invColor);
 
             document.getElementById('invWoName').innerText = appData.profile.name || 'NAMA BRAND WO';
+            // Alamat WO di Header
+            document.getElementById('invWoAddressHeader').innerText = appData.profile.address || 'Alamat WO belum diatur';
+            
             document.getElementById('invClient').innerText = agenda.client;
             document.getElementById('invEventDate').innerText = `Tanggal Acara: ${formatTgl(agenda.date, agenda.endDate)}`;
             document.getElementById('invWoAddress').innerText = agenda.address || '-';
@@ -568,10 +586,20 @@
             document.getElementById('invBankAcc').innerText = appData.profile.bankAcc || '-';
             document.getElementById('invBankHolder').innerText = appData.profile.bankHolder || '-';
 
+            // Terms & Conditions
+            document.getElementById('invTermsText').innerText = appData.profile.invTerms || 'Harap lakukan pelunasan maksimal H-1 sebelum acara. Terdapat biaya tambahan apabila ada request di luar rincian paket di atas.';
             document.getElementById('invOwnerName').innerText = appData.profile.ownerName || 'Nama Owner';
-            document.getElementById('invPhoneFooter').innerText = appData.profile.phone || '-';
-            document.getElementById('invEmailFooter').innerText = appData.profile.email || '-';
-            document.getElementById('invIgFooter').innerText = appData.profile.ig || '-';
+
+            // Sosial Media Dinamis
+            let footerHtml = '';
+            const p = appData.profile;
+            if(p.phone) footerHtml += `<div class="flex items-center gap-1.5"><i class="fab fa-whatsapp text-lg" style="color: ${invColor}"></i> <span>${p.phone}</span></div>`;
+            if(p.email) footerHtml += `<div class="flex items-center gap-1.5"><i class="fas fa-envelope text-lg" style="color: ${invColor}"></i> <span>${p.email}</span></div>`;
+            if(p.ig) footerHtml += `<div class="flex items-center gap-1.5"><i class="fab fa-instagram text-lg" style="color: ${invColor}"></i> <span>${p.ig}</span></div>`;
+            if(p.tiktok) footerHtml += `<div class="flex items-center gap-1.5"><i class="fab fa-tiktok text-lg" style="color: ${invColor}"></i> <span>${p.tiktok}</span></div>`;
+            if(p.facebook) footerHtml += `<div class="flex items-center gap-1.5"><i class="fab fa-facebook text-lg" style="color: ${invColor}"></i> <span>${p.facebook}</span></div>`;
+            if(p.youtube) footerHtml += `<div class="flex items-center gap-1.5"><i class="fab fa-youtube text-lg" style="color: ${invColor}"></i> <span>${p.youtube}</span></div>`;
+            document.getElementById('invFooterContacts').innerHTML = footerHtml;
 
             exportAsJPG('invoiceTemplate', `Invoice_${agenda.client.replace(/\s+/g, '_')}_${invNumber}`, action);
         }
