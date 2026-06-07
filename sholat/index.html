@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sajadah Pintar - Penghitung Rakaat</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #0b132b;
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .header {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        select {
+            background-color: #1c2541;
+            color: white;
+            border: 2px solid #4a4e69;
+            padding: 10px 20px;
+            font-size: 1.1rem;
+            border-radius: 8px;
+            outline: none;
+        }
+
+        .display-container {
+            text-align: center;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .rakaat-title {
+            font-size: 1.5rem;
+            color: #6fffe9;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .rakaat-number {
+            font-size: 12rem;
+            font-weight: bold;
+            line-height: 1;
+            text-shadow: 0 0 20px rgba(111, 255, 233, 0.3);
+        }
+
+        .status-info {
+            font-size: 1.2rem;
+            color: #a5a5a5;
+            margin-top: 10px;
+        }
+
+        /* Area Deteksi Sujud (Diletakkan di bawah dahi) */
+        .detector-zone {
+            width: 100%;
+            height: 30vh;
+            background: linear-gradient(transparent, rgba(111, 255, 233, 0.1));
+            border-top: 2px dashed #3a506b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .detector-text {
+            color: #5bc0be;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-reset {
+            background-color: #e63946;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <select id="sholatSelect" onchange="resetApp()">
+            <option value="2">Subuh (2 Rakaat)</option>
+            <option value="4" selected>Dzuhur (4 Rakaat)</option>
+            <option value="4">Ashar (4 Rakaat)</option>
+            <option value="3">Maghrib (3 Rakaat)</option>
+            <option value="4">Isya (4 Rakaat)</option>
+        </select>
+    </div>
+
+    <div class="display-container">
+        <div class="rakaat-title">Rakaat</div>
+        <div class="rakaat-number" id="rakaatDisplay">1</div>
+        <div class="status-info" id="statusDisplay">Sujud ke-0 dalam rakaat ini</div>
+    </div>
+
+    <button class="btn-reset" onclick="resetApp()">Reset</button>
+
+    <!-- Letakkan HP di sajadah, dahi menyentuh/mendekati area ini saat sujud -->
+    <div class="detector-zone" onclick="handleSujud()">
+        <div class="detector-text">[ Sentuh / Dekatkan Dahi di Sini Saat Sujud ]</div>
+    </div>
+
+    <script>
+        let totalSujud = 0;
+        let currentRakaat = 1;
+
+        function handleSujud() {
+            let targetRakaat = parseInt(document.getElementById('sholatSelect').value);
+            
+            if (currentRakaat > targetRakaat) return; // Sholat sudah selesai
+
+            totalSujud++;
+            let sujudKe = totalSujud % 2 === 0 ? 2 : 1;
+            
+            document.getElementById('statusDisplay').innerText = `Sujud ke-${sujudKe} dalam rakaat ini`;
+
+            // Jika sudah 2 kali sujud, rakaat bertambah di sujud kedua setelah bangun
+            if (totalSujud > 0 && totalSujud % 2 === 0) {
+                if (currentRakaat < targetRakaat) {
+                    // Beri jeda sedikit seolah-olah user sedang bangun dari sujud ke rakaat baru
+                    setTimeout(() => {
+                        currentRakaat++;
+                        document.getElementById('rakaatDisplay').innerText = currentRakaat;
+                        document.getElementById('statusDisplay').innerText = "Sujud ke-0 dalam rakaat ini";
+                    }, 1000);
+                } else {
+                    // Jika rakaat terakhir sudah selesai 2 sujud
+                    document.getElementById('statusDisplay').innerText = "Selesai! Silakan Tahiyat Akhir.";
+                    document.getElementById('statusDisplay').style.color = "#6fffe9";
+                }
+            }
+        }
+
+        function resetApp() {
+            totalSujud = 0;
+            currentRakaat = 1;
+            document.getElementById('rakaatDisplay').innerText = "1";
+            document.getElementById('statusDisplay').innerText = "Sujud ke-0 dalam rakaat ini";
+            document.getElementById('statusDisplay').style.color = "#a5a5a5";
+        }
+    </script>
+</body>
+</html>
