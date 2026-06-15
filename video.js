@@ -141,8 +141,7 @@ function initOAuth() {
   tokenClient = google.accounts.oauth2.initTokenClient({
     client_id: CONFIG.CLIENT_ID,
     scope: [
-      "https://www.googleapis.com/auth/youtube.force-ssl",
-      "https://www.googleapis.com/auth/youtube",
+      "https://www.googleapis.com/auth/youtube.readonly",
       "profile",
       "email",
     ].join(" "),
@@ -796,6 +795,27 @@ document.addEventListener("DOMContentLoaded", async () => {
   document.getElementById("commentInput")?.addEventListener("keydown", e => {
     if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) submitComment();
   });
+
+  // Auto landscape saat fullscreen di HP (Screen Orientation API)
+  const handleFullscreenChange = () => {
+    if (document.fullscreenElement) {
+      // Masuk fullscreen
+      if (screen.orientation && screen.orientation.lock) {
+        screen.orientation.lock("landscape").catch(err => {
+          console.log("Orientation lock ditolak/tidak disupport browser:", err.message);
+        });
+      }
+    } else {
+      // Keluar fullscreen
+      if (screen.orientation && screen.orientation.unlock) {
+        screen.orientation.unlock();
+      }
+    }
+  };
+  document.addEventListener("fullscreenchange", handleFullscreenChange);
+  document.addEventListener("webkitfullscreenchange", handleFullscreenChange);
+  document.addEventListener("mozfullscreenchange", handleFullscreenChange);
+  document.addEventListener("MSFullscreenChange", handleFullscreenChange);
 
   // OAuth init
   if (window.google) initOAuth();
