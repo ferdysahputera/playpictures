@@ -388,15 +388,4 @@ document.addEventListener("DOMContentLoaded", () => {
   });
   inp?.addEventListener("keydown", e => { if (e.key==="Enter") { clearTimeout(searchTimer); doSearch(inp.value); }});
   clr?.addEventListener("click", () => { inp.value=""; clr.classList.remove("show"); loadVideos(currentTab); });
-
-  // Login / Logout
-  document.getElementById("loginBtn")?.addEventListener("click", doLogin);
-  document.getElementById("logoutBtn")?.addEventListener("click", doLogout);
-
-  // Subscribe
-  document.getElementById("subBtn")?.addEventListener("click", doSubscribe);
-
-  // Inisialisasi OAuth (tunggu Google GSI load)
-  if (window.google) initOAuth();
-  else document.querySelector('script[src*="gsi"]')?.addEventListener("load", initOAuth);
 });
