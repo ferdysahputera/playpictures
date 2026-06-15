@@ -11,8 +11,6 @@
   <!-- Font Awesome CDN untuk Ikon Minimalis -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link rel="stylesheet" href="style.css" />
-  <!-- Google Identity Services untuk Login / Like / Subscribe / Komentar -->
-  <script src="https://accounts.google.com/gsi/client" async defer></script>
   <!-- YouTube IFrame Player API – dibuat via JavaScript, bukan tag iframe statis -->
   <script>
     var tag = document.createElement('script');
@@ -77,18 +75,6 @@
           <button id="btnDownload" class="action-btn" title="Download video">
             <i class="fa-solid fa-circle-arrow-down"></i> Download
           </button>
-          <a id="btnYoutube" href="#" target="_blank" class="action-btn yt-open" title="Buka di YouTube">
-            <i class="fa-brands fa-youtube"></i> Buka di YouTube
-          </a>
-        </div>
-      </div>
-
-      <!-- ── CHANNEL INFO ── -->
-      <div class="channel-mini-card" id="channelMini">
-        <img id="chMiniAvatar" src="" alt="Channel" class="ch-mini-avatar" />
-        <div class="ch-mini-info">
-          <div id="chMiniName" class="ch-mini-name">Play Pictures</div>
-          <div id="chMiniSubs" class="ch-mini-subs"></div>
         </div>
       </div>
 
@@ -116,22 +102,6 @@
       <div class="desc-card">
         <div id="descText" class="desc-text short"></div>
         <button id="descToggle" class="desc-toggle">Tampilkan lebih banyak <i class="fa-solid fa-chevron-down"></i></button>
-      </div>
-
-
-
-      <!-- ── DAFTAR KOMENTAR ── -->
-      <div class="comments-card">
-        <h3><i class="fa-solid fa-comment-dots"></i> Komentar <span id="commentCount" class="count-badge"></span></h3>
-        <div id="commentList" class="comment-list">
-          <!-- Skeleton -->
-          <div class="comment-skeleton"></div>
-          <div class="comment-skeleton"></div>
-          <div class="comment-skeleton"></div>
-        </div>
-        <div id="commentNote" class="comment-note">
-          Untuk membalas atau melihat semua komentar, <a id="ytCommentLink" href="#" target="_blank">buka di YouTube <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
-        </div>
       </div>
 
     </div><!-- /video-left -->

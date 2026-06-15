@@ -359,7 +359,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Load data awal
-  loadChannel();
   loadVideos("latest");
 
   // Tab

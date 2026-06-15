@@ -228,26 +228,17 @@ async function loadVideoDetail(vid) {
     document.getElementById("vDate").textContent  = `📅 ${fmtDate(v.snippet.publishedAt)}`;
     document.getElementById("vDuration").textContent = dur ? `⏱ ${dur}` : "";
 
-    // Like count
-    document.getElementById("likeCount").textContent =
-      v.statistics?.likeCount ? `Like (${fmt(v.statistics.likeCount)})` : "Like";
-
-    // YouTube links
-    document.getElementById("btnYoutube").href = ytUrl;
-    document.getElementById("ytCommentLink").href = ytUrl;
+    // YouTube links (bila elemen ada)
+    const btnYt = document.getElementById("btnYoutube");
+    if (btnYt) btnYt.href = ytUrl;
+    const commentLnk = document.getElementById("ytCommentLink");
+    if (commentLnk) commentLnk.href = ytUrl;
     const dlYt = document.getElementById("dlYt");
     if (dlYt) dlYt.href = ytUrl;
 
     // Deskripsi
     const rawDesc = v.snippet.description || "Tidak ada deskripsi.";
     renderDescriptionWithParts(rawDesc);
-
-    // Channel
-    await loadChannelMini(v.snippet.channelId);
-
-    // Komentar (count badge)
-    const cnt = document.getElementById("commentCount");
-    if (cnt) cnt.textContent = fmt(v.statistics?.commentCount);
 
     return v;
   } catch(e) {
@@ -714,9 +705,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
   // Jika YT API belum siap, window.onYouTubeIframeAPIReady akan dipanggil otomatis
 
-  // Load komentar + related (paralel)
+  // Load related (paralel)
   if (vData) {
-    loadComments(videoId);
     loadRelated(videoId);
   }
 
