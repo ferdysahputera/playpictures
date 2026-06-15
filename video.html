@@ -35,14 +35,7 @@
       </div>
     </a>
     <a href="index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Kembali</a>
-    <div class="nav-right">
-      <button id="loginBtn" class="btn-login"><i class="fa-solid fa-key"></i> Masuk</button>
-      <div id="userInfo" class="user-info" style="display:none">
-        <img id="userAvatar" src="" alt="User" />
-        <span id="userName"></span>
-        <button id="logoutBtn" class="btn-logout"><i class="fa-solid fa-right-from-bracket"></i> Keluar</button>
-      </div>
-    </div>
+    <div class="nav-right"></div>
   </div>
 </header>
 
@@ -78,15 +71,6 @@
 
         <!-- Tombol Aksi -->
         <div class="v-actions">
-          <button id="btnLike" class="action-btn" title="Like video ini">
-            <i class="fa-solid fa-thumbs-up"></i> <span id="likeCount">Like</span>
-          </button>
-          <button id="btnDislike" class="action-btn" title="Dislike video ini">
-            <i class="fa-solid fa-thumbs-down"></i> Dislike
-          </button>
-          <button id="btnSub" class="action-btn btn-sub" title="Subscribe channel ini">
-            <i class="fa-solid fa-heart"></i> Subscribe
-          </button>
           <button id="btnShare" class="action-btn" title="Bagikan video">
             <i class="fa-solid fa-share-nodes"></i> Share
           </button>
@@ -97,12 +81,6 @@
             <i class="fa-brands fa-youtube"></i> Buka di YouTube
           </a>
         </div>
-
-        <!-- Info Login (muncul jika belum login) -->
-        <div id="loginHint" class="login-hint" style="display:none">
-          <span><i class="fa-solid fa-key"></i> <strong>Masuk</strong> untuk Like, Subscribe, dan berkomentar langsung di sini.</span>
-          <button id="loginHintBtn" class="btn-login-sm">Masuk sekarang</button>
-        </div>
       </div>
 
       <!-- ── CHANNEL INFO ── -->
@@ -112,7 +90,6 @@
           <div id="chMiniName" class="ch-mini-name">Play Pictures</div>
           <div id="chMiniSubs" class="ch-mini-subs"></div>
         </div>
-        <button id="btnSubMini" class="btn-subscribe btn-sub-mini"><i class="fa-solid fa-heart"></i> Subscribe</button>
       </div>
 
       <!-- ── NAVIGASI VIDEO SEBELUMNYA/SELANJUTNYA ── -->
@@ -141,23 +118,7 @@
         <button id="descToggle" class="desc-toggle">Tampilkan lebih banyak <i class="fa-solid fa-chevron-down"></i></button>
       </div>
 
-      <!-- ── FORM KOMENTAR ── -->
-      <div class="comment-form-card" id="commentFormCard">
-        <h3><i class="fa-solid fa-comments"></i> Tulis Komentar</h3>
-        <div id="commentLoginMsg" class="comment-login-msg">
-          <i class="fa-solid fa-key"></i> Silakan <button id="loginForComment" class="link-btn">masuk</button> untuk berkomentar.
-        </div>
-        <div id="commentForm" style="display:none">
-          <div class="comment-input-row">
-            <img id="commentAvatar" src="" alt="Saya" class="comment-own-avatar" />
-            <textarea id="commentInput" rows="2" placeholder="Tulis komentar Anda..."></textarea>
-          </div>
-          <div class="comment-actions">
-            <button id="cancelComment" class="btn-ghost-sm">Batal</button>
-            <button id="submitComment" class="btn-primary-sm">Kirim Komentar</button>
-          </div>
-        </div>
-      </div>
+
 
       <!-- ── DAFTAR KOMENTAR ── -->
       <div class="comments-card">
