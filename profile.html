@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="referrer" content="no-referrer-when-downgrade" />
+  <title>Profil – Play Pictures</title>
+  <meta name="description" content="Profil channel Play Pictures – Capturing Your Best Moment With Us" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- ══════════════════════════════
+     NAVBAR
+══════════════════════════════ -->
+<header class="navbar">
+  <div class="wrap">
+    <a href="index.html" class="logo">
+      <div class="logo-icon"><i class="fa-solid fa-play"></i></div>
+      <div>
+        <div class="logo-name">Play Pictures</div>
+        <div class="logo-sub">Capturing Your Best Moment</div>
+      </div>
+    </a>
+    <div class="nav-right"></div>
+  </div>
+</header>
+
+<!-- ══════════════════════════════
+     HALAMAN PROFIL
+══════════════════════════════ -->
+<main class="profile-page-main">
+  <div class="wrap" style="max-width:680px">
+
+    <!-- HERO CARD -->
+    <div class="profile-hero" id="profileHero">
+      <!-- Skeleton loading -->
+      <div id="profileSkeleton">
+        <div class="profile-skeleton-avatar"></div>
+        <div class="profile-skeleton-line" style="width:60%;margin:0 auto 8px;"></div>
+        <div class="profile-skeleton-line" style="width:40%;margin:0 auto;"></div>
+      </div>
+
+      <!-- Konten utama (disembunyikan sampai data siap) -->
+      <div id="profileContent" style="display:none">
+        <div class="profile-avatar-wrap">
+          <img id="profAvatar" src="" alt="Avatar Channel" class="profile-avatar" />
+          <div class="profile-avatar-ring"></div>
+        </div>
+        <h1 id="profName" class="profile-name">Play Pictures</h1>
+        <p id="profTagline" class="profile-desc">Capturing Your Best Moment With Us</p>
+
+        <!-- Statistik -->
+        <div class="profile-stats-row" id="profStats">
+          <div class="profile-stat-chip">
+            <i class="fa-solid fa-users"></i>
+            <span id="profSubs">—</span>
+          </div>
+          <div class="profile-stat-chip">
+            <i class="fa-solid fa-film"></i>
+            <span id="profVids">—</span>
+          </div>
+          <div class="profile-stat-chip">
+            <i class="fa-solid fa-eye"></i>
+            <span id="profViews">—</span>
+          </div>
+        </div>
+
+        <!-- Tombol YouTube -->
+        <a id="profYtBtn" href="#" target="_blank" class="btn-yt-channel">
+          <i class="fa-brands fa-youtube"></i>
+          Kunjungi Channel YouTube
+        </a>
+      </div>
+    </div>
+
+    <!-- TENTANG CHANNEL -->
+    <div class="profile-info-card" id="profileAboutCard" style="display:none">
+      <div class="profile-info-title">
+        <i class="fa-solid fa-circle-info"></i> Tentang Channel
+      </div>
+      <div id="profAbout" class="profile-about-text"></div>
+      <button id="btnReadMore" class="btn-read-more">
+        Baca selengkapnya <i class="fa-solid fa-chevron-down"></i>
+      </button>
+    </div>
+
+    <!-- TAUTAN & KONTAK -->
+    <div class="profile-info-card">
+      <div class="profile-info-title">
+        <i class="fa-solid fa-link"></i> Tautan
+      </div>
+      <div class="profile-links-grid">
+        <a id="lnkYt" href="#" target="_blank" class="profile-link-btn plink-yt">
+          <i class="fa-brands fa-youtube"></i>
+          <div>
+            <div>YouTube</div>
+            <div class="plink-label">Play Pictures</div>
+          </div>
+        </a>
+        <a href="https://www.instagram.com/play.pictures.id" target="_blank" class="profile-link-btn plink-ig">
+          <i class="fa-brands fa-instagram"></i>
+          <div>
+            <div>Instagram</div>
+            <div class="plink-label">@play.pictures.id</div>
+          </div>
+        </a>
+        <a href="https://wa.me/62" target="_blank" class="profile-link-btn plink-wa" id="lnkWa">
+          <i class="fa-brands fa-whatsapp"></i>
+          <div>
+            <div>WhatsApp</div>
+            <div class="plink-label">Hubungi kami</div>
+          </div>
+        </a>
+        <a href="https://www.facebook.com/playpictures.id" target="_blank" class="profile-link-btn plink-fb">
+          <i class="fa-brands fa-facebook"></i>
+          <div>
+            <div>Facebook</div>
+            <div class="plink-label">Play Pictures</div>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <!-- VIDEO TERBARU MINI -->
+    <div class="profile-info-card">
+      <div class="profile-info-title">
+        <i class="fa-solid fa-square-play"></i> Video Terbaru
+      </div>
+      <div id="latestVideoMini" class="related-list">
+        <div class="related-skeleton"></div>
+        <div class="related-skeleton"></div>
+        <div class="related-skeleton"></div>
+      </div>
+      <a href="index.html" style="display:block;text-align:center;margin-top:18px;">
+        <button style="padding:10px 28px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:20px;color:#94a3b8;font-size:0.82rem;font-weight:600;cursor:pointer;transition:all .3s;" onmouseover="this.style.borderColor='#a855f7';this.style.color='#fff'" onmouseout="this.style.borderColor='rgba(255,255,255,0.08)';this.style.color='#94a3b8'">
+          <i class="fa-solid fa-grid-2"></i> Lihat Semua Video
+        </button>
+      </a>
+    </div>
+
+  </div>
+</main>
+
+<!-- ══════════════════════════════
+     MOBILE BOTTOM NAVIGATION
+══════════════════════════════ -->
+<nav class="mobile-bottom-nav" id="mobileBottomNav">
+  <a href="index.html" class="mob-nav-item" id="mnHome">
+    <i class="fa-solid fa-house"></i>
+    <span>Home</span>
+  </a>
+  <a href="index.html?tab=playlist" class="mob-nav-item" id="mnPlaylist">
+    <i class="fa-solid fa-list"></i>
+    <span>Playlist</span>
+  </a>
+  <a href="profile.html" class="mob-nav-item active" id="mnProfile">
+    <div class="mob-nav-pill"></div>
+    <i class="fa-solid fa-user"></i>
+    <span>Profil</span>
+  </a>
+</nav>
+
+<!-- Toast -->
+<div id="toast" class="toast"></div>
+
+<script src="config.js"></script>
+<script>
+"use strict";
+
+const YT_API = "https://www.googleapis.com/youtube/v3";
+
+function fmt(n) {
+  n = parseInt(n) || 0;
+  if (n >= 1e6) return (n/1e6).toFixed(1).replace(".0","") + " Jt";
+  if (n >= 1e3) return (n/1e3).toFixed(1).replace(".0","") + " Rb";
+  return n.toLocaleString("id");
+}
+function ago(iso) {
+  if (!iso) return "";
+  const s = (Date.now() - new Date(iso)) / 1000;
+  if (s < 60) return "Baru saja";
+  if (s < 3600) return `${Math.floor(s/60)} mnt lalu`;
+  if (s < 86400) return `${Math.floor(s/3600)} jam lalu`;
+  if (s < 2592000) return `${Math.floor(s/86400)} hari lalu`;
+  return `${Math.floor(s/31536000)} thn lalu`;
+}
+function thumb(t, keys=["maxres","standard","high","medium","default"]) {
+  for (const k of keys) if (t?.[k]?.url) return t[k].url;
+  return "";
+}
+function parseDur(d) {
+  if (!d) return "";
+  const m = d.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
+  if (!m) return "";
+  const h=+m[1]||0, min=+m[2]||0, s=+m[3]||0;
+  return h ? `${h}:${String(min).padStart(2,"0")}:${String(s).padStart(2,"0")}`
+           : `${min}:${String(s).padStart(2,"0")}`;
+}
+async function yt(ep, params={}) {
+  const url = new URL(`${YT_API}/${ep}`);
+  Object.entries({ key: CONFIG.API_KEY, ...params })
+    .forEach(([k,v]) => url.searchParams.set(k, v));
+  const res = await fetch(url.toString());
+  const data = await res.json();
+  if (!res.ok) throw new Error(data?.error?.message || "API error");
+  return data;
+}
+
+// Navbar scroll effect
+window.addEventListener("scroll", () => {
+  document.querySelector(".navbar")?.classList.toggle("scrolled", scrollY > 20);
+}, { passive: true });
+
+async function loadProfile() {
+  try {
+    // Load channel info
+    const data = await yt("channels", {
+      part: "snippet,statistics,brandingSettings",
+      id: CONFIG.CHANNEL_ID,
+    });
+    const ch = data.items?.[0];
+    if (!ch) return;
+
+    // Avatar
+    const avatarUrl = thumb(ch.snippet.thumbnails);
+    if (avatarUrl) document.getElementById("profAvatar").src = avatarUrl;
+
+    // Nama & tagline
+    document.getElementById("profName").textContent = ch.snippet.title;
+    const tagline = ch.brandingSettings?.channel?.description ||
+                    ch.snippet.description?.split("\n")[0] || "";
+    if (tagline) document.getElementById("profTagline").textContent = tagline;
+
+    // Stats
+    const s = ch.statistics;
+    document.getElementById("profSubs").textContent = `${fmt(s.subscriberCount)} subscriber`;
+    document.getElementById("profVids").textContent = `${fmt(s.videoCount)} video`;
+    document.getElementById("profViews").textContent = `${fmt(s.viewCount)} tayangan`;
+
+    // YouTube link
+    const ytUrl = `https://www.youtube.com/channel/${CONFIG.CHANNEL_ID}`;
+    document.getElementById("profYtBtn").href = ytUrl;
+    document.getElementById("lnkYt").href = ytUrl;
+
+    // About / deskripsi panjang
+    const fullDesc = ch.snippet.description || "";
+    if (fullDesc.trim()) {
+      document.getElementById("profAbout").textContent = fullDesc;
+      document.getElementById("profileAboutCard").style.display = "";
+    }
+
+    // Tampilkan konten, sembunyikan skeleton
+    document.getElementById("profileSkeleton").style.display = "none";
+    document.getElementById("profileContent").style.display = "";
+
+    // Load video terbaru
+    loadLatestVideos();
+
+  } catch(e) {
+    console.error("Profile load error:", e);
+    document.getElementById("profileSkeleton").innerHTML =
+      `<p style="color:#94a3b8;font-size:0.85rem">Gagal memuat data channel.</p>`;
+  }
+}
+
+async function loadLatestVideos() {
+  const list = document.getElementById("latestVideoMini");
+  try {
+    let videoItems = [];
+
+    if (CONFIG.PLAYLIST_ID && !CONFIG.PLAYLIST_ID.includes("YOUR_")) {
+      const pl = await yt("playlistItems", {
+        part: "snippet", playlistId: CONFIG.PLAYLIST_ID, maxResults: 5,
+      });
+      const ids = pl.items.map(i => i.snippet.resourceId.videoId).join(",");
+      if (ids) {
+        const det = await yt("videos", { part: "snippet,statistics,contentDetails", id: ids });
+        videoItems = det.items;
+      }
+    }
+
+    if (!videoItems.length) {
+      const srch = await yt("search", {
+        part: "snippet", channelId: CONFIG.CHANNEL_ID,
+        type: "video", maxResults: 5, order: "date",
+      });
+      const ids = srch.items.map(i => i.id.videoId).join(",");
+      if (ids) {
+        const det = await yt("videos", { part: "snippet,statistics,contentDetails", id: ids });
+        videoItems = det.items;
+      }
+    }
+
+    list.innerHTML = "";
+    videoItems.forEach(v => {
+      const img = thumb(v.snippet.thumbnails);
+      const dur = parseDur(v.contentDetails?.duration);
+      const item = document.createElement("div");
+      item.className = "related-item";
+      item.style.cursor = "pointer";
+      item.innerHTML = `
+        <div class="related-thumb">
+          <img src="${img}" alt="${v.snippet.title}" loading="lazy" />
+          ${dur ? `<span class="related-dur">${dur}</span>` : ""}
+        </div>
+        <div class="related-info">
+          <div class="related-title">${v.snippet.title}</div>
+          <div class="related-meta">${fmt(v.statistics?.viewCount)} views · ${ago(v.snippet.publishedAt)}</div>
+        </div>`;
+      item.addEventListener("click", () => { window.location.href = `video.html?v=${v.id}`; });
+      list.appendChild(item);
+    });
+  } catch(e) {
+    list.innerHTML = `<p style="color:#5a5878;font-size:0.8rem">Gagal memuat video.</p>`;
+  }
+}
+
+// Read more toggle
+let readMoreExpanded = false;
+document.getElementById("btnReadMore").addEventListener("click", () => {
+  readMoreExpanded = !readMoreExpanded;
+  const el = document.getElementById("profAbout");
+  el.classList.toggle("expanded", readMoreExpanded);
+  document.getElementById("btnReadMore").innerHTML = readMoreExpanded
+    ? 'Lebih sedikit <i class="fa-solid fa-chevron-up"></i>'
+    : 'Baca selengkapnya <i class="fa-solid fa-chevron-down"></i>';
+});
+
+document.addEventListener("DOMContentLoaded", loadProfile);
+</script>
+</body>
+</html>

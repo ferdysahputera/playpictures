@@ -91,7 +91,46 @@
 <!-- Toast Notifikasi -->
 <div id="toast" class="toast"></div>
 
+<!-- ══════════════════════════════
+     MOBILE BOTTOM NAVIGATION
+══════════════════════════════ -->
+<nav class="mobile-bottom-nav" id="mobileBottomNav">
+  <a href="index.html" class="mob-nav-item active" id="mnHome">
+    <div class="mob-nav-pill"></div>
+    <i class="fa-solid fa-house"></i>
+    <span>Home</span>
+  </a>
+  <button class="mob-nav-item" id="mnPlaylist" onclick="switchToPlaylist()">
+    <i class="fa-solid fa-list"></i>
+    <span>Playlist</span>
+  </button>
+  <a href="profile.html" class="mob-nav-item" id="mnProfile">
+    <i class="fa-solid fa-user"></i>
+    <span>Profil</span>
+  </a>
+</nav>
+
 <script src="config.js"></script>
 <script src="app.js"></script>
+<script>
+  function switchToPlaylist() {
+    const btn = document.querySelector('.tab-btn[data-tab="playlist"]');
+    if (btn) btn.click();
+    // Highlight nav item
+    document.querySelectorAll('.mob-nav-item').forEach(el => {
+      el.classList.remove('active');
+      el.querySelector('.mob-nav-pill')?.remove();
+    });
+    const mn = document.getElementById('mnPlaylist');
+    mn.classList.add('active');
+    const pill = document.createElement('div');
+    pill.className = 'mob-nav-pill';
+    mn.insertBefore(pill, mn.firstChild);
+  }
+  // Jika URL punya ?tab=playlist, switch otomatis
+  if (new URLSearchParams(location.search).get('tab') === 'playlist') {
+    document.addEventListener('DOMContentLoaded', () => switchToPlaylist());
+  }
+</script>
 </body>
 </html>
