@@ -148,43 +148,48 @@ function renderDescription(text) {
   const descCard = document.querySelector(".desc-card");
   if (!descEl) return;
 
-  if (!text.trim()) {
+  if (!text || !text.trim()) {
     if (descCard) descCard.style.display = "none";
     return;
   }
   if (descCard) descCard.style.display = "";
 
-  // Regex YouTube link
+  // ── Regex YouTube link ────────────────────────────────
   const ytRegex = /(https?:\/\/(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})[^\s\n\r]*)/gi;
   const matches = [...text.matchAll(ytRegex)];
 
   // Kumpulkan link unik
   const uniqueMatches = [];
   matches.forEach(m => {
-    const fullUrl = m[1];
-    const targetVid = m[2];
-    if (!uniqueMatches.some(x => x.url === fullUrl)) {
-      uniqueMatches.push({ url: fullUrl, id: targetVid });
+    if (!uniqueMatches.some(x => x.url === m[1])) {
+      uniqueMatches.push({ url: m[1], id: m[2] });
     }
   });
   uniqueMatches.sort((a, b) => b.url.length - a.url.length);
 
-  // Escape dulu untuk HTML aman
-  let htmlContent = esc(text);
-
-  // Ganti link YouTube dengan tombol tonton lokal
-  uniqueMatches.forEach(item => {
-    const localUrl = `video.html?v=${item.id}`;
-    const escUrl = esc(item.url);
-    const regexReplace = new RegExp(escapeRegExp(escUrl), 'g');
-    htmlContent = htmlContent.replace(regexReplace,
-      `<a href="${localUrl}" class="part-link"><i class="fa-solid fa-play"></i> TONTON DI SINI</a>`);
+  // ── Langkah 1: Ganti URL dengan token SEBELUM di-escape ──
+  // Ini penting! Kalau di-escape dulu, "&" di URL jadi "&amp;" dan replace gagal.
+  let tokenizedText = text;
+  const tokenMap = {};
+  uniqueMatches.forEach((item, idx) => {
+    const token = `__YTTOKEN_${idx}__`;
+    tokenMap[token] = `<a href="video.html?v=${item.id}" class="part-link"><i class="fa-solid fa-play"></i> TONTON DI SINI</a>`;
+    // Ganti semua kemunculan URL ini dengan token
+    tokenizedText = tokenizedText.split(item.url).join(token);
   });
 
-  // Highlight "Part X"
+  // ── Langkah 2: Escape HTML dari teks yang sudah di-tokenisasi ──
+  let htmlContent = esc(tokenizedText);
+
+  // ── Langkah 3: Kembalikan token menjadi HTML link ──
+  Object.entries(tokenMap).forEach(([token, html]) => {
+    htmlContent = htmlContent.split(token).join(html);
+  });
+
+  // ── Highlight "Part X" ────────────────────────────────
   htmlContent = htmlContent.replace(/\b(part\s*\d+)\b/gi, '<span class="part-badge">$1</span>');
 
-  // Ganti newline ke <br>
+  // ── Ganti newline ke <br> ─────────────────────────────
   htmlContent = htmlContent.replace(/\n/g, "<br>");
 
   descEl.innerHTML = htmlContent;
