@@ -2,353 +2,243 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Detail Video - Play Pictures</title>
-  <link rel="stylesheet" href="style.css"/>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <style>
-    .video-page {
-      display: flex;
-      flex-direction: row;
-      gap: 2rem;
-      padding: 2rem;
-      flex-wrap: wrap;
-    }
-
-    .left-column {
-      flex: 2;
-      min-width: 300px;
-    }
-
-    .right-column {
-      flex: 1;
-      min-width: 250px;
-    }
-
-    .video-frame-container {
-      border: 3px solid var(--accent);
-      border-radius: 10px;
-      overflow: hidden;
-      box-shadow: 0 0 15px rgba(255, 106, 0, 0.2);
-    }
-
-    .video-frame-container iframe {
-      width: 100%;
-      height: 400px;
-      display: block;
-    }
-
-    .video-info {
-      margin-top: 1rem;
-    }
-
-    .video-description {
-      white-space: pre-line;
-    }
-
-    .video-description a {
-      color: var(--accent);
-      text-decoration: underline;
-    }
-
-    .share-buttons {
-      margin-top: 1rem;
-      display: flex;
-      gap: 1rem;
-    }
-
-    .share-buttons button {
-      background: var(--card-bg);
-      color: var(--text);
-      border: 1px solid var(--accent);
-      padding: 0.5rem 1rem;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: 0.3s ease;
-    }
-
-    .share-buttons button:hover {
-      background: var(--accent);
-      color: white;
-    }
-
-    .related-videos h3 {
-      margin-bottom: 1rem;
-    }
-
-    .video-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
-
-    .video-grid .card {
-      display: flex;
-      gap: 1rem;
-      background: var(--card-bg);
-      padding: 0.5rem;
-      border-radius: 8px;
-    }
-
-    .video-grid .thumb {
-      width: 100px;
-      height: 70px;
-      object-fit: cover;
-      border-radius: 5px;
-    }
-
-    .video-grid .card-content {
-      flex: 1;
-    }
-
-    /* Fullscreen video support */
-    :fullscreen iframe,
-    :-webkit-full-screen iframe {
-      width: 100vw !important;
-      height: 100vh !important;
-      object-fit: cover;
-    }
-
-    @media screen and (orientation: landscape) {
-      iframe {
-        height: 100vh !important;
-      }
-    }
-
-    @media (max-width: 768px) {
-      .video-page {
-        flex-direction: column;
-      }
-    }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Video – Play Pictures</title>
+  <meta name="description" content="Tonton video Play Pictures" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <!-- Font Awesome CDN untuk Ikon Minimalis -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="style.css" />
+  <!-- Google Identity Services untuk Login / Like / Subscribe / Komentar -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <!-- YouTube IFrame Player API – dibuat via JavaScript, bukan tag iframe statis -->
+  <script>
+    var tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    document.head.appendChild(tag);
+  </script>
 </head>
-<body class="fade-in">
-  <header>
-    <div class="logo"><a href="index.html"><img src="logo.png"/></a></div>
+<body>
 
-    <button class="menu-toggle" aria-label="Toggle menu" aria-expanded="false">
-      <span></span><span></span><span></span>
-    </button>
-    <nav>
-      <ul>
-        <li><a href="index.html">Home</a></li>
-        <li><a href="about.html">Tentang</a></li>
-      </ul>
-    </nav>
-  </header>
-
-  <!-- Floating Search -->
-  <button id="floating-search" aria-label="Search"><i class="fas fa-search"></i></button>
-  <div id="search-overlay">
-    <div class="overlay-content">
-      <button id="overlay-close" aria-label="Tutup">?</button>
-      <form id="overlay-search-form">
-        <input type="text" id="overlay-search-input" placeholder="Cari video...">
-        <button type="submit"><i class="fas fa-search"></i></button>
-      </form>
+<!-- ══════════════════════════════
+     NAVBAR
+══════════════════════════════ -->
+<header class="navbar">
+  <div class="wrap">
+    <a href="index.html" class="logo">
+      <div class="logo-icon"><i class="fa-solid fa-play"></i></div>
+      <div>
+        <div class="logo-name">Play Pictures</div>
+        <div class="logo-sub">Capturing Your Best Moment</div>
+      </div>
+    </a>
+    <a href="index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Kembali</a>
+    <div class="nav-right">
+      <button id="loginBtn" class="btn-login"><i class="fa-solid fa-key"></i> Masuk</button>
+      <div id="userInfo" class="user-info" style="display:none">
+        <img id="userAvatar" src="" alt="User" />
+        <span id="userName"></span>
+        <button id="logoutBtn" class="btn-logout"><i class="fa-solid fa-right-from-bracket"></i> Keluar</button>
+      </div>
     </div>
   </div>
+</header>
 
-  <main class="video-page">
-    <!-- KIRI -->
-    <div class="left-column">
-      <div class="video-frame-container">
-        <iframe id="video-frame" frameborder="0" allowfullscreen></iframe>
-      </div>
-      <div class="video-info">
-        <h2 id="video-title">Memuat judul...</h2>
-        <div id="video-description" class="video-description">Memuat deskripsi...</div>
+<!-- ══════════════════════════════
+     HALAMAN VIDEO
+══════════════════════════════ -->
+<main class="video-page-main">
+  <div class="wrap video-wrap">
 
-        <div class="share-buttons">
-          <button id="copy-link"><i class="fas fa-link"></i> Salin Link</button>
-          <button id="share-whatsapp"><i class="fab fa-whatsapp"></i> WhatsApp</button>
+    <!-- KOLOM KIRI: Player + Info -->
+    <div class="video-left">
+
+      <!-- ── PLAYER (dibuat via YT API, bukan iframe statis) ── -->
+      <div id="playerBox" class="player-box">
+        <div id="ytPlayerTarget"></div>
+        <!-- Placeholder sebelum player dimuat -->
+        <div id="playerPlaceholder" class="player-placeholder">
+          <div class="spinner"></div>
+          <p>Memuat player...</p>
         </div>
       </div>
+
+      <!-- ── JUDUL & INFO ── -->
+      <div class="vinfo-card">
+        <h1 id="vTitle" class="v-title">Memuat...</h1>
+
+        <!-- Statistik -->
+        <div class="v-stats">
+          <span id="vViews"><i class="fa-solid fa-eye"></i> —</span>
+          <span id="vDate"><i class="fa-solid fa-calendar-days"></i> —</span>
+          <span id="vDuration"><i class="fa-solid fa-clock"></i> —</span>
+        </div>
+
+        <!-- Tombol Aksi -->
+        <div class="v-actions">
+          <button id="btnLike" class="action-btn" title="Like video ini">
+            <i class="fa-solid fa-thumbs-up"></i> <span id="likeCount">Like</span>
+          </button>
+          <button id="btnDislike" class="action-btn" title="Dislike video ini">
+            <i class="fa-solid fa-thumbs-down"></i> Dislike
+          </button>
+          <button id="btnSub" class="action-btn btn-sub" title="Subscribe channel ini">
+            <i class="fa-solid fa-heart"></i> Subscribe
+          </button>
+          <button id="btnShare" class="action-btn" title="Bagikan video">
+            <i class="fa-solid fa-share-nodes"></i> Share
+          </button>
+          <button id="btnDownload" class="action-btn" title="Download video">
+            <i class="fa-solid fa-circle-arrow-down"></i> Download
+          </button>
+          <a id="btnYoutube" href="#" target="_blank" class="action-btn yt-open" title="Buka di YouTube">
+            <i class="fa-brands fa-youtube"></i> Buka di YouTube
+          </a>
+        </div>
+
+        <!-- Info Login (muncul jika belum login) -->
+        <div id="loginHint" class="login-hint" style="display:none">
+          <span><i class="fa-solid fa-key"></i> <strong>Masuk</strong> untuk Like, Subscribe, dan berkomentar langsung di sini.</span>
+          <button id="loginHintBtn" class="btn-login-sm">Masuk sekarang</button>
+        </div>
+      </div>
+
+      <!-- ── CHANNEL INFO ── -->
+      <div class="channel-mini-card" id="channelMini">
+        <img id="chMiniAvatar" src="" alt="Channel" class="ch-mini-avatar" />
+        <div class="ch-mini-info">
+          <div id="chMiniName" class="ch-mini-name">Play Pictures</div>
+          <div id="chMiniSubs" class="ch-mini-subs"></div>
+        </div>
+        <button id="btnSubMini" class="btn-subscribe btn-sub-mini"><i class="fa-solid fa-heart"></i> Subscribe</button>
+      </div>
+
+      <!-- ── NAVIGASI VIDEO SEBELUMNYA/SELANJUTNYA ── -->
+      <div id="navVideos" class="nav-videos-card" style="display:none">
+        <a id="prevVideoLink" href="#" class="nav-video-btn prev" style="display:none">
+          <i class="fa-solid fa-chevron-left"></i>
+          <img id="prevVideoThumb" src="" alt="Prev Thumb" class="nav-video-thumb" />
+          <div class="nav-btn-meta">
+            <span class="nav-label">SEBELUMNYA</span>
+            <span id="prevVideoTitle" class="nav-title-text">Judul Sebelumnya</span>
+          </div>
+        </a>
+        <a id="nextVideoLink" href="#" class="nav-video-btn next" style="display:none">
+          <div class="nav-btn-meta">
+            <span class="nav-label">SELANJUTNYA</span>
+            <span id="nextVideoTitle" class="nav-title-text">Judul Selanjutnya</span>
+          </div>
+          <img id="nextVideoThumb" src="" alt="Next Thumb" class="nav-video-thumb" />
+          <i class="fa-solid fa-chevron-right"></i>
+        </a>
+      </div>
+
+      <!-- ── DESKRIPSI ── -->
+      <div class="desc-card">
+        <div id="descText" class="desc-text short"></div>
+        <button id="descToggle" class="desc-toggle">Tampilkan lebih banyak <i class="fa-solid fa-chevron-down"></i></button>
+      </div>
+
+      <!-- ── FORM KOMENTAR ── -->
+      <div class="comment-form-card" id="commentFormCard">
+        <h3><i class="fa-solid fa-comments"></i> Tulis Komentar</h3>
+        <div id="commentLoginMsg" class="comment-login-msg">
+          <i class="fa-solid fa-key"></i> Silakan <button id="loginForComment" class="link-btn">masuk</button> untuk berkomentar.
+        </div>
+        <div id="commentForm" style="display:none">
+          <div class="comment-input-row">
+            <img id="commentAvatar" src="" alt="Saya" class="comment-own-avatar" />
+            <textarea id="commentInput" rows="2" placeholder="Tulis komentar Anda..."></textarea>
+          </div>
+          <div class="comment-actions">
+            <button id="cancelComment" class="btn-ghost-sm">Batal</button>
+            <button id="submitComment" class="btn-primary-sm">Kirim Komentar</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── DAFTAR KOMENTAR ── -->
+      <div class="comments-card">
+        <h3><i class="fa-solid fa-comment-dots"></i> Komentar <span id="commentCount" class="count-badge"></span></h3>
+        <div id="commentList" class="comment-list">
+          <!-- Skeleton -->
+          <div class="comment-skeleton"></div>
+          <div class="comment-skeleton"></div>
+          <div class="comment-skeleton"></div>
+        </div>
+        <div id="commentNote" class="comment-note">
+          Untuk membalas atau melihat semua komentar, <a id="ytCommentLink" href="#" target="_blank">buka di YouTube <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+        </div>
+      </div>
+
+    </div><!-- /video-left -->
+
+    <!-- KOLOM KANAN: Video Lainnya -->
+    <aside class="video-right">
+      <h3 class="sidebar-title"><i class="fa-solid fa-square-play"></i> Video Lainnya</h3>
+      <div id="relatedList" class="related-list">
+        <div class="related-skeleton"></div>
+        <div class="related-skeleton"></div>
+        <div class="related-skeleton"></div>
+        <div class="related-skeleton"></div>
+        <div class="related-skeleton"></div>
+      </div>
+    </aside>
+
+  </div>
+</main>
+
+<!-- ══════════════════════════════
+     MODAL SHARE
+══════════════════════════════ -->
+<div id="shareModal" class="modal-bg" style="display:none">
+  <div class="modal-box">
+    <div class="modal-head">
+      <strong><i class="fa-solid fa-share-nodes"></i> Bagikan Video</strong>
+      <button id="shareClose" class="modal-close"><i class="fa-solid fa-xmark"></i></button>
     </div>
-
-    <!-- KANAN -->
-    <div class="right-column related-videos">
-      <h3>Video Rekomendasi</h3>
-      <div id="related-list" class="video-grid"></div>
+    <div class="modal-body">
+      <p id="shareTitle" class="share-title-preview"></p>
+      <div class="share-link-row">
+        <input id="shareUrlInput" type="text" readonly class="share-input" />
+        <button id="copyLinkBtn" class="btn-copy">Salin</button>
+      </div>
+      <div class="share-platforms">
+        <a id="shareWa"  href="#" target="_blank" class="sp-btn sp-wa"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>
+        <a id="shareTw"  href="#" target="_blank" class="sp-btn sp-tw"><i class="fa-brands fa-x-twitter"></i> Twitter</a>
+        <a id="shareFb"  href="#" target="_blank" class="sp-btn sp-fb"><i class="fa-brands fa-facebook-f"></i> Facebook</a>
+        <a id="shareTg"  href="#" target="_blank" class="sp-btn sp-tg"><i class="fa-solid fa-paper-plane"></i> Telegram</a>
+      </div>
     </div>
-  </main>
+  </div>
+</div>
 
-  <script>
-    const videoId = new URLSearchParams(window.location.search).get("v");
-    const API_KEY = "AIzaSyDq4QPxumyDdxZB6ZlUciD7dsSA5ftQsQk";
-    const CHANNEL_ID = "UC87Oi8WXRAI2ncAX7CoBT6w";
-    const MAX_RESULTS = 6;
+<!-- ══════════════════════════════
+     MODAL DOWNLOAD
+══════════════════════════════ -->
+<div id="dlModal" class="modal-bg" style="display:none">
+  <div class="modal-box">
+    <div class="modal-head">
+      <strong><i class="fa-solid fa-circle-arrow-down"></i> Download Video</strong>
+      <button id="dlClose" class="modal-close"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-body">
+      <p class="dl-note">YouTube tidak mengizinkan download langsung. Gunakan salah satu layanan di bawah ini:</p>
+      <div class="dl-options">
+        <a id="dlYt"     href="#" target="_blank" class="dl-btn"><i class="fa-brands fa-youtube"></i> Buka di YouTube</a>
+        <a href="https://yt1s.io"      target="_blank" class="dl-btn"><i class="fa-solid fa-cloud-arrow-down"></i> yt1s.io</a>
+        <a href="https://ssyoutube.com" target="_blank" class="dl-btn"><i class="fa-solid fa-cloud-arrow-down"></i> ssyoutube.com</a>
+        <a href="https://y2mate.com"   target="_blank" class="dl-btn"><i class="fa-solid fa-cloud-arrow-down"></i> y2mate.com</a>
+      </div>
+    </div>
+  </div>
+</div>
 
-    const iframe = document.getElementById("video-frame");
-    const titleEl = document.getElementById("video-title");
-    const descEl = document.getElementById("video-description");
-    const relatedList = document.getElementById("related-list");
+<!-- Toast -->
+<div id="toast" class="toast"></div>
 
-    if (videoId) {
-      iframe.src = `https://www.youtube.com/embed/${videoId}?rel=0&autoplay=1`;
-
-      fetch(`https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${videoId}&key=${API_KEY}`)
-        .then(res => res.json())
-        .then(data => {
-          const snippet = data.items[0].snippet;
-          titleEl.textContent = snippet.title;
-          descEl.innerHTML = linkify(snippet.description);
-
-          const ids = extractVideoIdsFromDescription(snippet.description);
-          fetchRecommended(ids);
-          fetchChannelRecommendations();
-        });
-
-      // Optional fullscreen trigger for mobile
-      iframe.addEventListener("load", () => {
-        if (window.innerWidth < 768 && iframe.requestFullscreen) {
-          const isPortrait = window.matchMedia("(orientation: portrait)").matches;
-          if (isPortrait) {
-            iframe.requestFullscreen().catch(() => {});
-          }
-        }
-      });
-    }
-
-    function linkify(text) {
-      const urlPattern = /(\bhttps?:\/\/[^\s]+)/gi;
-      return text.replace(urlPattern, function (url) {
-        const ytMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]{11})/);
-        if (ytMatch) {
-          const id = ytMatch[1];
-          return `<a href="video.html?v=${id}">${url}</a>`;
-        } else {
-          return `<a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`;
-        }
-      });
-    }
-
-    function extractVideoIdsFromDescription(desc) {
-      const matches = desc.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]{11})/g) || [];
-      const ids = matches.map(link => {
-        const match = link.match(/(?:v=|\.be\/)([\w-]{11})/);
-        return match ? match[1] : null;
-      }).filter(Boolean);
-      return [...new Set(ids)].filter(id => id !== videoId).slice(0, MAX_RESULTS);
-    }
-
-    function fetchRecommended(ids) {
-      if (!ids.length) return;
-      fetch(`https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${ids.join(',')}&key=${API_KEY}`)
-        .then(res => res.json())
-        .then(data => {
-          data.items.forEach(item => {
-            const snippet = item.snippet;
-            const vidId = item.id;
-            const card = document.createElement("a");
-            card.href = `video.html?v=${vidId}`;
-            card.className = "card";
-            card.innerHTML = `
-              <img class="thumb" src="${snippet.thumbnails.medium.url}" alt="Thumbnail ${snippet.title}">
-              <div class="card-content">
-                <div class="title">${snippet.title}</div>
-                <div class="published">${new Date(snippet.publishedAt).toLocaleDateString()}</div>
-              </div>
-            `;
-            relatedList.appendChild(card);
-          });
-        });
-    }
-
-    function fetchChannelRecommendations() {
-      fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${CHANNEL_ID}&maxResults=5&order=date&type=video&key=${API_KEY}`)
-        .then(res => res.json())
-        .then(data => {
-          data.items.forEach(item => {
-            const vidId = item.id.videoId;
-            if (vidId === videoId) return;
-            const snippet = item.snippet;
-            const card = document.createElement("a");
-            card.href = `video.html?v=${vidId}`;
-            card.className = "card";
-            card.innerHTML = `
-              <img class="thumb" src="${snippet.thumbnails.medium.url}" alt="Thumbnail ${snippet.title}">
-              <div class="card-content">
-                <div class="title">${snippet.title}</div>
-                <div class="published">${new Date(snippet.publishedAt).toLocaleDateString()}</div>
-              </div>
-            `;
-            relatedList.appendChild(card);
-          });
-        });
-    }
-
-    // Share + Copy
-    const copyBtn = document.getElementById("copy-link");
-    const waBtn = document.getElementById("share-whatsapp");
-
-    copyBtn.addEventListener("click", () => {
-      const url = window.location.href;
-      navigator.clipboard.writeText(url).then(() => {
-        copyBtn.textContent = "? Tersalin!";
-        setTimeout(() => {
-          copyBtn.innerHTML = '<i class="fas fa-link"></i> Salin Link';
-        }, 2000);
-      });
-    });
-
-    waBtn.addEventListener("click", () => {
-      const url = encodeURIComponent(window.location.href);
-      const text = encodeURIComponent("Lihat video ini:");
-      window.open(`https://wa.me/?text=${text}%20${url}`, "_blank");
-    });
-
-    // Hamburger
-    const menuToggle = document.querySelector(".menu-toggle");
-    const nav = document.querySelector("nav");
-    menuToggle.addEventListener("click", () => {
-      const expanded = menuToggle.getAttribute("aria-expanded") === "true";
-      menuToggle.setAttribute("aria-expanded", !expanded);
-      menuToggle.classList.toggle("active");
-      nav.classList.toggle("open");
-    });
-    document.addEventListener("click", (e) => {
-      if (!nav.contains(e.target) && !menuToggle.contains(e.target)) {
-        nav.classList.remove("open");
-        menuToggle.classList.remove("active");
-        menuToggle.setAttribute("aria-expanded", "false");
-      }
-    });
-
-    // Floating Search
-    const floatingSearchBtn = document.getElementById("floating-search");
-    const searchOverlay = document.getElementById("search-overlay");
-    const overlaySearchForm = document.getElementById("overlay-search-form");
-    const overlaySearchInput = document.getElementById("overlay-search-input");
-    const overlayClose = document.getElementById("overlay-close");
-
-    floatingSearchBtn.addEventListener("click", () => {
-      searchOverlay.classList.add("active");
-      overlaySearchInput.focus();
-    });
-
-    overlayClose.addEventListener("click", () => {
-      searchOverlay.classList.remove("active");
-    });
-
-    overlaySearchForm.addEventListener("submit", (e) => {
-      e.preventDefault();
-      const query = overlaySearchInput.value.trim();
-      if (!query) return;
-      window.location.href = `index.html?q=${encodeURIComponent(query)}`;
-    });
-
-    // Transisi
-    document.querySelectorAll('a[href]').forEach(link => {
-      if (link.target !== "_blank") {
-        link.addEventListener('click', function(e) {
-          e.preventDefault();
-          document.body.classList.add('fade-out');
-          const href = this.getAttribute('href');
-          setTimeout(() => window.location.href = href, 300);
-        });
-      }
-    });
-  </script>
+<script src="config.js"></script>
+<script src="video.js"></script>
 </body>
 </html>

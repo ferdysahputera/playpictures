@@ -2,52 +2,121 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Play Pictures - Capturing Your Best Moment With Us</title>
-  <link rel="stylesheet" href="style.css"/>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Play Pictures – Capturing Your Best Moment With Us</title>
+  <meta name="description" content="Tonton video terbaru dari Play Pictures – Capturing Your Best Moment With Us" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <!-- Font Awesome CDN untuk Ikon Minimalis -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="style.css" />
+  <!-- Google Identity Services untuk Login -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
+<body>
 
-<body class="fade-in">
-  <header>
-    <div class="logo"><a href=""><img src="logo.png"/></a></div>
-    <button class="menu-toggle" aria-label="Toggle menu" aria-expanded="false">
-      <span></span><span></span><span></span>
-    </button>
-    <nav>
-      <ul>
-        <li><a href="#">Home</a></li>
-        <li><a href="about.html">Tentang</a></li>
-      </ul>
-    </nav>
-  </header>
+<!-- ══════════════════════════════
+     NAVBAR
+══════════════════════════════ -->
+<header class="navbar">
+  <div class="wrap">
+    <!-- Logo -->
+    <a href="index.html" class="logo">
+      <div class="logo-icon"><i class="fa-solid fa-play"></i></div>
+      <div>
+        <div class="logo-name">Play Pictures</div>
+        <div class="logo-sub">Capturing Your Best Moment</div>
+      </div>
+    </a>
 
-  <div class="search-container">
-    <form id="search-form">
-      <input type="text" id="search-input" placeholder="Cari video...">
-        <button type="submit"><i class="fas fa-search"></i></button>
-      <button type="button" id="reset-button" class="hidden" title="Reset">
-  <i class="fas fa-rotate-left"></i>
-</button>
-    </form>
-  </div>
+    <!-- Search -->
+    <div class="search-box">
+      <i class="fa-solid fa-magnifying-glass search-icon"></i>
+      <input id="searchInput" type="text" placeholder="Cari video..." autocomplete="off" />
+      <button id="searchClearBtn" class="search-clear" title="Hapus pencarian"><i class="fa-solid fa-xmark"></i></button>
+    </div>
 
-  <main id="video-list"></main>
-  <div id="loader" class="hidden">Loading...</div>
-  <div id="error-message" class="error-message hidden"></div>
-
-  <!-- Floating Search -->
-  <button id="floating-search" aria-label="Search"><i class="fas fa-search"></i></button>
-  <div id="search-overlay">
-    <div class="overlay-content">
-      <button id="overlay-close" aria-label="Tutup">?</button>
-      <form id="overlay-search-form">
-        <input type="text" id="overlay-search-input" placeholder="Cari video...">
-        <button type="submit"><i class="fas fa-search"></i></button>
-      </form>
+    <!-- Login -->
+    <div class="nav-right">
+      <button id="loginBtn" class="btn-login">
+        <i class="fa-solid fa-key"></i> Masuk
+      </button>
+      <div id="userInfo" class="user-info" style="display:none">
+        <img id="userAvatar" src="" alt="User" />
+        <span id="userName"></span>
+        <button id="logoutBtn" class="btn-logout"><i class="fa-solid fa-right-from-bracket"></i> Keluar</button>
+      </div>
     </div>
   </div>
+</header>
 
-  <script src="script.js"></script>
+<!-- ══════════════════════════════
+     CHANNEL INFO BAR
+══════════════════════════════ -->
+<section class="channel-bar">
+  <div class="wrap channel-wrap">
+    <div class="channel-avatar-wrap">
+      <img id="chAvatar" src="" alt="Channel" class="ch-avatar" />
+    </div>
+    <div class="channel-detail">
+      <h1 id="chName" class="ch-name">Play Pictures</h1>
+      <p id="chStats" class="ch-stats">Memuat info channel...</p>
+    </div>
+    <button id="subBtn" class="btn-subscribe" title="Subscribe channel ini">
+      <i class="fa-solid fa-heart"></i> Subscribe
+    </button>
+  </div>
+</section>
+
+<!-- ══════════════════════════════
+     MAIN CONTENT
+══════════════════════════════ -->
+<main class="main-content">
+  <div class="wrap">
+
+    <!-- Tab Navigasi -->
+    <div class="tab-bar">
+      <button class="tab-btn active" data-tab="latest" id="tabLatest"><i class="fa-solid fa-clock"></i> Video Terbaru</button>
+      <button class="tab-btn" data-tab="playlist" id="tabPlaylist"><i class="fa-solid fa-list"></i> Playlist</button>
+      <button class="tab-btn" data-tab="popular" id="tabPopular"><i class="fa-solid fa-fire"></i> Terpopuler</button>
+    </div>
+
+    <!-- Grid Video -->
+    <div id="videoGrid" class="video-grid">
+      <!-- Skeleton loading -->
+      <div class="card skeleton"></div>
+      <div class="card skeleton"></div>
+      <div class="card skeleton"></div>
+      <div class="card skeleton"></div>
+      <div class="card skeleton"></div>
+      <div class="card skeleton"></div>
+    </div>
+
+    <!-- Muat Lebih -->
+    <div id="loadMoreWrap" class="load-more-wrap" style="display:none">
+      <button id="loadMoreBtn" class="btn-loadmore">Muat lebih banyak <i class="fa-solid fa-chevron-down"></i></button>
+    </div>
+
+    <!-- Pesan Error / Info -->
+    <div id="msgBox" class="msg-box" style="display:none"></div>
+
+  </div>
+</main>
+
+<!-- ══════════════════════════════
+     FOOTER
+══════════════════════════════ -->
+<footer class="footer">
+  <div class="wrap footer-wrap">
+    <p>© <span id="yr"></span> <strong>Play Pictures</strong> — Capturing Your Best Moment With Us</p>
+    <a id="ytChannelLink" href="#" target="_blank" class="yt-link"><i class="fa-brands fa-youtube"></i> Kunjungi Channel YouTube</a>
+  </div>
+</footer>
+
+<!-- Toast Notifikasi -->
+<div id="toast" class="toast"></div>
+
+<script src="config.js"></script>
+<script src="app.js"></script>
 </body>
 </html>
