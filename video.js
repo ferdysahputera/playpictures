@@ -722,21 +722,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // ── Event Listeners ────────────────────────────────────
 
-  // Login / Logout
-  document.getElementById("loginBtn")?.addEventListener("click", doLogin);
-  document.getElementById("logoutBtn")?.addEventListener("click", doLogout);
-  document.getElementById("loginHintBtn")?.addEventListener("click", doLogin);
-  document.getElementById("loginForComment")?.addEventListener("click", doLogin);
-
-  // Login hint (muncul jika belum login)
-  document.getElementById("loginHint").style.display = "";
-
-  // Like / Dislike / Subscribe
-  document.getElementById("btnLike")?.addEventListener("click", doLike);
-  document.getElementById("btnDislike")?.addEventListener("click", doDislike);
-  document.getElementById("btnSub")?.addEventListener("click", doSubscribe);
-  document.getElementById("btnSubMini")?.addEventListener("click", doSubscribe);
-
   // Share
   const title = document.getElementById("vTitle")?.textContent || "Video";
   document.getElementById("btnShare")?.addEventListener("click", () => openShare(videoId, title));
@@ -786,16 +771,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       descExpanded ? "Tampilkan lebih sedikit ▴" : "Tampilkan lebih banyak ▾";
   });
 
-  // Komentar: cancel / submit
-  document.getElementById("cancelComment")?.addEventListener("click", () => {
-    const inp = document.getElementById("commentInput");
-    if (inp) inp.value = "";
-  });
-  document.getElementById("submitComment")?.addEventListener("click", submitComment);
-  document.getElementById("commentInput")?.addEventListener("keydown", e => {
-    if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) submitComment();
-  });
-
   // Auto landscape saat fullscreen di HP (Screen Orientation API)
   const handleFullscreenChange = () => {
     if (document.fullscreenElement) {
@@ -816,8 +791,4 @@ document.addEventListener("DOMContentLoaded", async () => {
   document.addEventListener("webkitfullscreenchange", handleFullscreenChange);
   document.addEventListener("mozfullscreenchange", handleFullscreenChange);
   document.addEventListener("MSFullscreenChange", handleFullscreenChange);
-
-  // OAuth init
-  if (window.google) initOAuth();
-  else document.querySelector('script[src*="gsi"]')?.addEventListener("load", initOAuth);
 });
