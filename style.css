@@ -724,7 +724,7 @@ img { max-width: 100%; display: block; }
 /* Description Card */
 .desc-text {
   font-size: 0.86rem; color: #cbd5e1; line-height: 1.8;
-  white-space: pre-wrap; word-break: break-word;
+  word-break: break-word;
 }
 .desc-text.short { max-height: 85px; overflow: hidden; }
 .desc-toggle {
@@ -1004,8 +1004,8 @@ img { max-width: 100%; display: block; }
   .related-info { padding: 10px; }
 }
 @media (max-width: 600px) {
-  .search-box { display: none; }
-  .video-grid { grid-template-columns: 1fr; }
+  .search-box { max-width: 100%; margin: 0; }
+  .video-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 14px; }
   .v-actions { gap: 8px; justify-content: space-between; }
   .action-btn { flex: 1; justify-content: center; padding: 10px; font-size: 0.75rem; }
   .logo-sub { display: none; }

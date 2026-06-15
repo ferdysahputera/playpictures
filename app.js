@@ -8,11 +8,9 @@
 const YT_API = "https://www.googleapis.com/youtube/v3";
 
 // ── State ────────────────────────────────────────────────
-let accessToken  = null;   // OAuth token (set setelah login)
-let tokenClient  = null;   // Google token client
-let isSubscribed = false;
 let nextPageToken = null;
-let currentTab   = "latest";
+let currentTab   = "playlist";   // Default: tampilkan playlist
+let isSearchMode = false;
 
 // ── Utilitas ─────────────────────────────────────────────
 function fmt(n) {
@@ -63,157 +61,6 @@ async function yt(endpoint, params={}) {
   return data;
 }
 
-// ── Fetch dengan OAuth (untuk write operations) ───────────
-async function ytAuth(endpoint, method="POST", body=null, params={}) {
-  if (!accessToken) { toast("Silakan login terlebih dahulu 🔑", "error"); return null; }
-  const url = new URL(`${YT_API}/${endpoint}`);
-  Object.entries({ key: CONFIG.API_KEY, ...params })
-    .forEach(([k,v]) => url.searchParams.set(k, v));
-  const opts = {
-    method,
-    headers: { Authorization: `Bearer ${accessToken}`, "Content-Type": "application/json" },
-  };
-  if (body) opts.body = JSON.stringify(body);
-  const res = await fetch(url.toString(), opts);
-  if (!res.ok) {
-    const err = await res.json().catch(()=>({}));
-    throw new Error(err?.error?.message || `HTTP ${res.status}`);
-  }
-  return res.status === 204 ? null : res.json();
-}
-
-// ═══════════════════════════════════════════════
-// OAUTH / LOGIN
-// ═══════════════════════════════════════════════
-function initOAuth() {
-  if (!window.google || !CONFIG.CLIENT_ID || CONFIG.CLIENT_ID.includes("GANTI_")) return;
-  tokenClient = google.accounts.oauth2.initTokenClient({
-    client_id: CONFIG.CLIENT_ID,
-    scope: [
-      "https://www.googleapis.com/auth/youtube.readonly",
-      "profile",
-      "email",
-    ].join(" "),
-    callback: onTokenReceived,
-  });
-}
-
-async function onTokenReceived(resp) {
-  if (resp.error) { toast("Login gagal: " + resp.error, "error"); return; }
-  accessToken = resp.access_token;
-  // Ambil info user dari Google API
-  try {
-    const me = await fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
-      headers: { Authorization: `Bearer ${accessToken}` }
-    }).then(r=>r.json());
-
-    document.getElementById("userAvatar").src = me.picture || "";
-    document.getElementById("userName").textContent = me.name || me.email || "User";
-    document.getElementById("loginBtn").style.display  = "none";
-    document.getElementById("userInfo").style.display  = "flex";
-    toast("✅ Login berhasil! Halo, " + (me.name || "User"));
-
-    // Cek status subscribe
-    checkSubscription();
-  } catch(e) {
-    console.warn(e);
-  }
-}
-
-function doLogin() {
-  if (!tokenClient) {
-    toast("⚠️ CLIENT_ID belum diisi di config.js", "error");
-    return;
-  }
-  tokenClient.requestAccessToken();
-}
-
-function doLogout() {
-  if (accessToken) google.accounts.oauth2.revoke(accessToken, ()=>{});
-  accessToken = null;
-  document.getElementById("loginBtn").style.display  = "";
-  document.getElementById("userInfo").style.display  = "none";
-  document.getElementById("userAvatar").src = "";
-  document.getElementById("userName").textContent = "";
-  isSubscribed = false;
-  updateSubButton();
-  toast("Anda telah keluar.");
-}
-
-// ═══════════════════════════════════════════════
-// CHANNEL INFO
-// ═══════════════════════════════════════════════
-async function loadChannel() {
-  try {
-    const data = await yt("channels", {
-      part: "snippet,statistics",
-      id: CONFIG.CHANNEL_ID,
-    });
-    const ch = data.items?.[0];
-    if (!ch) return;
-
-    const avUrl = thumb(ch.snippet.thumbnails);
-    if (avUrl) document.getElementById("chAvatar").src = avUrl;
-    document.getElementById("chName").textContent = ch.snippet.title;
-    const s = ch.statistics;
-    document.getElementById("chStats").textContent =
-      `${fmt(s.subscriberCount)} subscriber · ${fmt(s.videoCount)} video · ${fmt(s.viewCount)} total tayangan`;
-
-    // Footer YouTube link
-    const ytLink = document.getElementById("ytChannelLink");
-    if (ytLink) ytLink.href = `https://www.youtube.com/channel/${CONFIG.CHANNEL_ID}`;
-  } catch(e) {
-    console.warn("Channel:", e);
-  }
-}
-
-// ── Cek dan Update Status Subscribe ──────────────────────
-async function checkSubscription() {
-  if (!accessToken) return;
-  try {
-    const data = await ytAuth("subscriptions", "GET", null, {
-      part: "snippet",
-      mine: "true",
-      forChannelId: CONFIG.CHANNEL_ID,
-    });
-    isSubscribed = (data?.pageInfo?.totalResults > 0);
-    updateSubButton();
-  } catch(e) { console.warn("Check sub:", e); }
-}
-
-function updateSubButton() {
-  document.querySelectorAll("#subBtn, #btnSub, #btnSubMini").forEach(btn => {
-    if (!btn) return;
-    if (isSubscribed) {
-      btn.textContent = "✅ Berlangganan";
-      btn.classList.add("subscribed");
-    } else {
-      btn.textContent = "❤️ Subscribe";
-      btn.classList.remove("subscribed");
-    }
-  });
-}
-
-async function doSubscribe() {
-  if (!accessToken) { doLogin(); return; }
-  try {
-    if (!isSubscribed) {
-      await ytAuth("subscriptions", "POST",
-        { snippet: { resourceId: { kind: "youtube#channel", channelId: CONFIG.CHANNEL_ID } } },
-        { part: "snippet" }
-      );
-      isSubscribed = true;
-      toast("❤️ Berhasil Subscribe!");
-    } else {
-      // Untuk unsubscribe perlu subscription ID, lewatkan dulu
-      toast("Anda sudah berlangganan channel ini ✅");
-    }
-    updateSubButton();
-  } catch(e) {
-    toast("Gagal subscribe: " + e.message, "error");
-  }
-}
-
 // ═══════════════════════════════════════════════
 // LOAD VIDEO
 // ═══════════════════════════════════════════════
@@ -222,6 +69,8 @@ async function loadVideos(tab, pageToken=null, append=false) {
   const loadMoreWrap = document.getElementById("loadMoreWrap");
   const msgBox = document.getElementById("msgBox");
   if (!grid) return;
+
+  isSearchMode = false;
 
   if (!append) {
     grid.innerHTML = Array(6).fill('<div class="card skeleton"></div>').join("");
@@ -232,14 +81,17 @@ async function loadVideos(tab, pageToken=null, append=false) {
     let videoItems = [];
 
     if (tab === "playlist") {
-      // Load dari Playlist
+      // Load dari Playlist (DEFAULT)
       const params = { part: "snippet", playlistId: CONFIG.PLAYLIST_ID, maxResults: CONFIG.MAX_RESULTS };
       if (pageToken) params.pageToken = pageToken;
       const pl = await yt("playlistItems", params);
       nextPageToken = pl.nextPageToken || null;
       const ids = pl.items.map(i => i.snippet.resourceId.videoId).join(",");
-      const det = await yt("videos", { part: "snippet,statistics,contentDetails", id: ids });
-      videoItems = det.items;
+      if (!ids) { videoItems = []; }
+      else {
+        const det = await yt("videos", { part: "snippet,statistics,contentDetails", id: ids });
+        videoItems = det.items;
+      }
     } else {
       // Load dari Channel (latest / popular)
       const order = tab === "popular" ? "viewCount" : "date";
@@ -312,10 +164,21 @@ let searchTimer;
 async function doSearch(q) {
   const grid = document.getElementById("videoGrid");
   const msgBox = document.getElementById("msgBox");
-  if (!q.trim()) { loadVideos(currentTab); return; }
+  const loadMoreWrap = document.getElementById("loadMoreWrap");
 
+  if (!q.trim()) {
+    // Kembali ke playlist default
+    isSearchMode = false;
+    nextPageToken = null;
+    loadVideos(currentTab);
+    return;
+  }
+
+  isSearchMode = true;
+  nextPageToken = null;
   grid.innerHTML = Array(6).fill('<div class="card skeleton"></div>').join("");
-  document.getElementById("loadMoreWrap").style.display = "none";
+  if (loadMoreWrap) loadMoreWrap.style.display = "none";
+  if (msgBox) msgBox.style.display = "none";
 
   try {
     const srch = await yt("search", {
@@ -323,8 +186,14 @@ async function doSearch(q) {
       q, type: "video", maxResults: 12,
     });
     const ids = srch.items.map(i => i.id.videoId).join(",");
-    const det = await yt("videos", { part: "snippet,statistics,contentDetails", id: ids });
     grid.innerHTML = "";
+
+    if (!ids) {
+      if (msgBox) { msgBox.style.display=""; msgBox.textContent = `Tidak ada hasil untuk "${q}"`; }
+      return;
+    }
+
+    const det = await yt("videos", { part: "snippet,statistics,contentDetails", id: ids });
     if (!det.items.length) {
       if (msgBox) { msgBox.style.display=""; msgBox.textContent = `Tidak ada hasil untuk "${q}"`; }
       return;
@@ -342,13 +211,17 @@ async function doSearch(q) {
 document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("yr").textContent = new Date().getFullYear();
 
+  // Update footer YouTube link
+  const ytLink = document.getElementById("ytChannelLink");
+  if (ytLink) ytLink.href = `https://www.youtube.com/channel/${CONFIG.CHANNEL_ID}`;
+
   // Navbar scroll
   window.addEventListener("scroll", () => {
     document.querySelector(".navbar")?.classList.toggle("scrolled", scrollY > 20);
   }, { passive: true });
 
   // Cek config
-  if (CONFIG.API_KEY.includes("YOUR_") || CONFIG.CHANNEL_ID.includes("xxx")) {
+  if (!CONFIG.API_KEY || CONFIG.API_KEY.includes("YOUR_") || !CONFIG.CHANNEL_ID || CONFIG.CHANNEL_ID.includes("xxx")) {
     const msg = document.getElementById("msgBox");
     if (msg) {
       msg.style.display = "";
@@ -358,8 +231,14 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
-  // Load data awal
-  loadVideos("latest");
+  // Aktifkan tab Playlist sebagai default
+  document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+  const playlistTab = document.querySelector('.tab-btn[data-tab="playlist"]');
+  if (playlistTab) playlistTab.classList.add("active");
+  currentTab = "playlist";
+
+  // Load data awal (playlist)
+  loadVideos("playlist");
 
   // Tab
   document.querySelectorAll(".tab-btn").forEach(btn => {
@@ -368,13 +247,19 @@ document.addEventListener("DOMContentLoaded", () => {
       btn.classList.add("active");
       currentTab = btn.dataset.tab;
       nextPageToken = null;
+      isSearchMode = false;
+      // Bersihkan search jika ada
+      const inp = document.getElementById("searchInput");
+      const clr = document.getElementById("searchClearBtn");
+      if (inp) inp.value = "";
+      if (clr) clr.classList.remove("show");
       loadVideos(currentTab);
     });
   });
 
   // Load more
   document.getElementById("loadMoreBtn")?.addEventListener("click", () => {
-    if (nextPageToken) loadVideos(currentTab, nextPageToken, true);
+    if (nextPageToken && !isSearchMode) loadVideos(currentTab, nextPageToken, true);
   });
 
   // Search
@@ -386,5 +271,11 @@ document.addEventListener("DOMContentLoaded", () => {
     searchTimer = setTimeout(() => doSearch(e.target.value), 500);
   });
   inp?.addEventListener("keydown", e => { if (e.key==="Enter") { clearTimeout(searchTimer); doSearch(inp.value); }});
-  clr?.addEventListener("click", () => { inp.value=""; clr.classList.remove("show"); loadVideos(currentTab); });
+  clr?.addEventListener("click", () => {
+    inp.value = "";
+    clr.classList.remove("show");
+    isSearchMode = false;
+    nextPageToken = null;
+    loadVideos(currentTab);
+  });
 });
