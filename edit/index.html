@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generator Jadwal Sholat Jum'at</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Belleza&display=swap" rel="stylesheet">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Belleza', sans-serif;
+            background-color: #0b132b;
+            color: #ffffff;
+            margin: 0;
+            padding: 30px;
+            display: flex;
+            flex-direction: row;
+            gap: 30px;
+            min-height: 100vh;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        /* Container Form Kiri */
+        .control-panel {
+            background: #1c2541;
+            padding: 25px;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 380px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            border: 1px solid #3a506b;
+        }
+
+        .control-panel h2 {
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-size: 24px;
+            color: #6fffe9;
+            text-align: center;
+            letter-spacing: 1px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 15px;
+            color: #cbd5e1;
+            letter-spacing: 0.5px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            background: #0b132b;
+            border: 1px solid #3a506b;
+            border-radius: 6px;
+            color: #ffffff;
+            font-family: 'Belleza', sans-serif;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #6fffe9;
+            box-shadow: 0 0 8px rgba(111, 255, 233, 0.2);
+        }
+
+        .btn-download {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #00b4d8, #0077b6);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-family: 'Belleza', sans-serif;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+            box-shadow: 0 4px 15px rgba(0, 180, 216, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .btn-download:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 180, 216, 0.5);
+        }
+
+        /* Container Preview Kanan */
+        .preview-container {
+            flex: 1;
+            max-width: 800px;
+            background: #1c2541;
+            padding: 25px;
+            border-radius: 12px;
+            border: 1px solid #3a506b;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+
+        .preview-container h3 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            color: #6fffe9;
+            font-size: 20px;
+        }
+
+        /* Wrapper untuk menampung resolusi canvas asli agar tetap bisa di-scale di browser */
+        .canvas-wrapper {
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            background: #000;
+        }
+
+        /* Area Canvas Utama (Resolusi HD asli 1280x720) */
+        #capture-area {
+            position: absolute;
+            width: 1280px;
+            height: 720px;
+            top: 0;
+            left: 0;
+            transform-origin: top left;
+        }
+
+        #bg-image {
+            width: 1280px;
+            height: 720px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+
+        /* Desain Overlay Teks */
+        .text-overlay {
+            position: absolute;
+            font-family: 'Belleza', sans-serif;
+            color: #ffffff;
+            font-size: 34px;
+            left: 480px; /* Memulai teks tepat setelah label kuning */
+            z-index: 2;
+            white-space: nowrap;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+
+        /* Set posisi Y presisi di tengah-tengah kolom box biru gambar */
+        #out-tanggal {
+            top: 215px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #f7d05c; /* Warna emas agar senada dengan judul Sholat Jum'at */
+            font-size: 26px;
+            text-align: center;
+            letter-spacing: 1px;
+        }
+        #out-imam { top: 323px; }
+        #out-khatib { top: 406px; }
+        #out-muadzin { top: 489px; }
+
+        .note {
+            font-size: 12px;
+            color: #a5a5a5;
+            margin-top: 15px;
+            line-height: 1.5;
+        }
+
+        /* Responsif untuk layar kecil/tablet */
+        @media (max-width: 900px) {
+            body {
+                flex-direction: column;
+                padding: 15px;
+            }
+            .control-panel, .preview-container {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="control-panel">
+        <h2>INPUT DATA</h2>
+        
+        <div class="form-group">
+            <label for="in-tanggal">Tanggal Pelaksanaan</label>
+            <input type="text" id="in-tanggal" placeholder="Contoh: 15 Ramadhan 1447 H / 6 Maret 2026">
+        </div>
+
+        <div class="form-group">
+            <label for="in-imam">Nama IMAM</label>
+            <input type="text" id="in-imam" placeholder="Masukkan nama Imam">
+        </div>
+
+        <div class="form-group">
+            <label for="in-khatib">Nama KHATIB</label>
+            <input type="text" id="in-khatib" placeholder="Masukkan nama Khatib">
+        </div>
+
+        <div class="form-group">
+            <label for="in-muadzin">Nama MUADZIN</label>
+            <input type="text" id="in-muadzin" placeholder="Masukkan nama Muadzin">
+        </div>
+
+        <button class="btn-download" onclick="downloadGambar()">Download Gambar (JPG)</button>
+        
+        <div class="note">
+            *Catatan: Pastikan file gambar <strong>petugas.jpg</strong> berada di satu folder yang sama dengan file HTML ini agar preview dan hasil download muncul sempurna.
+        </div>
+    </div>
+
+    <div class="preview-container">
+        <h3>Live Preview</h3>
+        <div class="canvas-wrapper" id="wrapper">
+            <div id="capture-area">
+                <img src="petugas.jpg" id="bg-image" alt="Template Kosong">
+                
+                <div id="out-tanggal" class="text-overlay"></div>
+                <div id="out-imam" class="text-overlay"></div>
+                <div id="out-khatib" class="text-overlay"></div>
+                <div id="out-muadzin" class="text-overlay"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 1. Fungsi Otomatis untuk Mengatur Skala Ukuran Preview (Responsive Preview)
+        function aturSkalaPreview() {
+            const wrapper = document.getElementById('wrapper');
+            const captureArea = document.getElementById('capture-area');
+            const lebarWrapper = wrapper.clientWidth;
+            
+            // Menghitung rasio skala berdasarkan lebar pembungkus layar saat ini dibagi 1280 (lebar asli template)
+            const rasioSkala = lebarWrapper / 1280;
+            
+            // Mengaplikasikan transformasi CSS agar area HD mengecil pas di layar pratinjau
+            captureArea.style.transform = `scale(${rasioSkala})`;
+            wrapper.style.height = `${720 * rasioSkala}px`;
+        }
+
+        window.addEventListener('resize', aturSkalaPreview);
+        window.addEventListener('DOMContentLoaded', aturSkalaPreview);
+
+        // 2. Logika Live Preview (Mengetik langsung muncul di gambar)
+        const daftarInput = ['tanggal', 'imam', 'khatib', 'muadzin'];
+        daftarInput.forEach(id => {
+            document.getElementById(`in-${id}`).addEventListener('input', function(e) {
+                document.getElementById(`out-${id}`).innerText = e.target.value;
+            });
+        });
+
+        // 3. Fungsi Ekspor dan Download Gambar Menjadi File JPG
+        function downloadGambar() {
+            const areaCetak = document.getElementById('capture-area');
+            
+            // Menggunakan html2canvas untuk menangkap element
+            html2canvas(areaCetak, {
+                scale: 1.5, // Menaikkan skala saat dorender untuk menjaga ketajaman resolusi teks saat dicetak
+                useCORS: true,
+                logging: false,
+                backgroundColor: null
+            }).then(canvas => {
+                // Konversi canvas menjadi format JPEG/JPG kualitas tinggi (0.95)
+                const linkDownload = document.createElement('a');
+                linkDownload.download = 'Jadwal_Petugas_Jumat.jpg';
+                linkDownload.href = canvas.toDataURL('image/jpeg', 0.95);
+                linkDownload.click();
+            }).catch(err => {
+                alert("Gagal mengunduh gambar. Pastikan Anda membuka file HTML ini dengan benar dan file 'petugas.jpg' sudah ada di folder yang sama.");
+                console.error(err);
+            });
+        }
+    </script>
+</body>
+</html>
