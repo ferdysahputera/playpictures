@@ -888,9 +888,20 @@
             let startX = 0, startY = 0;
             let elemStartX = 0, elemStartY = 0;
 
-            document.getElementById('capture-area').addEventListener('mousedown', function(e) {
+            const captureArea = document.getElementById('capture-area');
+
+            // Mouse events
+            captureArea.addEventListener('mousedown', onDragStart);
+            // Touch events
+            captureArea.addEventListener('touchstart', onDragStart, { passive: false });
+
+            function onDragStart(e) {
                 const editModeActive = document.getElementById(`toggle-edit-${currentTab}`).checked;
                 if (!editModeActive) return;
+
+                const isTouch = e.type === 'touchstart';
+                const clientX = isTouch ? e.touches[0].clientX : e.clientX;
+                const clientY = isTouch ? e.touches[0].clientY : e.clientY;
 
                 const target = e.target.closest('.text-overlay');
                 if (!target) return;
@@ -899,30 +910,48 @@
                 let scale = getPreviewScale();
                 if (!scale || isNaN(scale) || scale <= 0) scale = 1;
 
-                startX = e.clientX;
-                startY = e.clientY;
+                startX = clientX;
+                startY = clientY;
 
                 elemStartX = parseFloat(activeDragElement.style.left) || 0;
                 elemStartY = parseFloat(activeDragElement.style.top) || 0;
 
-                document.addEventListener('mousemove', onMouseMove);
-                document.addEventListener('mouseup', onMouseUp);
+                if (isTouch) {
+                    document.addEventListener('touchmove', onTouchMove, { passive: false });
+                    document.addEventListener('touchend', onDragEnd);
+                } else {
+                    document.addEventListener('mousemove', onMouseMove);
+                    document.addEventListener('mouseup', onDragEnd);
+                }
+                
+                // Prevent default scrolling only when dragging an actual overlay
                 e.preventDefault();
-            });
+            }
 
             function onMouseMove(e) {
+                moveElement(e.clientX, e.clientY);
+            }
+
+            function onTouchMove(e) {
+                if (e.touches && e.touches.length > 0) {
+                    moveElement(e.touches[0].clientX, e.touches[0].clientY);
+                }
+                e.preventDefault(); // Prevent page scrolling/bounce when dragging
+            }
+
+            function moveElement(clientX, clientY) {
                 if (!activeDragElement) return;
                 let scale = getPreviewScale();
                 if (!scale || isNaN(scale) || scale <= 0) scale = 1;
 
-                const dx = (e.clientX - startX) / scale;
-                const dy = (e.clientY - startY) / scale;
+                const dx = (clientX - startX) / scale;
+                const dy = (clientY - startY) / scale;
 
                 activeDragElement.style.left = `${elemStartX + dx}px`;
                 activeDragElement.style.top = `${elemStartY + dy}px`;
             }
 
-            function onMouseUp() {
+            function onDragEnd() {
                 if (activeDragElement) {
                     const id = activeDragElement.id;
                     positionsCache[currentTab][id] = {
@@ -934,7 +963,9 @@
                     activeDragElement = null;
                 }
                 document.removeEventListener('mousemove', onMouseMove);
-                document.removeEventListener('mouseup', onMouseUp);
+                document.removeEventListener('mouseup', onDragEnd);
+                document.removeEventListener('touchmove', onTouchMove);
+                document.removeEventListener('touchend', onDragEnd);
             }
         }
 
