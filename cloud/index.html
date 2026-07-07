@@ -1,0 +1,2430 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TeleCloud - Telegram File Manager</title>
+    <!-- Google Fonts & FontAwesome Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #24A1DE; /* Telegram Blue */
+            --primary-glow: rgba(36, 161, 222, 0.4);
+            --bg-gradient: radial-gradient(circle at 50% 50%, #1a1c29 0%, #0e1017 100%);
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-bg-hover: rgba(255, 255, 255, 0.07);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --sidebar-width: 280px;
+            --danger: #ef4444;
+            --success: #10b981;
+            --warning: #f59e0b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg-gradient);
+            color: var(--text-main);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+        }
+
+        /* Ambient background glow elements */
+        .ambient-glow {
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(36, 161, 222, 0.15) 0%, rgba(0, 0, 0, 0) 70%);
+            z-index: 0;
+            pointer-events: none;
+        }
+        .glow-top-left { top: -100px; left: -100px; }
+        .glow-bottom-right { bottom: -100px; right: -100px; }
+
+        /* Main Container layout */
+        .app-container {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            backdrop-filter: blur(20px);
+        }
+
+        /* Sidebar Styling */
+        aside {
+            width: var(--sidebar-width);
+            background: rgba(14, 16, 23, 0.4);
+            border-right: 1px solid var(--glass-border);
+            display: flex;
+            flex-direction: column;
+            padding: 24px;
+            z-index: 10;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+
+        .logo-icon {
+            font-size: 24px;
+            color: var(--primary);
+            filter: drop-shadow(0 0 10px var(--primary-glow));
+        }
+
+        .logo-text {
+            font-weight: 700;
+            font-size: 16px;
+            letter-spacing: 0.2px;
+            background: linear-gradient(to right, #fff, var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.2;
+        }
+
+        .nav-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            list-style: none;
+            flex-grow: 1;
+            overflow-y: auto;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            border-radius: 12px;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: all 0.3s ease;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .nav-item:hover {
+            color: var(--text-main);
+            background: var(--glass-bg-hover);
+        }
+
+        .nav-item.active {
+            color: #fff;
+            background: var(--primary);
+            box-shadow: 0 4px 20px var(--primary-glow);
+        }
+
+        .connection-status {
+            margin-top: 16px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .status-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--danger);
+            box-shadow: 0 0 8px var(--danger);
+            display: inline-block;
+        }
+
+        .status-dot.connected {
+            background-color: var(--success);
+            box-shadow: 0 0 8px var(--success);
+        }
+
+        .status-text {
+            font-size: 11px;
+            color: var(--text-muted);
+            word-break: break-all;
+        }
+
+        /* Sidebar Footer Copyright */
+        .sidebar-footer {
+            margin-top: 16px;
+            padding-top: 12px;
+            border-top: 1px solid var(--glass-border);
+            font-size: 10px;
+            color: var(--text-muted);
+            text-align: center;
+        }
+
+        .sidebar-footer a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        /* Main Workspace Panel */
+        main {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        /* Top Bar Styling */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 30px;
+            border-bottom: 1px solid var(--glass-border);
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .header-left {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-grow: 1;
+        }
+
+        .search-container {
+            position: relative;
+            width: 240px;
+        }
+
+        .search-container input {
+            width: 100%;
+            padding: 10px 12px 10px 36px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            color: #fff;
+            font-family: inherit;
+            outline: none;
+            transition: all 0.3s;
+            font-size: 13px;
+        }
+
+        .search-container input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 10px var(--primary-glow);
+        }
+
+        .search-container i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+
+        .select-filter-container {
+            display: flex;
+            gap: 8px;
+        }
+
+        .select-filter {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            color: var(--text-main);
+            padding: 8px 12px;
+            font-family: inherit;
+            font-size: 13px;
+            outline: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .select-filter:focus {
+            border-color: var(--primary);
+        }
+
+        .select-filter option {
+            background: #161925;
+            color: #fff;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 16px;
+            border-radius: 10px;
+            font-family: inherit;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s ease;
+            font-size: 13px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: #fff;
+            box-shadow: 0 4px 15px var(--primary-glow);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(36, 161, 222, 0.6);
+        }
+
+        .btn-secondary {
+            background: var(--glass-bg);
+            color: var(--text-main);
+            border: 1px solid var(--glass-border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--glass-bg-hover);
+        }
+
+        /* File list & breadcrumb view area */
+        .workspace-content {
+            flex-grow: 1;
+            padding: 20px 30px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* Chat Workspace Panel */
+        .chat-workspace {
+            display: none;
+            flex-direction: row; /* Horizontal split for Topic sidebar and Chat box */
+            flex-grow: 1;
+            height: 100%;
+            overflow: hidden;
+            background: rgba(14, 16, 23, 0.2);
+        }
+
+        .chat-sidebar {
+            width: 240px;
+            background: rgba(14, 16, 23, 0.4);
+            border-right: 1px solid var(--glass-border);
+            display: flex;
+            flex-direction: column;
+            padding: 16px;
+            overflow-y: auto;
+            gap: 8px;
+        }
+
+        .chat-sidebar-title {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            padding-left: 6px;
+        }
+
+        .chat-topic-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 13px;
+            color: var(--text-muted);
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        .chat-topic-item:hover {
+            background: var(--glass-bg-hover);
+            color: var(--text-main);
+        }
+
+        .chat-topic-item.active {
+            background: var(--primary);
+            color: #fff;
+            box-shadow: 0 4px 12px var(--primary-glow);
+        }
+
+        .chat-main {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .chat-messages-container {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .chat-bubble {
+            max-width: 65%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            font-size: 14px;
+            line-height: 1.4;
+            position: relative;
+            word-break: word-break;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .chat-bubble.incoming {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+        }
+
+        .chat-bubble.outgoing {
+            background: var(--primary);
+            color: #fff;
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+            box-shadow: 0 4px 15px var(--primary-glow);
+        }
+
+        .chat-sender {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 2px;
+        }
+        .chat-bubble.outgoing .chat-sender {
+            color: #b3e5fc;
+        }
+
+        .chat-time {
+            font-size: 10px;
+            color: var(--text-muted);
+            align-self: flex-end;
+        }
+        .chat-bubble.outgoing .chat-time {
+            color: rgba(255,255,255,0.7);
+        }
+
+        .chat-input-container {
+            padding: 16px 20px;
+            border-top: 1px solid var(--glass-border);
+            display: flex;
+            gap: 12px;
+            background: rgba(22, 25, 37, 0.6);
+        }
+
+        .chat-input-container input {
+            flex-grow: 1;
+            padding: 12px 16px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            color: #fff;
+            font-family: inherit;
+            outline: none;
+            font-size: 14px;
+        }
+
+        .chat-input-container input:focus {
+            border-color: var(--primary);
+        }
+
+        .chat-send-btn {
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 16px;
+        }
+
+        .chat-send-btn:hover {
+            transform: scale(1.05);
+            background: #1d8ec4;
+        }
+
+        .breadcrumb-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .breadcrumb-item {
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .breadcrumb-item:hover {
+            color: var(--text-main);
+        }
+
+        .breadcrumb-item.active {
+            color: var(--primary);
+            font-weight: 600;
+            cursor: default;
+        }
+
+
+        /* Folder Grid View */
+        .grid-section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+        }
+
+        .items-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 20px;
+        }
+
+        /* Folder Card & File Card */
+        .item-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .item-card:hover {
+            background: var(--glass-bg-hover);
+            transform: translateY(-4px);
+            border-color: rgba(36, 161, 222, 0.4);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .item-icon {
+            font-size: 48px;
+            margin-bottom: 14px;
+            transition: transform 0.3s;
+        }
+
+        .item-card:hover .item-icon {
+            transform: scale(1.1);
+        }
+
+        .folder-icon { color: #f59e0b; } /* Orange Folder */
+        .image-icon { color: #10b981; }
+        .document-icon { color: #3b82f6; }
+        .video-icon { color: #ec4899; }
+        .audio-icon { color: #8b5cf6; }
+        .generic-icon { color: #9ca3af; }
+
+        .item-name {
+            font-size: 14px;
+            font-weight: 500;
+            width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            margin-bottom: 6px;
+        }
+
+        .item-meta {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .item-actions {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .item-card:hover .item-actions {
+            opacity: 1;
+        }
+
+        .action-dot {
+            background: rgba(0,0,0,0.3);
+            border: none;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            color: #fff;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        .action-dot:hover {
+            background: rgba(0,0,0,0.6);
+        }
+
+        /* Overlay/Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-content {
+            background: rgba(22, 25, 37, 0.95);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            width: 90%;
+            max-width: 480px;
+            padding: 32px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            transform: scale(0.9);
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            color: #fff;
+            font-family: inherit;
+            outline: none;
+        }
+
+        .form-group input:focus {
+            border-color: var(--primary);
+        }
+
+        .form-help {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 6px;
+            line-height: 1.4;
+        }
+
+        .form-help a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 28px;
+        }
+
+        /* Upload Queue panel */
+        .upload-queue-panel {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            width: 320px;
+            max-height: 280px;
+            background: rgba(22, 25, 37, 0.95);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            z-index: 90;
+            overflow: hidden;
+            display: none;
+            flex-direction: column;
+        }
+
+        .queue-header {
+            padding: 16px;
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .queue-items {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 12px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .queue-item {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .queue-item-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+        }
+
+        .queue-item-name {
+            font-weight: 500;
+            max-width: 70%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .queue-item-progress-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .queue-item-progress-fill {
+            height: 100%;
+            width: 0%;
+            background: var(--primary);
+            transition: width 0.2s;
+        }
+
+        /* Drop overlay when dragging files */
+        .workspace-content.dragover {
+            border: 2px dashed var(--primary);
+            background: rgba(36, 161, 222, 0.05);
+            border-radius: 16px;
+        }
+
+        .drag-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(36, 161, 222, 0.15);
+            backdrop-filter: blur(4px);
+            z-index: 80;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 12px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s;
+        }
+
+        .workspace-content.dragover .drag-overlay {
+            opacity: 1;
+        }
+
+        .drag-overlay i {
+            font-size: 48px;
+            color: var(--primary);
+            animation: bounce 1s infinite alternate;
+        }
+
+        @keyframes bounce {
+            from { transform: translateY(0); }
+            to { transform: translateY(-10px); }
+        }
+
+        /* Context menu style */
+        .context-menu {
+            position: absolute;
+            background: rgba(22, 25, 37, 0.95);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 8px 0;
+            min-width: 150px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            z-index: 110;
+            display: none;
+        }
+
+        .context-menu-item {
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            font-size: 13px;
+            color: var(--text-main);
+            transition: background 0.2s;
+        }
+
+        .context-menu-item:hover {
+            background: var(--glass-bg-hover);
+        }
+
+        .context-menu-item.delete {
+            color: var(--danger);
+        }
+
+        /* Preview Modal sizing */
+        .preview-content {
+            max-width: 700px;
+            width: 90%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .preview-viewer {
+            width: 100%;
+            max-height: 450px;
+            margin: 20px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .preview-viewer img {
+            max-width: 100%;
+            max-height: 450px;
+            border-radius: 8px;
+        }
+
+        .preview-viewer video, .preview-viewer audio {
+            width: 100%;
+        }
+
+        .text-preview {
+            width: 100%;
+            height: 300px;
+            background: #000;
+            color: #00ff00;
+            font-family: monospace;
+            padding: 16px;
+            overflow-y: auto;
+            border-radius: 8px;
+            white-space: pre-wrap;
+            text-align: left;
+        }
+
+        /* Empty state styling */
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 20px;
+            text-align: center;
+            color: var(--text-muted);
+            gap: 16px;
+        }
+
+        .empty-state i {
+            font-size: 64px;
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="ambient-glow glow-top-left"></div>
+    <div class="ambient-glow glow-bottom-right"></div>
+
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside>
+            <div class="logo-container">
+                <i class="fa-solid fa-cloud-bolt logo-icon"></i>
+                <span class="logo-text">Cloud Desa<br>Kampung Baru</span>
+            </div>
+            
+            <ul class="nav-menu">
+                <li class="nav-item active" onclick="switchNav('all')">
+                    <i class="fa-solid fa-folder-open"></i> Semua File
+                </li>
+                <li class="nav-item" onclick="switchNav('image')">
+                    <i class="fa-solid fa-image"></i> Gambar
+                </li>
+                <li class="nav-item" onclick="switchNav('document')">
+                    <i class="fa-solid fa-file-invoice"></i> Dokumen
+                </li>
+                <li class="nav-item" onclick="switchNav('video')">
+                    <i class="fa-solid fa-video"></i> Video
+                </li>
+                <li class="nav-item" onclick="switchNav('audio')">
+                    <i class="fa-solid fa-music"></i> Audio
+                </li>
+                <li class="nav-item" onclick="switchNav('chat')">
+                    <i class="fa-solid fa-comments"></i> Chat Grup
+                </li>
+                <li class="nav-item" onclick="openConfigModal()">
+                    <i class="fa-solid fa-gear"></i> Pengaturan
+                </li>
+            </ul>
+
+            <div class="connection-status">
+                <div class="status-header">
+                    <span id="status-indicator" class="status-dot"></span>
+                    <span id="status-title">Terputus</span>
+                </div>
+                <div id="status-detail" class="status-text">Belum ada kredensial bot Telegram.</div>
+            </div>
+
+            <div class="sidebar-footer">
+                Copyright by <a href="https://playpictures.co.id" target="_blank">Play Pictures</a>
+            </div>
+        </aside>
+
+        <!-- Main Workspace -->
+        <main>
+            <header>
+                <div class="header-left">
+                    <div class="search-container">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" id="search-input" placeholder="Cari file..." oninput="handleSearch()">
+                    </div>
+                    <div class="select-filter-container">
+                        <select class="select-filter" id="sort-select" onchange="handleSortChange()">
+                            <option value="newest">Terbaru</option>
+                            <option value="oldest">Terlama</option>
+                            <option value="name">Nama (A-Z)</option>
+                            <option value="size">Ukuran Terbesar</option>
+                        </select>
+                        <select class="select-filter" id="topic-select" onchange="handleTopicChange()">
+                            <option value="all">Semua Topik Telegram</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="action-buttons" id="workspace-action-buttons">
+                    <button class="btn btn-secondary" onclick="openCreateFolderModal()">
+                        <i class="fa-solid fa-folder-plus"></i> Folder Baru
+                    </button>
+                    <button class="btn btn-primary" onclick="triggerFileInput()">
+                        <i class="fa-solid fa-cloud-arrow-up"></i> Unggah File
+                    </button>
+                    <input type="file" id="file-input" style="display: none;" multiple onchange="handleFileSelect(event)">
+                </div>
+            </header>
+
+            <!-- Chat Workspace -->
+            <div class="chat-workspace" id="chat-workspace">
+                <!-- Left Sidebar: Forum Topics -->
+                <div class="chat-sidebar" id="chat-sidebar-topics">
+                    <div class="chat-sidebar-title">Topik Grup</div>
+                    <div class="chat-topic-item active" id="chat-topic-all" onclick="switchChatTopic('all')">
+                        <i class="fa-solid fa-comments"></i> Semua Obrolan
+                    </div>
+                    <div class="chat-topic-item" id="chat-topic-general" onclick="switchChatTopic('general')">
+                        <i class="fa-solid fa-hashtag"></i> Utama (General)
+                    </div>
+                    <div id="chat-dynamic-topics" style="display: flex; flex-direction: column; gap: 8px;">
+                        <!-- Dynamic forum topics will render here -->
+                    </div>
+                </div>
+
+                <!-- Right Pane: Messages -->
+                <div class="chat-main">
+                    <div class="chat-messages-container" id="chat-messages">
+                        <div style="color: var(--text-muted); text-align: center; margin-top: auto; padding: 20px;">
+                            <i class="fa-solid fa-comments" style="font-size: 48px; opacity: 0.3; margin-bottom: 12px;"></i>
+                            <p>Selamat datang di Chat Grup!</p>
+                            <p style="font-size: 12px;">Ketik pesan di bawah untuk dikirim langsung ke grup Telegram Anda.</p>
+                        </div>
+                    </div>
+                    <div class="chat-input-container">
+                        <input type="text" id="chat-input-field" placeholder="Ketik pesan untuk grup Telegram..." onkeydown="handleChatSendKeyPress(event)">
+                        <button class="chat-send-btn" onclick="sendChatMessage()">
+                            <i class="fa-solid fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="workspace-content" id="workspace" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)">
+                <!-- Drag overlay -->
+                <div class="drag-overlay">
+                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                    <h3>Lepaskan berkas untuk mengunggah</h3>
+                </div>
+
+                <!-- Breadcrumbs -->
+                <div class="breadcrumb-container" id="breadcrumbs">
+                    <span class="breadcrumb-item active">Root</span>
+                </div>
+
+                <!-- Folders and Files Sections -->
+                <div id="files-section" style="width: 100%;">
+                    <div class="grid-section-title" id="folders-title">Folder</div>
+                    <div class="items-grid" id="folders-grid" style="margin-bottom: 24px;">
+                        <!-- Folders dynamic list -->
+                    </div>
+
+                    <div class="grid-section-title" id="files-title">File</div>
+                    <div class="items-grid" id="files-grid">
+                        <!-- Files dynamic list -->
+                    </div>
+
+                    <div id="empty-view" class="empty-state" style="display: none;">
+                        <i class="fa-solid fa-folder-open"></i>
+                        <div>
+                            <h3>Folder ini kosong</h3>
+                            <p>Seret file ke sini atau klik Unggah File untuk memulai.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <!-- 1. Config Modal -->
+    <div class="modal-overlay" id="config-modal">
+        <div class="modal-content">
+            <h3 class="modal-title"><i class="fa-solid fa-gears" style="color: var(--primary);"></i> Konfigurasi TeleCloud</h3>
+            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">
+                Semua data disimpan secara lokal di browser Anda (`localStorage`) dan tidak pernah dikirim ke pihak ketiga selain Telegram. Aman digunakan untuk GitHub Pages!
+            </p>
+            <div class="form-group">
+                <label for="bot-token">Token Bot Telegram</label>
+                <input type="password" id="bot-token" placeholder="Contoh: 1234567890:ABCdefGhI...">
+                <div class="form-help">Dapatkan dari <a href="https://t.me/BotFather" target="_blank">@BotFather</a> di Telegram.</div>
+            </div>
+            <div class="form-group">
+                <label for="chat-id">Chat ID / Channel ID</label>
+                <input type="text" id="chat-id" placeholder="Contoh: -1001234567890 atau 987654321">
+                <div class="form-help">
+                    Masukkan ID Grup, Channel, atau ID Anda sendiri. Pastikan Bot telah masuk ke chat/channel tersebut sebagai <b>Administrator</b>.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('config-modal')">Batal</button>
+                <button class="btn btn-primary" onclick="saveConfig()">Simpan & Hubungkan</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. Create Folder Modal -->
+    <div class="modal-overlay" id="folder-modal">
+        <div class="modal-content">
+            <h3 class="modal-title"><i class="fa-solid fa-folder-plus" style="color: #f59e0b;"></i> Buat Folder Baru</h3>
+            <div class="form-group">
+                <label for="new-folder-name">Nama Folder</label>
+                <input type="text" id="new-folder-name" placeholder="Masukkan nama folder...">
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('folder-modal')">Batal</button>
+                <button class="btn btn-primary" onclick="createFolder()">Buat</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. Rename Modal -->
+    <div class="modal-overlay" id="rename-modal">
+        <div class="modal-content">
+            <h3 class="modal-title"><i class="fa-solid fa-pen-to-square" style="color: var(--primary);"></i> Ubah Nama</h3>
+            <div class="form-group">
+                <label for="rename-item-name">Nama Baru</label>
+                <input type="text" id="rename-item-name" placeholder="Masukkan nama baru...">
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('rename-modal')">Batal</button>
+                <button class="btn btn-primary" onclick="submitRename()">Simpan</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. Preview Modal -->
+    <div class="modal-overlay" id="preview-modal">
+        <div class="modal-content preview-content">
+            <h3 class="modal-title" id="preview-title"><i class="fa-solid fa-file"></i> Pratinjau</h3>
+            <div class="preview-viewer" id="preview-viewer">
+                <!-- Will dynamic load image, video, audio, or text preview -->
+            </div>
+            <div class="modal-footer" style="width: 100%;">
+                <button class="btn btn-secondary" onclick="closeModal('preview-modal')">Tutup</button>
+                <a id="preview-download-link" href="#" class="btn btn-primary" target="_blank" download>
+                    <i class="fa-solid fa-download"></i> Unduh File
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right-click Context Menu -->
+    <div class="context-menu" id="context-menu">
+        <div class="context-menu-item" onclick="handleContextMenuRename()"><i class="fa-solid fa-pen-to-square"></i> Ubah Nama</div>
+        <div class="context-menu-item delete" onclick="handleContextMenuDelete()"><i class="fa-solid fa-trash-can"></i> Hapus</div>
+    </div>
+
+    <!-- Active Upload Queue Panel -->
+    <div class="upload-queue-panel" id="upload-queue-panel">
+        <div class="queue-header">
+            <span>Mengunggah File...</span>
+            <span id="queue-count" style="font-size: 11px; background: var(--primary); padding: 2px 6px; border-radius: 10px;">0</span>
+        </div>
+        <div class="queue-items" id="queue-items">
+            <!-- Active upload items -->
+        </div>
+    </div>
+
+    <script>
+        // System Registry & State
+        let botToken = localStorage.getItem('telecloud_bot_token') || '';
+        let chatId = localStorage.getItem('telecloud_chat_id') || '';
+        let isConnected = false;
+
+        // Current navigation location (array of folder names path)
+        let currentPath = [];
+        let currentFilter = 'all'; // all, image, document, video, audio, chat
+        let searchQuery = '';
+        let currentSort = 'newest'; // newest, oldest, name, size
+        let currentTopic = 'all'; // all or specific message_thread_id string
+        let activeChatTopic = 'all'; // all, general, or message_thread_id string
+
+        // Virtual Directory Registry
+        let registry = {
+            version: 1,
+            topics: {},  // thread_id -> name (learned dynamically)
+            folders: {}, // name -> { folders: {}, files: [] }
+            files: [] // list of root files: { name, file_id, size, type, date, message_id, file_path }
+        };
+
+        // Track pinned registry message id to quickly update database
+        let registryMessageId = localStorage.getItem('telecloud_registry_msg_id') || '';
+        let lastUpdateId = parseInt(localStorage.getItem('telecloud_last_update_id') || '0');
+
+        // Context Menu State
+        let activeContextItem = null; // { type: 'folder'|'file', name: string, data: object }
+        let syncInterval = null;
+
+        // Start initialization
+        window.addEventListener('DOMContentLoaded', () => {
+            if (botToken && chatId) {
+                connectTelegram();
+            } else {
+                openConfigModal();
+            }
+
+            // Close context menu on click elsewhere
+            document.addEventListener('click', () => {
+                document.getElementById('context-menu').style.display = 'none';
+            });
+        });
+
+        // Toggle connection modal
+        function openConfigModal() {
+            document.getElementById('bot-token').value = botToken;
+            document.getElementById('chat-id').value = chatId;
+            openModal('config-modal');
+        }
+
+        function openModal(id) {
+            document.getElementById(id).classList.add('active');
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('active');
+        }
+
+        // Save Bot credentials
+        async function saveConfig() {
+            const tokenInput = document.getElementById('bot-token').value.trim();
+            const chatInput = document.getElementById('chat-id').value.trim();
+
+            if (!tokenInput || !chatInput) {
+                alert('Silakan masukkan Token Bot dan Chat ID terlebih dahulu!');
+                return;
+            }
+
+            botToken = tokenInput;
+            chatId = chatInput;
+            closeModal('config-modal');
+
+            // Reset state
+            isConnected = false;
+            if (syncInterval) clearInterval(syncInterval);
+            updateStatusIndicator();
+
+            await connectTelegram();
+        }
+
+        // Helper: Call Telegram API
+        async function callTelegram(method, data = {}, isMultipart = false) {
+            const url = `https://api.telegram.org/bot${botToken}/${method}`;
+            try {
+                let options = {};
+                if (isMultipart) {
+                    options = {
+                        method: 'POST',
+                        body: data
+                    };
+                } else {
+                    options = {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(data)
+                    };
+                }
+                const response = await fetch(url, options);
+                return await response.json();
+            } catch (err) {
+                console.error(`Telegram API Error (${method}):`, err);
+                return { ok: false, error: err.message };
+            }
+        }
+
+        // Verify and Connect
+        async function connectTelegram() {
+            const indicator = document.getElementById('status-indicator');
+            const title = document.getElementById('status-title');
+            const detail = document.getElementById('status-detail');
+
+            title.innerText = 'Menghubungkan...';
+            indicator.className = 'status-dot';
+
+            // 1. Check Bot & Chat validation via getChat
+            const chatRes = await callTelegram('getChat', { chat_id: chatId });
+            if (!chatRes.ok) {
+                title.innerText = 'Terputus';
+                detail.innerText = `Gagal menghubungkan: ${chatRes.description || 'Token atau Chat ID salah.'}`;
+                openConfigModal();
+                return;
+            }
+
+            // Save to localStorage
+            localStorage.setItem('telecloud_bot_token', botToken);
+            localStorage.setItem('telecloud_chat_id', chatId);
+
+            isConnected = true;
+            const chatTitle = chatRes.result.title || chatRes.result.first_name || 'Obrolan Telegram';
+            title.innerText = 'Tersambung';
+            detail.innerText = `Menggunakan: ${chatTitle}`;
+            indicator.className = 'status-dot connected';
+
+            // 2. Fetch registry from pinned message or look for it
+            await loadRegistry(chatRes.result);
+
+            // 3. Start Polling for manually sent files
+            startAutoSync();
+        }
+
+        // Load Registry Database from Telegram
+        async function loadRegistry(chatObj) {
+            let pinnedMsg = chatObj.pinned_message;
+
+            // If we have a saved message ID, check it
+            if (registryMessageId) {
+                let isRegistryFound = false;
+                if (pinnedMsg && pinnedMsg.message_id == registryMessageId) {
+                    isRegistryFound = true;
+                }
+
+                if (isRegistryFound && pinnedMsg.document && pinnedMsg.document.file_name === 'registry.json') {
+                    await downloadRegistryFile(pinnedMsg.document.file_id);
+                    return;
+                }
+            }
+
+            // Fallback: If current pinned message is registry, download it
+            if (pinnedMsg && pinnedMsg.document && pinnedMsg.document.file_name === 'registry.json') {
+                registryMessageId = pinnedMsg.message_id;
+                localStorage.setItem('telecloud_registry_msg_id', registryMessageId);
+                await downloadRegistryFile(pinnedMsg.document.file_id);
+                return;
+            }
+
+            // If no pinned message, ask user to initialize or create new one
+            console.log('No pinned registry.json found.');
+            const confirmInit = confirm('Database berkas (registry.json) tidak ditemukan tersemat di chat ini. Apakah Anda ingin menginisialisasi database baru? (Semua visualisasi folder akan dimulai dari awal)');
+            if (confirmInit) {
+                registry = { version: 1, folders: {}, files: [] };
+                await saveRegistry();
+            } else {
+                renderWorkspace();
+            }
+        }
+
+        // Download JSON registry from Telegram File ID
+        async function downloadRegistryFile(fileId) {
+            const fileRes = await callTelegram('getFile', { file_id: fileId });
+            if (fileRes.ok) {
+                const filePath = fileRes.result.file_path;
+                // Use AllOrigins CORS Proxy to fetch the file content securely in browser
+                const downloadUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(`https://api.telegram.org/file/bot${botToken}/${filePath}`)}`;
+                try {
+                    const response = await fetch(downloadUrl);
+                    if (!response.ok) throw new Error('HTTP error ' + response.status);
+                    registry = await response.json();
+                    renderWorkspace();
+                } catch (e) {
+                    console.error('Failed to parse registry.json', e);
+                    alert('Gagal membaca database berkas dari Telegram karena masalah koneksi CORS. Silakan muat ulang halaman.');
+                    // fallback to render what we have or empty
+                    renderWorkspace();
+                }
+            } else {
+                alert('Gagal mendapatkan file database dari Telegram: ' + (fileRes.description || 'Unknown error'));
+            }
+        }
+
+        // Save & Pin Registry to Telegram Chat
+        async function saveRegistry() {
+            if (!isConnected) return;
+
+            const registryStr = JSON.stringify(registry, null, 2);
+            const blob = new Blob([registryStr], { type: 'application/json' });
+            
+            const formData = new FormData();
+            formData.append('chat_id', chatId);
+            formData.append('document', blob, 'registry.json');
+            formData.append('caption', 'TeleCloud System Registry Database. Jangan hapus pesan ini!');
+
+            // Upload new registry
+            const uploadRes = await callTelegram('sendDocument', formData, true);
+            if (uploadRes.ok) {
+                const newMsgId = uploadRes.result.message_id;
+
+                // Pin the new registry
+                const pinRes = await callTelegram('pinChatMessage', {
+                    chat_id: chatId,
+                    message_id: newMsgId,
+                    disable_notification: true
+                });
+
+                if (pinRes.ok) {
+                    // Try to unpin the previous registry to keep chat neat
+                    if (registryMessageId && registryMessageId != newMsgId) {
+                        callTelegram('unpinChatMessage', {
+                            chat_id: chatId,
+                            message_id: registryMessageId
+                        }).catch(() => {});
+                    }
+                    
+                    registryMessageId = newMsgId;
+                    localStorage.setItem('telecloud_registry_msg_id', registryMessageId);
+                }
+            }
+            renderWorkspace();
+        }
+
+        // Auto Sync: Scan for manually sent files in the chat
+        function startAutoSync() {
+            if (syncInterval) clearInterval(syncInterval);
+            // Check updates immediately then poll every 6 seconds
+            syncNewTelegramMessages();
+            syncInterval = setInterval(syncNewTelegramMessages, 6000);
+        }
+
+        // Check for new files and chat messages sent manually to Telegram chat/channel
+        let chatMessages = [];
+        
+        async function syncNewTelegramMessages() {
+            if (!isConnected) return;
+
+            const params = { limit: 50 };
+            if (lastUpdateId > 0) {
+                params.offset = lastUpdateId + 1;
+            }
+
+            const updatesRes = await callTelegram('getUpdates', params);
+            if (updatesRes.ok && updatesRes.result.length > 0) {
+                let registryChanged = false;
+                let newChatAdded = false;
+
+                for (const update of updatesRes.result) {
+                    lastUpdateId = Math.max(lastUpdateId, update.update_id);
+                    localStorage.setItem('telecloud_last_update_id', lastUpdateId);
+
+                    const message = update.message || update.channel_post;
+                    if (!message) continue;
+
+                    // Match current chat_id (convert both to string to be safe)
+                    if (String(message.chat.id) !== String(chatId)) continue;
+
+                    // Capture Topic name if created in chat
+                    if (message.forum_topic_created && message.message_thread_id) {
+                        if (!registry.topics) registry.topics = {};
+                        registry.topics[String(message.message_thread_id)] = message.forum_topic_created.name;
+                        registryChanged = true;
+                    }
+
+                    // Feed Chat Workspace if it's a text message
+                    if (message.text && !message.document) {
+                        if (!chatMessages.some(m => m.message_id === message.message_id)) {
+                            const senderName = message.from 
+                                ? (message.from.first_name + (message.from.last_name ? ' ' + message.from.last_name : '')) 
+                                : 'Sistem';
+                            chatMessages.push({
+                                message_id: message.message_id,
+                                message_thread_id: message.message_thread_id ? String(message.message_thread_id) : '',
+                                sender: senderName,
+                                text: message.text,
+                                time: new Date(message.date * 1000).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }),
+                                outgoing: false
+                            });
+                            newChatAdded = true;
+
+                            // Register the topic if it's not already in registry.topics
+                            if (message.message_thread_id) {
+                                const threadStr = String(message.message_thread_id);
+                                if (!registry.topics) registry.topics = {};
+                                if (!registry.topics[threadStr]) {
+                                    registry.topics[threadStr] = `Topik #${threadStr}`;
+                                    registryChanged = true;
+                                }
+                            }
+                        }
+                    }
+
+                    // Check if message has any files
+                    let fileObject = null;
+                    let fileType = 'document';
+                    let fileName = '';
+                    let fileSize = 0;
+
+                    if (message.document) {
+                        if (message.document.file_name === 'registry.json') continue;
+                        fileObject = message.document;
+                        fileType = 'document';
+                        fileName = message.document.file_name || 'Dokumen Tanpa Nama';
+                        fileSize = message.document.file_size || 0;
+                    } else if (message.photo && message.photo.length > 0) {
+                        fileObject = message.photo[message.photo.length - 1];
+                        fileType = 'image';
+                        fileName = `Foto_${fileObject.file_unique_id}.jpg`;
+                        fileSize = fileObject.file_size || 0;
+                    } else if (message.video) {
+                        fileObject = message.video;
+                        fileType = 'video';
+                        fileName = message.video.file_name || `Video_${fileObject.file_unique_id}.mp4`;
+                        fileSize = message.video.file_size || 0;
+                    } else if (message.audio) {
+                        fileObject = message.audio;
+                        fileType = 'audio';
+                        fileName = message.audio.file_name || `Audio_${fileObject.file_unique_id}.mp3`;
+                        fileSize = message.audio.file_size || 0;
+                    }
+
+                    if (fileObject) {
+                        // Check if file already exists in registry (avoid duplicate import)
+                        if (!isFileInRegistry(fileObject.file_id)) {
+                            // Detect actual file type from extension if possible
+                            const ext = fileName.split('.').pop().toLowerCase();
+                            if (['jpg','jpeg','png','gif','webp','bmp','svg'].includes(ext)) fileType = 'image';
+                            else if (['mp4','webm','mkv','avi','mov'].includes(ext)) fileType = 'video';
+                            else if (['mp3','wav','ogg','aac','flac','m4a'].includes(ext)) fileType = 'audio';
+
+                            // Fetch file_path immediately for thumbnails and fast loading
+                            let filePath = '';
+                            const pathRes = await callTelegram('getFile', { file_id: fileObject.file_id });
+                            if (pathRes.ok) {
+                                filePath = pathRes.result.file_path;
+                            }
+
+                            // Register topic
+                            const threadStr = message.message_thread_id ? String(message.message_thread_id) : '';
+                            if (threadStr) {
+                                if (!registry.topics) registry.topics = {};
+                                if (!registry.topics[threadStr]) {
+                                    registry.topics[threadStr] = `Topik #${threadStr}`;
+                                }
+                            }
+
+                            // Append to root directory registry
+                            registry.files.push({
+                                name: fileName,
+                                file_id: fileObject.file_id,
+                                message_id: message.message_id,
+                                message_thread_id: threadStr,
+                                file_path: filePath,
+                                size: fileSize,
+                                type: fileType,
+                                date: new Date(message.date * 1000).toLocaleDateString('id-ID')
+                            });
+                            registryChanged = true;
+                        }
+                    }
+                }
+
+                if (newChatAdded) {
+                    renderChatMessages();
+                }
+
+                if (registryChanged) {
+                    await saveRegistry();
+                    if (currentFilter === 'chat') {
+                        renderChatTopics();
+                    }
+                }
+            }
+        }
+
+        // Helper to compile all unique topics found in files/messages
+        function initializeTopicsFromData() {
+            if (!registry.topics) registry.topics = {};
+            
+            // Collect from files recursively
+            const collectFromFolder = (folder) => {
+                if (folder.files) {
+                    folder.files.forEach(f => {
+                        if (f.message_thread_id) {
+                            const tid = String(f.message_thread_id);
+                            if (!registry.topics[tid]) {
+                                registry.topics[tid] = `Topik #${tid}`;
+                            }
+                        }
+                    });
+                }
+                if (folder.folders) {
+                    for (const key in folder.folders) {
+                        collectFromFolder(folder.folders[key]);
+                    }
+                }
+            };
+            collectFromFolder(registry);
+
+            // Collect from messages
+            chatMessages.forEach(msg => {
+                if (msg.message_thread_id) {
+                    const tid = String(msg.message_thread_id);
+                    if (!registry.topics[tid]) {
+                        registry.topics[tid] = `Topik #${tid}`;
+                    }
+                }
+            });
+        }
+
+        // Switch active chat topic
+        function switchChatTopic(topicId) {
+            activeChatTopic = String(topicId);
+            
+            // Remove active classes
+            document.querySelectorAll('.chat-topic-item').forEach(el => el.classList.remove('active'));
+            
+            // Set active class
+            if (topicId === 'all') {
+                document.getElementById('chat-topic-all').classList.add('active');
+            } else if (topicId === 'general') {
+                document.getElementById('chat-topic-general').classList.add('active');
+            } else {
+                const activeItem = document.getElementById(`chat-topic-${topicId}`);
+                if (activeItem) activeItem.classList.add('active');
+            }
+
+            renderChatMessages();
+        }
+
+        // Render Forum Topics sidebar inside chat workspace
+        function renderChatTopics() {
+            // Compile list from data first
+            initializeTopicsFromData();
+            
+            const container = document.getElementById('chat-dynamic-topics');
+            container.innerHTML = '';
+            
+            Object.keys(registry.topics).forEach(threadId => {
+                const topicName = registry.topics[threadId];
+                const item = document.createElement('div');
+                item.className = `chat-topic-item ${activeChatTopic === String(threadId) ? 'active' : ''}`;
+                item.id = `chat-topic-${threadId}`;
+                item.innerHTML = `<i class="fa-solid fa-comments"></i> ${escapeHtml(topicName)}`;
+                item.addEventListener('click', () => switchChatTopic(threadId));
+                container.appendChild(item);
+            });
+        }
+
+        // Render chat messages in chat container, filtered by active topic
+        function renderChatMessages() {
+            const container = document.getElementById('chat-messages');
+            
+            // Filter messages based on selected topic
+            let filteredMessages = chatMessages.slice();
+            if (activeChatTopic !== 'all') {
+                filteredMessages = filteredMessages.filter(msg => {
+                    if (activeChatTopic === 'general') {
+                        return !msg.message_thread_id; // General chat messages have no thread_id
+                    }
+                    return String(msg.message_thread_id) === activeChatTopic;
+                });
+            }
+
+            if (filteredMessages.length === 0) {
+                container.innerHTML = `
+                    <div style="color: var(--text-muted); text-align: center; margin-top: auto; padding: 20px;">
+                        <i class="fa-solid fa-comments" style="font-size: 48px; opacity: 0.3; margin-bottom: 12px;"></i>
+                        <p>Belum ada obrolan teks di topik ini.</p>
+                        <p style="font-size: 12px;">Ketik pesan pertama Anda di bawah.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = '';
+            filteredMessages.forEach(msg => {
+                const bubble = document.createElement('div');
+                bubble.className = `chat-bubble ${msg.outgoing ? 'outgoing' : 'incoming'}`;
+                bubble.innerHTML = `
+                    <span class="chat-sender">${escapeHtml(msg.sender)}</span>
+                    <span>${escapeHtml(msg.text)}</span>
+                    <span class="chat-time">${msg.time}</span>
+                `;
+                container.appendChild(bubble);
+            });
+            scrollChatToBottom();
+        }
+
+        // Scroll chat window to bottom
+        function scrollChatToBottom() {
+            const container = document.getElementById('chat-messages');
+            container.scrollTop = container.scrollHeight;
+        }
+
+        // Send Text Message to Telegram
+        async function sendChatMessage() {
+            const inputField = document.getElementById('chat-input-field');
+            const text = inputField.value.trim();
+            if (!text || !isConnected) return;
+
+            const payload = {
+                chat_id: chatId,
+                text: text
+            };
+
+            // If we are currently inside a specific Telegram topic, send the message to that topic thread
+            if (activeChatTopic !== 'all' && activeChatTopic !== 'general') {
+                payload.message_thread_id = activeChatTopic;
+            }
+
+            const res = await callTelegram('sendMessage', payload);
+            if (res.ok) {
+                inputField.value = '';
+                chatMessages.push({
+                    message_id: res.result.message_id,
+                    message_thread_id: activeChatTopic === 'general' ? '' : (activeChatTopic === 'all' ? '' : activeChatTopic),
+                    sender: 'Saya',
+                    text: text,
+                    time: new Date(res.result.date * 1000).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }),
+                    outgoing: true
+                });
+                renderChatMessages();
+            } else {
+                alert('Gagal mengirim pesan: ' + (res.description || 'Unknown error'));
+            }
+        }
+
+        // Input Keyboard Enter Listener
+        function handleChatSendKeyPress(e) {
+            if (e.key === 'Enter') {
+                sendChatMessage();
+            }
+        }
+
+        // Helper to check duplicates
+        function isFileInRegistry(fileId) {
+            return searchFileId(registry, fileId);
+        }
+
+        function searchFileId(folder, fileId) {
+            if (folder.files && folder.files.some(f => f.file_id === fileId)) {
+                return true;
+            }
+            if (folder.folders) {
+                for (const key in folder.folders) {
+                    if (searchFileId(folder.folders[key], fileId)) return true;
+                }
+            }
+            return false;
+        }
+
+        // Navigate Current Path Folder Object Helper
+        function getCurrentFolder() {
+            let folder = registry;
+            for (const name of currentPath) {
+                if (folder.folders && folder.folders[name]) {
+                    folder = folder.folders[name];
+                } else {
+                    currentPath = [];
+                    return registry;
+                }
+            }
+            return folder;
+        }
+
+        // Helper to parse dd/mm/yyyy dates
+        function parseDate(dateStr) {
+            if (!dateStr) return 0;
+            const parts = dateStr.split('/');
+            if (parts.length === 3) {
+                return new Date(parts[2], parts[1] - 1, parts[0]).getTime();
+            }
+            return new Date(dateStr).getTime() || 0;
+        }
+
+        // Change workspace display based on path & search
+        function renderWorkspace() {
+            const folder = getCurrentFolder();
+            const breadcrumbs = document.getElementById('breadcrumbs');
+            const foldersGrid = document.getElementById('folders-grid');
+            const filesGrid = document.getElementById('files-grid');
+            const foldersTitle = document.getElementById('folders-title');
+            const filesTitle = document.getElementById('files-title');
+            const emptyView = document.getElementById('empty-view');
+
+            // Sync topic dropdown options
+            updateTopicDropdown();
+
+            // Render Breadcrumbs
+            let breadcrumbHtml = `<span class="breadcrumb-item" onclick="navigatePath(-1)">Root</span>`;
+            currentPath.forEach((name, idx) => {
+                breadcrumbHtml += ` <i class="fa-solid fa-chevron-right" style="font-size: 10px;"></i> `;
+                breadcrumbHtml += `<span class="breadcrumb-item ${idx === currentPath.length - 1 ? 'active' : ''}" onclick="navigatePath(${idx})">${name}</span>`;
+            });
+            breadcrumbs.innerHTML = breadcrumbHtml;
+
+            // Clear grids
+            foldersGrid.innerHTML = '';
+            filesGrid.innerHTML = '';
+
+            // Get lists
+            const folderList = Object.keys(folder.folders || {}).sort();
+            let fileList = (folder.files || []).slice();
+
+            // Filter Category (Images, Doc, etc.)
+            if (currentFilter !== 'all') {
+                fileList = fileList.filter(f => f.type === currentFilter);
+            }
+
+            // Filter by Telegram Topic
+            if (currentTopic !== 'all') {
+                fileList = fileList.filter(f => String(f.message_thread_id) === currentTopic);
+            }
+
+            // Search Filter
+            if (searchQuery) {
+                fileList = fileList.filter(f => f.name.toLowerCase().includes(searchQuery.toLowerCase()));
+            }
+
+            // Apply Sorting
+            if (currentSort === 'name') {
+                fileList.sort((a, b) => a.name.localeCompare(b.name));
+            } else if (currentSort === 'size') {
+                fileList.sort((a, b) => b.size - a.size);
+            } else if (currentSort === 'oldest') {
+                fileList.sort((a, b) => parseDate(a.date) - parseDate(b.date));
+            } else {
+                // newest
+                fileList.sort((a, b) => parseDate(b.date) - parseDate(a.date));
+            }
+
+            // Render Folders (only show when not filtering by category)
+            if (currentFilter === 'all' && !searchQuery && folderList.length > 0) {
+                foldersTitle.style.display = 'block';
+                foldersGrid.style.display = 'grid';
+                folderList.forEach(name => {
+                    const card = document.createElement('div');
+                    card.className = 'item-card';
+                    card.innerHTML = `
+                        <div class="item-actions">
+                            <button class="action-dot" onclick="showItemContext(event, 'folder', '${name}')">
+                                <i class="fa-solid fa-ellipsis-vertical"></i>
+                            </button>
+                        </div>
+                        <i class="fa-solid fa-folder item-icon folder-icon"></i>
+                        <div class="item-name" title="${name}">${name}</div>
+                        <div class="item-meta">${Object.keys(folder.folders[name].folders || {}).length + (folder.folders[name].files || []).length} item</div>
+                    `;
+                    card.addEventListener('dblclick', () => {
+                        currentPath.push(name);
+                        renderWorkspace();
+                    });
+                    foldersGrid.appendChild(card);
+                });
+            } else {
+                foldersTitle.style.display = 'none';
+                foldersGrid.style.display = 'none';
+            }
+
+            // Render Files
+            if (fileList.length > 0) {
+                filesTitle.style.display = 'block';
+                filesGrid.style.display = 'grid';
+                fileList.forEach(file => {
+                    const card = document.createElement('div');
+                    card.className = 'item-card';
+                    
+                    let iconHtml = '';
+                    if (file.type === 'image' && file.file_path) {
+                        // Display beautiful image thumbnail
+                        const directThumbUrl = `https://api.telegram.org/file/bot${botToken}/${file.file_path}`;
+                        iconHtml = `
+                            <div style="width: 80px; height: 80px; border-radius: 12px; overflow: hidden; margin-bottom: 14px; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border);">
+                                <img src="${directThumbUrl}" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
+                            </div>
+                        `;
+                    } else {
+                        let iconClass = 'fa-solid fa-file generic-icon';
+                        if (file.type === 'image') iconClass = 'fa-solid fa-file-image image-icon';
+                        else if (file.type === 'video') iconClass = 'fa-solid fa-file-video video-icon';
+                        else if (file.type === 'audio') iconClass = 'fa-solid fa-file-audio audio-icon';
+                        else if (file.type === 'document') iconClass = 'fa-solid fa-file-invoice document-icon';
+                        
+                        iconHtml = `<i class="${iconClass} item-icon"></i>`;
+                    }
+
+                    card.innerHTML = `
+                        <div class="item-actions">
+                            <button class="action-dot" onclick="showItemContext(event, 'file', '${file.name}')">
+                                <i class="fa-solid fa-ellipsis-vertical"></i>
+                            </button>
+                        </div>
+                        ${iconHtml}
+                        <div class="item-name" title="${file.name}">${file.name}</div>
+                        <div class="item-meta">${formatBytes(file.size)}</div>
+                    `;
+                    card.addEventListener('click', (e) => {
+                        // Ignore if context clicked
+                        if (e.target.closest('.item-actions')) return;
+                        openPreview(file);
+                    });
+                    filesGrid.appendChild(card);
+                });
+            } else {
+                filesTitle.style.display = 'none';
+                filesGrid.style.display = 'none';
+            }
+
+            // Check if fully empty
+            const totalVisible = (currentFilter === 'all' && !searchQuery ? folderList.length : 0) + fileList.length;
+            if (totalVisible === 0) {
+                emptyView.style.display = 'flex';
+            } else {
+                emptyView.style.display = 'none';
+            }
+        }
+
+        // Navigate via breadcrumbs
+        function navigatePath(idx) {
+            if (idx === -1) {
+                currentPath = [];
+            } else {
+                currentPath = currentPath.slice(0, idx + 1);
+            }
+            renderWorkspace();
+        }
+
+        // Left Navigation filter switch
+        function switchNav(type) {
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            
+            currentFilter = type;
+
+            const workspace = document.getElementById('workspace');
+            const chatWorkspace = document.getElementById('chat-workspace');
+            const actionButtons = document.getElementById('workspace-action-buttons');
+            const searchFilters = document.querySelector('.header-left');
+
+            if (type === 'chat') {
+                workspace.style.display = 'none';
+                chatWorkspace.style.display = 'flex';
+                actionButtons.style.display = 'none';
+                searchFilters.style.visibility = 'hidden';
+                renderChatTopics();
+                renderChatMessages();
+                scrollChatToBottom();
+            } else {
+                workspace.style.display = 'flex';
+                chatWorkspace.style.display = 'none';
+                actionButtons.style.display = 'inline-flex';
+                searchFilters.style.visibility = 'visible';
+                renderWorkspace();
+            }
+        }
+
+        // Sorting Handlers
+        function handleSortChange() {
+            currentSort = document.getElementById('sort-select').value;
+            renderWorkspace();
+        }
+
+        // Topic Handlers
+        function handleTopicChange() {
+            currentTopic = document.getElementById('topic-select').value;
+            renderWorkspace();
+        }
+
+        // Update Topic Dropdown with unique thread IDs found in registry
+        function updateTopicDropdown() {
+            const topicSelect = document.getElementById('topic-select');
+            
+            // Keep the default "Semua Topik"
+            topicSelect.innerHTML = '<option value="all">Semua Topik Telegram</option>';
+            
+            // Collect unique thread IDs from files recursive
+            const threadIds = new Set();
+            collectThreadIds(registry, threadIds);
+
+            // Populate select list
+            threadIds.forEach(threadId => {
+                const topicName = (registry.topics && registry.topics[threadId]) 
+                    ? registry.topics[threadId] 
+                    : `Topik #${threadId}`;
+                const option = document.createElement('option');
+                option.value = threadId;
+                option.textContent = topicName;
+                if (currentTopic === String(threadId)) {
+                    option.selected = true;
+                }
+                topicSelect.appendChild(option);
+            });
+        }
+
+        // Helper recursive to collect thread IDs
+        function collectThreadIds(folder, set) {
+            if (folder.files) {
+                folder.files.forEach(f => {
+                    if (f.message_thread_id) {
+                        set.add(String(f.message_thread_id));
+                    }
+                });
+            }
+            if (folder.folders) {
+                for (const key in folder.folders) {
+                    collectThreadIds(folder.folders[key], set);
+                }
+            }
+        }
+
+        // Folder Creator Modal triggers
+        function openCreateFolderModal() {
+            if (!isConnected) {
+                alert('Hubungkan TeleCloud dengan Bot Telegram Anda terlebih dahulu!');
+                openConfigModal();
+                return;
+            }
+            document.getElementById('new-folder-name').value = '';
+            openModal('folder-modal');
+        }
+
+        async function createFolder() {
+            const nameInput = document.getElementById('new-folder-name').value.trim();
+            if (!nameInput) return;
+            
+            if (nameInput.includes('/') || nameInput.includes('\\') || nameInput.includes('.') || nameInput.includes('registry.json')) {
+                alert('Nama folder mengandung karakter yang dilarang!');
+                return;
+            }
+
+            const folder = getCurrentFolder();
+            if (!folder.folders) folder.folders = {};
+
+            if (folder.folders[nameInput]) {
+                alert('Folder dengan nama ini sudah ada!');
+                return;
+            }
+
+            folder.folders[nameInput] = { folders: {}, files: [] };
+            closeModal('folder-modal');
+            
+            // Save state to Telegram
+            await saveRegistry();
+        }
+
+        // Direct file upload triggers
+        function triggerFileInput() {
+            if (!isConnected) {
+                alert('Hubungkan TeleCloud dengan Bot Telegram Anda terlebih dahulu!');
+                openConfigModal();
+                return;
+            }
+            document.getElementById('file-input').click();
+        }
+
+        function handleFileSelect(e) {
+            const files = e.target.files;
+            if (files.length > 0) {
+                uploadFilesList(Array.from(files));
+            }
+        }
+
+        // Drag & Drop
+        function handleDragOver(e) {
+            e.preventDefault();
+            document.getElementById('workspace').classList.add('dragover');
+        }
+
+        function handleDragLeave(e) {
+            e.preventDefault();
+            document.getElementById('workspace').classList.remove('dragover');
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            document.getElementById('workspace').classList.remove('dragover');
+            
+            if (!isConnected) {
+                alert('Hubungkan TeleCloud dengan Bot Telegram Anda terlebih dahulu!');
+                openConfigModal();
+                return;
+            }
+
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                uploadFilesList(Array.from(files));
+            }
+        }
+
+        // Upload queue handler
+        async function uploadFilesList(files) {
+            const queuePanel = document.getElementById('upload-queue-panel');
+            const queueItems = document.getElementById('queue-items');
+            const queueCount = document.getElementById('queue-count');
+
+            queuePanel.style.display = 'flex';
+            queueCount.innerText = parseInt(queueCount.innerText) + files.length;
+
+            for (const file of files) {
+                if (file.size > 50 * 1024 * 1024) {
+                    alert(`Berkas "${file.name}" melebihi batas ukuran maksimal Bot Telegram (50 MB).`);
+                    continue;
+                }
+
+                // Add to queue UI
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'queue-item';
+                const fileIdClean = 'up-' + Math.random().toString(36).substr(2, 9);
+                itemDiv.id = fileIdClean;
+                itemDiv.innerHTML = `
+                    <div class="queue-item-info">
+                        <span class="queue-item-name" title="${file.name}">${file.name}</span>
+                        <span class="queue-item-percent" id="${fileIdClean}-pct">0%</span>
+                    </div>
+                    <div class="queue-item-progress-bar">
+                        <div class="queue-item-progress-fill" id="${fileIdClean}-fill"></div>
+                    </div>
+                `;
+                queueItems.appendChild(itemDiv);
+
+                try {
+                    const fileData = await uploadToTelegram(file, (percent) => {
+                        document.getElementById(`${fileIdClean}-fill`).style.width = percent + '%';
+                        document.getElementById(`${fileIdClean}-pct`).innerText = percent + '%';
+                    });
+
+                    if (fileData) {
+                        // Register in virtual folder
+                        const folder = getCurrentFolder();
+                        if (!folder.files) folder.files = [];
+
+                        // Detect simple category
+                        let fileType = 'document';
+                        const ext = file.name.split('.').pop().toLowerCase();
+                        if (['jpg','jpeg','png','gif','webp','bmp','svg'].includes(ext)) fileType = 'image';
+                        else if (['mp4','webm','mkv','avi','mov'].includes(ext)) fileType = 'video';
+                        else if (['mp3','wav','ogg','aac','flac','m4a'].includes(ext)) fileType = 'audio';
+
+                        // Immediately fetch file_path to cache it
+                        let filePath = '';
+                        const pathRes = await callTelegram('getFile', { file_id: fileData.file_id });
+                        if (pathRes.ok) {
+                            filePath = pathRes.result.file_path;
+                        }
+
+                        folder.files.push({
+                            name: file.name,
+                            file_id: fileData.file_id,
+                            message_id: fileData.message_id,
+                            file_path: filePath,
+                            size: file.size,
+                            type: fileType,
+                            date: new Date().toLocaleDateString('id-ID')
+                        });
+
+                        itemDiv.remove();
+                    } else {
+                        document.getElementById(`${fileIdClean}-pct`).innerText = 'Gagal';
+                        document.getElementById(`${fileIdClean}-pct`).style.color = 'var(--danger)';
+                    }
+                } catch (e) {
+                    console.error(e);
+                    document.getElementById(`${fileIdClean}-pct`).innerText = 'Kesalahan';
+                    document.getElementById(`${fileIdClean}-pct`).style.color = 'var(--danger)';
+                }
+
+                queueCount.innerText = Math.max(0, parseInt(queueCount.innerText) - 1);
+            }
+
+            if (parseInt(queueCount.innerText) === 0) {
+                setTimeout(() => {
+                    queuePanel.style.display = 'none';
+                }, 2000);
+            }
+
+            // Sync registry db to Telegram
+            await saveRegistry();
+        }
+
+        // Direct Telegram Upload utilizing XMLHttpRequest for progress bar support
+        function uploadToTelegram(file, onProgress) {
+            return new Promise((resolve, reject) => {
+                const xhr = new XMLHttpRequest();
+                const formData = new FormData();
+                
+                formData.append('chat_id', chatId);
+                formData.append('document', file);
+
+                xhr.open('POST', `https://api.telegram.org/bot${botToken}/sendDocument`, true);
+
+                xhr.upload.onprogress = (e) => {
+                    if (e.lengthComputable) {
+                        const percentComplete = Math.round((e.loaded / e.total) * 100);
+                        onProgress(percentComplete);
+                    }
+                };
+
+                xhr.onload = () => {
+                    if (xhr.status === 200) {
+                        const res = JSON.parse(xhr.responseText);
+                        if (res.ok) {
+                            resolve({
+                                file_id: res.result.document.file_id,
+                                message_id: res.result.message_id
+                            });
+                        } else {
+                            resolve(null);
+                        }
+                    } else {
+                        resolve(null);
+                    }
+                };
+
+                xhr.onerror = () => reject(new Error('Koneksi terputus'));
+                xhr.send(formData);
+            });
+        }
+
+        // Show File/Folder actions menu (rename, delete)
+        function showItemContext(e, type, name) {
+            e.stopPropagation();
+            e.preventDefault();
+
+            const folder = getCurrentFolder();
+            let data = null;
+            if (type === 'folder') {
+                data = folder.folders[name];
+            } else {
+                data = folder.files.find(f => f.name === name);
+            }
+
+            activeContextItem = { type, name, data };
+
+            const menu = document.getElementById('context-menu');
+            menu.style.display = 'block';
+            menu.style.left = e.clientX + 'px';
+            menu.style.top = e.clientY + 'px';
+        }
+
+        // Context Menu Action: Rename
+        function handleContextMenuRename() {
+            if (!activeContextItem) return;
+            document.getElementById('rename-item-name').value = activeContextItem.name;
+            openModal('rename-modal');
+        }
+
+        async function submitRename() {
+            const newName = document.getElementById('rename-item-name').value.trim();
+            if (!newName || !activeContextItem) return;
+
+            const folder = getCurrentFolder();
+
+            if (activeContextItem.type === 'folder') {
+                if (newName === activeContextItem.name) { closeModal('rename-modal'); return; }
+                if (folder.folders[newName]) { alert('Folder dengan nama ini sudah terdaftar!'); return; }
+
+                folder.folders[newName] = folder.folders[activeContextItem.name];
+                delete folder.folders[activeContextItem.name];
+            } else {
+                if (newName === activeContextItem.name) { closeModal('rename-modal'); return; }
+                const existing = folder.files.find(f => f.name === newName);
+                if (existing) { alert('File dengan nama ini sudah terdaftar!'); return; }
+
+                const fileObj = folder.files.find(f => f.name === activeContextItem.name);
+                if (fileObj) {
+                    fileObj.name = newName;
+                }
+            }
+
+            closeModal('rename-modal');
+            await saveRegistry();
+        }
+
+        // Context Menu Action: Delete
+        async function handleContextMenuDelete() {
+            if (!activeContextItem) return;
+            
+            const isConfirmed = confirm(`Apakah Anda yakin ingin menghapus "${activeContextItem.name}"?`);
+            if (!isConfirmed) return;
+
+            const folder = getCurrentFolder();
+
+            if (activeContextItem.type === 'folder') {
+                delete folder.folders[activeContextItem.name];
+            } else {
+                folder.files = folder.files.filter(f => f.name !== activeContextItem.name);
+            }
+
+            await saveRegistry();
+        }
+
+        // Render preview content helper
+        function renderPreviewElements(file, rawUrl) {
+            const viewer = document.getElementById('preview-viewer');
+            const dlLink = document.getElementById('preview-download-link');
+
+            dlLink.href = rawUrl;
+            dlLink.style.pointerEvents = 'auto';
+
+            if (file.type === 'image') {
+                viewer.innerHTML = `<img src="${rawUrl}" alt="${file.name}">`;
+            } else if (file.type === 'video') {
+                viewer.innerHTML = `<video controls src="${rawUrl}"></video>`;
+            } else if (file.type === 'audio') {
+                viewer.innerHTML = `<audio controls src="${rawUrl}"></audio>`;
+            } else {
+                const ext = file.name.split('.').pop().toLowerCase();
+                if (['txt', 'json', 'js', 'html', 'css', 'md'].includes(ext)) {
+                    // Text files require CORS proxy to fetch content
+                    const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(rawUrl)}`;
+                    viewer.innerHTML = '<div style="color: var(--text-muted);"><i class="fa-solid fa-spinner fa-spin"></i> Membaca berkas teks...</div>';
+                    fetch(proxyUrl)
+                        .then(res => {
+                            if (!res.ok) throw new Error();
+                            return res.text();
+                        })
+                        .then(text => {
+                            viewer.innerHTML = `<div class="text-preview">${escapeHtml(text)}</div>`;
+                        })
+                        .catch(() => {
+                            viewer.innerHTML = `<div style="color: var(--text-muted);"><i class="fa-solid fa-triangle-exclamation" style="color: var(--warning);"></i> Gagal memuat pratinjau teks.</div>`;
+                        });
+                } else {
+                    viewer.innerHTML = `
+                        <div style="text-align: center; color: var(--text-muted);">
+                            <i class="fa-solid fa-file-arrow-down" style="font-size: 56px; margin-bottom: 16px;"></i>
+                            <p>Pratinjau tidak tersedia untuk tipe file ini.</p>
+                            <p style="font-size: 12px; margin-top: 8px;">Silakan klik 'Unduh File' di bawah.</p>
+                        </div>
+                    `;
+                }
+            }
+        }
+
+        // File Preview Modal Loader
+        async function openPreview(file) {
+            const title = document.getElementById('preview-title');
+            const viewer = document.getElementById('preview-viewer');
+            const dlLink = document.getElementById('preview-download-link');
+
+            title.innerHTML = `<i class="fa-solid fa-file-signature"></i> ${file.name}`;
+            viewer.innerHTML = '<div style="color: var(--text-muted);"><i class="fa-solid fa-spinner fa-spin"></i> Menghubungkan ke berkas Telegram...</div>';
+            dlLink.href = '#';
+            dlLink.style.pointerEvents = 'none';
+
+            openModal('preview-modal');
+
+            // Construct Telegram direct post link if file is too big or for direct access
+            let telegramPostLink = '';
+            if (file.message_id) {
+                const cleanChatId = chatId.toString().replace('-100', '');
+                if (chatId.toString().startsWith('-100')) {
+                    telegramPostLink = `https://t.me/c/${cleanChatId}/${file.message_id}`;
+                } else if (chatId.toString().startsWith('@')) {
+                    telegramPostLink = `https://t.me/${chatId.toString().replace('@', '')}/${file.message_id}`;
+                } else {
+                    telegramPostLink = `tg://openmessage?chat_id=${chatId}&message_id=${file.message_id}`;
+                }
+            }
+
+            // If file size is larger than 20MB, skip getFile to prevent Telegram Bot limit errors
+            if (file.size > 20 * 1024 * 1024) {
+                viewer.innerHTML = `
+                    <div style="text-align: center; padding: 20px;">
+                        <i class="fa-solid fa-triangle-exclamation" style="font-size: 56px; color: var(--warning); margin-bottom: 16px;"></i>
+                        <h4 style="margin-bottom: 8px;">Ukuran File Terlalu Besar (> 20 MB)</h4>
+                        <p style="font-size: 13px; color: var(--text-muted); line-height: 1.4;">
+                            API Bot Telegram membatasi unduhan langsung lewat browser maksimal 20 MB.<br>
+                            Silakan klik tombol di bawah untuk membuka dan mengunduh berkas ini langsung di aplikasi Telegram Anda.
+                        </p>
+                    </div>
+                `;
+                if (telegramPostLink) {
+                    dlLink.href = telegramPostLink;
+                    dlLink.innerHTML = `<i class="fa-brands fa-telegram"></i> Buka & Unduh di Telegram`;
+                    dlLink.style.pointerEvents = 'auto';
+                } else {
+                    dlLink.style.display = 'none';
+                }
+                return;
+            }
+
+            // Restore normal download button label
+            dlLink.innerHTML = `<i class="fa-solid fa-download"></i> Unduh File`;
+            dlLink.style.display = 'inline-flex';
+
+            // Check if file_path is already cached to render preview instantly without API calls
+            if (file.file_path) {
+                const rawUrl = `https://api.telegram.org/file/bot${botToken}/${file.file_path}`;
+                renderPreviewElements(file, rawUrl);
+                return;
+            }
+
+            // Fetch path if not cached
+            const fileRes = await callTelegram('getFile', { file_id: file.file_id });
+            if (fileRes.ok) {
+                const filePath = fileRes.result.file_path;
+                // Cache the path locally in the current session object
+                file.file_path = filePath;
+                const rawUrl = `https://api.telegram.org/file/bot${botToken}/${filePath}`;
+                renderPreviewElements(file, rawUrl);
+            } else {
+                viewer.innerHTML = `
+                    <div style="color: var(--danger); text-align: center; padding: 20px;">
+                        <i class="fa-solid fa-circle-xmark" style="font-size: 48px; margin-bottom: 12px;"></i>
+                        <p style="font-weight: 600;">Gagal mengambil berkas dari Telegram</p>
+                        <p style="font-size: 13px; color: var(--text-muted); margin-top: 6px;">Detail Error: ${fileRes.description || 'Tidak ada respons dari server'}</p>
+                        ${telegramPostLink ? `
+                            <p style="font-size: 12px; color: var(--text-muted); margin-top: 10px;">
+                                Anda dapat mencoba mengunduhnya langsung melalui aplikasi Telegram Anda dengan menekan tombol di bawah.
+                            </p>
+                        ` : ''}
+                    </div>
+                `;
+                if (telegramPostLink) {
+                    dlLink.href = telegramPostLink;
+                    dlLink.innerHTML = `<i class="fa-brands fa-telegram"></i> Buka di Telegram`;
+                    dlLink.style.pointerEvents = 'auto';
+                } else {
+                    dlLink.style.pointerEvents = 'none';
+                }
+            }
+        }
+
+        // Live Search Handler
+        function handleSearch() {
+            searchQuery = document.getElementById('search-input').value.trim();
+            renderWorkspace();
+        }
+
+        // Helper utilities
+        function formatBytes(bytes, decimals = 2) {
+            if (!+bytes) return '0 Bytes';
+            const k = 1024;
+            const dm = decimals < 0 ? 0 : decimals;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
+        }
+
+        function escapeHtml(text) {
+            return text
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        function updateStatusIndicator() {
+            const indicator = document.getElementById('status-indicator');
+            const title = document.getElementById('status-title');
+            const detail = document.getElementById('status-detail');
+
+            if (!isConnected) {
+                title.innerText = 'Terputus';
+                detail.innerText = 'Kredensial Telegram salah atau tidak terkonfigurasi.';
+                indicator.className = 'status-dot';
+            }
+        }
+    </script>
+</body>
+</html>
