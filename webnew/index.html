@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Playlist — Video Player</title>
+  <link rel="icon" href="img/logo.png" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="inner">
+      <a class="brand" href="index.html">
+        <img src="img/logo.png" alt="logo" />
+        <span>Play<span class="dot">·</span>List</span>
+      </a>
+      <div class="search">
+        <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 10-.7.7l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0A4.5 4.5 0 1114 9.5 4.5 4.5 0 019.5 14z"/></svg>
+        <input id="search" type="search" placeholder="Cari video..." autocomplete="off" />
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <div id="channelBanner" class="channel-banner hidden"></div>
+    <div class="toolbar">
+      <h1 id="pageTitle">Playlist Terbaru</h1>
+      <div class="spacer"></div>
+      <div class="segmented" id="sort">
+        <button data-sort="recent" class="active">Terbaru</button>
+        <button data-sort="popular">Popular</button>
+      </div>
+    </div>
+
+    <div id="state" class="center-state">
+      <div class="spinner"></div>
+      <div>Memuat playlist...</div>
+    </div>
+
+    <section id="grid" class="grid hidden"></section>
+
+    <div id="loadMoreWrap" class="load-more hidden">
+      <button id="loadMore" class="btn ghost">Muat lebih banyak</button>
+    </div>
+  </main>
+
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/home.js"></script>
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Video — Player</title>
+  <link rel="icon" href="img/logo.png" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="inner">
+      <a class="brand" href="index.html">
+        <img src="img/logo.png" alt="logo" />
+        <span>Play<span class="dot">·</span>List</span>
+      </a>
+    </div>
+  </header>
+
+  <main class="container">
+    <div id="state" class="center-state">
+      <div class="spinner"></div>
+      <div>Memuat video...</div>
+    </div>
+
+    <div id="watch" class="watch hidden">
+      <div class="main">
+        <div class="player-wrap">
+          <div id="player"></div>
+        </div>
+        <h1 class="video-title" id="vTitle"></h1>
+        <div class="video-sub" id="vSub"></div>
+        <div class="video-desc" id="vDesc"></div>
+      </div>
+
+      <aside class="side">
+        <section class="side-section hidden" id="nextSection">
+          <h2>Video Selanjutnya</h2>
+          <div id="nextBox" class="next-box"></div>
+        </section>
+
+        <section class="side-section">
+          <h2>Terbaru</h2>
+          <div id="recentList"></div>
+        </section>
+
+        <section class="side-section">
+          <h2>Popular</h2>
+          <div id="popularList"></div>
+        </section>
+      </aside>
+    </div>
+  </main>
+
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="https://www.youtube.com/iframe_api"></script>
+  <script src="js/player.js"></script>
+</body>
+</html>
