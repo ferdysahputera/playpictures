@@ -1,0 +1,10 @@
+name = "yt-playlist-proxy"
+main = "index.js"
+compatibility_date = "2024-09-23"
+
+# Set API key sebagai secret (jangan commit):
+#   wrangler secret put YOUTUBE_API_KEY
+#
+# Optional: override playlist default lewat env (bisa juga diisi dari frontend)
+# [vars]
+# PLAYLIST_ID = ""
