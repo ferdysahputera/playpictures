@@ -1,109 +1,354 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Putar Video</title>
-  <link rel="stylesheet" href="style.css">
-  <link rel="icon" href="assets/logo.png" type="image/png">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Detail Video - Play Pictures</title>
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    .video-page {
+      display: flex;
+      flex-direction: row;
+      gap: 2rem;
+      padding: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .left-column {
+      flex: 2;
+      min-width: 300px;
+    }
+
+    .right-column {
+      flex: 1;
+      min-width: 250px;
+    }
+
+    .video-frame-container {
+      border: 3px solid var(--accent);
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 0 15px rgba(255, 106, 0, 0.2);
+    }
+
+    .video-frame-container iframe {
+      width: 100%;
+      height: 400px;
+      display: block;
+    }
+
+    .video-info {
+      margin-top: 1rem;
+    }
+
+    .video-description {
+      white-space: pre-line;
+    }
+
+    .video-description a {
+      color: var(--accent);
+      text-decoration: underline;
+    }
+
+    .share-buttons {
+      margin-top: 1rem;
+      display: flex;
+      gap: 1rem;
+    }
+
+    .share-buttons button {
+      background: var(--card-bg);
+      color: var(--text);
+      border: 1px solid var(--accent);
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+
+    .share-buttons button:hover {
+      background: var(--accent);
+      color: white;
+    }
+
+    .related-videos h3 {
+      margin-bottom: 1rem;
+    }
+
+    .video-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .video-grid .card {
+      display: flex;
+      gap: 1rem;
+      background: var(--card-bg);
+      padding: 0.5rem;
+      border-radius: 8px;
+    }
+
+    .video-grid .thumb {
+      width: 100px;
+      height: 70px;
+      object-fit: cover;
+      border-radius: 5px;
+    }
+
+    .video-grid .card-content {
+      flex: 1;
+    }
+
+    /* Fullscreen video support */
+    :fullscreen iframe,
+    :-webkit-full-screen iframe {
+      width: 100vw !important;
+      height: 100vh !important;
+      object-fit: cover;
+    }
+
+    @media screen and (orientation: landscape) {
+      iframe {
+        height: 100vh !important;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .video-page {
+        flex-direction: column;
+      }
+    }
+  </style>
 </head>
-<body>
-  <header class="site-header">
-    <div class="container header-inner">
-      <a href="index.html" class="logo">
-        <img src="assets/logo.png" alt="Logo" class="logo-img" onerror="this.style.display='none'">
-        <span class="logo-text">MyPlaylist</span>
-      </a>
-      <nav class="main-nav">
-        <a href="index.html">Playlist</a>
-        <a href="index.html#channel">Channel</a>
-      </nav>
-      <button class="search-toggle" id="searchToggle" aria-label="Toggle search">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="11" cy="11" r="8"></circle>
-          <path d="M21 21l-4.35-4.35"></path>
-        </svg>
-      </button>
-    </div>
+<body class="fade-in">
+  <header>
+    <div class="logo"><a href="index.html"><img src="logo.png"/></a></div>
+
+    <button class="menu-toggle" aria-label="Toggle menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <nav>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">Tentang</a></li>
+      </ul>
+    </nav>
   </header>
 
-  <div class="search-overlay" id="searchOverlay">
-    <div class="search-bar-container">
-      <input type="text" id="searchInput" placeholder="Cari di channel..." autocomplete="off">
-      <button class="search-close" id="searchClose">&times;</button>
+  <!-- Floating Search -->
+  <button id="floating-search" aria-label="Search"><i class="fas fa-search"></i></button>
+  <div id="search-overlay">
+    <div class="overlay-content">
+      <button id="overlay-close" aria-label="Tutup">?</button>
+      <form id="overlay-search-form">
+        <input type="text" id="overlay-search-input" placeholder="Cari video...">
+        <button type="submit"><i class="fas fa-search"></i></button>
+      </form>
     </div>
-    <div class="search-results" id="searchResults"></div>
   </div>
 
-  <main class="container main-content">
-    <div class="video-player-section">
-      <div class="video-wrapper" id="videoWrapper" style="display:none;">
-        <iframe id="player" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+  <main class="video-page">
+    <!-- KIRI -->
+    <div class="left-column">
+      <div class="video-frame-container">
+        <iframe id="video-frame" frameborder="0" allowfullscreen></iframe>
       </div>
-    <div class="video-details">
-      <h1 class="video-title" id="videoTitle">Memuat...</h1>
-      <p class="video-description" id="videoDescription"></p>
-      <div class="action-bar">
-        <a id="downloadBtn" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-download">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
-            <polyline points="7 10 12 15 17 10"/>
-            <line x1="12" y1="15" x2="12" y2="3"/>
-          </svg>
-          Unduh Video
-        </a>
-        <div class="share-group">
-          <span class="share-label">Bagikan:</span>
-          <button id="shareFb" class="btn-share btn-fb" aria-label="Facebook">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-          </button>
-          <button id="shareIg" class="btn-share btn-ig" aria-label="Instagram">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.85-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
-          </button>
-          <button id="shareWa" class="btn-share btn-wa" aria-label="WhatsApp">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-          </button>
-          <button id="shareCopy" class="btn-share btn-copy" aria-label="Copy Link">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
-          </button>
+      <div class="video-info">
+        <h2 id="video-title">Memuat judul...</h2>
+        <div id="video-description" class="video-description">Memuat deskripsi...</div>
+
+        <div class="share-buttons">
+          <button id="copy-link"><i class="fas fa-link"></i> Salin Link</button>
+          <button id="share-whatsapp"><i class="fab fa-whatsapp"></i> WhatsApp</button>
         </div>
       </div>
-      <div id="descLinks" class="desc-links"></div>
-    </div>
     </div>
 
-    <div class="recent-videos" id="descSection">
-      <h2 class="section-title">Video dari Deskripsi</h2>
-      <div class="video-grid" id="descVideosGrid">
-        <div class="loading">Memuat video dari deskripsi...</div>
-      </div>
-    </div>
-
-    <div class="recent-videos">
-      <h2 class="section-title">Video Terbaru dari Channel</h2>
-      <div class="video-grid" id="relatedGrid">
-        <div class="loading">Memuat video terbaru...</div>
-      </div>
+    <!-- KANAN -->
+    <div class="right-column related-videos">
+      <h3>Video Rekomendasi</h3>
+      <div id="related-list" class="video-grid"></div>
     </div>
   </main>
 
-  <footer class="site-footer">
-    <div class="container">
-      <p>&copy; 2026 MyPlaylist. Dibuat dengan YouTube Data API.</p>
-    </div>
-  </footer>
+  <script>
+    const videoId = new URLSearchParams(window.location.search).get("v");
+    const API_KEY = "AIzaSyDq4QPxumyDdxZB6ZlUciD7dsSA5ftQsQk";
+    const CHANNEL_ID = "UC87Oi8WXRAI2ncAX7CoBT6w";
+    const MAX_RESULTS = 6;
 
-  <script src="app.js"></script>
+    const iframe = document.getElementById("video-frame");
+    const titleEl = document.getElementById("video-title");
+    const descEl = document.getElementById("video-description");
+    const relatedList = document.getElementById("related-list");
 
-  <div id="downloadModal" class="modal-overlay">
-    <div class="modal-box">
-      <h3 class="modal-title">Peringatan</h3>
-      <p class="modal-text">Anda akan diarahkan keluar dari website Play Pictures ke situs unduh eksternal. Kami tidak bertanggung jawab atas apapun yang terjadi pada perangkat atau data Anda di situs tersebut.</p>
-      <div class="modal-actions">
-        <button id="modalCancel" class="btn btn-cancel">Batal</button>
-        <button id="modalConfirm" class="btn btn-confirm">Ya, Lanjutkan</button>
-      </div>
-    </div>
-  </div>
+    if (videoId) {
+      iframe.src = `https://www.youtube.com/embed/${videoId}?rel=0&autoplay=1`;
+
+      fetch(`https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${videoId}&key=${API_KEY}`)
+        .then(res => res.json())
+        .then(data => {
+          const snippet = data.items[0].snippet;
+          titleEl.textContent = snippet.title;
+          descEl.innerHTML = linkify(snippet.description);
+
+          const ids = extractVideoIdsFromDescription(snippet.description);
+          fetchRecommended(ids);
+          fetchChannelRecommendations();
+        });
+
+      // Optional fullscreen trigger for mobile
+      iframe.addEventListener("load", () => {
+        if (window.innerWidth < 768 && iframe.requestFullscreen) {
+          const isPortrait = window.matchMedia("(orientation: portrait)").matches;
+          if (isPortrait) {
+            iframe.requestFullscreen().catch(() => {});
+          }
+        }
+      });
+    }
+
+    function linkify(text) {
+      const urlPattern = /(\bhttps?:\/\/[^\s]+)/gi;
+      return text.replace(urlPattern, function (url) {
+        const ytMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]{11})/);
+        if (ytMatch) {
+          const id = ytMatch[1];
+          return `<a href="video.html?v=${id}">${url}</a>`;
+        } else {
+          return `<a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`;
+        }
+      });
+    }
+
+    function extractVideoIdsFromDescription(desc) {
+      const matches = desc.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]{11})/g) || [];
+      const ids = matches.map(link => {
+        const match = link.match(/(?:v=|\.be\/)([\w-]{11})/);
+        return match ? match[1] : null;
+      }).filter(Boolean);
+      return [...new Set(ids)].filter(id => id !== videoId).slice(0, MAX_RESULTS);
+    }
+
+    function fetchRecommended(ids) {
+      if (!ids.length) return;
+      fetch(`https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${ids.join(',')}&key=${API_KEY}`)
+        .then(res => res.json())
+        .then(data => {
+          data.items.forEach(item => {
+            const snippet = item.snippet;
+            const vidId = item.id;
+            const card = document.createElement("a");
+            card.href = `video.html?v=${vidId}`;
+            card.className = "card";
+            card.innerHTML = `
+              <img class="thumb" src="${snippet.thumbnails.medium.url}" alt="Thumbnail ${snippet.title}">
+              <div class="card-content">
+                <div class="title">${snippet.title}</div>
+                <div class="published">${new Date(snippet.publishedAt).toLocaleDateString()}</div>
+              </div>
+            `;
+            relatedList.appendChild(card);
+          });
+        });
+    }
+
+    function fetchChannelRecommendations() {
+      fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${CHANNEL_ID}&maxResults=5&order=date&type=video&key=${API_KEY}`)
+        .then(res => res.json())
+        .then(data => {
+          data.items.forEach(item => {
+            const vidId = item.id.videoId;
+            if (vidId === videoId) return;
+            const snippet = item.snippet;
+            const card = document.createElement("a");
+            card.href = `video.html?v=${vidId}`;
+            card.className = "card";
+            card.innerHTML = `
+              <img class="thumb" src="${snippet.thumbnails.medium.url}" alt="Thumbnail ${snippet.title}">
+              <div class="card-content">
+                <div class="title">${snippet.title}</div>
+                <div class="published">${new Date(snippet.publishedAt).toLocaleDateString()}</div>
+              </div>
+            `;
+            relatedList.appendChild(card);
+          });
+        });
+    }
+
+    // Share + Copy
+    const copyBtn = document.getElementById("copy-link");
+    const waBtn = document.getElementById("share-whatsapp");
+
+    copyBtn.addEventListener("click", () => {
+      const url = window.location.href;
+      navigator.clipboard.writeText(url).then(() => {
+        copyBtn.textContent = "? Tersalin!";
+        setTimeout(() => {
+          copyBtn.innerHTML = '<i class="fas fa-link"></i> Salin Link';
+        }, 2000);
+      });
+    });
+
+    waBtn.addEventListener("click", () => {
+      const url = encodeURIComponent(window.location.href);
+      const text = encodeURIComponent("Lihat video ini:");
+      window.open(`https://wa.me/?text=${text}%20${url}`, "_blank");
+    });
+
+    // Hamburger
+    const menuToggle = document.querySelector(".menu-toggle");
+    const nav = document.querySelector("nav");
+    menuToggle.addEventListener("click", () => {
+      const expanded = menuToggle.getAttribute("aria-expanded") === "true";
+      menuToggle.setAttribute("aria-expanded", !expanded);
+      menuToggle.classList.toggle("active");
+      nav.classList.toggle("open");
+    });
+    document.addEventListener("click", (e) => {
+      if (!nav.contains(e.target) && !menuToggle.contains(e.target)) {
+        nav.classList.remove("open");
+        menuToggle.classList.remove("active");
+        menuToggle.setAttribute("aria-expanded", "false");
+      }
+    });
+
+    // Floating Search
+    const floatingSearchBtn = document.getElementById("floating-search");
+    const searchOverlay = document.getElementById("search-overlay");
+    const overlaySearchForm = document.getElementById("overlay-search-form");
+    const overlaySearchInput = document.getElementById("overlay-search-input");
+    const overlayClose = document.getElementById("overlay-close");
+
+    floatingSearchBtn.addEventListener("click", () => {
+      searchOverlay.classList.add("active");
+      overlaySearchInput.focus();
+    });
+
+    overlayClose.addEventListener("click", () => {
+      searchOverlay.classList.remove("active");
+    });
+
+    overlaySearchForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const query = overlaySearchInput.value.trim();
+      if (!query) return;
+      window.location.href = `index.html?q=${encodeURIComponent(query)}`;
+    });
+
+    // Transisi
+    document.querySelectorAll('a[href]').forEach(link => {
+      if (link.target !== "_blank") {
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          document.body.classList.add('fade-out');
+          const href = this.getAttribute('href');
+          setTimeout(() => window.location.href = href, 300);
+        });
+      }
+    });
+  </script>
 </body>
 </html>

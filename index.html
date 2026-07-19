@@ -1,70 +1,53 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Playlist Video</title>
-  <link rel="stylesheet" href="style.css">
-  <link rel="icon" href="assets/logo.png" type="image/png">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Play Pictures - Capturing Your Best Moment With Us</title>
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
-<body>
-  <header class="site-header">
-    <div class="container header-inner">
-      <a href="index.html" class="logo">
-        <img src="assets/logo.png" alt="Logo" class="logo-img" onerror="this.style.display='none'">
-        <span class="logo-text">MyPlaylist</span>
-      </a>
-      <nav class="main-nav">
-        <a href="index.html">Playlist</a>
-        <a href="index.html#channel">Channel</a>
-      </nav>
-      <button class="search-toggle" id="searchToggle" aria-label="Toggle search">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="11" cy="11" r="8"></circle>
-          <path d="M21 21l-4.35-4.35"></path>
-        </svg>
-      </button>
-    </div>
+
+<body class="fade-in">
+  <header>
+    <div class="logo"><a href=""><img src="logo.png"/></a></div>
+    <button class="menu-toggle" aria-label="Toggle menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <nav>
+      <ul>
+        <li><a href="#">Home</a></li>
+        <li><a href="about.html">Tentang</a></li>
+      </ul>
+    </nav>
   </header>
 
-  <div class="search-overlay" id="searchOverlay">
-    <div class="search-bar-container">
-      <input type="text" id="searchInput" placeholder="Cari di channel..." autocomplete="off">
-      <button class="search-close" id="searchClose">&times;</button>
-    </div>
-    <div class="search-results" id="searchResults"></div>
+  <div class="search-container">
+    <form id="search-form">
+      <input type="text" id="search-input" placeholder="Cari video...">
+        <button type="submit"><i class="fas fa-search"></i></button>
+      <button type="button" id="reset-button" class="hidden" title="Reset">
+  <i class="fas fa-rotate-left"></i>
+</button>
+    </form>
   </div>
 
-  <main class="container main-content">
-    <div class="page-controls">
-      <h1 class="page-title">Playlist Video</h1>
-      <div class="sort-controls">
-        <label for="sortSelect">Urutkan:</label>
-        <select id="sortSelect">
-          <option value="default">Default</option>
-          <option value="title-asc">Judul A-Z</option>
-          <option value="title-desc">Judul Z-A</option>
-          <option value="date-asc">Terlama</option>
-          <option value="date-desc">Terbaru</option>
-        </select>
-      </div>
-    </div>
+  <main id="video-list"></main>
+  <div id="loader" class="hidden">Loading...</div>
+  <div id="error-message" class="error-message hidden"></div>
 
-    <div class="video-grid" id="videoGrid">
-      <div class="loading">Memuat playlist...</div>
+  <!-- Floating Search -->
+  <button id="floating-search" aria-label="Search"><i class="fas fa-search"></i></button>
+  <div id="search-overlay">
+    <div class="overlay-content">
+      <button id="overlay-close" aria-label="Tutup">?</button>
+      <form id="overlay-search-form">
+        <input type="text" id="overlay-search-input" placeholder="Cari video...">
+        <button type="submit"><i class="fas fa-search"></i></button>
+      </form>
     </div>
+  </div>
 
-    <div class="load-more">
-      <button id="loadMoreBtn" class="btn btn-primary">Muat Lebih Banyak</button>
-    </div>
-  </main>
-
-  <footer class="site-footer">
-    <div class="container">
-      <p>&copy; 2026 MyPlaylist. Dibuat dengan YouTube Data API.</p>
-    </div>
-  </footer>
-
-  <script src="app.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
