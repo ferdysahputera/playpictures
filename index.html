@@ -1,136 +1,70 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="referrer" content="no-referrer-when-downgrade" />
-  <title>Play Pictures – Capturing Your Best Moment With Us</title>
-  <meta name="description" content="Tonton video terbaru dari Play Pictures – Capturing Your Best Moment With Us" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <!-- Font Awesome CDN untuk Ikon Minimalis -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <link rel="stylesheet" href="style.css" />
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Playlist Video</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="assets/logo.png" type="image/png">
 </head>
 <body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="index.html" class="logo">
+        <img src="assets/logo.png" alt="Logo" class="logo-img" onerror="this.style.display='none'">
+        <span class="logo-text">MyPlaylist</span>
+      </a>
+      <nav class="main-nav">
+        <a href="index.html">Playlist</a>
+        <a href="index.html#channel">Channel</a>
+      </nav>
+      <button class="search-toggle" id="searchToggle" aria-label="Toggle search">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <path d="M21 21l-4.35-4.35"></path>
+        </svg>
+      </button>
+    </div>
+  </header>
 
-<!-- ══════════════════════════════
-     NAVBAR
-══════════════════════════════ -->
-<header class="navbar">
-  <div class="wrap">
-    <!-- Logo -->
-    <a href="index.html" class="logo">
-      <div class="logo-icon"><i class="fa-solid fa-play"></i></div>
-      <div>
-        <div class="logo-name">Play Pictures</div>
-        <div class="logo-sub">Capturing Your Best Moment</div>
+  <div class="search-overlay" id="searchOverlay">
+    <div class="search-bar-container">
+      <input type="text" id="searchInput" placeholder="Cari di channel..." autocomplete="off">
+      <button class="search-close" id="searchClose">&times;</button>
+    </div>
+    <div class="search-results" id="searchResults"></div>
+  </div>
+
+  <main class="container main-content">
+    <div class="page-controls">
+      <h1 class="page-title">Playlist Video</h1>
+      <div class="sort-controls">
+        <label for="sortSelect">Urutkan:</label>
+        <select id="sortSelect">
+          <option value="default">Default</option>
+          <option value="title-asc">Judul A-Z</option>
+          <option value="title-desc">Judul Z-A</option>
+          <option value="date-asc">Terlama</option>
+          <option value="date-desc">Terbaru</option>
+        </select>
       </div>
-    </a>
-
-    <!-- Search -->
-    <div class="search-box">
-      <i class="fa-solid fa-magnifying-glass search-icon"></i>
-      <input id="searchInput" type="text" placeholder="Cari video..." autocomplete="off" />
-      <button id="searchClearBtn" class="search-clear" title="Hapus pencarian"><i class="fa-solid fa-xmark"></i></button>
     </div>
 
-    <!-- Nav Right (Empty) -->
-    <div class="nav-right"></div>
-  </div>
-</header>
-
-
-
-<!-- ══════════════════════════════
-     MAIN CONTENT
-══════════════════════════════ -->
-<main class="main-content">
-  <div class="wrap">
-
-    <!-- Tab Navigasi -->
-    <div class="tab-bar">
-      <button class="tab-btn" data-tab="latest" id="tabLatest"><i class="fa-solid fa-clock"></i> Video Terbaru</button>
-      <button class="tab-btn active" data-tab="playlist" id="tabPlaylist"><i class="fa-solid fa-list"></i> Playlist</button>
-      <button class="tab-btn" data-tab="popular" id="tabPopular"><i class="fa-solid fa-fire"></i> Terpopuler</button>
+    <div class="video-grid" id="videoGrid">
+      <div class="loading">Memuat playlist...</div>
     </div>
 
-    <!-- Grid Video -->
-    <div id="videoGrid" class="video-grid">
-      <!-- Skeleton loading -->
-      <div class="card skeleton"></div>
-      <div class="card skeleton"></div>
-      <div class="card skeleton"></div>
-      <div class="card skeleton"></div>
-      <div class="card skeleton"></div>
-      <div class="card skeleton"></div>
+    <div class="load-more">
+      <button id="loadMoreBtn" class="btn btn-primary">Muat Lebih Banyak</button>
     </div>
+  </main>
 
-    <!-- Muat Lebih -->
-    <div id="loadMoreWrap" class="load-more-wrap" style="display:none">
-      <button id="loadMoreBtn" class="btn-loadmore">Muat lebih banyak <i class="fa-solid fa-chevron-down"></i></button>
+  <footer class="site-footer">
+    <div class="container">
+      <p>&copy; 2026 MyPlaylist. Dibuat dengan YouTube Data API.</p>
     </div>
+  </footer>
 
-    <!-- Pesan Error / Info -->
-    <div id="msgBox" class="msg-box" style="display:none"></div>
-
-  </div>
-</main>
-
-<!-- ══════════════════════════════
-     FOOTER
-══════════════════════════════ -->
-<footer class="footer">
-  <div class="wrap footer-wrap">
-    <p>© <span id="yr"></span> <strong>Play Pictures</strong> — Capturing Your Best Moment With Us</p>
-    <a id="ytChannelLink" href="#" target="_blank" class="yt-link"><i class="fa-brands fa-youtube"></i> Kunjungi Channel YouTube</a>
-  </div>
-</footer>
-
-<!-- Toast Notifikasi -->
-<div id="toast" class="toast"></div>
-
-<!-- ══════════════════════════════
-     MOBILE BOTTOM NAVIGATION
-══════════════════════════════ -->
-<nav class="mobile-bottom-nav" id="mobileBottomNav">
-  <a href="index.html" class="mob-nav-item active" id="mnHome">
-    <div class="mob-nav-pill"></div>
-    <i class="fa-solid fa-house"></i>
-    <span>Home</span>
-  </a>
-  <button class="mob-nav-item" id="mnPlaylist" onclick="switchToPlaylist()">
-    <i class="fa-solid fa-list"></i>
-    <span>Playlist</span>
-  </button>
-  <a href="profile.html" class="mob-nav-item" id="mnProfile">
-    <i class="fa-solid fa-user"></i>
-    <span>Profil</span>
-  </a>
-</nav>
-
-<script src="config.js"></script>
-<script src="app.js"></script>
-<script>
-  function switchToPlaylist() {
-    const btn = document.querySelector('.tab-btn[data-tab="playlist"]');
-    if (btn) btn.click();
-    // Highlight nav item
-    document.querySelectorAll('.mob-nav-item').forEach(el => {
-      el.classList.remove('active');
-      el.querySelector('.mob-nav-pill')?.remove();
-    });
-    const mn = document.getElementById('mnPlaylist');
-    mn.classList.add('active');
-    const pill = document.createElement('div');
-    pill.className = 'mob-nav-pill';
-    mn.insertBefore(pill, mn.firstChild);
-  }
-  // Jika URL punya ?tab=playlist, switch otomatis
-  if (new URLSearchParams(location.search).get('tab') === 'playlist') {
-    document.addEventListener('DOMContentLoaded', () => switchToPlaylist());
-  }
-</script>
+  <script src="app.js"></script>
 </body>
 </html>

@@ -1,194 +1,109 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="referrer" content="no-referrer-when-downgrade" />
-  <title>Video – Play Pictures</title>
-  <meta name="description" content="Tonton video Play Pictures" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <!-- Font Awesome CDN untuk Ikon Minimalis -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <link rel="stylesheet" href="style.css" />
-  <!-- YouTube IFrame Player API – dibuat via JavaScript, bukan tag iframe statis -->
-  <script>
-    var tag = document.createElement('script');
-    tag.src = "https://www.youtube.com/iframe_api";
-    document.head.appendChild(tag);
-  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Putar Video</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="assets/logo.png" type="image/png">
 </head>
 <body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="index.html" class="logo">
+        <img src="assets/logo.png" alt="Logo" class="logo-img" onerror="this.style.display='none'">
+        <span class="logo-text">MyPlaylist</span>
+      </a>
+      <nav class="main-nav">
+        <a href="index.html">Playlist</a>
+        <a href="index.html#channel">Channel</a>
+      </nav>
+      <button class="search-toggle" id="searchToggle" aria-label="Toggle search">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <path d="M21 21l-4.35-4.35"></path>
+        </svg>
+      </button>
+    </div>
+  </header>
 
-<!-- ══════════════════════════════
-     NAVBAR
-══════════════════════════════ -->
-<header class="navbar">
-  <div class="wrap">
-    <a href="index.html" class="logo">
-      <div class="logo-icon"><i class="fa-solid fa-play"></i></div>
-      <div>
-        <div class="logo-name">Play Pictures</div>
-        <div class="logo-sub">Capturing Your Best Moment</div>
-      </div>
-    </a>
-    <a href="index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Kembali</a>
-    <div class="nav-right"></div>
+  <div class="search-overlay" id="searchOverlay">
+    <div class="search-bar-container">
+      <input type="text" id="searchInput" placeholder="Cari di channel..." autocomplete="off">
+      <button class="search-close" id="searchClose">&times;</button>
+    </div>
+    <div class="search-results" id="searchResults"></div>
   </div>
-</header>
 
-<!-- ══════════════════════════════
-     HALAMAN VIDEO
-══════════════════════════════ -->
-<main class="video-page-main">
-  <div class="wrap video-wrap">
-
-    <!-- KOLOM KIRI: Player + Info -->
-    <div class="video-left">
-
-      <!-- ── PLAYER (dibuat via YT API, bukan iframe statis) ── -->
-      <div id="playerBox" class="player-box">
-        <div id="ytPlayerTarget"></div>
-        <!-- Placeholder sebelum player dimuat -->
-        <div id="playerPlaceholder" class="player-placeholder">
-          <div class="spinner"></div>
-          <p>Memuat player...</p>
-        </div>
+  <main class="container main-content">
+    <div class="video-player-section">
+      <div class="video-wrapper" id="videoWrapper" style="display:none;">
+        <iframe id="player" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
       </div>
-
-      <!-- ── JUDUL & INFO ── -->
-      <div class="vinfo-card">
-        <h1 id="vTitle" class="v-title">Memuat...</h1>
-
-        <!-- Statistik -->
-        <div class="v-stats">
-          <span id="vViews"><i class="fa-solid fa-eye"></i> —</span>
-          <span id="vDate"><i class="fa-solid fa-calendar-days"></i> —</span>
-          <span id="vDuration"><i class="fa-solid fa-clock"></i> —</span>
-        </div>
-
-        <!-- Tombol Aksi -->
-        <div class="v-actions">
-          <button id="btnShare" class="action-btn" title="Bagikan video">
-            <i class="fa-solid fa-share-nodes"></i> Share
-          </button>
-          <button id="btnDownload" class="action-btn" title="Download video">
-            <i class="fa-solid fa-circle-arrow-down"></i> Download
-          </button>
-        </div>
-      </div>
-
-      <!-- ── NAVIGASI VIDEO SEBELUMNYA/SELANJUTNYA ── -->
-      <div id="navVideos" class="nav-videos-card" style="display:none">
-        <a id="prevVideoLink" href="#" class="nav-video-btn prev" style="display:none">
-          <i class="fa-solid fa-chevron-left"></i>
-          <img id="prevVideoThumb" src="" alt="Prev Thumb" class="nav-video-thumb" />
-          <div class="nav-btn-meta">
-            <span class="nav-label">SEBELUMNYA</span>
-            <span id="prevVideoTitle" class="nav-title-text">Judul Sebelumnya</span>
-          </div>
+    <div class="video-details">
+      <h1 class="video-title" id="videoTitle">Memuat...</h1>
+      <p class="video-description" id="videoDescription"></p>
+      <div class="action-bar">
+        <a id="downloadBtn" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-download">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/>
+            <line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+          Unduh Video
         </a>
-        <a id="nextVideoLink" href="#" class="nav-video-btn next" style="display:none">
-          <div class="nav-btn-meta">
-            <span class="nav-label">SELANJUTNYA</span>
-            <span id="nextVideoTitle" class="nav-title-text">Judul Selanjutnya</span>
-          </div>
-          <img id="nextVideoThumb" src="" alt="Next Thumb" class="nav-video-thumb" />
-          <i class="fa-solid fa-chevron-right"></i>
-        </a>
+        <div class="share-group">
+          <span class="share-label">Bagikan:</span>
+          <button id="shareFb" class="btn-share btn-fb" aria-label="Facebook">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+          </button>
+          <button id="shareIg" class="btn-share btn-ig" aria-label="Instagram">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.85-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+          </button>
+          <button id="shareWa" class="btn-share btn-wa" aria-label="WhatsApp">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          </button>
+          <button id="shareCopy" class="btn-share btn-copy" aria-label="Copy Link">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+          </button>
+        </div>
       </div>
-
-      <!-- ── DESKRIPSI ── -->
-      <div class="desc-card">
-        <div id="descText" class="desc-text short"></div>
-        <button id="descToggle" class="desc-toggle">Tampilkan lebih banyak <i class="fa-solid fa-chevron-down"></i></button>
-      </div>
-
-    </div><!-- /video-left -->
-
-    <!-- KOLOM KANAN: Video Lainnya -->
-    <aside class="video-right">
-      <h3 class="sidebar-title"><i class="fa-solid fa-square-play"></i> Video Lainnya</h3>
-      <div id="relatedList" class="related-list">
-        <div class="related-skeleton"></div>
-        <div class="related-skeleton"></div>
-        <div class="related-skeleton"></div>
-        <div class="related-skeleton"></div>
-        <div class="related-skeleton"></div>
-      </div>
-    </aside>
-
-  </div>
-</main>
-
-<!-- ══════════════════════════════
-     MODAL SHARE
-══════════════════════════════ -->
-<div id="shareModal" class="modal-bg" style="display:none">
-  <div class="modal-box">
-    <div class="modal-head">
-      <strong><i class="fa-solid fa-share-nodes"></i> Bagikan Video</strong>
-      <button id="shareClose" class="modal-close"><i class="fa-solid fa-xmark"></i></button>
+      <div id="descLinks" class="desc-links"></div>
     </div>
-    <div class="modal-body">
-      <p id="shareTitle" class="share-title-preview"></p>
-      <div class="share-link-row">
-        <input id="shareUrlInput" type="text" readonly class="share-input" />
-        <button id="copyLinkBtn" class="btn-copy">Salin</button>
+    </div>
+
+    <div class="recent-videos" id="descSection">
+      <h2 class="section-title">Video dari Deskripsi</h2>
+      <div class="video-grid" id="descVideosGrid">
+        <div class="loading">Memuat video dari deskripsi...</div>
       </div>
-      <div class="share-platforms">
-        <a id="shareWa"  href="#" target="_blank" class="sp-btn sp-wa"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>
-        <a id="shareTw"  href="#" target="_blank" class="sp-btn sp-tw"><i class="fa-brands fa-x-twitter"></i> Twitter</a>
-        <a id="shareFb"  href="#" target="_blank" class="sp-btn sp-fb"><i class="fa-brands fa-facebook-f"></i> Facebook</a>
-        <a id="shareTg"  href="#" target="_blank" class="sp-btn sp-tg"><i class="fa-solid fa-paper-plane"></i> Telegram</a>
+    </div>
+
+    <div class="recent-videos">
+      <h2 class="section-title">Video Terbaru dari Channel</h2>
+      <div class="video-grid" id="relatedGrid">
+        <div class="loading">Memuat video terbaru...</div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>&copy; 2026 MyPlaylist. Dibuat dengan YouTube Data API.</p>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+
+  <div id="downloadModal" class="modal-overlay">
+    <div class="modal-box">
+      <h3 class="modal-title">Peringatan</h3>
+      <p class="modal-text">Anda akan diarahkan keluar dari website Play Pictures ke situs unduh eksternal. Kami tidak bertanggung jawab atas apapun yang terjadi pada perangkat atau data Anda di situs tersebut.</p>
+      <div class="modal-actions">
+        <button id="modalCancel" class="btn btn-cancel">Batal</button>
+        <button id="modalConfirm" class="btn btn-confirm">Ya, Lanjutkan</button>
       </div>
     </div>
   </div>
-</div>
-
-<!-- ══════════════════════════════
-     MODAL DOWNLOAD
-══════════════════════════════ -->
-<div id="dlModal" class="modal-bg" style="display:none">
-  <div class="modal-box">
-    <div class="modal-head">
-      <strong><i class="fa-solid fa-circle-arrow-down"></i> Download Video</strong>
-      <button id="dlClose" class="modal-close"><i class="fa-solid fa-xmark"></i></button>
-    </div>
-    <div class="modal-body">
-      <p class="dl-note">YouTube tidak mengizinkan download langsung. Gunakan salah satu layanan di bawah ini:</p>
-      <div class="dl-options">
-        <a id="dlYt"     href="#" target="_blank" class="dl-btn"><i class="fa-brands fa-youtube"></i> Buka di YouTube</a>
-        <a href="https://yt1s.io"      target="_blank" class="dl-btn"><i class="fa-solid fa-cloud-arrow-down"></i> yt1s.io</a>
-        <a href="https://ssyoutube.com" target="_blank" class="dl-btn"><i class="fa-solid fa-cloud-arrow-down"></i> ssyoutube.com</a>
-        <a href="https://y2mate.com"   target="_blank" class="dl-btn"><i class="fa-solid fa-cloud-arrow-down"></i> y2mate.com</a>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Toast -->
-<div id="toast" class="toast"></div>
-
-<!-- ══════════════════════════════
-     MOBILE BOTTOM NAVIGATION
-══════════════════════════════ -->
-<nav class="mobile-bottom-nav" id="mobileBottomNav">
-  <a href="index.html" class="mob-nav-item" id="mnHome">
-    <i class="fa-solid fa-house"></i>
-    <span>Home</span>
-  </a>
-  <a href="index.html?tab=playlist" class="mob-nav-item" id="mnPlaylist">
-    <i class="fa-solid fa-list"></i>
-    <span>Playlist</span>
-  </a>
-  <a href="profile.html" class="mob-nav-item" id="mnProfile">
-    <i class="fa-solid fa-user"></i>
-    <span>Profil</span>
-  </a>
-</nav>
-
-<script src="config.js"></script>
-<script src="video.js"></script>
 </body>
 </html>
