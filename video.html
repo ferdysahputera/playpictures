@@ -42,8 +42,50 @@
       margin-top: 1rem;
     }
 
+    .video-stats {
+      color: var(--accent);
+      font-size: 0.9rem;
+      margin: 0.5rem 0;
+    }
+
     .video-description {
       white-space: pre-line;
+      border: 1px solid var(--card-bg);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .video-description summary {
+      cursor: pointer;
+      color: var(--accent);
+      font-weight: bold;
+      padding: 0.75rem 1rem;
+      background: var(--card-bg);
+      transition: background 0.3s;
+      list-style: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .video-description summary::before {
+      content: '\f107';
+      font-family: 'Font Awesome 6 Free';
+      font-weight: 900;
+      transition: transform 0.3s;
+    }
+
+    .video-description[open] summary::before {
+      transform: rotate(180deg);
+    }
+
+    .video-description summary:hover {
+      background: var(--hover);
+    }
+
+    .video-description .desc-content {
+      padding: 1rem;
+      border-top: 1px solid var(--card-bg);
     }
 
     .video-description a {
@@ -157,11 +199,19 @@
       </div>
       <div class="video-info">
         <h2 id="video-title">Memuat judul...</h2>
-        <div id="video-description" class="video-description">Memuat deskripsi...</div>
+        <div id="video-stats" class="video-stats"></div>
+        <details id="video-description" class="video-description">
+          <summary>Deskripsi</summary>
+          <div class="desc-content">Memuat deskripsi...</div>
+        </details>
 
         <div class="share-buttons">
           <button id="copy-link"><i class="fas fa-link"></i> Salin Link</button>
           <button id="share-whatsapp"><i class="fab fa-whatsapp"></i> WhatsApp</button>
+          <button id="share-facebook"><i class="fab fa-facebook"></i> Facebook</button>
+          <button id="share-twitter"><i class="fab fa-twitter"></i> Twitter</button>
+          <button id="share-telegram"><i class="fab fa-telegram"></i> Telegram</button>
+          <button id="download-btn"><i class="fas fa-download"></i> Download</button>
         </div>
       </div>
     </div>
@@ -170,6 +220,8 @@
     <div class="right-column related-videos">
       <h3>Video Rekomendasi</h3>
       <div id="related-list" class="video-grid"></div>
+      <h3 style="margin-top:2rem;">Video Terbaru</h3>
+      <div id="recent-list" class="video-grid"></div>
     </div>
   </main>
 
@@ -181,22 +233,57 @@
 
     const iframe = document.getElementById("video-frame");
     const titleEl = document.getElementById("video-title");
-    const descEl = document.getElementById("video-description");
+    const descDetails = document.getElementById("video-description");
+    const descContent = descDetails.querySelector(".desc-content");
     const relatedList = document.getElementById("related-list");
+    const recentList = document.getElementById("recent-list");
+
+    function formatDate(dateStr) {
+      return new Date(dateStr).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+    }
+
+    function formatStats(stats) {
+      if (!stats) return '';
+      const views = stats.viewCount ? parseInt(stats.viewCount).toLocaleString('id-ID') : '0';
+      const likes = stats.likeCount ? parseInt(stats.likeCount).toLocaleString('id-ID') : '0';
+      return ` • ${views} views • ${likes} likes`;
+    }
 
     if (videoId) {
       iframe.src = `https://www.youtube.com/embed/${videoId}?rel=0&autoplay=1`;
 
-      fetch(`https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${videoId}&key=${API_KEY}`)
+      fetch(`https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics&id=${videoId}&key=${API_KEY}`)
         .then(res => res.json())
         .then(data => {
           const snippet = data.items[0].snippet;
-          titleEl.textContent = snippet.title;
-          descEl.innerHTML = linkify(snippet.description);
+          const stats = data.items[0].statistics;
+          titleEl.textContent = snippet.title.split("|").map(t => t.trim()).filter(t => t)[0] || snippet.title;
+          document.getElementById("video-stats").textContent = formatStats(stats);
+          descContent.innerHTML = linkify(snippet.description);
 
           const ids = extractVideoIdsFromDescription(snippet.description);
-          fetchRecommended(ids);
-          fetchChannelRecommendations();
+          if (ids.length > 0) {
+            document.querySelector(".related-videos h3").textContent = snippet.title;
+            fetchRecommended(ids);
+          } else {
+            document.querySelector(".related-videos h3").textContent = "Rekomendasi Lainnya";
+            fetchChannelRecommendations();
+          }
+          const tags = snippet.title.split("|").map(t => t.trim()).filter(t => t);
+          const tagsEl = document.createElement("div");
+          tagsEl.className = "tags";
+          tags.forEach(tag => {
+            const span = document.createElement("span");
+            span.className = "tag";
+            span.textContent = tag;
+            span.style.cursor = "pointer";
+            span.addEventListener("click", () => {
+              window.location.href = `index.html?q=${encodeURIComponent(tag)}`;
+            });
+            tagsEl.appendChild(span);
+          });
+          titleEl.insertAdjacentElement("afterend", tagsEl);
+          fetchRecentVideos();
         });
 
       // Optional fullscreen trigger for mobile
@@ -229,58 +316,110 @@
         const match = link.match(/(?:v=|\.be\/)([\w-]{11})/);
         return match ? match[1] : null;
       }).filter(Boolean);
-      return [...new Set(ids)].filter(id => id !== videoId).slice(0, MAX_RESULTS);
+      return [...new Set(ids)].slice(0, MAX_RESULTS);
     }
 
-    function fetchRecommended(ids) {
-      if (!ids.length) return;
-      fetch(`https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${ids.join(',')}&key=${API_KEY}`)
-        .then(res => res.json())
-        .then(data => {
-          data.items.forEach(item => {
-            const snippet = item.snippet;
-            const vidId = item.id;
-            const card = document.createElement("a");
-            card.href = `video.html?v=${vidId}`;
-            card.className = "card";
-            card.innerHTML = `
-              <img class="thumb" src="${snippet.thumbnails.medium.url}" alt="Thumbnail ${snippet.title}">
-              <div class="card-content">
-                <div class="title">${snippet.title}</div>
-                <div class="published">${new Date(snippet.publishedAt).toLocaleDateString()}</div>
-              </div>
-            `;
-            relatedList.appendChild(card);
-          });
-        });
-    }
+      function fetchRecommended(ids) {
+       if (!ids.length) return;
+       fetch(`https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics&id=${ids.join(',')}&key=${API_KEY}`)
+         .then(res => res.json())
+         .then(data => {
+           data.items.forEach((item, index) => {
+             const snippet = item.snippet;
+             const stats = item.statistics;
+             const vidId = item.id;
+             const label = `BAGIAN ${index + 1}`;
+             const isActive = vidId === videoId;
+             const card = document.createElement("a");
+             card.href = `video.html?v=${vidId}`;
+             card.className = `card desc-card${isActive ? ' active-video' : ''}`;
+             card.innerHTML = `
+               <div class="thumb-wrapper">
+                 <img class="thumb" src="${snippet.thumbnails.medium.url}" alt="Thumb ${snippet.title}">
+                 <span class="rec-label">${label}</span>
+               </div>
+               <div class="card-content">
+                 <div class="title">${snippet.title}</div>
+                 <div class="meta">
+                   <span class="published">${formatDate(snippet.publishedAt)}${formatStats(stats)}</span>
+                   ${isActive ? '<span class="active-badge"><i class="fas fa-play"></i> SEDANG DITONTON</span>' : ''}
+                 </div>
+               </div>
+             `;
+             relatedList.appendChild(card);
+           });
+         });
+     }
 
     function fetchChannelRecommendations() {
       fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${CHANNEL_ID}&maxResults=5&order=date&type=video&key=${API_KEY}`)
         .then(res => res.json())
         .then(data => {
-          data.items.forEach(item => {
-            const vidId = item.id.videoId;
-            if (vidId === videoId) return;
-            const snippet = item.snippet;
-            const card = document.createElement("a");
-            card.href = `video.html?v=${vidId}`;
-            card.className = "card";
-            card.innerHTML = `
-              <img class="thumb" src="${snippet.thumbnails.medium.url}" alt="Thumbnail ${snippet.title}">
-              <div class="card-content">
-                <div class="title">${snippet.title}</div>
-                <div class="published">${new Date(snippet.publishedAt).toLocaleDateString()}</div>
-              </div>
-            `;
-            relatedList.appendChild(card);
-          });
+          const ids = data.items.map(item => item.id.videoId).filter(id => id !== videoId);
+          if (!ids.length) return;
+          fetch(`https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics&id=${ids.join(',')}&key=${API_KEY}`)
+            .then(res => res.json())
+            .then(vidData => {
+              vidData.items.forEach(item => {
+                const snippet = item.snippet;
+                const stats = item.statistics;
+                const vidId = item.id;
+                const card = document.createElement("a");
+                card.href = `video.html?v=${vidId}`;
+                card.className = "card";
+                card.innerHTML = `
+                  <div class="thumb-wrapper">
+                    <img class="thumb" src="${snippet.thumbnails.medium.url}" alt="Thumbnail ${snippet.title}">
+                  </div>
+                  <div class="card-content">
+                    <div class="title">${snippet.title}</div>
+                    <div class="published">${formatDate(snippet.publishedAt)}${formatStats(stats)}</div>
+                  </div>
+                `;
+                relatedList.appendChild(card);
+              });
+            });
         });
     }
 
-    // Share + Copy
+    function fetchRecentVideos() {
+      fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${CHANNEL_ID}&maxResults=5&order=date&type=video&key=${API_KEY}`)
+        .then(res => res.json())
+        .then(data => {
+          const ids = data.items.map(item => item.id.videoId).filter(id => id !== videoId);
+          if (!ids.length) return;
+          fetch(`https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics&id=${ids.join(',')}&key=${API_KEY}`)
+            .then(res => res.json())
+            .then(vidData => {
+              vidData.items.forEach(item => {
+                const snippet = item.snippet;
+                const stats = item.statistics;
+                const vidId = item.id;
+                const card = document.createElement("a");
+                card.href = `video.html?v=${vidId}`;
+                card.className = "card";
+                card.innerHTML = `
+                  <div class="thumb-wrapper">
+                    <img class="thumb" src="${snippet.thumbnails.medium.url}" alt="Thumbnail ${snippet.title}">
+                  </div>
+                  <div class="card-content">
+                    <div class="title">${snippet.title}</div>
+                    <div class="published">${formatDate(snippet.publishedAt)}${formatStats(stats)}</div>
+                  </div>
+                `;
+                recentList.appendChild(card);
+              });
+            });
+        });
+    }
+
+    // Share + Copy + Download
     const copyBtn = document.getElementById("copy-link");
     const waBtn = document.getElementById("share-whatsapp");
+    const fbBtn = document.getElementById("share-facebook");
+    const twBtn = document.getElementById("share-twitter");
+    const tgBtn = document.getElementById("share-telegram");
+    const dlBtn = document.getElementById("download-btn");
 
     copyBtn.addEventListener("click", () => {
       const url = window.location.href;
@@ -294,9 +433,25 @@
 
     waBtn.addEventListener("click", () => {
       const url = encodeURIComponent(window.location.href);
-      const text = encodeURIComponent("Lihat video ini:");
-      window.open(`https://wa.me/?text=${text}%20${url}`, "_blank");
+      window.open(`https://wa.me/?text=${url}`, "_blank");
     });
+
+    fbBtn.addEventListener("click", () => {
+      const url = encodeURIComponent(window.location.href);
+      window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, "_blank");
+    });
+
+    twBtn.addEventListener("click", () => {
+      const url = encodeURIComponent(window.location.href);
+      window.open(`https://twitter.com/intent/tweet?url=${url}`, "_blank");
+    });
+
+    tgBtn.addEventListener("click", () => {
+      const url = encodeURIComponent(window.location.href);
+      window.open(`https://t.me/share/url?url=${url}`, "_blank");
+    });
+
+    dlBtn.addEventListener("click", openModal);
 
     // Hamburger
     const menuToggle = document.querySelector(".menu-toggle");
@@ -349,6 +504,49 @@
         });
       }
     });
+
+    // Custom modal
+    const modalOverlay = document.createElement("div");
+    modalOverlay.id = "custom-modal";
+    modalOverlay.innerHTML = `
+      <div class="modal-box">
+        <div class="modal-header">
+          <i class="fas fa-exclamation-triangle"></i> Peringatan
+        </div>
+        <div class="modal-body">
+          Anda akan diarahkan ke situs eksternal di luar Play Pictures untuk mengunduh video. Play Pictures tidak bertanggung jawab atas konten atau keamanan situs tersebut.
+        </div>
+        <div class="modal-footer">
+          <button id="modal-cancel">Batal</button>
+          <button id="modal-confirm">Lanjutkan</button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modalOverlay);
+
+    const modalCancel = document.getElementById("modal-cancel");
+    const modalConfirm = document.getElementById("modal-confirm");
+
+    function openModal() {
+      modalOverlay.classList.add("active");
+    }
+
+    function closeModal() {
+      modalOverlay.classList.remove("active");
+    }
+
+    modalCancel.addEventListener("click", closeModal);
+    modalConfirm.addEventListener("click", () => {
+      closeModal();
+      window.open(`https://y2mate.com/youtube/${videoId}`, "_blank");
+    });
+    modalOverlay.addEventListener("click", (e) => {
+      if (e.target === modalOverlay) closeModal();
+    });
+
+    // Ganti tombol download ke modal
+    dlBtn.removeEventListener("click", null);
+    dlBtn.addEventListener("click", openModal);
   </script>
 </body>
 </html>

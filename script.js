@@ -8,7 +8,35 @@ let fetching = false;
 let mode = "playlist";
 let lastQuery = "";
 
+const MANUAL_TAGS = [
+  "OT. SULTAN",
+  "OT. AMG",
+  "OT. LEGENDA AMORA",
+  "OT. AZKA",
+  "OT. ATTARAZKA",
+  "OT. FREDIS",
+  "OT BELENO",
+  "OT. RAVI",
+  "OT. FIANDRA",
+  "CAMPURSARI",
+  "OT. YUNIOR",
+  "VENUS MUSIK",
+  "OT. RONA AUDIO"
+];
+
+function shuffleArray(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+let shuffledTags = shuffleArray(MANUAL_TAGS);
+
 const videoListEl = document.getElementById("video-list");
+const searchInfoEl = document.getElementById("search-info");
 const loaderEl = document.getElementById("loader");
 const searchForm = document.getElementById("search-form");
 const searchInput = document.getElementById("search-input");
@@ -16,6 +44,15 @@ const resetButton = document.getElementById("reset-button");
 const errorMessageEl = document.getElementById("error-message");
 const menuToggle = document.querySelector(".menu-toggle");
 const nav = document.querySelector("nav");
+
+const urlParams = new URLSearchParams(window.location.search);
+const initialQuery = urlParams.get("q");
+if (initialQuery) {
+  lastQuery = initialQuery;
+  mode = "search";
+  searchInput.value = initialQuery;
+  resetButton.classList.remove("hidden");
+}
 
 const floatingSearchBtn = document.getElementById("floating-search");
 const searchOverlay = document.getElementById("search-overlay");
@@ -65,21 +102,38 @@ function renderVideos(data) {
     const snippet = item.snippet;
     if (!snippet || snippet.title === "Private video" || snippet.title === "Video pribadi") return;
     const vidId = mode === "playlist" ? snippet.resourceId.videoId : item.id.videoId;
+    const tags = snippet.title.split("|").map(t => t.trim()).filter(t => t).slice(1);
     const card = document.createElement("a");
     card.href = `./video.html?v=${vidId}`;
     card.target = "";
     card.rel = "noopener noreferrer";
     card.className = "card";
     card.innerHTML = `
-      <img class="thumb" src="${snippet.thumbnails?.medium?.url || ''}" alt="Thumbnail ${snippet.title}" />
+      <div class="thumb-wrapper">
+        <img class="thumb" src="${snippet.thumbnails?.medium?.url || ''}" alt="Thumbnail ${snippet.title}" />
+        <div class="tags">
+          ${tags.map(tag => `<span class="tag" data-query="${tag}">${tag}</span>`).join("")}
+        </div>
+      </div>
       <div class="card-content">
         <div class="title">${snippet.title}</div>
-        <div class="published">${new Date(snippet.publishedAt).toLocaleDateString()}</div>
+         <div class="published">${new Date(snippet.publishedAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}</div>
       </div>
     `;
     fragment.appendChild(card);
   });
   videoListEl.appendChild(fragment);
+  updateSearchInfo();
+}
+
+function updateSearchInfo() {
+  if (mode === "search" && lastQuery) {
+    const count = videoListEl.children.length;
+    searchInfoEl.textContent = `Pencarian: "${lastQuery}" • ${count} hasil`;
+    searchInfoEl.classList.remove("hidden");
+  } else {
+    searchInfoEl.classList.add("hidden");
+  }
 }
 
 function checkShortPage() {
@@ -112,6 +166,7 @@ resetButton.addEventListener("click", () => {
   lastQuery = "";
   nextPageToken = "";
   videoListEl.innerHTML = "";
+  searchInfoEl.classList.add("hidden");
   resetButton.classList.add("hidden");
   fetchVideos();
   searchInput.value = "";
@@ -153,6 +208,68 @@ document.addEventListener("click", (e) => {
     nav.classList.remove("open");
     menuToggle.classList.remove("active");
     menuToggle.setAttribute("aria-expanded", "false");
+  }
+});
+
+// Tag click to search
+videoListEl.addEventListener("click", (e) => {
+  const tag = e.target.closest(".tag");
+  if (!tag) return;
+  e.preventDefault();
+  e.stopPropagation();
+  const query = tag.dataset.query;
+  searchInput.value = query;
+  lastQuery = query;
+  mode = "search";
+  nextPageToken = "";
+  videoListEl.innerHTML = "";
+  fetchVideos();
+  resetButton.classList.remove("hidden");
+});
+
+// Tag recommendations
+const tagRecEl = document.getElementById("tag-recommendations");
+searchInput.addEventListener("input", () => {
+  const val = searchInput.value.trim().toLowerCase();
+  if (!val) {
+    tagRecEl.classList.add("hidden");
+    tagRecEl.innerHTML = "";
+    return;
+  }
+  const matches = shuffledTags.filter(t => t.toLowerCase().includes(val)).slice(0, 8);
+  if (!matches.length) {
+    tagRecEl.classList.add("hidden");
+    tagRecEl.innerHTML = "";
+    return;
+  }
+  tagRecEl.innerHTML = matches.map(t => `<span class="rec-tag" data-query="${t}">${t}</span>`).join("");
+  tagRecEl.classList.remove("hidden");
+});
+
+searchInput.addEventListener("focus", () => {
+  if (searchInput.value.trim()) return;
+  shuffledTags = shuffleArray(MANUAL_TAGS);
+  tagRecEl.innerHTML = shuffledTags.slice(0, 8).map(t => `<span class="rec-tag" data-query="${t}">${t}</span>`).join("");
+  tagRecEl.classList.remove("hidden");
+});
+
+tagRecEl.addEventListener("click", (e) => {
+  const recTag = e.target.closest(".rec-tag");
+  if (!recTag) return;
+  const query = recTag.dataset.query;
+  searchInput.value = query;
+  lastQuery = query;
+  mode = "search";
+  nextPageToken = "";
+  videoListEl.innerHTML = "";
+  tagRecEl.classList.add("hidden");
+  fetchVideos();
+  resetButton.classList.remove("hidden");
+});
+
+document.addEventListener("click", (e) => {
+  if (!tagRecEl.contains(e.target) && e.target !== searchInput) {
+    tagRecEl.classList.add("hidden");
   }
 });
 

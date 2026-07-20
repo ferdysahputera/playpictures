@@ -24,12 +24,14 @@
 
   <div class="search-container">
     <form id="search-form">
-      <input type="text" id="search-input" placeholder="Cari video...">
+      <input type="text" id="search-input" placeholder="Cari video..." autocomplete="off">
         <button type="submit"><i class="fas fa-search"></i></button>
       <button type="button" id="reset-button" class="hidden" title="Reset">
   <i class="fas fa-rotate-left"></i>
 </button>
     </form>
+    <div id="search-info" class="search-info hidden"></div>
+    <div id="tag-recommendations" class="tag-recommendations hidden"></div>
   </div>
 
   <main id="video-list"></main>
