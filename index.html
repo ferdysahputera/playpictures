@@ -30,10 +30,23 @@
   <i class="fas fa-rotate-left"></i>
 </button>
     </form>
-    <div id="search-info" class="search-info hidden"></div>
     <div id="tag-recommendations" class="tag-recommendations hidden"></div>
   </div>
 
+  <div class="controls-bar hidden" id="controls-bar">
+    <div class="view-toggle">
+      <button id="view-grid" class="active" aria-label="Grid"><i class="fas fa-th"></i></button>
+      <button id="view-list" aria-label="List"><i class="fas fa-list"></i></button>
+    </div>
+    <div class="sort-toggle">
+      <button id="sort-newest" class="active">Terbaru</button>
+      <button id="sort-oldest">Terlama</button>
+    </div>
+  </div>
+
+  <div id="results-header" class="results-header hidden">
+    <h2 id="results-title"></h2>
+  </div>
   <main id="video-list"></main>
   <div id="loader" class="hidden">Loading...</div>
   <div id="error-message" class="error-message hidden"></div>
@@ -42,7 +55,7 @@
   <button id="floating-search" aria-label="Search"><i class="fas fa-search"></i></button>
   <div id="search-overlay">
     <div class="overlay-content">
-      <button id="overlay-close" aria-label="Tutup">?</button>
+      <button id="overlay-close" aria-label="Tutup"><i class="fas fa-xmark"></i></button>
       <form id="overlay-search-form">
         <input type="text" id="overlay-search-input" placeholder="Cari video...">
         <button type="submit"><i class="fas fa-search"></i></button>

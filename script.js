@@ -7,6 +7,10 @@ let nextPageToken = "";
 let fetching = false;
 let mode = "playlist";
 let lastQuery = "";
+let currentView = "grid";
+let sortOrder = "newest";
+let currentItems = [];
+let isNewSearch = true;
 
 const MANUAL_TAGS = [
   "OT. SULTAN",
@@ -36,8 +40,14 @@ function shuffleArray(arr) {
 let shuffledTags = shuffleArray(MANUAL_TAGS);
 
 const videoListEl = document.getElementById("video-list");
-const searchInfoEl = document.getElementById("search-info");
+const resultsHeader = document.getElementById("results-header");
+const resultsTitle = document.getElementById("results-title");
 const loaderEl = document.getElementById("loader");
+const controlsBar = document.getElementById("controls-bar");
+const viewGridBtn = document.getElementById("view-grid");
+const viewListBtn = document.getElementById("view-list");
+const sortNewestBtn = document.getElementById("sort-newest");
+const sortOldestBtn = document.getElementById("sort-oldest");
 const searchForm = document.getElementById("search-form");
 const searchInput = document.getElementById("search-input");
 const resetButton = document.getElementById("reset-button");
@@ -63,7 +73,9 @@ const overlayClose = document.getElementById("overlay-close");
 async function fetchVideos() {
   if (fetching) return;
   fetching = true;
-  loaderEl.classList.remove("hidden");
+  if (isNewSearch) {
+    loaderEl.classList.remove("hidden");
+  }
   errorMessageEl.classList.add("hidden");
   try {
     const url =
@@ -85,7 +97,9 @@ async function fetchVideos() {
   } finally {
     loaderEl.classList.add("hidden");
     fetching = false;
-    checkShortPage();
+    if (isNewSearch) {
+      checkShortPage();
+    }
   }
 }
 
@@ -97,6 +111,36 @@ function renderVideos(data) {
   } else {
     errorMessageEl.classList.add("hidden");
   }
+  
+  if (isNewSearch) {
+    currentItems = items;
+  } else {
+    currentItems = [...currentItems, ...items];
+  }
+  
+  applySortAndRender();
+  updateSearchInfo();
+  updateControlsVisibility();
+}
+
+function applySortAndRender() {
+  let items = [...currentItems];
+  items.sort((a, b) => {
+    const dateA = new Date(a.snippet?.publishedAt || 0);
+    const dateB = new Date(b.snippet?.publishedAt || 0);
+    return sortOrder === "newest" ? dateB - dateA : dateA - dateB;
+  });
+
+  if (isNewSearch) {
+    videoListEl.innerHTML = "";
+    isNewSearch = false;
+  }
+
+  videoListEl.classList.remove("list-view");
+  if (currentView === "list") {
+    videoListEl.classList.add("list-view");
+  }
+
   const fragment = document.createDocumentFragment();
   items.forEach((item) => {
     const snippet = item.snippet;
@@ -123,16 +167,15 @@ function renderVideos(data) {
     fragment.appendChild(card);
   });
   videoListEl.appendChild(fragment);
-  updateSearchInfo();
 }
 
 function updateSearchInfo() {
   if (mode === "search" && lastQuery) {
-    const count = videoListEl.children.length;
-    searchInfoEl.textContent = `Pencarian: "${lastQuery}" • ${count} hasil`;
-    searchInfoEl.classList.remove("hidden");
+    const count = currentItems.length;
+    resultsTitle.textContent = `Hasil Pencarian: "${lastQuery}" (${count} hasil)`;
+    resultsHeader.classList.remove("hidden");
   } else {
-    searchInfoEl.classList.add("hidden");
+    resultsHeader.classList.add("hidden");
   }
 }
 
@@ -142,10 +185,14 @@ function checkShortPage() {
   }
 }
 
+let scrollTimeout;
 window.addEventListener("scroll", () => {
   const nearBottom = window.innerHeight + window.scrollY >= document.body.offsetHeight - 300;
   if (nearBottom && nextPageToken && !fetching) {
-    fetchVideos();
+    clearTimeout(scrollTimeout);
+    scrollTimeout = setTimeout(() => {
+      fetchVideos();
+    }, 200);
   }
 });
 
@@ -156,17 +203,21 @@ searchForm.addEventListener("submit", (e) => {
   mode = "search";
   lastQuery = query;
   nextPageToken = "";
+  isNewSearch = true;
   videoListEl.innerHTML = "";
   fetchVideos();
   resetButton.classList.remove("hidden");
+  updateControlsVisibility();
 });
 
 resetButton.addEventListener("click", () => {
   mode = "playlist";
   lastQuery = "";
   nextPageToken = "";
+  isNewSearch = true;
   videoListEl.innerHTML = "";
-  searchInfoEl.classList.add("hidden");
+  controlsBar.classList.add("hidden");
+  resultsHeader.classList.add("hidden");
   resetButton.classList.add("hidden");
   fetchVideos();
   searchInput.value = "";
@@ -197,9 +248,11 @@ overlaySearchForm.addEventListener("submit", (e) => {
   mode = "search";
   lastQuery = query;
   nextPageToken = "";
+  isNewSearch = true;
   videoListEl.innerHTML = "";
   fetchVideos();
   resetButton.classList.remove("hidden");
+  updateControlsVisibility();
 });
 
 // Close menu when clicking outside nav
@@ -222,9 +275,11 @@ videoListEl.addEventListener("click", (e) => {
   lastQuery = query;
   mode = "search";
   nextPageToken = "";
+  isNewSearch = true;
   videoListEl.innerHTML = "";
   fetchVideos();
   resetButton.classList.remove("hidden");
+  updateControlsVisibility();
 });
 
 // Tag recommendations
@@ -261,10 +316,12 @@ tagRecEl.addEventListener("click", (e) => {
   lastQuery = query;
   mode = "search";
   nextPageToken = "";
+  isNewSearch = true;
   videoListEl.innerHTML = "";
   tagRecEl.classList.add("hidden");
   fetchVideos();
   resetButton.classList.remove("hidden");
+  updateControlsVisibility();
 });
 
 document.addEventListener("click", (e) => {
@@ -272,6 +329,45 @@ document.addEventListener("click", (e) => {
     tagRecEl.classList.add("hidden");
   }
 });
+
+// View toggle
+viewGridBtn.addEventListener("click", () => {
+  currentView = "grid";
+  viewGridBtn.classList.add("active");
+  viewListBtn.classList.remove("active");
+  applySortAndRender();
+});
+
+viewListBtn.addEventListener("click", () => {
+  currentView = "list";
+  viewListBtn.classList.add("active");
+  viewGridBtn.classList.remove("active");
+  applySortAndRender();
+});
+
+// Sort toggle
+sortNewestBtn.addEventListener("click", () => {
+  sortOrder = "newest";
+  sortNewestBtn.classList.add("active");
+  sortOldestBtn.classList.remove("active");
+  applySortAndRender();
+});
+
+sortOldestBtn.addEventListener("click", () => {
+  sortOrder = "oldest";
+  sortOldestBtn.classList.add("active");
+  sortNewestBtn.classList.remove("active");
+  applySortAndRender();
+});
+
+// Show controls only in search mode
+function updateControlsVisibility() {
+  if (mode === "search" && lastQuery) {
+    controlsBar.classList.remove("hidden");
+  } else {
+    controlsBar.classList.add("hidden");
+  }
+}
 
 // Load initial videos
 fetchVideos();
