@@ -3,6 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="Tonton video terbaru dari Play Pictures. Lihat deskripsi, rekomendasi, dan share ke semua sosial media.">
+  <meta property="og:title" content="Play Pictures - Video">
+  <meta property="og:description" content="Tonton video terbaru dari Play Pictures.">
+  <meta property="og:type" content="video.other">
+  <meta property="og:url" content="">
+  <meta name="twitter:card" content="player">
   <title>Detail Video - Play Pictures</title>
   <link rel="stylesheet" href="style.css"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -300,6 +306,14 @@
           document.getElementById("video-stats").textContent = formatStats(stats);
           descContent.innerHTML = linkify(snippet.description);
 
+          document.title = titleEl.textContent + " - Play Pictures";
+          const ogTitle = document.querySelector('meta[property="og:title"]');
+          const ogDesc = document.querySelector('meta[property="og:description"]');
+          const metaDesc = document.querySelector('meta[name="description"]');
+          if (ogTitle) ogTitle.setAttribute("content", titleEl.textContent);
+          if (ogDesc) ogDesc.setAttribute("content", snippet.description.slice(0, 200));
+          if (metaDesc) metaDesc.setAttribute("content", snippet.description.slice(0, 200));
+
           const ids = extractVideoIdsFromDescription(snippet.description);
           if (ids.length > 0) {
             document.querySelector(".related-videos h3").textContent = snippet.title;
@@ -330,7 +344,11 @@
         if (window.innerWidth < 768 && iframe.requestFullscreen) {
           const isPortrait = window.matchMedia("(orientation: portrait)").matches;
           if (isPortrait) {
-            iframe.requestFullscreen().catch(() => {});
+            iframe.requestFullscreen().then(() => {
+              if (screen.orientation && screen.orientation.lock) {
+                screen.orientation.lock('landscape').catch(() => {});
+              }
+            }).catch(() => {});
           }
         }
       });
