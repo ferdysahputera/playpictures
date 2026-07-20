@@ -13,16 +13,20 @@
       gap: 2rem;
       padding: 2rem;
       flex-wrap: wrap;
+      width: 100%;
+      max-width: 100%;
     }
 
     .left-column {
       flex: 2;
-      min-width: 300px;
+      min-width: 0;
+      max-width: 100%;
     }
 
     .right-column {
       flex: 1;
-      min-width: 250px;
+      min-width: 0;
+      max-width: 100%;
     }
 
     .video-frame-container {
@@ -30,10 +34,17 @@
       border-radius: 10px;
       overflow: hidden;
       box-shadow: 0 0 15px rgba(255, 106, 0, 0.2);
-      aspect-ratio: 16 / 9;
+      position: relative;
+      width: 100%;
+      max-width: 100%;
+      padding-bottom: 56.25%;
+      height: 0;
     }
 
     .video-frame-container iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
       width: 100%;
       height: 100%;
       display: block;
@@ -97,22 +108,29 @@
     .share-buttons {
       margin-top: 1rem;
       display: flex;
-      gap: 1rem;
+      gap: 0.75rem;
+      flex-wrap: wrap;
     }
 
     .share-buttons button {
       background: var(--card-bg);
       color: var(--text);
       border: 1px solid var(--accent);
-      padding: 0.5rem 1rem;
-      border-radius: 5px;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
       cursor: pointer;
       transition: 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
     }
 
     .share-buttons button:hover {
       background: var(--accent);
       color: white;
+      transform: scale(1.1);
     }
 
     .related-videos h3 {
@@ -152,15 +170,32 @@
       object-fit: cover;
     }
 
-    @media screen and (orientation: landscape) {
-      iframe {
-        height: 100vh !important;
-      }
-    }
-
     @media (max-width: 768px) {
       .video-page {
         flex-direction: column;
+        padding: 1rem;
+        gap: 1rem;
+      }
+
+      .left-column,
+      .right-column {
+        flex: 1 1 auto;
+      }
+
+      .video-frame-container {
+        border-width: 2px;
+      }
+
+      .video-grid .card {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      .video-grid .thumb {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 16 / 9;
+        object-fit: cover;
       }
     }
   </style>
@@ -207,12 +242,13 @@
         </details>
 
         <div class="share-buttons">
-          <button id="copy-link"><i class="fas fa-link"></i> Salin Link</button>
-          <button id="share-whatsapp"><i class="fab fa-whatsapp"></i> WhatsApp</button>
-          <button id="share-facebook"><i class="fab fa-facebook"></i> Facebook</button>
-          <button id="share-twitter"><i class="fab fa-twitter"></i> Twitter</button>
-          <button id="share-telegram"><i class="fab fa-telegram"></i> Telegram</button>
-          <button id="download-btn"><i class="fas fa-download"></i> Download</button>
+          <button id="copy-link" aria-label="Salin Link"><i class="fas fa-link"></i></button>
+          <button id="share-whatsapp" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></button>
+          <button id="share-facebook" aria-label="Facebook"><i class="fab fa-facebook"></i></button>
+          <button id="share-twitter" aria-label="Twitter"><i class="fab fa-twitter"></i></button>
+          <button id="share-telegram" aria-label="Telegram"><i class="fab fa-telegram"></i></button>
+          <button id="share-threads" aria-label="Threads"><i class="fab fa-threads"></i></button>
+          <button id="download-btn" aria-label="Download"><i class="fas fa-download"></i></button>
         </div>
       </div>
     </div>
@@ -223,6 +259,7 @@
       <div id="related-list" class="video-grid"></div>
       <h3 style="margin-top:2rem;">Video Terbaru</h3>
       <div id="recent-list" class="video-grid"></div>
+      <div id="recent-error" class="error-message hidden" style="margin-top:1rem;"></div>
     </div>
   </main>
 
@@ -238,6 +275,7 @@
     const descContent = descDetails.querySelector(".desc-content");
     const relatedList = document.getElementById("related-list");
     const recentList = document.getElementById("recent-list");
+    const recentError = document.getElementById("recent-error");
 
     function formatDate(dateStr) {
       return new Date(dateStr).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
@@ -352,16 +390,22 @@
          });
      }
 
-    function fetchChannelRecommendations() {
+     function fetchChannelRecommendations() {
       fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${CHANNEL_ID}&maxResults=5&order=date&type=video&key=${API_KEY}`)
-        .then(res => res.json())
+        .then(res => {
+          if (!res.ok) throw new Error("HTTP error " + res.status);
+          return res.json();
+        })
         .then(data => {
-          const ids = data.items.map(item => item.id.videoId).filter(id => id !== videoId);
+          const ids = (data.items || []).map(item => item.id).filter(id => id && id !== videoId);
           if (!ids.length) return;
-          fetch(`https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics&id=${ids.join(',')}&key=${API_KEY}`)
-            .then(res => res.json())
+          return fetch(`https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics&id=${ids.join(',')}&key=${API_KEY}`)
+            .then(res => {
+              if (!res.ok) throw new Error("HTTP error " + res.status);
+              return res.json();
+            })
             .then(vidData => {
-              vidData.items.forEach(item => {
+              (vidData.items || []).forEach(item => {
                 const snippet = item.snippet;
                 const stats = item.statistics;
                 const vidId = item.id;
@@ -380,19 +424,27 @@
                 relatedList.appendChild(card);
               });
             });
-        });
+        })
+        .catch(err => console.error("Gagal memuat rekomendasi channel:", err));
     }
 
     function fetchRecentVideos() {
       fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${CHANNEL_ID}&maxResults=5&order=date&type=video&key=${API_KEY}`)
-        .then(res => res.json())
+        .then(res => {
+          if (!res.ok) throw new Error("HTTP error " + res.status);
+          return res.json();
+        })
         .then(data => {
-          const ids = data.items.map(item => item.id.videoId).filter(id => id !== videoId);
+          const items = data.items || [];
+          const ids = items.map(item => item.id).filter(id => id && id !== videoId);
           if (!ids.length) return;
-          fetch(`https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics&id=${ids.join(',')}&key=${API_KEY}`)
-            .then(res => res.json())
+          return fetch(`https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics&id=${ids.join(',')}&key=${API_KEY}`)
+            .then(res => {
+              if (!res.ok) throw new Error("HTTP error " + res.status);
+              return res.json();
+            })
             .then(vidData => {
-              vidData.items.forEach(item => {
+              (vidData.items || []).forEach(item => {
                 const snippet = item.snippet;
                 const stats = item.statistics;
                 const vidId = item.id;
@@ -411,6 +463,11 @@
                 recentList.appendChild(card);
               });
             });
+        })
+        .catch(err => {
+          console.error("Gagal memuat video terbaru:", err);
+          recentError.textContent = "Gagal memuat video terbaru.";
+          recentError.classList.remove("hidden");
         });
     }
 
@@ -420,6 +477,7 @@
     const fbBtn = document.getElementById("share-facebook");
     const twBtn = document.getElementById("share-twitter");
     const tgBtn = document.getElementById("share-telegram");
+    const thBtn = document.getElementById("share-threads");
     const dlBtn = document.getElementById("download-btn");
 
     copyBtn.addEventListener("click", () => {
@@ -450,6 +508,11 @@
     tgBtn.addEventListener("click", () => {
       const url = encodeURIComponent(window.location.href);
       window.open(`https://t.me/share/url?url=${url}`, "_blank");
+    });
+
+    thBtn.addEventListener("click", () => {
+      const url = encodeURIComponent(window.location.href);
+      window.open(`https://www.threads.net/intent/post?text=${url}`, "_blank");
     });
 
     dlBtn.addEventListener("click", openModal);
