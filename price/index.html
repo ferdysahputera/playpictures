@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SHIFT | Luxury Wedding Photography & Videography Pricelist</title>
+  
+  <!-- Meta tags for premium SEO -->
+  <meta name="description" content="Pricelist eksklusif layanan fotografi dan videografi pernikahan mewah oleh Shift Photography. Abadikan momen berharga Anda dengan sentuhan estetika terbaik.">
+  <meta name="keywords" content="wedding photography, wedding videography, luxury wedding, pricelist wedding, dokumentasi pernikahan">
+  
+  <!-- FontAwesome for Premium Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- html2canvas library for JPG generation -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <!-- jsPDF library for high quality PDF downloads -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  
+  <!-- Local Stylesheets -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- LIQUID GLASS THEME DECORATIVE BLOBS -->
+  <div class="glass-blob-container">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+  </div>
+
+  <!-- SPARKLES BACKGROUND ANIMATION -->
+  <div class="sparkles" id="sparkles-container"></div>
+
+  <!-- HEADER & NAVIGATION -->
+  <header class="glass-header">
+    <a href="#" class="logo">
+      Shift
+      <span>Photography</span>
+    </a>
+    
+    <!-- Desktop Navigation -->
+    <nav class="desktop-nav">
+      <ul class="nav-links">
+        <li><a href="#home">Home</a></li>
+        <li><a href="#about">Tentang Kami</a></li>
+        <li><a href="#gallery">Gallery</a></li>
+        <li><a href="#packages">Pricelist</a></li>
+      </ul>
+    </nav>
+    
+    <div class="nav-icons">
+      <button class="cart-icon-btn" id="open-cart-btn" aria-label="Buka Keranjang Belanja">
+        <i class="fa-solid fa-bag-shopping"></i>
+        <span class="cart-count" id="cart-badge-count">0</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- MOBILE LIQUID GLASS BOTTOM NAVIGATION -->
+  <nav class="mobile-bottom-nav">
+    <div class="mobile-nav-indicator" id="mobile-nav-indicator"></div>
+    <a href="#home" class="mobile-nav-item active" data-index="0" aria-label="Home">
+      <i class="fa-solid fa-house"></i>
+      <span>Home</span>
+    </a>
+    <a href="#gallery" class="mobile-nav-item" data-index="1" aria-label="Gallery">
+      <i class="fa-solid fa-images"></i>
+      <span>Gallery</span>
+    </a>
+    <a href="#packages" class="mobile-nav-item" data-index="2" aria-label="Pricelist">
+      <i class="fa-solid fa-gem"></i>
+      <span>Pricelist</span>
+    </a>
+    <a href="javascript:void(0)" class="mobile-nav-item" id="mobile-cart-trigger" data-index="3" aria-label="Keranjang">
+      <div style="position: relative; display: inline-block;">
+        <i class="fa-solid fa-bag-shopping"></i>
+        <span class="cart-count mobile-cart-badge" id="mobile-cart-badge-count">0</span>
+      </div>
+      <span>Cart</span>
+    </a>
+  </nav>
+
+  <!-- FLOATING LUXURY BACKGROUND MUSIC CONTROLLER -->
+  <div class="music-player-widget" id="music-widget">
+    <button class="music-toggle-btn" id="music-toggle-btn" aria-label="Putar Musik">
+      <i class="fa-solid fa-compact-disc"></i>
+    </button>
+    <span class="music-status-tooltip" id="music-tooltip">Play Music</span>
+  </div>
+  
+  <!-- Audio Tag (Beautiful Romantic Dream track) -->
+  <audio id="bg-music" src="https://assets.mixkit.co/music/preview/mixkit-beautiful-dream-2931.mp3" loop></audio>
+
+  <!-- HERO SECTION (INVITATION STYLE) -->
+  <section class="hero" id="home">
+    <div class="hero-bg"></div>
+    <div class="hero-content">
+      <div class="hero-invitation-frame">
+        <span class="hero-subtitle">The Art of Storytelling</span>
+        <h1 class="hero-title">Elegance in Every Frame</h1>
+        <p class="hero-tagline">Premium Wedding Photography & Videography</p>
+        <a href="#packages" class="gold-btn">View Pricelist</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT SECTION -->
+  <section class="about section-padding" id="about">
+    <div class="about-inner reveal">
+      <div class="about-badge">Tentang Kami</div>
+      <h2 class="about-heading">Kami Suka Bercerita</h2>
+      <div class="title-line"></div>
+      <p class="about-text">
+        Kami tahu bahwa cerita Anda sangat ingin diceritakan. Kehidupan Anda, keluarga Anda, cinta Anda, dan hari pernikahan Anda adalah salah satu kisah terindah yang bisa diceritakan. Anda sebaiknya percaya bahwa kami akan senang untuk mengatakannya untuk Anda secara kreatif, artistik, dan jujur dengan siapa Anda.
+      </p>
+      <div class="about-quote-block">
+        <i class="fa-solid fa-quote-left about-quote-icon"></i>
+        <blockquote class="about-quote">
+          Kenangan Besok, Hari Ini.
+        </blockquote>
+      </div>
+      <p class="about-text">
+        Ketika Anda mulai memiliki anak, rambut Anda mulai beruban, dan kerutan muncul di mana-mana — mungkin Anda akan mengalami waktu yang buruk, waktu yang baik, tidak ada yang tahu. Tapi di sini, mari kita bantu untuk mengenang sekali lagi: bahwa saat itu, ada saat ketika Anda berdua sangat jatuh cinta, bahwa Anda berdua akan menaklukkan dunia.
+      </p>
+      <p class="about-text">
+        <strong>Biarkan kami membantu Anda untuk mengingat semua waktu yang baik.</strong>
+      </p>
+      <span class="about-author">— Shift Photography Team</span>
+    </div>
+  </section>
+
+  <!-- PHOTO & VIDEO GALLERY SECTION -->
+  <section class="gallery section-padding" id="gallery">
+    <div class="luxury-title-wrapper reveal">
+      <span class="subtitle">Portfolio Showcase</span>
+      <h2>Our Masterpieces</h2>
+      <div class="title-line"></div>
+    </div>
+    
+    <div class="reveal" style="max-width: 1200px; margin: 0 auto;">
+      <!-- Filter Buttons -->
+      <div class="gallery-filters">
+        <button class="active" data-filter="all">All Stories</button>
+        <button data-filter="photo">Photography</button>
+        <button data-filter="video">Videography</button>
+      </div>
+
+      <!-- Masonry-like Grid -->
+      <div class="gallery-grid">
+        <!-- Photo Item 1 -->
+        <div class="gallery-item reveal-left" data-category="photo" onclick="openLightbox('https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=1000')">
+          <img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=600" alt="Wedding Classic Couple" loading="lazy">
+          <div class="gallery-overlay">
+            <h3 class="gallery-item-title">Ethereal Love</h3>
+            <span class="gallery-item-cat">Photography</span>
+          </div>
+        </div>
+
+        <!-- Photo Item 2 -->
+        <div class="gallery-item reveal" data-category="photo" onclick="openLightbox('https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80&w=1000')">
+          <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80&w=600" alt="Rings and Details" loading="lazy">
+          <div class="gallery-overlay">
+            <h3 class="gallery-item-title">Sacred Vows</h3>
+            <span class="gallery-item-cat">Photography</span>
+          </div>
+        </div>
+
+        <!-- Video Item 3 (represented as image thumbnail) -->
+        <div class="gallery-item reveal-right" data-category="video" onclick="openLightbox('https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&q=80&w=1000')">
+          <img src="https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&q=80&w=600" alt="Wedding Cinematic Ceremony" loading="lazy">
+          <div class="gallery-overlay">
+            <h3 class="gallery-item-title">Eternal Symphony</h3>
+            <span class="gallery-item-cat">Videography</span>
+          </div>
+        </div>
+
+        <!-- Photo Item 4 -->
+        <div class="gallery-item reveal-left" data-category="photo" onclick="openLightbox('https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=1000')">
+          <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=600" alt="Happy Elegant Bride" loading="lazy">
+          <div class="gallery-overlay">
+            <h3 class="gallery-item-title">Graceful Silhouette</h3>
+            <span class="gallery-item-cat">Photography</span>
+          </div>
+        </div>
+
+        <!-- Video Item 5 -->
+        <div class="gallery-item reveal" data-category="video" onclick="openLightbox('https://images.unsplash.com/photo-1507504038482-7621c37b3f9d?auto=format&fit=crop&q=80&w=1000')">
+          <img src="https://images.unsplash.com/photo-1507504038482-7621c37b3f9d?auto=format&fit=crop&q=80&w=600" alt="Golden Reception Entrance" loading="lazy">
+          <div class="gallery-overlay">
+            <h3 class="gallery-item-title">Golden Hour Waltz</h3>
+            <span class="gallery-item-cat">Videography</span>
+          </div>
+        </div>
+
+        <!-- Photo Item 6 -->
+        <div class="gallery-item reveal-right" data-category="photo" onclick="openLightbox('https://images.unsplash.com/photo-1532712938310-34cb3982ef74?auto=format&fit=crop&q=80&w=1000')">
+          <img src="https://images.unsplash.com/photo-1532712938310-34cb3982ef74?auto=format&fit=crop&q=80&w=600" alt="Luxury Reception Settings" loading="lazy">
+          <div class="gallery-overlay">
+            <h3 class="gallery-item-title">Royal Banquets</h3>
+            <span class="gallery-item-cat">Photography</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LIGHTBOX MODAL -->
+  <div class="lightbox" id="gallery-lightbox" onclick="closeLightbox()">
+    <div class="lightbox-content" onclick="event.stopPropagation()">
+      <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
+      <img id="lightbox-img" src="" alt="Zoomed view">
+    </div>
+  </div>
+
+  <!-- CURATED PACKAGES PRICELIST SECTION -->
+  <section class="packages section-padding" id="packages">
+    <div class="luxury-title-wrapper reveal">
+      <span class="subtitle">Pilihan Terbaik Untuk Anda</span>
+      <h2>Paket Layanan Kami</h2>
+      <div class="title-line"></div>
+    </div>
+
+    <!-- Category Tab Switcher -->
+    <div class="pkg-tabs-sticky-wrapper" id="pkg-tabs-wrapper">
+      <div class="pkg-tabs-inner">
+        <button class="pkg-tab active" data-tab="hantaran" onclick="switchPkgTab('hantaran', this)"><i class="fa-solid fa-gift"></i> Hantaran</button>
+        <button class="pkg-tab" data-tab="prawedding" onclick="switchPkgTab('prawedding', this)"><i class="fa-solid fa-heart"></i> Prawedding</button>
+        <button class="pkg-tab" data-tab="wedding" onclick="switchPkgTab('wedding', this)"><i class="fa-solid fa-ring"></i> Wedding</button>
+        <button class="pkg-tab" data-tab="clip" onclick="switchPkgTab('clip', this)"><i class="fa-solid fa-clapperboard"></i> Wedding Clip</button>
+      </div>
+    </div>
+
+    <!-- ===== HANTARAN ===== -->
+    <div class="pkg-panel active" id="tab-hantaran">
+      <div class="packages-grid">
+        <div class="package-card glass-card reveal-left">
+          <div>
+            <span class="pkg-category-badge">Hantaran</span>
+            <h3 class="package-name">Batari</h3>
+            <div class="package-price">Rp 800.000</div>
+            <ul class="package-features">
+              <li><i class="fa-solid fa-circle-check"></i> Dokumentasi</li>
+              <li><i class="fa-solid fa-circle-check"></i> File saja</li>
+              <li><i class="fa-solid fa-circle-check"></i> File Foto Edit</li>
+              <li><i class="fa-solid fa-circle-check"></i> Semua File via Drive</li>
+            </ul>
+          </div>
+          <button class="gold-btn-outline" onclick="addPackageToCart('Batari', 800000)">Pilih Paket</button>
+        </div>
+
+        <div class="package-card glass-card featured reveal">
+          <div>
+            <span class="pkg-category-badge">Hantaran</span>
+            <h3 class="package-name">Padma</h3>
+            <div class="package-price">Rp 1.500.000</div>
+            <ul class="package-features">
+              <li><i class="fa-solid fa-circle-check"></i> Dokumentasi</li>
+              <li><i class="fa-solid fa-circle-check"></i> File saja</li>
+              <li><i class="fa-solid fa-circle-check"></i> File Foto Edit</li>
+              <li><i class="fa-solid fa-circle-check"></i> 1 Menit Teaser Clip Hantaran</li>
+              <li><i class="fa-solid fa-circle-check"></i> Semua File via Drive</li>
+            </ul>
+          </div>
+          <button class="gold-btn" onclick="addPackageToCart('Padma', 1500000)">Pilih Paket</button>
+        </div>
+
+        <div class="package-card glass-card reveal-right">
+          <div>
+            <span class="pkg-category-badge">Hantaran</span>
+            <h3 class="package-name">Atman</h3>
+            <div class="package-price">Rp 2.000.000</div>
+            <ul class="package-features">
+              <li><i class="fa-solid fa-circle-check"></i> Dokumentasi</li>
+              <li><i class="fa-solid fa-circle-check"></i> File saja</li>
+              <li><i class="fa-solid fa-circle-check"></i> File Foto Edit</li>
+              <li><i class="fa-solid fa-circle-check"></i> 1 Menit Teaser Clip Hantaran</li>
+              <li><i class="fa-solid fa-circle-check"></i> Cetak Uk. 22R + Bingkai</li>
+              <li><i class="fa-solid fa-circle-check"></i> Semua File via Drive</li>
+            </ul>
+          </div>
+          <button class="gold-btn-outline" onclick="addPackageToCart('Atman', 2000000)">Pilih Paket</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== PRAWEDDING ===== -->
+    <div class="pkg-panel" id="tab-prawedding">
+      <div class="packages-grid packages-grid-2">
+        <div class="package-card glass-card reveal-left">
+          <div>
+            <span class="pkg-category-badge">Prawedding</span>
+            <h3 class="package-name">Narapati</h3>
+            <div class="package-price">Rp 1.500.000</div>
+            <ul class="package-features">
+              <li><i class="fa-solid fa-circle-check"></i> Foto saja</li>
+              <li><i class="fa-solid fa-circle-check"></i> 1 Hari, 1 Konsep, 1 Lokasi</li>
+              <li><i class="fa-solid fa-circle-check"></i> Edit File Foto</li>
+              <li><i class="fa-solid fa-circle-check"></i> Cetak 60x40 cm (22R) + Bingkai 2 Pcs</li>
+              <li><i class="fa-solid fa-circle-check"></i> Semua File Via Drive</li>
+            </ul>
+          </div>
+          <button class="gold-btn-outline" onclick="addPackageToCart('Narapati', 1500000)">Pilih Paket</button>
+        </div>
+
+        <div class="package-card glass-card featured reveal-right">
+          <div>
+            <span class="pkg-category-badge">Prawedding</span>
+            <h3 class="package-name">Bupala</h3>
+            <div class="package-price">Rp 2.500.000</div>
+            <ul class="package-features">
+              <li><i class="fa-solid fa-circle-check"></i> Foto saja</li>
+              <li><i class="fa-solid fa-circle-check"></i> 1 Hari, 2 Konsep, 2 Lokasi</li>
+              <li><i class="fa-solid fa-circle-check"></i> Edit File Foto</li>
+              <li><i class="fa-solid fa-circle-check"></i> Cetak 60x40 cm (22R) + Bingkai 2 Pcs</li>
+              <li><i class="fa-solid fa-circle-check"></i> Semua File Via Drive</li>
+            </ul>
+          </div>
+          <button class="gold-btn" onclick="addPackageToCart('Bupala', 2500000)">Pilih Paket</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== WEDDING ===== -->
+    <div class="pkg-panel" id="tab-wedding">
+      <div class="packages-grid packages-grid-3">
+        <div class="package-card glass-card reveal-left">
+          <div>
+            <span class="pkg-category-badge">Wedding</span>
+            <h3 class="package-name">Astana</h3>
+            <div class="package-price">Rp 2.500.000</div>
+            <ul class="package-features">
+              <li><i class="fa-solid fa-circle-check"></i> Maksimal 2 Hari Kerja</li>
+              <li><i class="fa-solid fa-circle-check"></i> Album Magnetik Keluarga</li>
+              <li><i class="fa-solid fa-circle-check"></i> Cetak 120 Foto Ukuran 4R</li>
+              <li><i class="fa-solid fa-circle-check"></i> Cetak 5 Pcs Ukuran 12R</li>
+              <li><i class="fa-solid fa-circle-check"></i> Bingkai 12R 1 Pcs</li>
+              <li><i class="fa-solid fa-circle-check"></i> Edit File Foto</li>
+              <li><i class="fa-solid fa-circle-check"></i> Flashdisk 16 Gb</li>
+            </ul>
+          </div>
+          <button class="gold-btn-outline" onclick="addPackageToCart('Astana', 2500000)">Pilih Paket</button>
+        </div>
+
+        <div class="package-card glass-card reveal">
+          <div>
+            <span class="pkg-category-badge">Wedding</span>
+            <h3 class="package-name">Akusara</h3>
+            <div class="package-price">Rp 3.700.000</div>
+            <ul class="package-features">
+              <li><i class="fa-solid fa-circle-check"></i> Maksimal 2 Hari Kerja</li>
+              <li><i class="fa-solid fa-circle-check"></i> Album Magnetik Keluarga</li>
+              <li><i class="fa-solid fa-circle-check"></i> Cetak 120 Foto Ukuran 4R</li>
+              <li><i class="fa-solid fa-circle-check"></i> Cetak 5 Pcs Ukuran 12R</li>
+              <li><i class="fa-solid fa-circle-check"></i> Bingkai 12R 1 Pcs</li>
+              <li><i class="fa-solid fa-circle-check"></i> Video Shooting Dokumentasi</li>
+              <li><i class="fa-solid fa-circle-check"></i> Edit File Foto</li>
+              <li><i class="fa-solid fa-circle-check"></i> Flashdisk 16 Gb</li>
+            </ul>
+          </div>
+          <button class="gold-btn-outline" onclick="addPackageToCart('Akusara', 3700000)">Pilih Paket</button>
+        </div>
+
+        <div class="package-card glass-card reveal-right">
+          <div>
+            <span class="pkg-category-badge">Wedding</span>
+            <h3 class="package-name">Gandewa</h3>
+            <div class="package-price">Rp 4.000.000</div>
+            <ul class="package-features">
+              <li><i class="fa-solid fa-circle-check"></i> Maksimal 2 Hari Kerja</li>
+              <li><i class="fa-solid fa-circle-check"></i> Album Hard Cover / Kolase (10 Sheet)</li>
+              <li><i class="fa-solid fa-circle-check"></i> Album Magnetik Keluarga (10 Sheet)</li>
+              <li><i class="fa-solid fa-circle-check"></i> Cetak 120 Foto Ukuran 4R</li>
+              <li><i class="fa-solid fa-circle-check"></i> Cetak 5 Pcs Ukuran 12R</li>
+              <li><i class="fa-solid fa-circle-check"></i> Bingkai 12R 1 Pcs</li>
+              <li><i class="fa-solid fa-circle-check"></i> Edit File Foto</li>
+              <li><i class="fa-solid fa-circle-check"></i> Flashdisk 16 Gb</li>
+            </ul>
+          </div>
+          <button class="gold-btn-outline" onclick="addPackageToCart('Gandewa', 4000000)">Pilih Paket</button>
+        </div>
+
+        <div class="package-card glass-card reveal-left">
+          <div>
+            <span class="pkg-category-badge">Wedding</span>
+            <h3 class="package-name">Bumantra</h3>
+            <div class="package-price">Rp 5.500.000</div>
+            <ul class="package-features">
+              <li><i class="fa-solid fa-circle-check"></i> Maksimal 2 Hari Kerja</li>
+              <li><i class="fa-solid fa-circle-check"></i> Album Hard Cover / Kolase (10 Sheet)</li>
+              <li><i class="fa-solid fa-circle-check"></i> Album Magnetik Keluarga (10 Sheet)</li>
+              <li><i class="fa-solid fa-circle-check"></i> Cetak 120 Foto Ukuran 4R</li>
+              <li><i class="fa-solid fa-circle-check"></i> Cetak 5 Pcs Ukuran 12R</li>
+              <li><i class="fa-solid fa-circle-check"></i> Bingkai 12R 1 Pcs</li>
+              <li><i class="fa-solid fa-circle-check"></i> Cetak 22R + Bingkai 1 Pcs</li>
+              <li><i class="fa-solid fa-circle-check"></i> Video Shooting Dokumentasi</li>
+              <li><i class="fa-solid fa-circle-check"></i> Edit File Foto</li>
+              <li><i class="fa-solid fa-circle-check"></i> Flashdisk 16 Gb</li>
+            </ul>
+          </div>
+          <button class="gold-btn" onclick="addPackageToCart('Bumantra', 5500000)">Pilih Paket</button>
+        </div>
+
+        <div class="package-card glass-card featured reveal">
+          <div>
+            <span class="pkg-category-badge">Wedding</span>
+            <h3 class="package-name">Cundamani</h3>
+            <div class="package-price">Rp 7.500.000</div>
+            <ul class="package-features">
+              <li><i class="fa-solid fa-circle-check"></i> Maksimal 2 Hari Kerja</li>
+              <li><i class="fa-solid fa-circle-check"></i> Album Hard Cover / Kolase (10 Sheet)</li>
+              <li><i class="fa-solid fa-circle-check"></i> Album Magnetik Keluarga (15 Sheet)</li>
+              <li><i class="fa-solid fa-circle-check"></i> Cetak 120 Foto Ukuran 4R</li>
+              <li><i class="fa-solid fa-circle-check"></i> Cetak 5 Pcs Ukuran 12R</li>
+              <li><i class="fa-solid fa-circle-check"></i> Bingkai 12R 2 Pcs</li>
+              <li><i class="fa-solid fa-circle-check"></i> Cetak 22R + Bingkai 1 Pcs</li>
+              <li><i class="fa-solid fa-circle-check"></i> Video Wedding Clip (1-3 Menit)</li>
+              <li><i class="fa-solid fa-circle-check"></i> Video Shooting Dokumentasi</li>
+              <li><i class="fa-solid fa-circle-check"></i> Edit File Foto</li>
+              <li><i class="fa-solid fa-circle-check"></i> Flashdisk 32 Gb</li>
+            </ul>
+          </div>
+          <button class="gold-btn" onclick="addPackageToCart('Cundamani', 7500000)">Pilih Paket</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== WEDDING CLIP ===== -->
+    <div class="pkg-panel" id="tab-clip">
+      <div class="packages-grid">
+        <div class="package-card glass-card reveal-left">
+          <div>
+            <span class="pkg-category-badge">Wedding Clip</span>
+            <h3 class="package-name">Indurasmi</h3>
+            <div class="package-price">Rp 800.000</div>
+            <ul class="package-features">
+              <li><i class="fa-solid fa-circle-check"></i> Teaser 1 Menit</li>
+              <li><i class="fa-solid fa-circle-check"></i> 1 Hari</li>
+            </ul>
+          </div>
+          <button class="gold-btn-outline" onclick="addPackageToCart('Indurasmi', 800000)">Pilih Paket</button>
+        </div>
+
+        <div class="package-card glass-card featured reveal">
+          <div>
+            <span class="pkg-category-badge">Wedding Clip</span>
+            <h3 class="package-name">Baskara</h3>
+            <div class="package-price">Rp 1.200.000</div>
+            <ul class="package-features">
+              <li><i class="fa-solid fa-circle-check"></i> Clip 2-3 Menit</li>
+              <li><i class="fa-solid fa-circle-check"></i> 1 Hari</li>
+            </ul>
+          </div>
+          <button class="gold-btn" onclick="addPackageToCart('Baskara', 1200000)">Pilih Paket</button>
+        </div>
+
+        <div class="package-card glass-card reveal-right">
+          <div>
+            <span class="pkg-category-badge">Wedding Clip</span>
+            <h3 class="package-name">Narpati</h3>
+            <div class="package-price">Rp 2.000.000</div>
+            <ul class="package-features">
+              <li><i class="fa-solid fa-circle-check"></i> Clip 2-3 Menit</li>
+              <li><i class="fa-solid fa-circle-check"></i> 2 Hari</li>
+            </ul>
+          </div>
+          <button class="gold-btn-outline" onclick="addPackageToCart('Narpati', 2000000)">Pilih Paket</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== ADD-ONS STRIP ===== -->
+    <div class="addons-strip reveal">
+      <div class="addons-strip-title"><i class="fa-solid fa-circle-plus"></i> Paket Add-ons Tambahan</div>
+      <div class="addons-strip-items">
+        <div class="addon-chip" onclick="addPackageToCart('Background Kain (per baju)', 350000)">
+          <i class="fa-solid fa-shirt"></i>
+          <div>
+            <strong>Background Kain</strong>
+            <span>Rp 350.000 / baju</span>
+          </div>
+          <button class="addon-add-btn"><i class="fa-solid fa-plus"></i></button>
+        </div>
+        <div class="addon-chip" onclick="addPackageToCart('Barcode Foto', 200000)">
+          <i class="fa-solid fa-qrcode"></i>
+          <div>
+            <strong>Barcode Foto</strong>
+            <span>Rp 200.000</span>
+          </div>
+          <button class="addon-add-btn"><i class="fa-solid fa-plus"></i></button>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+
+
+  <!-- CART SIDE OVERLAY & DRAWER -->
+  <div class="cart-overlay" id="cart-overlay" onclick="closeCart()"></div>
+  
+  <div class="cart-drawer glass-cart-drawer" id="cart-drawer">
+    <div class="cart-header">
+      <h3>Keranjang</h3>
+      <button class="cart-close-btn" onclick="closeCart()" aria-label="Tutup Keranjang">&times;</button>
+    </div>
+    
+    <div class="cart-body">
+      <!-- Cart Items Container -->
+      <div id="cart-items-container">
+        <p class="cart-empty-message">Keranjang Anda kosong</p>
+      </div>
+
+      <!-- Wedding Info Form (Supporting Start & End Dates) -->
+      <div class="cart-form" id="cart-checkout-form" style="display: none;">
+        <h4 class="form-title">Detail Pernikahan</h4>
+        
+        <div class="form-group">
+          <label for="input-names">Nama Pasangan</label>
+          <input type="text" id="input-names" placeholder="Contoh: Romeo & Juliet" required>
+        </div>
+
+        <div style="display: flex; gap: 10px;">
+          <div class="form-group" style="flex: 1;">
+            <label for="input-start-date">Mulai Acara</label>
+            <input type="date" id="input-start-date" required>
+          </div>
+          <div class="form-group" style="flex: 1;">
+            <label for="input-end-date">Selesai Acara</label>
+            <input type="date" id="input-end-date" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="input-venue">Lokasi / Venue Pernikahan</label>
+          <input type="text" id="input-venue" placeholder="Contoh: Hotel Mulia, Jakarta" required>
+        </div>
+      </div>
+    </div>
+
+    <div class="cart-footer">
+      <div class="cart-total-row">
+        <span>Total Harga</span>
+        <span class="cart-total-price" id="cart-total-display">Rp 0</span>
+      </div>
+      <button class="gold-btn checkout-btn" onclick="openInvoicePreview()">
+        <i class="fa-solid fa-file-invoice-dollar"></i>
+        Lihat Invoice Preview
+      </button>
+    </div>
+  </div>
+
+  <!-- INVOICE PREVIEW MODAL (LUXURY RECEIPT CARD) -->
+  <div class="lightbox" id="invoice-preview-modal" onclick="closeInvoiceModal()">
+    <div class="lightbox-content" style="max-width: 480px; width: 90%; background: #ffffff; padding: 0; border: 1px solid var(--color-gold); border-radius: 16px; box-shadow: var(--box-shadow-luxury);" onclick="event.stopPropagation()">
+      <span class="lightbox-close" style="right: 20px; top: 15px; color: #1a1a1a; font-size: 32px; z-index: 100;" onclick="closeInvoiceModal()">&times;</span>
+      
+      <!-- Printable Card Content Area -->
+      <div id="invoice-card-print" style="padding: 40px 30px; background: #ffffff; position: relative; overflow-y: auto; flex: 1 1 auto; -webkit-overflow-scrolling: touch;">
+        <!-- Luxury watermark backdrop -->
+        <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0.03; pointer-events: none; background: url('https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=600') center center/cover; z-index: 0;"></div>
+        
+        <div style="position: relative; z-index: 1; text-align: center;">
+          <h2 style="font-family: var(--font-serif); font-size: 26px; color: var(--color-dark); margin-bottom: 2px; text-transform: uppercase; letter-spacing: 2px;">Shift</h2>
+          <span style="font-family: var(--font-sans); font-size: 9px; letter-spacing: 6px; color: var(--color-gold); text-transform: uppercase; display: block; margin-bottom: 15px;">Photography</span>
+          
+          <div style="width: 50px; height: 1px; background: var(--color-gold); margin: 0 auto 20px;"></div>
+          
+          <h3 style="font-family: var(--font-serif); font-size: 18px; margin-bottom: 20px; color: var(--color-dark); letter-spacing: 1px;">KUTIPAN ESTIMASI BIAYA</h3>
+          
+          <!-- Couple Detail Block -->
+          <div style="text-align: left; margin-bottom: 20px; background: var(--color-cream); padding: 15px; border-radius: 8px; border: 1px solid rgba(197, 168, 128, 0.2); font-size: 12px; line-height: 1.6;">
+            <div><strong>Klien:</strong> <span id="invoice-couple-names"></span></div>
+            <div><strong>Tanggal Acara:</strong> <span id="invoice-date-range"></span></div>
+            <div><strong>Lokasi / Venue:</strong> <span id="invoice-venue-location"></span></div>
+          </div>
+          
+          <!-- Selections Table -->
+          <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 11px; margin-bottom: 25px;">
+            <thead>
+              <tr style="border-bottom: 1px solid var(--color-gold); font-weight: 600; color: var(--color-gold-dark);">
+                <th style="padding: 8px 0;">Item Layanan</th>
+                <th style="padding: 8px 0; text-align: right;">Estimasi Harga</th>
+              </tr>
+            </thead>
+            <tbody id="invoice-items-list" style="color: var(--color-dark-light);">
+              <!-- Rendered items -->
+            </tbody>
+            <tfoot>
+              <tr style="border-top: 1px solid var(--color-gold); font-weight: 700; font-size: 13px;">
+                <td style="padding: 12px 0;">Total Estimasi</td>
+                <td style="padding: 12px 0; text-align: right; color: var(--color-gold-dark);" id="invoice-total-amount"></td>
+              </tr>
+            </tfoot>
+          </table>
+          
+          <!-- Terms and Conditions Block -->
+          <div style="text-align: left; margin-top: 20px; border-top: 1px dashed rgba(197, 168, 128, 0.3); padding-top: 15px; font-size: 8px; line-height: 1.5; color: var(--color-gray);">
+            <strong style="color: var(--color-dark); display: block; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px;">Syarat & Ketentuan Tambahan:</strong>
+            <ul style="margin: 0; padding-left: 12px; list-style-type: decimal;">
+              <li style="margin-bottom: 3px;">Biaya transportasi diluar kota Curup disesuaikan dengan jarak masing-masing customer.</li>
+              <li style="margin-bottom: 3px;">Apabila ada perubahan jadwal harap memberi konfirmasi kepada admin secepatnya.</li>
+              <li style="margin-bottom: 3px;">Pelunasan maksimal H+5. Konfirmasi apabila telah melakukan pelunasan melalui Bank.</li>
+              <li style="margin-bottom: 3px;">Apabila customer melakukan pembatalan, maka uang muka yang dibayarkan menjadi deposit dan dapat digunakan dengan paket lain.</li>
+              <li style="margin-bottom: 3px;">Harap konfirmasi ulang H-7 acara atau sesi pemotretan.</li>
+            </ul>
+          </div>
+          
+          <p style="font-size: 8px; color: var(--color-gray); font-style: italic; line-height: 1.4; margin-top: 15px;">
+            Nilai di atas merupakan ringkasan kalkulasi pilihan Anda. Konfirmasi resmi mengenai jadwal dan penawaran detail akan diproses Admin.
+          </p>
+        </div>
+      </div>
+      
+      <!-- Actions Block -->
+      <div style="background: var(--color-cream); padding: 15px; display: flex; gap: 10px; border-top: 1px solid var(--color-gray-light); z-index: 5; flex-shrink: 0;">
+        <button id="btn-download-jpg" class="gold-btn-outline" style="flex: 1; padding: 12px; font-size: 11px; text-align: center;" onclick="downloadInvoicePDFOrJPG()">
+          <i class="fa-solid fa-file-pdf" style="margin-right: 5px;"></i> Unduh PDF / JPG
+        </button>
+        <button id="btn-send-wa" class="gold-btn" style="flex: 1; padding: 12px; font-size: 11px; display: flex; justify-content: center; align-items: center; gap: 5px;" onclick="sendInvoiceWhatsAppDirect()">
+          <i class="fa-solid fa-cart-shopping"></i> Checkout
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- LIGHTBOX FOR PHOTO ZOOM -->
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">
+      Shift
+      <span>Photography</span>
+    </div>
+    <div class="footer-socials">
+      <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+      <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+      <a href="#" aria-label="Youtube"><i class="fa-brands fa-youtube"></i></a>
+    </div>
+    <div class="footer-copyright">
+      &copy; 2026 Shift Photography. All Rights Reserved. Designed for Majestic Weddings.
+    </div>
+  </footer>
+
+  <!-- Application Logic JS -->
+  <script src="app.js"></script>
+</body>
+</html>
