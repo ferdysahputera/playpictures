@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="id"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Noor Prompt Studio</title>
+<link rel="stylesheet" href="css/style.css">
+</head><body>
+<header><h1>🕌 Noor Prompt Studio</h1><button id="themeBtn">🌙</button></header>
+<div class="wrap">
+<aside>
+<h3>Menu</h3>
+<ul><li>Dashboard</li><li>Character</li><li>Storyboard</li><li>Prompt</li><li>Library</li></ul>
+</aside>
+<main>
+<section class="card">
+<h2>Character Builder</h2>
+<input id="name" placeholder="Nama karakter">
+<select id="role"><option>Ayah</option><option>Ibu</option><option>Anak</option></select>
+<input id="outfit" placeholder="Pakaian">
+<label><input type="checkbox" id="faceless" checked> Faceless</label>
+<button onclick="saveCharacter()">Simpan</button>
+</section>
+<section class="card">
+<h2>Prompt Generator</h2>
+<select id="style">
+<option>Pixar 3D</option><option>Anime 3D</option><option>Clay</option>
+</select>
+<textarea id="scene" placeholder="Deskripsi adegan"></textarea>
+<button onclick="generate()">Generate Prompt</button>
+<pre id="output"></pre>
+</section>
+<section class="card">
+<h2>Character Library</h2>
+<ul id="library"></ul>
+</section>
+</main></div>
+<script src="js/app.js"></script>
+</body></html>
