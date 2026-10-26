@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Admin - Bedah Rumah Jend. Sudirman</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .admin-header-text h2 {
+            font-size: clamp(1.6rem, 2vw, 2.2rem);
+            letter-spacing: -0.01em;
+        }
+        .admin-header-text p {
+            color: var(--text-secondary);
+        }
+        .tabs {
+            display: flex;
+            gap: 0.6rem;
+            flex-wrap: wrap;
+        }
+        .tab-btn {
+            border: none;
+            background: rgba(148, 163, 184, 0.16);
+            color: var(--text-secondary);
+            padding: 0.55rem 1.2rem;
+            border-radius: 999px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .tab-btn.active {
+            background: linear-gradient(90deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            box-shadow: 0 18px 40px -24px rgba(37, 99, 235, 0.9);
+        }
+        .tab-content {
+            display: none;
+            background: var(--card);
+            border-radius: 18px;
+            padding: clamp(1.2rem, 3vw, 2rem);
+            box-shadow: 0 40px 80px -50px rgba(15, 23, 42, 0.9);
+            border: 1px solid rgba(226, 232, 240, 0.9);
+            flex-direction: column;
+            gap: 1.6rem;
+        }
+        .tab-content.active {
+            display: flex;
+        }
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .section-header h3 {
+            font-size: clamp(1.2rem, 2vw, 1.6rem);
+        }
+        .section-header p {
+            color: var(--text-secondary);
+        }
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+        }
+        .form-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+        }
+        .table-actions {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        .table-actions .btn {
+            padding: 0.45rem 1rem;
+            font-size: 0.95rem;
+        }
+        .badge-sisa {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.8rem;
+            border-radius: 999px;
+            background: rgba(239, 68, 68, 0.14);
+            color: #991b1b;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+        .badge-lengkap {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.8rem;
+            border-radius: 999px;
+            background: rgba(34, 197, 94, 0.16);
+            color: #166534;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+        .info-pilih {
+            text-align: center;
+            color: var(--text-secondary);
+            padding: 1rem;
+            background: rgba(148, 163, 184, 0.08);
+            border-radius: 12px;
+        }
+        .print-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+        }
+        .foto-rab-wrap {
+            display: none;
+            flex-direction: column;
+            gap: 1rem;
+            background: rgba(148, 163, 184, 0.06);
+            border: 1px solid rgba(226, 232, 240, 0.9);
+            border-radius: 16px;
+            padding: clamp(1rem, 2vw, 1.4rem);
+        }
+        .foto-rab-wrap.active {
+            display: flex;
+        }
+        .foto-rab-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .foto-rab-header h3 {
+            font-size: 1.15rem;
+        }
+        .foto-rab-header p {
+            color: var(--text-secondary);
+            font-size: 0.92rem;
+        }
+        .foto-rab-img {
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+            display: block;
+            border-radius: 12px;
+            border: 1px solid rgba(226, 232, 240, 0.9);
+            box-shadow: 0 30px 60px -45px rgba(15, 23, 42, 0.9);
+        }
+        .foto-rab-img.hidden {
+            display: none;
+        }
+        .foto-rab-empty {
+            text-align: center;
+            color: var(--text-secondary);
+            padding: 1.2rem;
+            border: 1px dashed rgba(148, 163, 184, 0.6);
+            border-radius: 12px;
+            font-size: 0.95rem;
+        }
+        .print-area {
+            background: white;
+            padding: 1rem;
+            border-radius: 14px;
+        }
+        .print-title {
+            display: none;
+            margin-bottom: 0.8rem;
+        }
+        .print-title h2 {
+            font-size: 1.3rem;
+            margin-bottom: 0.2rem;
+        }
+        .print-title p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        @media print {
+            @page {
+                size: A4 landscape;
+                margin: 10mm;
+            }
+            body.printing-custom {
+                background: white;
+            }
+            body.printing-custom > *:not(#pdfHolder) {
+                display: none !important;
+            }
+            body.printing-custom #pdfHolder {
+                position: static !important;
+                left: auto !important;
+                top: auto !important;
+                display: block !important;
+            }
+            body.printing-custom .print-doc {
+                width: 100% !important;
+                padding: 0 !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Dashboard Admin Bedah Rumah</h1>
+            <nav>
+                <a href="../index.html">Beranda Publik</a>
+                <a href="#" id="logoutBtn">Keluar</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="admin-header">
+            <div class="admin-header-text">
+                <h2>Kelola Data Per Anggota</h2>
+                <p>RAB, Material Masuk & Sisa Material Terhubung Langsung Dengan Master Material</p>
+            </div>
+            <button class="btn btn-primary" onclick="syncData()">Muat Ulang Data</button>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="openTab(event, 'anggota')">Anggota</button>
+            <button class="tab-btn" onclick="openTab(event, 'master')">Master Material</button>
+            <button class="tab-btn" onclick="openTab(event, 'rab')">RAB Per Anggota</button>
+            <button class="tab-btn" onclick="openTab(event, 'material')">Material Masuk</button>
+            <button class="tab-btn" onclick="openTab(event, 'rekapSisa')">Rekap Sisa Material</button>
+            <button class="tab-btn" onclick="openTab(event, 'kas')">Arus Kas (Masuk/Keluar)</button>
+        </div>
+
+        <!-- Tab Anggota -->
+        <div id="anggota" class="tab-content active">
+            <div class="section-header">
+                <div>
+                    <h3>Daftar Anggota</h3>
+                    <p>Tambah, ubah, atau hapus data anggota kelompok</p>
+                </div>
+            </div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="namaAnggotaInput">Nama Anggota</label>
+                    <input type="text" id="namaAnggotaInput" placeholder="Masukkan nama lengkap">
+                </div>
+                <div class="form-group">
+                    <label for="noUrutAnggota">Nomor Urut</label>
+                    <input type="number" id="noUrutAnggota" placeholder="Contoh: 1">
+                </div>
+            </div>
+            <div class="form-actions">
+                <button class="btn btn-success" onclick="tambahAnggota()">Tambah Anggota</button>
+            </div>
+            <div class="table-wrapper">
+                <table id="anggotaTable">
+                    <thead>
+                        <tr>
+                            <th>No Urut</th>
+                            <th>Nama Anggota</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Tab Master Material -->
+        <div id="master" class="tab-content">
+            <div class="section-header">
+                <div>
+                    <h3>Master Material</h3>
+                    <p>Daftar material, satuan, dan harga standar. Digunakan untuk RAB & Material Masuk</p>
+                </div>
+            </div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Nama Material</label>
+                    <input type="text" id="masterNama" placeholder="Contoh: Semen, Pasir, Batu Bata">
+                </div>
+                <div class="form-group">
+                    <label>Satuan</label>
+                    <input type="text" id="masterSatuan" placeholder="sak, m3, kg, pcs, zak">
+                </div>
+                <div class="form-group">
+                    <label>Harga Satuan (Rp)</label>
+                    <input type="number" id="masterHarga" placeholder="0">
+                </div>
+            </div>
+            <div class="form-actions">
+                <button class="btn btn-success" onclick="tambahMasterMaterial()">Tambah ke Master Material</button>
+            </div>
+            <div class="table-wrapper">
+                <table id="masterMaterialTable">
+                    <thead>
+                        <tr>
+                            <th>Nama Material</th>
+                            <th>Satuan</th>
+                            <th>Harga Satuan</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Tab RAB -->
+        <div id="rab" class="tab-content">
+            <div class="section-header">
+                <div>
+                    <h3>Input RAB Per Anggota</h3>
+                    <p>Bisa pilih langsung dari Master Material biar otomatis terisi</p>
+                </div>
+            </div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Pilih Anggota</label>
+                    <select id="rabAnggota">
+                        <option value="">-- Pilih Anggota --</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Tanggal</label>
+                    <input type="date" id="rabTanggal">
+                </div>
+                <div class="form-group" style="grid-column: 1/-1;">
+                    <label>Pilih dari Master Material</label>
+                    <select id="selectMasterForRab"></select>
+                </div>
+                <div class="form-group">
+                    <label>Nama Material / Uraian</label>
+                    <input type="text" id="rabUraian" placeholder="Otomatis dari master, atau isi manual">
+                </div>
+                <div class="form-group">
+                    <label>Volume</label>
+                    <input type="number" id="rabVolume" placeholder="0">
+                </div>
+                <div class="form-group">
+                    <label>Satuan</label>
+                    <input type="text" id="rabSatuan" placeholder="sak, m3, kg">
+                </div>
+                <div class="form-group">
+                    <label>Harga Satuan (Rp)</label>
+                    <input type="number" id="rabHarga" placeholder="0">
+                </div>
+            </div>
+            <div class="form-actions">
+                <button class="btn btn-success" onclick="tambahRAB()">Tambah RAB</button>
+                <button class="btn btn-ghost" onclick="resetFormRAB()">Bersihkan Form</button>
+            </div>
+
+            <div id="fotoRabWrap" class="foto-rab-wrap">
+                <div class="foto-rab-header">
+                    <div>
+                        <h3>Foto RAB Fisik</h3>
+                        <p>Simpan file di folder <strong>images/rab/</strong> dengan nama sesuai nomor urut anggota (contoh: <code>1.jpg</code>, <code>2.png</code>)</p>
+                    </div>
+                    <div class="print-actions">
+                        <button class="btn btn-primary" onclick="cetakRabPdf()">Cetak PDF</button>
+                        <button class="btn btn-primary" onclick="cetakRabJpg()">Simpan JPG</button>
+                    </div>
+                </div>
+                <img id="fotoRabImg" class="foto-rab-img hidden" alt="Foto RAB Fisik">
+                <div id="fotoRabEmpty" class="foto-rab-empty">Belum ada foto untuk anggota ini.</div>
+            </div>
+
+            <div id="rabInfoPilih" class="info-pilih">
+                Silahkan pilih anggota terlebih dahulu untuk menampilkan tabel RAB per anggota
+            </div>
+            <div id="rabPrintArea" class="print-area">
+                <div class="print-title">
+                    <h2>RAB - <span id="printRabNama"></span></h2>
+                    <p>Dicetak: <span id="printRabTanggal"></span></p>
+                </div>
+                <div id="rabTableWrap" class="table-wrapper" style="display:none;">
+                    <table id="rabInputTable">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Nama Bahan Bangunan</th>
+                                <th>Volume</th>
+                                <th>Satuan</th>
+                                <th>Harga Satuan</th>
+                                <th>Jumlah</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="5"><strong>TOTAL RAB</strong></td>
+                                <td colspan="2"><strong id="totalRabInput">Rp 0</strong></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+
+            <div id="rabSisaWrap" style="display:none; margin-top: 1.5rem;">
+                <div class="section-header">
+                    <div>
+                        <h3>Rekap Sisa Yang Belum Diterima - <span id="namaAnggotaRabSisa"></span></h3>
+                        <p>Perhitungan berdasarkan RAB dan Material Masuk anggota ini</p>
+                    </div>
+                    <div class="print-actions">
+                        <button class="btn btn-primary" onclick="cetakSisaPdf()">Cetak PDF</button>
+                        <button class="btn btn-primary" onclick="cetakSisaJpg()">Simpan JPG</button>
+                    </div>
+                </div>
+                <div class="print-area" id="sisaPrintArea">
+                    <div class="print-title">
+                        <h2>Rekap Sisa Yang Belum Diterima - <span id="printSisaNama"></span></h2>
+                        <p>Dicetak: <span id="printSisaTanggal"></span></p>
+                    </div>
+                    <div class="table-wrapper">
+                        <table id="rabSisaTable">
+                            <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Nama Bahan Bangunan</th>
+                                <th>Volume RAB</th>
+                                <th>Sudah Masuk</th>
+                                <th>Sisa Belum Diterima</th>
+                                <th>Satuan</th>
+                                <th>Harga Satuan</th>
+                                <th>Estimasi Nilai Sisa (Rp)</th>
+                                <th>Status</th>
+                            </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Material -->
+        <div id="material" class="tab-content">
+            <div class="section-header">
+                <div>
+                    <h3>Material Sudah Masuk Per Anggota</h3>
+                    <p>Pilih dari Master Material biar nama, satuan & harga otomatis terisi</p>
+                </div>
+            </div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Pilih Anggota</label>
+                    <select id="matAnggota">
+                        <option value="">-- Pilih Anggota --</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Tanggal</label>
+                    <input type="date" id="matTanggal">
+                </div>
+                <div class="form-group" style="grid-column: 1/-1;">
+                    <label>Pilih dari Master Material</label>
+                    <select id="selectMasterMaterial"></select>
+                </div>
+                <div class="form-group">
+                    <label>Nama Material</label>
+                    <input type="text" id="matNama" placeholder="Bisa diisi manual atau otomatis">
+                </div>
+                <div class="form-group">
+                    <label>Volume Masuk</label>
+                    <input type="number" id="matVolume" placeholder="0">
+                </div>
+                <div class="form-group">
+                    <label>Satuan</label>
+                    <input type="text" id="matSatuan" placeholder="sak, m3, kg">
+                </div>
+                <div class="form-group">
+                    <label>Harga Satuan (Rp)</label>
+                    <input type="number" id="matHarga" placeholder="0">
+                </div>
+                <div class="form-group">
+                    <label>Keterangan</label>
+                    <input type="text" id="matKeterangan" placeholder="Opsional">
+                </div>
+            </div>
+            <div class="form-actions">
+                <button class="btn btn-success" onclick="tambahMaterial()">Tambah Material Masuk</button>
+                <button class="btn btn-ghost" onclick="resetFormMaterial()">Bersihkan Form</button>
+            </div>
+            <div id="matInfoPilih" class="info-pilih">
+                Silahkan pilih anggota terlebih dahulu untuk menampilkan tabel Material Masuk per anggota
+            </div>
+            <div id="matTableWrap" class="table-wrapper" style="display:none;">
+                <table id="matInputTable">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Tanggal</th>
+                            <th>Material</th>
+                            <th>Volume Masuk</th>
+                            <th>Satuan</th>
+                            <th>Harga Satuan</th>
+                            <th>Jumlah</th>
+                            <th>Keterangan</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="6"><strong>TOTAL MATERIAL MASUK</strong></td>
+                            <td colspan="3"><strong id="totalMatInput">Rp 0</strong></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+
+        <!-- Tab Rekap Sisa -->
+        <div id="rekapSisa" class="tab-content">
+            <div class="section-header">
+                <div>
+                    <h3>Rekap Sisa Material Keseluruhan</h3>
+                    <p>Dihitung otomatis dari seluruh RAB dan Material Masuk semua anggota</p>
+                </div>
+                <button class="btn btn-primary" onclick="renderRekapSisa()">Refresh Rekap</button>
+            </div>
+            <div class="table-wrapper">
+                <table id="rekapSisaTable">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Anggota</th>
+                            <th>Nama Material</th>
+                            <th>Volume RAB</th>
+                            <th>Sudah Masuk</th>
+                            <th>Sisa Belum Diterima</th>
+                            <th>Satuan</th>
+                            <th>Harga Satuan</th>
+                            <th>Estimasi Nilai Sisa (Rp)</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Tab Kas -->
+        <div id="kas" class="tab-content">
+            <div class="section-header">
+                <div>
+                    <h3>Arus Kas Kelompok</h3>
+                    <p>Pisahkan antara kas masuk dan kas keluar</p>
+                </div>
+            </div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Jenis Transaksi</label>
+                    <select id="kasJenis">
+                        <option value="masuk">Kas Masuk</option>
+                        <option value="keluar">Kas Keluar</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Tanggal</label>
+                    <input type="date" id="kasTanggal">
+                </div>
+                <div class="form-group">
+                    <label>Jumlah (Rp)</label>
+                    <input type="number" id="kasJumlah" placeholder="0">
+                </div>
+                <div class="form-group">
+                    <label>Keterangan</label>
+                    <input type="text" id="kasKeterangan" placeholder="Sumber / Keperluan">
+                </div>
+            </div>
+            <div class="form-actions">
+                <button class="btn btn-success" onclick="tambahKas()">Tambah Transaksi</button>
+            </div>
+            <div class="table-wrapper">
+                <table id="kasTable">
+                    <thead>
+                        <tr>
+                            <th>Tanggal</th>
+                            <th>Jenis</th>
+                            <th>Jumlah</th>
+                            <th>Keterangan</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="2"><strong>Saldo Kas</strong></td>
+                            <td colspan="3"><strong id="kasSaldoAdmin">Rp 0</strong></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <div class="modal-backdrop" id="editAnggotaModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Edit Data Anggota</h3>
+                <button class="modal-close" onclick="closeEditAnggota()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="editAnggotaOldNama">
+                <div class="form-group">
+                    <label for="editAnggotaNama">Nama Anggota</label>
+                    <input type="text" id="editAnggotaNama">
+                </div>
+                <div class="form-group">
+                    <label for="editAnggotaNo">Nomor Urut</label>
+                    <input type="number" id="editAnggotaNo">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-ghost" onclick="closeEditAnggota()">Batal</button>
+                <button class="btn btn-primary" onclick="simpanEditAnggota()">Simpan Perubahan</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 Kelompok Bedah Rumah</p>
+        </div>
+    </footer>
+
+    <script src="../js/config.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="../js/admin.js"></script>
+    <script>
+        function openTab(evt, tabName) {
+            const tabcontent = document.getElementsByClassName("tab-content");
+            for (let i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].classList.remove("active");
+            }
+            const tablinks = document.getElementsByClassName("tab-btn");
+            for (let i = 0; i < tablinks.length; i++) {
+                tablinks[i].classList.remove("active");
+            }
+            document.getElementById(tabName).classList.add("active");
+            if (evt && evt.currentTarget) {
+                evt.currentTarget.classList.add("active");
+            }
+            if (tabName === 'rekapSisa') {
+                if (typeof renderRekapSisa === 'function') {
+                    renderRekapSisa();
+                }
+            }
+            if (tabName === 'rab' && typeof renderRAB === 'function') {
+                renderRAB();
+            }
+            if (tabName === 'material' && typeof renderMaterial === 'function') {
+                renderMaterial();
+            }
+        }
+    </script>
+</body>
+</html>
