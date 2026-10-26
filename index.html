@@ -1,68 +1,121 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Play Pictures - Capturing Your Best Moment With Us</title>
-  <link rel="stylesheet" href="style.css"/>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bedah Rumah Kelompok - Beranda Publik</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
 </head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Bedah Rumah Kelompok</h1>
+            <nav>
+                <a href="index.html" class="active">Beranda Publik</a>
+                <a href="admin/login.html">Login Admin</a>
+            </nav>
+        </div>
+    </header>
 
-<body class="fade-in">
-  <header>
-    <div class="logo"><a href=""><img src="logo.png"/></a></div>
-    <button class="menu-toggle" aria-label="Toggle menu" aria-expanded="false">
-      <span></span><span></span><span></span>
-    </button>
-    <nav>
-      <ul>
-        <li><a href="#">Home</a></li>
-        <li><a href="about.html">Tentang</a></li>
-      </ul>
-    </nav>
-  </header>
+    <main class="container">
+        <section class="page-hero">
+            <div>
+                <span class="hero-badge">Transparansi Anggaran</span>
+                <h2>Progres Bedah Rumah Per Anggota</h2>
+                <p>Pantau RAB, material yang sudah masuk, sisa bahan yang belum diterima, serta arus kas kelompok secara terbuka.</p>
+            </div>
+            <a href="#kas" class="btn-hero">Lihat Arus Kas</a>
+        </section>
 
-  <div class="search-container">
-    <form id="search-form">
-      <input type="text" id="search-input" placeholder="Cari video..." autocomplete="off">
-        <button type="submit"><i class="fas fa-search"></i></button>
-      <button type="button" id="reset-button" class="hidden" title="Reset">
-  <i class="fas fa-rotate-left"></i>
-</button>
-    </form>
-    <div id="tag-recommendations" class="tag-recommendations hidden"></div>
-  </div>
+        <section>
+            <div class="section-head">
+                <div>
+                    <h2 style="font-size:clamp(1.2rem,2vw,1.5rem);">Data Per Anggota</h2>
+                    <p>Klik kartu anggota untuk melihat rincian RAB, foto RAB fisik, dan grafik</p>
+                </div>
+            </div>
+            <div class="members-grid" id="membersGrid" style="margin-top:1rem;">
+                <p class="empty-state">Memuat data anggota...</p>
+            </div>
+        </section>
 
-  <div class="controls-bar hidden" id="controls-bar">
-    <div class="view-toggle">
-      <button id="view-grid" class="active" aria-label="Grid"><i class="fas fa-th"></i></button>
-      <button id="view-list" aria-label="List"><i class="fas fa-list"></i></button>
-    </div>
-    <div class="sort-toggle">
-      <button id="sort-newest" class="active">Terbaru</button>
-      <button id="sort-oldest">Terlama</button>
-    </div>
-  </div>
+        <section class="kas-summary">
+            <h2>Rekap Kas Kelompok</h2>
+            <div class="kas-cards">
+                <div class="kas-card masuk">
+                    <h3>Total Kas Masuk</h3>
+                    <p class="amount" id="totalMasuk">Rp 0</p>
+                </div>
+                <div class="kas-card keluar">
+                    <h3>Total Kas Keluar</h3>
+                    <p class="amount" id="totalKeluar">Rp 0</p>
+                </div>
+                <div class="kas-card saldo">
+                    <h3>Saldo Kas</h3>
+                    <p class="amount" id="saldo">Rp 0</p>
+                </div>
+            </div>
+        </section>
 
-  <div id="results-header" class="results-header hidden">
-    <h2 id="results-title"></h2>
-  </div>
-  <main id="video-list"></main>
-  <div id="loader" class="hidden">Loading...</div>
-  <div id="error-message" class="error-message hidden"></div>
+        <section class="chart-grid">
+            <div class="chart-card">
+                <h3>Komposisi Arus Kas</h3>
+                <p>Perbandingan total kas masuk dan kas keluar</p>
+                <div class="chart-box">
+                    <canvas id="chartKasKomposisi"></canvas>
+                </div>
+            </div>
+            <div class="chart-card">
+                <h3>Perkembangan Saldo Kas</h3>
+                <p>Saldo berjalan berdasarkan tanggal transaksi</p>
+                <div class="chart-box">
+                    <canvas id="chartKasSaldo"></canvas>
+                </div>
+            </div>
+        </section>
 
-  <!-- Floating Search -->
-  <button id="floating-search" aria-label="Search"><i class="fas fa-search"></i></button>
-  <div id="search-overlay">
-    <div class="overlay-content">
-      <button id="overlay-close" aria-label="Tutup"><i class="fas fa-xmark"></i></button>
-      <form id="overlay-search-form">
-        <input type="text" id="overlay-search-input" placeholder="Cari video...">
-        <button type="submit"><i class="fas fa-search"></i></button>
-      </form>
-    </div>
-  </div>
+        <section class="kas-table-section" id="kas">
+            <div class="section-head">
+                <div>
+                    <h2>Riwayat Transaksi Kas</h2>
+                    <p>Seluruh pencatatan kas masuk dan kas keluar kelompok</p>
+                </div>
+                <span class="tag tag-info" id="jumlahTransaksi">0 transaksi</span>
+            </div>
+            <div class="table-wrapper">
+                <table id="kasTable">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Tanggal</th>
+                            <th>Jenis</th>
+                            <th>Jumlah</th>
+                            <th>Keterangan</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="3"><strong>SALDO AKHIR</strong></td>
+                            <td colspan="2"><strong id="saldoTable">Rp 0</strong></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </section>
+    </main>
 
-  <script src="script.js"></script>
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 Kelompok Bedah Rumah - by Ketua</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/public.js"></script>
 </body>
 </html>

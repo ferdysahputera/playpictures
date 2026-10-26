@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detail Anggota - Bedah Rumah</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Bedah Rumah Kelompok</h1>
+            <nav>
+                <a href="index.html">Beranda Publik</a>
+                <a href="admin/login.html">Login Admin</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="page-hero">
+            <div>
+                <span class="hero-badge" id="badgeAnggota">Anggota</span>
+                <h2 id="namaAnggota">Memuat...</h2>
+                <p>Rincian RAB, material yang sudah masuk, serta sisa bahan bangunan yang belum diterima.</p>
+            </div>
+            <a href="index.html" class="btn-hero">&larr; Kembali ke Beranda</a>
+        </section>
+
+        <section class="stat-grid">
+            <div class="stat-card stat-blue">
+                <span class="stat-label">Total RAB</span>
+                <span class="stat-value" id="totalRAB">Rp 0</span>
+                <span class="stat-note" id="jumlahItemRAB">0 item bahan</span>
+            </div>
+            <div class="stat-card stat-green">
+                <span class="stat-label">Material Masuk</span>
+                <span class="stat-value" id="totalMaterial">Rp 0</span>
+                <span class="stat-note" id="jumlahItemMaterial">0 pengiriman</span>
+            </div>
+            <div class="stat-card stat-amber">
+                <span class="stat-label">Sisa Belum Diterima</span>
+                <span class="stat-value" id="nilaiSisa">Rp 0</span>
+                <span class="stat-note" id="jumlahSisa">0 bahan kurang</span>
+            </div>
+            <div class="stat-card stat-violet">
+                <span class="stat-label">Progres Realisasi</span>
+                <span class="stat-value" id="progresNilai">0%</span>
+                <div class="progress-line"><span id="progresBar" style="width:0%"></span></div>
+            </div>
+        </section>
+
+        <section class="chart-grid">
+            <div class="chart-card">
+                <h3>Progres Volume Material</h3>
+                <p>Persentase volume bahan bangunan yang sudah diterima dibanding RAB</p>
+                <div class="chart-box tall">
+                    <canvas id="chartProgress"></canvas>
+                </div>
+            </div>
+            <div class="chart-card">
+                <h3>Nilai RAB vs Realisasi</h3>
+                <p>Perbandingan nilai anggaran dengan nilai material yang sudah masuk</p>
+                <div class="chart-box tall">
+                    <canvas id="chartNilai"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section class="photo-card">
+            <div class="photo-card-header">
+                <div>
+                    <h3>Foto RAB Fisik</h3>
+                    <p>Dokumen RAB yang dipegang anggota</p>
+                </div>
+                <span class="tag tag-info" id="fotoStatus">Memuat foto...</span>
+            </div>
+            <div class="photo-frame">
+                <img id="fotoRabImg" alt="Foto RAB Fisik" style="display:none;">
+                <div class="photo-empty" id="fotoRabEmpty">Belum ada foto RAB untuk anggota ini.</div>
+            </div>
+        </section>
+
+        <section class="rab-section">
+            <h3>Rencana Anggaran Biaya (RAB)</h3>
+            <div class="table-wrapper">
+                <table id="rabTable">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Nama Bahan Bangunan</th>
+                            <th>Volume</th>
+                            <th>Satuan</th>
+                            <th>Harga Satuan</th>
+                            <th>Jumlah</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="5"><strong>TOTAL RAB</strong></td>
+                            <td><strong id="totalRabTable">Rp 0</strong></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </section>
+
+        <section class="rab-section">
+            <h3>Sisa Bahan Yang Belum Diterima</h3>
+            <div class="table-wrapper">
+                <table id="sisaTable">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Nama Bahan Bangunan</th>
+                            <th>Volume RAB</th>
+                            <th>Sudah Masuk</th>
+                            <th>Sisa</th>
+                            <th>Satuan</th>
+                            <th>Estimasi Nilai Sisa</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="6"><strong>TOTAL ESTIMASI SISA</strong></td>
+                            <td><strong id="totalSisaTable">Rp 0</strong></td>
+                            <td></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </section>
+
+        <section class="material-section">
+            <h3>Riwayat Material Masuk</h3>
+            <div class="table-wrapper">
+                <table id="materialTable">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Tanggal</th>
+                            <th>Nama Bahan</th>
+                            <th>Volume</th>
+                            <th>Satuan</th>
+                            <th>Harga Satuan</th>
+                            <th>Jumlah</th>
+                            <th>Keterangan</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="6"><strong>TOTAL MATERIAL MASUK</strong></td>
+                            <td colspan="2"><strong id="totalMaterialTable">Rp 0</strong></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 Kelompok Bedah Rumah - by Ketua</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/detail.js"></script>
+</body>
+</html>
