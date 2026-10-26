@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bedah Rumah Kelompok - Beranda Publik</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Bedah Rumah Kelompok</h1>
+            <nav>
+                <a href="index.html" class="active">Beranda Publik</a>
+                <a href="admin/login.html">Login Admin</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="page-hero">
+            <div>
+                <span class="hero-badge">Transparansi Anggaran</span>
+                <h2>Progres Bedah Rumah Per Anggota</h2>
+                <p>Pantau RAB, material yang sudah masuk, sisa bahan yang belum diterima, serta arus kas kelompok secara terbuka.</p>
+            </div>
+            <a href="#kas" class="btn-hero">Lihat Arus Kas</a>
+        </section>
+
+        <section>
+            <div class="section-head">
+                <div>
+                    <h2 style="font-size:clamp(1.2rem,2vw,1.5rem);">Data Per Anggota</h2>
+                    <p>Klik kartu anggota untuk melihat rincian RAB, foto RAB fisik, dan grafik</p>
+                </div>
+            </div>
+            <div class="members-grid" id="membersGrid" style="margin-top:1rem;">
+                <p class="empty-state">Memuat data anggota...</p>
+            </div>
+        </section>
+
+        <section class="kas-summary">
+            <h2>Rekap Kas Kelompok</h2>
+            <div class="kas-cards">
+                <div class="kas-card masuk">
+                    <h3>Total Kas Masuk</h3>
+                    <p class="amount" id="totalMasuk">Rp 0</p>
+                </div>
+                <div class="kas-card keluar">
+                    <h3>Total Kas Keluar</h3>
+                    <p class="amount" id="totalKeluar">Rp 0</p>
+                </div>
+                <div class="kas-card saldo">
+                    <h3>Saldo Kas</h3>
+                    <p class="amount" id="saldo">Rp 0</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="chart-grid">
+            <div class="chart-card">
+                <h3>Komposisi Arus Kas</h3>
+                <p>Perbandingan total kas masuk dan kas keluar</p>
+                <div class="chart-box">
+                    <canvas id="chartKasKomposisi"></canvas>
+                </div>
+            </div>
+            <div class="chart-card">
+                <h3>Perkembangan Saldo Kas</h3>
+                <p>Saldo berjalan berdasarkan tanggal transaksi</p>
+                <div class="chart-box">
+                    <canvas id="chartKasSaldo"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section class="kas-table-section" id="kas">
+            <div class="section-head">
+                <div>
+                    <h2>Riwayat Transaksi Kas</h2>
+                    <p>Seluruh pencatatan kas masuk dan kas keluar kelompok</p>
+                </div>
+                <span class="tag tag-info" id="jumlahTransaksi">0 transaksi</span>
+            </div>
+            <div class="table-wrapper">
+                <table id="kasTable">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Tanggal</th>
+                            <th>Jenis</th>
+                            <th>Jumlah</th>
+                            <th>Keterangan</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="3"><strong>SALDO AKHIR</strong></td>
+                            <td colspan="2"><strong id="saldoTable">Rp 0</strong></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 Kelompok Bedah Rumah - by Ketua</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/public.js"></script>
+</body>
+</html>
