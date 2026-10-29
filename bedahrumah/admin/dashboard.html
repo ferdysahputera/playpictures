@@ -232,7 +232,9 @@
             <button class="tab-btn" onclick="openTab(event, 'master')">Master Material</button>
             <button class="tab-btn" onclick="openTab(event, 'rab')">RAB Per Anggota</button>
             <button class="tab-btn" onclick="openTab(event, 'material')">Material Masuk</button>
+            <button class="tab-btn" onclick="openTab(event, 'barangMasuk')">Barang Masuk</button>
             <button class="tab-btn" onclick="openTab(event, 'rekapSisa')">Rekap Sisa Material</button>
+            <button class="tab-btn" onclick="openTab(event, 'galeri')">Galeri Foto</button>
             <button class="tab-btn" onclick="openTab(event, 'kas')">Arus Kas (Masuk/Keluar)</button>
         </div>
 
@@ -518,16 +520,86 @@
             </div>
         </div>
 
+        <!-- Tab Barang Masuk -->
+        <div id="barangMasuk" class="tab-content">
+            <div class="section-header">
+                <div>
+                    <h3>Barang Masuk Berdasarkan Tanggal</h3>
+                    <p>Menampilkan material yang masuk pada tanggal tertentu beserta anggota penerima</p>
+                </div>
+                <div class="filter-inline">
+                    <label for="adminFilterTanggalMasuk">Tanggal</label>
+                    <input type="date" id="adminFilterTanggalMasuk">
+                    <button type="button" class="btn btn-ghost" onclick="resetFilterTanggalMasukAdmin()">Semua</button>
+                </div>
+            </div>
+            <div class="ringkasan-strip" id="adminRingkasanTanggal"></div>
+            <div class="table-wrapper">
+                <table id="adminBarangMasukTable">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Tanggal</th>
+                            <th>Nama Bahan</th>
+                            <th>Volume</th>
+                            <th>Satuan</th>
+                            <th>Penerima</th>
+                            <th>Keterangan</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+
+            <div class="section-header" style="margin-top:0.5rem;">
+                <div>
+                    <h3>Satu Bahan - Siapa Saja Yang Sudah Menerima</h3>
+                    <p>Pilih satu bahan untuk melihat anggota yang sudah menerimanya</p>
+                </div>
+                <div class="filter-inline">
+                    <label for="adminFilterBahan">Bahan</label>
+                    <select id="adminFilterBahan"></select>
+                </div>
+            </div>
+            <div class="ringkasan-strip" id="adminRingkasanBahan"></div>
+            <div class="table-wrapper">
+                <table id="adminPenerimaBahanTable">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Anggota</th>
+                            <th>Total Diterima</th>
+                            <th>Satuan</th>
+                            <th>Jumlah Kiriman</th>
+                            <th>Tanggal Terakhir</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
         <!-- Tab Rekap Sisa -->
         <div id="rekapSisa" class="tab-content">
             <div class="section-header">
                 <div>
-                    <h3>Rekap Sisa Material Keseluruhan</h3>
-                    <p>Dihitung otomatis dari seluruh RAB dan Material Masuk semua anggota</p>
+                    <h3>Rekap Sisa Material Per Anggota</h3>
+                    <p>Pilih anggota terlebih dahulu, lalu rekap sisa material akan dihitung dari RAB dan Material Masuk anggota tersebut</p>
                 </div>
                 <button class="btn btn-primary" onclick="renderRekapSisa()">Refresh Rekap</button>
             </div>
-            <div class="table-wrapper">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="rekapSisaAnggota">Pilih Anggota</label>
+                    <select id="rekapSisaAnggota">
+                        <option value="">-- Pilih Anggota --</option>
+                    </select>
+                </div>
+            </div>
+            <div id="rekapSisaInfoPilih" class="info-pilih">
+                Silahkan pilih anggota terlebih dahulu untuk menampilkan rekap sisa material
+            </div>
+            <div id="rekapSisaTableWrap" class="table-wrapper" style="display:none;">
                 <table id="rekapSisaTable">
                     <thead>
                         <tr>
@@ -547,8 +619,63 @@
                 </table>
             </div>
         </div>
+        <!-- Tab Galeri -->
+        <div id="galeri" class="tab-content">
+            <div class="section-header">
+                <div>
+                    <h3>Galeri Foto Per Anggota</h3>
+                    <p>Tambah foto dokumen/kegiatan anggota. Gambar diambil dari link Google Drive (publik) atau folder Drive.</p>
+                </div>
+                <div style="margin-bottom:1rem;" class="print-actions">
+                    <button type="button" class="btn btn-ghost" onclick="loadDriveImagesAdmin()">Muat Foto dari Folder Drive</button>
+                    <span id="driveStatusAdmin" style="margin-left:0.8rem;font-size:0.85rem;color:var(--text-secondary);"></span>
+                </div>
+            </div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="galeriAnggota">Pilih Anggota</label>
+                    <select id="galeriAnggota">
+                        <option value="">-- Pilih Anggota --</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="galeriTanggal">Tanggal</label>
+                    <input type="date" id="galeriTanggal">
+                </div>
+                <div class="form-group">
+                    <label for="galeriKeterangan">Keterangan</label>
+                    <input type="text" id="galeriKeterangan" placeholder="Contoh: RAB, hasil bangun, dll">
+                </div>
+                <div class="form-group">
+                    <label for="galeriUrl">Link Gambar Google Drive</label>
+                    <input type="text" id="galeriUrl" placeholder="https://drive.google.com/thumbnail?id=FILE_ID&sz=w800">
+                </div>
+                <div class="form-group">
+                    <label for="galeriFileName">Nama File</label>
+                    <input type="text" id="galeriFileName" placeholder="foto1.jpg">
+                </div>
+            </div>
+            <div class="form-actions">
+                <button class="btn btn-success" onclick="tambahGaleri()">Tambah Foto</button>
+                <button class="btn btn-ghost" onclick="resetFormGaleri()">Bersihkan Form</button>
+            </div>
+            <div id="galeriInfoPilih" class="info-pilih">
+                Silahkan pilih anggota terlebih dahulu untuk menampilkan galeri foto
+            </div>
+            <div id="galeriGridWrap" class="table-wrapper" style="display:none;">
+                <div class="galeri-grid" id="galeriGrid"></div>
+            </div>
+        </div>
 
-        <!-- Tab Kas -->
+        <!-- Lightbox Full Foto (Admin) -->
+        <div id="galeriLightbox" class="galeri-lightbox" onclick="tutupGaleriLightbox()">
+            <div class="galeri-lightbox-content" onclick="event.stopPropagation()">
+                <button class="galeri-lightbox-close" onclick="tutupGaleriLightbox()">&times;</button>
+                <img id="galeriLightboxImg" src="" alt="Full foto">
+                <div id="galeriLightboxCaption" class="galeri-lightbox-caption"></div>
+            </div>
+        </div>
+
         <div id="kas" class="tab-content">
             <div class="section-header">
                 <div>
@@ -660,6 +787,19 @@
             }
             if (tabName === 'material' && typeof renderMaterial === 'function') {
                 renderMaterial();
+            }
+            if (tabName === 'barangMasuk') {
+                if (typeof renderBarangMasukAdmin === 'function') {
+                    renderBarangMasukAdmin();
+                }
+                if (typeof renderPenerimaBahanAdmin === 'function') {
+                    renderPenerimaBahanAdmin();
+                }
+            }
+            if (tabName === 'galeri') {
+                if (typeof renderGaleri === 'function') {
+                    renderGaleri();
+                }
             }
         }
     </script>

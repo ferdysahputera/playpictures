@@ -33,8 +33,13 @@ document.addEventListener('DOMContentLoaded', async function() {
         return String(m.anggota || '').trim() === String(namaAnggota).trim();
     });
 
+    const galeriAnggota = (Array.isArray(data.galeri) ? data.galeri : []).filter(function(g) {
+        return String(g.anggota || '').trim() === String(namaAnggota).trim();
+    });
+
     renderRAB(rabAnggota);
     renderMaterial(materialAnggota);
+    renderGaleri(galeriAnggota);
     renderSisa(rabAnggota, materialAnggota);
 });
 
@@ -285,6 +290,54 @@ function renderSisa(rabAnggota, materialAnggota) {
     gambarGrafik(list, totalMasuk, nilaiSisaTotal);
 }
 
+/* ---------------- GALERI FOTO ANGGOTA (HALAMAN DETAIL) ---------------- */
+
+function renderGaleri(galeriAnggota) {
+    const grid = document.getElementById('galeriGrid');
+    if (!grid) return;
+    grid.innerHTML = '';
+
+    const foto = (galeriAnggota || []).slice().sort(function(a, b) {
+        const ta = tanggalKey(a.tanggal || '');
+        const tb = tanggalKey(b.tanggal || '');
+        if (ta !== tb) return tb.localeCompare(ta);
+        return 0;
+    });
+
+    if (foto.length === 0) {
+        grid.innerHTML = '<p class="empty-state">Belum ada foto galeri untuk anggota ini.</p>';
+        return;
+    }
+
+    foto.forEach(function(f) {
+        const item = document.createElement('div');
+        item.className = 'galeri-item';
+        const namaSafe = String(f.fileName || f.url || '-').replace(/'/g, "\\'");
+        const urlSafe = String(f.url || '').replace(/'/g, "\\'");
+        const keteranganSafe = String(f.keterangan || '-').replace(/'/g, "\\'");
+        item.innerHTML = `
+            <div class="galeri-thumb">
+                <img src="${escapeHtml(urlSafe)}" alt="${escapeHtml(namaSafe)}" crossorigin="anonymous" onerror="this.onerror=null;this.src='https://via.placeholder.com/400x300?text=Gambar+tidak+tersedia'">
+            </div>
+            <div class="galeri-info">
+                <div class="galeri-nama">${escapeHtml(namaSafe || '-')}</div>
+                <div class="galeri-tanggal">${escapeHtml(formatTanggal(f.tanggal || '-'))}</div>
+                <div class="galeri-ket">${escapeHtml(keteranganSafe)}</div>
+            </div>
+        `;
+        grid.appendChild(item);
+
+        const thumb = item.querySelector('.galeri-thumb');
+        if (thumb) {
+            thumb.style.cursor = 'pointer';
+            thumb.title = 'Klik untuk lihat full foto';
+            thumb.addEventListener('click', function() {
+                bukaGaleriLightbox(driveFullSizeUrl(f.url || ''), f.fileName || f.url || '-');
+            });
+        }
+    });
+}
+
 /* ---------------- GRAFIK ---------------- */
 
 function potongLabel(teks, maks) {
@@ -418,10 +471,3 @@ function gambarGrafik(list, nilaiMasuk, nilaiSisa) {
 }
 
 /* ---------------- UTIL ---------------- */
-
-function formatTanggal(tanggal) {
-    if (!tanggal) return '-';
-    const d = new Date(tanggal);
-    if (isNaN(d.getTime())) return String(tanggal);
-    return d.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' });
-}

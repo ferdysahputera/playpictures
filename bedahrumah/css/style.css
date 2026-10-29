@@ -1018,3 +1018,260 @@ main.container {
 #kasTable td:nth-child(4) {
     white-space: nowrap;
 }
+
+/* ============================================================
+   BARANG MASUK - filter tanggal & rekap per bahan
+   ============================================================ */
+
+.filter-inline {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+}
+
+.filter-inline label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.filter-inline input[type="date"],
+.filter-inline select {
+    border-radius: 12px;
+    border: 1px solid rgba(148, 163, 184, 0.5);
+    padding: 0.55rem 0.8rem;
+    font-size: 0.95rem;
+    background: #fff;
+    color: var(--text-primary);
+}
+
+.filter-inline input[type="date"]:focus,
+.filter-inline select:focus {
+    outline: none;
+    border-color: rgba(37, 99, 235, 0.8);
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.08);
+}
+
+.ringkasan-strip {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+}
+
+.ringkasan-strip:empty {
+    display: none;
+}
+
+.ringkasan-chip {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.4rem;
+    padding: 0.45rem 0.9rem;
+    border-radius: 12px;
+    background: rgba(37, 99, 235, 0.08);
+    border: 1px solid rgba(37, 99, 235, 0.16);
+    font-size: 0.88rem;
+    color: var(--text-secondary);
+}
+
+.ringkasan-chip strong {
+    color: var(--text-primary);
+    font-size: 0.98rem;
+}
+
+.date-group-row td {
+    background: linear-gradient(90deg, rgba(37, 99, 235, 0.12), rgba(37, 99, 235, 0.04)) !important;
+    color: #1e40af;
+    font-weight: 700;
+    font-size: 0.9rem;
+    letter-spacing: 0.01em;
+}
+
+.empty-row td {
+    text-align: center;
+    color: var(--text-secondary);
+    padding: 1.4rem 1rem;
+}
+
+@media (max-width: 640px) {
+    .filter-inline {
+        width: 100%;
+    }
+
+    .filter-inline input[type="date"],
+    .filter-inline select {
+        flex: 1 1 160px;
+    }
+}
+
+/* ============================================================
+   GALERI FOTO PER ANGGOTA
+   ============================================================ */
+
+.galeri-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1rem;
+    padding: 1rem 0;
+}
+
+.galeri-item {
+    background: var(--card);
+    border-radius: 14px;
+    overflow: hidden;
+    border: 1px solid rgba(226, 232, 240, 0.8);
+    box-shadow: 0 20px 40px -20px rgba(15, 23, 42, 0.1);
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.galeri-item:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 30px 60px -30px rgba(15, 23, 42, 0.15);
+    border-color: rgba(37, 99, 235, 0.4);
+}
+
+.galeri-thumb {
+    width: 100%;
+    height: 160px;
+    overflow: hidden;
+    background: #eef2ff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.galeri-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.galeri-info {
+    padding: 0.9rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.galeri-nama {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.galeri-tanggal {
+    font-size: 0.82rem;
+    color: var(--text-secondary);
+}
+
+.galeri-ket {
+    font-size: 0.88rem;
+    color: var(--text-secondary);
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.btn-sm {
+    padding: 0.35rem 0.85rem;
+    font-size: 0.85rem;
+    align-self: flex-start;
+    margin-top: 0.2rem;
+}
+
+/* Galeri di halaman detail anggota */
+.galeri-detail {
+    background: var(--card);
+    border-radius: 18px;
+    padding: clamp(1.1rem, 2.4vw, 1.7rem);
+    border: 1px solid rgba(226, 232, 240, 0.9);
+    box-shadow: 0 40px 80px -55px rgba(15, 23, 42, 0.95);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.galeri-detail h3 {
+    font-size: clamp(1.2rem, 2vw, 1.6rem);
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.galeri-detail h3::before {
+    content: "";
+    width: 6px;
+    height: 1.6rem;
+    border-radius: 999px;
+    background: linear-gradient(180deg, var(--primary) 0%, rgba(37, 99, 235, 0.4) 100%);
+}
+
+/* Lightbox full foto */
+.galeri-lightbox {
+    display: none;
+    position: fixed;
+    z-index: 10000;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.92);
+    backdrop-filter: blur(6px);
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    box-sizing: border-box;
+    animation: fadeIn 0.25s ease;
+}
+.galeri-lightbox-content {
+    position: relative;
+    max-width: 96vw;
+    max-height: 88vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.galeri-lightbox img {
+    max-width: 100%;
+    max-height: 82vh;
+    object-fit: contain;
+    display: block;
+    border-radius: 10px;
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.6);
+    animation: zoomIn 0.3s ease;
+}
+.galeri-lightbox-close {
+    position: absolute;
+    top: -42px;
+    right: 0;
+    font-size: 44px;
+    line-height: 1;
+    color: #fff;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    z-index: 1;
+}
+.galeri-lightbox-caption {
+    margin-top: 0.8rem;
+    color: #fff;
+    font-size: 0.95rem;
+    text-align: center;
+    max-width: 80vw;
+    padding: 0 1rem;
+}
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+@keyframes zoomIn {
+    from { opacity: 0; transform: scale(0.92); }
+    to { opacity: 1; transform: scale(1); }
+}

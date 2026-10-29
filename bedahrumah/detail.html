@@ -26,7 +26,6 @@
                 <span class="hero-badge" id="badgeAnggota">Anggota</span>
                 <h2 id="namaAnggota">Memuat...</h2>
                 <p>Rincian RAB, material yang sudah masuk, serta sisa bahan bangunan yang belum diterima.</p>
-                <p><span color="#ff0000"><i>* Jumlah RAB kemungkinan ada perbedaan dengan RAB fisik, karena faktor pembulatan.</i></span></p>
             </div>
             <a href="index.html" class="btn-hero">&larr; Kembali ke Beranda</a>
         </section>
@@ -164,6 +163,21 @@
                 </table>
             </div>
         </section>
+
+        <section class="galeri-detail" id="galeriDetail">
+            <h3>Galeri Foto Anggota</h3>
+            <p>Dokumentasi foto dari Google Drive yang terkait dengan anggota ini.</p>
+            <div class="galeri-grid" id="galeriGrid"></div>
+        </section>
+
+        <!-- Lightbox Full Foto (Detail) -->
+        <div id="galeriLightbox" class="galeri-lightbox" onclick="tutupGaleriLightbox()">
+            <div class="galeri-lightbox-content" onclick="event.stopPropagation()">
+                <button class="galeri-lightbox-close" onclick="tutupGaleriLightbox()">&times;</button>
+                <img id="galeriLightboxImg" src="" alt="Full foto">
+                <div id="galeriLightboxCaption" class="galeri-lightbox-caption"></div>
+            </div>
+        </div>
     </main>
 
     <footer>

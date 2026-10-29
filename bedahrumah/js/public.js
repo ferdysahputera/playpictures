@@ -1,5 +1,7 @@
 let chartKasKomposisi = null;
 let chartKasSaldo = null;
+let dataMasukPublik = { material: [], anggota: [] };
+let bahanSelectTerinisialisasi = false;
 
 document.addEventListener('DOMContentLoaded', async function() {
     const data = await fetchData();
@@ -10,8 +12,160 @@ document.addEventListener('DOMContentLoaded', async function() {
     const kas = Array.isArray(data.kas) ? data.kas : [];
 
     renderAnggota(anggota, rab, material);
+
+    dataMasukPublik.material = material;
+    dataMasukPublik.anggota = anggota;
+    inisialisasiBarangMasuk();
+
     renderKas(kas);
 });
+
+/* ---------------- BARANG MASUK ---------------- */
+
+function inisialisasiBarangMasuk() {
+    const filterTanggal = document.getElementById('filterTanggalMasuk');
+    if (filterTanggal) {
+        filterTanggal.addEventListener('change', renderBarangMasuk);
+    }
+    const filterBahan = document.getElementById('filterBahanMasuk');
+    if (filterBahan) {
+        filterBahan.addEventListener('change', renderPenerimaBahan);
+    }
+    renderBarangMasuk();
+    renderPenerimaBahan();
+}
+
+function resetFilterTanggalMasuk() {
+    const filterTanggal = document.getElementById('filterTanggalMasuk');
+    if (filterTanggal) filterTanggal.value = '';
+    renderBarangMasuk();
+}
+
+function renderBarangMasuk() {
+    const tbody = document.querySelector('#barangMasukTable tbody');
+    const ringkasan = document.getElementById('ringkasanTanggalMasuk');
+    if (!tbody) return;
+
+    const filterEl = document.getElementById('filterTanggalMasuk');
+    const filterTanggal = filterEl ? filterEl.value : '';
+    const rows = barisBarangMasuk(dataMasukPublik.material, filterTanggal);
+    tbody.innerHTML = '';
+
+    const penerimaUnik = {};
+    let totalNilai = 0;
+    const jumlahPerTanggal = {};
+
+    rows.forEach(function(r) {
+        penerimaUnik[r.anggota] = true;
+        totalNilai += r.nilai;
+        jumlahPerTanggal[r.tanggalKey] = (jumlahPerTanggal[r.tanggalKey] || 0) + 1;
+    });
+
+    if (ringkasan) {
+        const labelTanggal = filterTanggal ? formatTanggal(filterTanggal) : 'Semua tanggal';
+        ringkasan.innerHTML = `
+            <span class="ringkasan-chip">Tanggal <strong>${escapeHtml(labelTanggal)}</strong></span>
+            <span class="ringkasan-chip">Pengiriman <strong>${rows.length}</strong></span>
+            <span class="ringkasan-chip">Penerima <strong>${Object.keys(penerimaUnik).length}</strong></span>
+            <span class="ringkasan-chip">Total nilai <strong>${formatRupiah(totalNilai)}</strong></span>
+        `;
+    }
+
+    if (rows.length === 0) {
+        tbody.innerHTML = `<tr class="empty-row"><td colspan="7">${filterTanggal ? 'Belum ada barang masuk pada tanggal ini.' : 'Belum ada data barang masuk.'}</td></tr>`;
+        return;
+    }
+
+    let grupTanggal = null;
+    let nomor = 0;
+
+    rows.forEach(function(r) {
+        if (r.tanggalKey !== grupTanggal) {
+            grupTanggal = r.tanggalKey;
+            const groupRow = document.createElement('tr');
+            groupRow.className = 'date-group-row';
+            groupRow.innerHTML = `<td colspan="7">${escapeHtml(formatTanggal(r.tanggal))} &middot; ${jumlahPerTanggal[grupTanggal] || 0} pengiriman</td>`;
+            tbody.appendChild(groupRow);
+        }
+        nomor += 1;
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${nomor}</td>
+            <td>${escapeHtml(formatTanggal(r.tanggal))}</td>
+            <td>${escapeHtml(r.namaMaterial)}</td>
+            <td>${r.volume}</td>
+            <td>${escapeHtml(r.satuan)}</td>
+            <td>${escapeHtml(r.anggota)}</td>
+            <td>${escapeHtml(r.keterangan)}</td>
+        `;
+        tbody.appendChild(row);
+    });
+}
+
+function renderPenerimaBahan() {
+    const select = document.getElementById('filterBahanMasuk');
+    const tbody = document.querySelector('#penerimaBahanTable tbody');
+    const ringkasan = document.getElementById('ringkasanPenerimaBahan');
+    if (!select || !tbody) return;
+
+    const daftar = daftarNamaBahan(dataMasukPublik.material, []);
+    const terpilih = select.value;
+    select.innerHTML = '<option value="">-- Pilih Bahan --</option>';
+    daftar.forEach(function(nama) {
+        const opt = document.createElement('option');
+        opt.value = nama;
+        opt.textContent = nama;
+        select.appendChild(opt);
+    });
+
+    if (!bahanSelectTerinisialisasi && daftar.length > 0) {
+        select.value = daftar[0];
+        bahanSelectTerinisialisasi = true;
+    } else if (terpilih && daftar.indexOf(terpilih) !== -1) {
+        select.value = terpilih;
+    }
+
+    const namaBahan = select.value;
+    tbody.innerHTML = '';
+
+    if (!namaBahan) {
+        if (ringkasan) ringkasan.innerHTML = '';
+        tbody.innerHTML = '<tr class="empty-row"><td colspan="6">Pilih satu bahan untuk melihat anggota yang sudah menerima.</td></tr>';
+        return;
+    }
+
+    const penerima = kelompokkanPenerimaBahan(dataMasukPublik.material, namaBahan);
+    const totalVolume = penerima.reduce(function(total, p) { return total + p.volume; }, 0);
+    const totalKiriman = penerima.reduce(function(total, p) { return total + p.kiriman; }, 0);
+    const satuan = penerima.length > 0 ? (penerima[0].satuan || '-') : '-';
+
+    if (ringkasan) {
+        ringkasan.innerHTML = `
+            <span class="ringkasan-chip">Bahan <strong>${escapeHtml(namaBahan)}</strong></span>
+            <span class="ringkasan-chip">Total diterima <strong>${totalVolume} ${escapeHtml(satuan)}</strong></span>
+            <span class="ringkasan-chip">Anggota <strong>${penerima.length}</strong></span>
+            <span class="ringkasan-chip">Pengiriman <strong>${totalKiriman}</strong></span>
+        `;
+    }
+
+    if (penerima.length === 0) {
+        tbody.innerHTML = '<tr class="empty-row"><td colspan="6">Belum ada anggota yang menerima bahan ini.</td></tr>';
+        return;
+    }
+
+    penerima.forEach(function(p, index) {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${index + 1}</td>
+            <td>${escapeHtml(p.anggota)}</td>
+            <td><strong>${p.volume}</strong></td>
+            <td>${escapeHtml(p.satuan || '-')}</td>
+            <td>${p.kiriman}</td>
+            <td>${p.terakhir ? escapeHtml(formatTanggal(p.terakhir)) : '-'}</td>
+        `;
+        tbody.appendChild(row);
+    });
+}
 
 /* ---------------- KARTU ANGGOTA ---------------- */
 
@@ -46,7 +200,7 @@ function renderAnggota(anggota, rab, material) {
             <div class="member-top">
                 <div class="member-avatar">${inisial(nama)}</div>
                 <div>
-                    <h3 style="margin:0;">${nama}</h3>
+                    <h3 style="margin:0;" title="${escapeHtml(nama)}">${escapeHtml(namaSingkat(nama))}</h3>
                     <p style="margin:0;font-size:0.85rem;">Anggota #${a.noUrut || '-'}</p>
                 </div>
             </div>
@@ -79,11 +233,10 @@ function inisial(nama) {
 
 function urutkanKas(kas) {
     return kas.slice().sort(function(a, b) {
-        const da = new Date(a.tanggal).getTime();
-        const db = new Date(b.tanggal).getTime();
-        const na = isNaN(da) ? 0 : da;
-        const nb = isNaN(db) ? 0 : db;
-        return na - nb;
+        const ka = tanggalKey(a.tanggal);
+        const kb = tanggalKey(b.tanggal);
+        if (ka !== kb) return ka.localeCompare(kb);
+        return (parseFloat(a.jumlah) || 0) - (parseFloat(b.jumlah) || 0);
     });
 }
 
@@ -263,10 +416,3 @@ function gambarGrafikKas(kas, masuk, keluar) {
 }
 
 /* ---------------- UTIL ---------------- */
-
-function formatTanggal(tanggal) {
-    if (!tanggal) return '-';
-    const d = new Date(tanggal);
-    if (isNaN(d.getTime())) return String(tanggal);
-    return d.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' });
-}

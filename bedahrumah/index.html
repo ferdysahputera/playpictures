@@ -15,6 +15,7 @@
             <h1>Bedah Rumah Kelompok</h1>
             <nav>
                 <a href="index.html" class="active">Beranda Publik</a>
+                <a href="#barangMasuk">Barang Masuk</a>
                 <a href="admin/login.html">Login Admin</a>
             </nav>
         </div>
@@ -26,7 +27,6 @@
                 <span class="hero-badge">Transparansi Anggaran</span>
                 <h2>Progres Bedah Rumah Per Anggota</h2>
                 <p>Pantau RAB, material yang sudah masuk, sisa bahan yang belum diterima, serta arus kas kelompok secara terbuka.</p>
-                <p><span color="#ff0000"><i>* Jumlah RAB kemungkinan ada perbedaan dengan RAB fisik, karena faktor pembulatan.</i></span></p>
             </div>
             <a href="#kas" class="btn-hero">Lihat Arus Kas</a>
         </section>
@@ -40,6 +40,66 @@
             </div>
             <div class="members-grid" id="membersGrid" style="margin-top:1rem;">
                 <p class="empty-state">Memuat data anggota...</p>
+            </div>
+        </section>
+
+        <section class="kas-table-section" id="barangMasuk">
+            <div class="section-head">
+                <div>
+                    <h2>Barang Masuk</h2>
+                    <p>Material yang sudah diterima anggota, dikelompokkan berdasarkan tanggal</p>
+                </div>
+                <div class="filter-inline">
+                    <label for="filterTanggalMasuk">Tanggal</label>
+                    <input type="date" id="filterTanggalMasuk">
+                    <button type="button" class="btn btn-ghost" onclick="resetFilterTanggalMasuk()">Semua</button>
+                </div>
+            </div>
+            <div class="ringkasan-strip" id="ringkasanTanggalMasuk"></div>
+            <div class="table-wrapper">
+                <table id="barangMasukTable">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Tanggal</th>
+                            <th>Nama Bahan</th>
+                            <th>Volume</th>
+                            <th>Satuan</th>
+                            <th>Penerima</th>
+                            <th>Keterangan</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="kas-table-section" id="penerimaBahan">
+            <div class="section-head">
+                <div>
+                    <h2>Siapa Saja Yang Sudah Menerima</h2>
+                    <p>Pilih satu bahan untuk melihat anggota yang sudah menerimanya</p>
+                </div>
+                <div class="filter-inline">
+                    <label for="filterBahanMasuk">Bahan</label>
+                    <select id="filterBahanMasuk"></select>
+                </div>
+            </div>
+            <div class="ringkasan-strip" id="ringkasanPenerimaBahan"></div>
+            <div class="table-wrapper">
+                <table id="penerimaBahanTable">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Anggota</th>
+                            <th>Total Diterima</th>
+                            <th>Satuan</th>
+                            <th>Jumlah Kiriman</th>
+                            <th>Tanggal Terakhir</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
             </div>
         </section>
 
