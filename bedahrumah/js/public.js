@@ -1,6 +1,6 @@
 let chartKasKomposisi = null;
 let chartKasSaldo = null;
-let dataMasukPublik = { material: [], anggota: [] };
+let dataMasukPublik = { material: [], anggota: [], rab: [] };
 let bahanSelectTerinisialisasi = false;
 
 document.addEventListener('DOMContentLoaded', async function() {
@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     dataMasukPublik.material = material;
     dataMasukPublik.anggota = anggota;
+    dataMasukPublik.rab = rab;
     inisialisasiBarangMasuk();
 
     renderKas(kas);
@@ -139,12 +140,27 @@ function renderPenerimaBahan() {
     const totalKiriman = penerima.reduce(function(total, p) { return total + p.kiriman; }, 0);
     const satuan = penerima.length > 0 ? (penerima[0].satuan || '-') : '-';
 
+    // Hitung kurangnya (RAB - masuk) per anggota untuk bahan ini.
+    const kurangMap = {};
+    dataMasukPublik.rab.forEach(function(r) {
+        if (String(r.namaMaterial || '').trim().toLowerCase() !== String(namaBahan).trim().toLowerCase()) return;
+        const volRab = parseFloat(r.volume) || 0;
+        const key = String(r.anggota || '').trim().toLowerCase();
+        kurangMap[key] = (kurangMap[key] || 0) + volRab;
+    });
+    const totalKurang = penerima.reduce(function(total, p) {
+        const masuk = parseFloat(p.volume) || 0;
+        const rab = kurangMap[String(p.anggota || '').trim().toLowerCase()] || 0;
+        return total + Math.max(0, rab - masuk);
+    }, 0);
+
     if (ringkasan) {
         ringkasan.innerHTML = `
             <span class="ringkasan-chip">Bahan <strong>${escapeHtml(namaBahan)}</strong></span>
             <span class="ringkasan-chip">Total diterima <strong>${totalVolume} ${escapeHtml(satuan)}</strong></span>
             <span class="ringkasan-chip">Anggota <strong>${penerima.length}</strong></span>
             <span class="ringkasan-chip">Pengiriman <strong>${totalKiriman}</strong></span>
+            <span class="ringkasan-chip">Total kurang <strong>${totalKurang} ${escapeHtml(satuan)}</strong></span>
         `;
     }
 
@@ -154,6 +170,11 @@ function renderPenerimaBahan() {
     }
 
     penerima.forEach(function(p, index) {
+        const masuk = parseFloat(p.volume) || 0;
+        const rab = kurangMap[String(p.anggota || '').trim().toLowerCase()] || 0;
+        const kurang = Math.max(0, rab - masuk);
+        const kurangClass = kurang > 0 ? 'tag-warn' : 'tag-ok';
+        const kurangLabel = kurang > 0 ? 'Kurang ' + kurang + ' ' + (satuan || '') : 'Lengkap';
         const row = document.createElement('tr');
         row.innerHTML = `
             <td>${index + 1}</td>
@@ -161,6 +182,7 @@ function renderPenerimaBahan() {
             <td><strong>${p.volume}</strong></td>
             <td>${escapeHtml(p.satuan || '-')}</td>
             <td>${p.kiriman}</td>
+            <td><span class="tag ${kurangClass}">${kurangLabel}</span></td>
             <td>${p.terakhir ? escapeHtml(formatTanggal(p.terakhir)) : '-'}</td>
         `;
         tbody.appendChild(row);
