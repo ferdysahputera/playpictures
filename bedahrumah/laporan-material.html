@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laporan Material Masuk - Bedah Rumah</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        :root {
+            --ink: #0f172a;
+            --muted: #64748b;
+            --line: #e2e8f0;
+            --brand: #2563eb;
+            --brand-dark: #1d4ed8;
+            --green: #16a34a;
+        }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+            background: #f1f5f9;
+            color: var(--ink);
+        }
+        .container { max-width: 950px; margin: 0 auto; padding: 1.2rem 1rem; }
+
+        /* ---------- LOADING OVERLAY ---------- */
+        #loadingOverlay {
+            position: fixed; inset: 0; z-index: 10000;
+            background: #ffffff;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            font-family: inherit;
+        }
+        #loadingOverlay.hidden {
+            opacity: 0; transition: opacity 0.4s ease;
+            pointer-events: none;
+        }
+        #loadingOverlay .brand {
+            font-size: 1.5rem; font-weight: 800; color: var(--brand);
+            margin-bottom: 0.25rem; letter-spacing: 0.02em;
+        }
+        #loadingOverlay .sub { color: var(--muted); font-size: 0.95rem; margin-bottom: 1.5rem; }
+        #loadingBarWrap {
+            width: clamp(260px, 40vw, 420px); height: 10px;
+            background: #e2e8f0; border-radius: 6px; overflow: hidden;
+            border: 1px solid #cbd5e1;
+        }
+        #loadingBar {
+            height: 100%; width: 0%; background: linear-gradient(90deg, var(--brand), var(--green));
+            border-radius: 6px; transition: width 0.3s ease;
+        }
+        #loadingPct { margin-top: 0.75rem; font-size: 0.9rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+        /* ---------- HEADER (minimalis) ---------- */
+        .laporan-header {
+            background: #fff;
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            padding: 1.1rem 1.4rem;
+            margin-bottom: 1rem;
+        }
+        .laporan-header .head-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        .laporan-header .head-text h1 {
+            margin: 0;
+            font-size: 1.8rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            line-height: 1.15;
+            color: #111827;
+        }
+        .laporan-header .head-text .sub {
+            margin: 0.25rem 0 0;
+            color: var(--muted);
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+        .laporan-header .head-badge {
+            display: none;
+        }
+        @media (max-width: 640px) {
+            .laporan-header { padding: 0.9rem 1.1rem; }
+            .laporan-header .head-text h1 { font-size: 1.35rem; }
+            .laporan-header .head-text .sub { font-size: 0.84rem; }
+        }
+
+        /* ---------- CONTROLS ---------- */
+        .laporan-controls {
+            display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap;
+            margin-bottom: 0.75rem;
+            background: #fff; padding: 0.75rem 1rem;
+            border-radius: 10px; border: 1px solid var(--line);
+        }
+        .laporan-controls label { font-size: 0.8rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; margin: 0; }
+        .laporan-controls select {
+            border: 1px solid var(--line); background: #fff; color: var(--ink);
+            padding: 0.45rem 0.7rem; border-radius: 8px; font-size: 0.9rem; min-width: 170px;
+        }
+        .download-btn {
+            background: linear-gradient(135deg, var(--brand-dark) 0%, var(--brand) 100%);
+            color: #fff; border: none; padding: 0.45rem 0.95rem; border-radius: 8px;
+            font-weight: 700; font-size: 0.85rem; cursor: pointer;
+            box-shadow: 0 8px 16px -8px rgba(37,99,235,0.35);
+            transition: transform 0.15s, filter 0.15s;
+        }
+        .download-btn:hover { transform: translateY(-1px); filter: brightness(1.08); }
+        .download-btn:active { transform: translateY(0); }
+        .download-btn.jpg { background: linear-gradient(135deg, #0f172a 0%, #334155 100%); box-shadow: 0 8px 16px -8px rgba(15,23,42,0.35); }
+
+        /* ---------- TOTAL STRIP ---------- */
+        .total-strip { display: flex; gap: 0.75rem; margin-top: 0.5rem; flex-wrap: wrap; }
+        .total-chip {
+            background: #fff; border: 1px solid var(--line); padding: 0.55rem 0.9rem;
+            border-radius: 10px; min-width: 130px; box-shadow: 0 4px 12px -6px rgba(15,23,42,0.03);
+        }
+        .total-chip .label { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 0.2rem; display: block; }
+        .total-chip .nilai { font-size: 1.05rem; font-weight: 800; color: var(--ink); }
+
+        /* ---------- TABLE ---------- */
+        .laporan-table-wrap {
+            width: 100%; overflow-x: auto;
+            border: 1px solid var(--line); border-radius: 10px; background: #fff;
+            margin-top: 0.5rem;
+        }
+        table.laporan-table {
+            width: 100%; border-collapse: collapse; min-width: 600px;
+            font-size: 0.86rem;
+        }
+        table.laporan-table thead th {
+            background: #f8fafc; text-align: left; color: var(--muted);
+            font-weight: 700; font-size: 0.74rem; padding: 0.62rem 0.8rem;
+            border-bottom: 2px solid var(--line); white-space: nowrap;
+            text-transform: uppercase; letter-spacing: 0.03em;
+            cursor: pointer; user-select: none; position: relative;
+            font-family: ui-sans-serif, system-ui, sans-serif;
+        }
+        table.laporan-table thead th:hover { background: #f1f5f9; color: var(--brand-dark); }
+        table.laporan-table thead th.sortable::after {
+            content: " ↕"; font-size: 0.65rem; opacity: 0.35; margin-left: 0.25rem; color: #64748b;
+        }
+        table.laporan-table thead th.sort-asc::after {
+            content: " ↑"; opacity: 1; color: var(--brand-dark);
+        }
+        table.laporan-table thead th.sort-desc::after {
+            content: " ↓"; opacity: 1; color: var(--brand-dark);
+        }
+        table.laporan-table tbody td {
+            padding: 0.55rem 0.8rem; border-bottom: 1px solid #f1f5f9; color: var(--ink);
+            vertical-align: middle;
+        }
+        table.laporan-table tbody tr:nth-child(even) td { background: #fafbfc; }
+        table.laporan-table tbody tr:hover td { background: #eef4ff; }
+        table.laporan-table tbody tr.lengkap td { background: #f0fdf4 !important; color: #166534; }
+        table.laporan-table tbody tr.lengkap:hover td { background: #dcfce7 !important; }
+        table.laporan-table tbody tr.kosong td { color: #94a3b8; }
+
+        /* Nama clickable */
+        .nama-btn {
+            background: none; border: none; padding: 0; margin: 0;
+            color: var(--brand-dark); font: inherit; font-weight: 700;
+            cursor: pointer; text-align: left; text-decoration: underline;
+            text-decoration-color: transparent; transition: text-decoration-color 0.15s;
+        }
+        .nama-btn:hover { text-decoration-color: var(--brand-dark); }
+        tr.lengkap .nama-btn { color: #15803d; }
+        .info-btn {
+            background: none;
+            border: none;
+            padding: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--muted);
+        }
+        .info-btn:hover svg circle,
+        .info-btn:hover svg path {
+            stroke: var(--brand-dark);
+        }
+
+        .badge-kurang {
+            display: inline-block; padding: 0.15rem 0.55rem; border-radius: 999px;
+            font-size: 0.72rem; font-weight: 700; white-space: nowrap;
+        }
+        .badge-kurang-tidak { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
+        .badge-kurang-ada { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+
+        .empty-state { text-align: center; padding: 3rem 1rem; color: var(--muted); }
+
+        /* ---------- POPUP RAB ---------- */
+        .rab-modal-overlay {
+            display: none; position: fixed; inset: 0;
+            background: rgba(15,23,42,0.55); backdrop-filter: blur(3px);
+            z-index: 10000; align-items: center; justify-content: center;
+            padding: 1rem; box-sizing: border-box;
+        }
+        .rab-modal-overlay.active { display: flex; }
+        .rab-modal {
+            background: #fff; border-radius: 14px; width: 100%;
+            max-width: 700px; max-height: 88vh; display: flex;
+            flex-direction: column; overflow: hidden;
+            box-shadow: 0 30px 60px -20px rgba(15,23,42,0.45);
+            animation: rabFade 0.18s ease;
+        }
+        @keyframes rabFade {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .rab-modal-header {
+            padding: 0.9rem 1.1rem; background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+            color: #fff; display: flex; justify-content: space-between; align-items: center; gap: 1rem;
+        }
+        .rab-modal-header h3 { margin: 0; font-size: 1rem; font-weight: 800; }
+        .rab-modal-close {
+            background: transparent; border: none; color: #fff; font-size: 1.7rem;
+            line-height: 1; cursor: pointer; padding: 0 0.2rem;
+        }
+        .rab-modal-body { padding: 0.9rem 1.1rem; overflow: auto; }
+        .rab-photo {
+            border: 1px solid var(--line); border-radius: 10px; background: #f8fafc;
+            margin-bottom: 0.9rem; text-align: center; overflow: hidden;
+        }
+        .rab-photo img { max-width: 100%; height: auto; display: block; margin: 0 auto; }
+        .rab-photo .photo-empty {
+            padding: 2rem 1rem; color: var(--muted); font-size: 0.85rem;
+        }
+        .rab-photo .photo-label {
+            font-size: 0.7rem; font-weight: 800; color: var(--muted);
+            text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.5rem; display: block;
+        }
+        .rab-modal table {
+            width: 100%; min-width: 0; border-collapse: collapse; font-size: 0.83rem;
+        }
+        .rab-modal table th,
+        .rab-modal table td {
+            padding: 0.5rem 0.55rem; border-bottom: 1px solid #f1f5f9; text-align: left;
+        }
+        .rab-modal table th {
+            background: #f8fafc; color: var(--muted); font-size: 0.7rem;
+            text-transform: uppercase; letter-spacing: 0.03em; white-space: nowrap;
+        }
+        .rab-modal tr.match td { background: #eef4ff; font-weight: 600; }
+        .rab-modal-total {
+            padding: 0.8rem 1.1rem; border-top: 2px solid var(--line);
+            display: flex; justify-content: space-between; font-weight: 800;
+            color: var(--ink); background: #f8fafc;
+        }
+
+        /* ---------- FOOTER ---------- */
+        .laporan-footer {
+            margin-top: 1.5rem; padding: 1rem 1.2rem; border-radius: 10px;
+            background: #fff; border: 1px solid var(--line);
+            display: flex; flex-wrap: wrap; gap: 0.5rem 1rem;
+            justify-content: space-between; align-items: center;
+            font-size: 0.8rem; color: var(--muted);
+        }
+        .laporan-footer .footer-item { display: inline-flex; align-items: center; gap: 0.35rem; }
+        .laporan-footer .footer-item strong { color: var(--ink); }
+        .laporan-footer a { color: var(--brand-dark); font-weight: 700; text-decoration: none; word-break: break-all; }
+        .laporan-footer a:hover { text-decoration: underline; }
+        .laporan-footer .footer-brand {
+            font-weight: 800; color: var(--brand-dark);
+            background: rgba(37,99,235,0.08); padding: 0.25rem 0.65rem;
+            border-radius: 999px; border: 1px solid rgba(37,99,235,0.18);
+        }
+        @media (max-width: 640px) {
+            .laporan-footer { flex-direction: column; align-items: flex-start; }
+            .laporan-controls { flex-direction: column; align-items: stretch; }
+            .laporan-controls select, .laporan-controls button { width: 100%; }
+            table.laporan-table { min-width: 520px; font-size: 0.78rem; }
+            table.laporan-table thead th, table.laporan-table tbody td { padding: 0.45rem 0.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Loading overlay -->
+    <div id="loadingOverlay">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:0.5rem;">
+            <div class="brand">Loading</div>
+            <div id="loadingPct">0%</div>
+        </div>
+        <div id="loadingBarWrap"><div id="loadingBar"></div></div>
+        <div style="margin-top: 2.5rem; color: var(--muted); font-size: 0.75rem; text-align: center; line-height: 1.6;">
+            <div>&copy; ZAZA APP</div>
+            <div>by Ferdy Sahputera</div>
+        </div>
+    </div>
+
+    <div class="container">
+        <header class="laporan-header">
+            <div class="head-row">
+                <div class="head-text">
+                    <h1>Laporan Material Masuk</h1>
+                    <p class="sub">Bedah Rumah Kelompok 2 • Desa Kampung Baru</p>
+                </div>
+            </div>
+        </header>
+
+        <div class="laporan-controls">
+            <label for="pilihBahanLaporan">Pilih Bahan</label>
+            <select id="pilihBahanLaporan"></select>
+            <button class="download-btn jpg" id="btnUnduhJPG" onclick="unduhJPG()">Unduh JPG</button>
+        </div>
+
+        <div class="total-strip" id="stripTotal"></div>
+
+        <div class="chart-wrap" id="chartWrap" style="display:none; margin-top: 0.9rem; background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 0.9rem 1rem;">
+            <canvas id="laporanChart" height="200"></canvas>
+        </div>
+        <div class="laporan-table-wrap">
+            <table class="laporan-table">
+                <thead>
+                    <tr>
+                        <th>NO</th>
+                        <th class="sortable" data-sort="nama" onclick="urutkan('nama')">NAMA</th>
+                        <th class="sortable" data-sort="tanggal" onclick="urutkan('tanggal')">TANGGAL</th>
+                        <th class="sortable" data-sort="masuk" onclick="urutkan('masuk')">MASUK</th>
+                        <th class="sortable" data-sort="total" onclick="urutkan('total')">TOTAL</th>
+                        <th>KURANG</th>
+                    </tr>
+                </thead>
+                <tbody id="tbodyLaporan"></tbody>
+            </table>
+        </div>
+
+        <div id="emptyLaporan" class="empty-state" style="display:none;">
+            <p>Belum ada data material masuk. Silakan pilih bahan atau input data melalui admin.</p>
+        </div>
+
+        <footer class="laporan-footer" id="laporanFooter">
+            <span class="footer-item">Website: <a href="http://playpictures.my.id/bedahrumah/data.html" target="_blank" rel="noopener">playpictures.my.id/bedahrumah/data.html</a></span>
+            <span class="footer-item">Tanggal Cetak: <strong id="footerTanggal">-</strong></span>
+            <span class="footer-item footer-brand">&copy; ZAZA APP &nbsp;|&nbsp; by Ferdy Sahputera</span>
+        </footer>
+    </div>
+
+    <!-- Popup RAB -->
+    <div class="rab-modal-overlay" id="rabModal" onclick="tutupRAB()">
+        <div class="rab-modal" onclick="event.stopPropagation()">
+            <div class="rab-modal-header">
+                <h3 id="rabModalTitle">RAB Awal</h3>
+                <button type="button" class="rab-modal-close" onclick="tutupRAB()">&times;</button>
+            </div>
+            <div class="rab-modal-body">
+                <div class="rab-photo" id="rabPhotoWrap">
+                    <span class="photo-label">Foto RAB Kertas</span>
+                    <img id="rabPhoto" src="" alt="Foto RAB" style="display:none;">
+                    <div id="rabPhotoEmpty" class="photo-empty">Foto RAB kertas belum tersedia.</div>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Uraian</th><th>Volume</th><th>Satuan</th><th>Harga Satuan</th><th>Jumlah</th>
+                        </tr>
+                    </thead>
+                    <tbody id="rabModalBody"></tbody>
+                </table>
+            </div>
+            <div class="rab-modal-total" id="rabModalTotal"></div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+    <script src="js/config.js"></script>
+    <script>
+        let dataLaporan = { material: [], anggota: [], rab: [] };
+        let sortBy = 'masuk';
+        let sortDir = 'desc';
+        let bahanSelectTerinisialisasi = false;
+        let loadingResolved = false;
+        let chartLaporan = null;
+
+        /* ---------- LOADING ---------- */
+        function setLoading(pct, teks) {
+            const bar = document.getElementById('loadingBar');
+            const pctEl = document.getElementById('loadingPct');
+            const p = Math.round(pct);
+            if (bar) bar.style.width = p + '%';
+            if (pctEl) pctEl.textContent = p + '%';
+        }
+
+        async function hideLoading() {
+            const ov = document.getElementById('loadingOverlay');
+            if (!ov) return;
+            await new Promise(r => setTimeout(r, 400));
+            ov.classList.add('hidden');
+        }
+
+        document.addEventListener('DOMContentLoaded', async function() {
+            isiTanggalCetak();
+
+            // Simulasi progres loading sambil menunggu data spreadsheet
+            let pct = 0;
+            const iv = setInterval(() => {
+                pct += Math.random() * 18;
+                if (pct > 92) pct = 92;
+                setLoading(Math.round(pct), '');
+            }, 120);
+
+            try {
+                const data = await Promise.race([
+                    fetchData(),
+                    new Promise((_, rej) => setTimeout(() => rej(new Error('Timeout')), 15000))
+                ]);
+                const anggota = Array.isArray(data.anggota) ? data.anggota : [];
+                const rab = Array.isArray(data.rab) ? data.rab : [];
+                const material = Array.isArray(data.material) ? data.material : [];
+                dataLaporan.material = material;
+                dataLaporan.anggota = anggota;
+                dataLaporan.rab = rab;
+            } catch (e) {
+                console.error('Gagal memuat data:', e);
+            }
+
+            setLoading(100, '');
+            clearInterval(iv);
+            await new Promise(r => setTimeout(r, 150));
+            await hideLoading();
+
+            inisialisasiLaporan();
+        });
+
+        function isiTanggalCetak() {
+            const el = document.getElementById('footerTanggal');
+            if (!el) return;
+            el.textContent = new Date().toLocaleString('id-ID', {
+                day: '2-digit', month: 'long', year: 'numeric',
+                hour: '2-digit', minute: '2-digit'
+            });
+        }
+
+        /* ---------- INISIALISASI ---------- */
+        function inisialisasiLaporan() {
+            const select = document.getElementById('pilihBahanLaporan');
+            if (!select) return;
+            const set = new Set();
+            (dataLaporan.material || []).forEach(function(m) {
+                const n = String(m.namaMaterial || '').trim();
+                if (n) set.add(n);
+            });
+            (dataLaporan.rab || []).forEach(function(r) {
+                const n = String(r.uraian || '').trim();
+                if (n) set.add(n);
+            });
+            const daftar = Array.from(set).sort(function(a, b) { return a.localeCompare(b, 'id'); });
+            select.innerHTML = '<option value="">-- Pilih Bahan --</option>';
+            daftar.forEach(function(nama) {
+                const opt = document.createElement('option');
+                opt.value = nama; opt.textContent = nama;
+                select.appendChild(opt);
+            });
+            if (!bahanSelectTerinisialisasi && daftar.length > 0) {
+                select.value = daftar[0];
+                bahanSelectTerinisialisasi = true;
+                renderLaporan(daftar[0]);
+            }
+            select.addEventListener('change', function() {
+                renderLaporan(this.value);
+            });
+        }
+
+        function formatTanggalPendek(tanggal) {
+            const key = tanggalKey(tanggal);
+            if (!key) return '-';
+            const bagian = key.split('-');
+            return bagian[2] + '/' + bagian[1];
+        }
+
+        /* ---------- URUTKAN ---------- */
+        function urutkan(field) {
+            if (sortBy === field) {
+                sortDir = sortDir === 'asc' ? 'desc' : 'asc';
+            } else {
+                sortBy = field;
+                sortDir = field === 'total' || field === 'masuk' ? 'desc' : 'asc';
+            }
+            const select = document.getElementById('pilihBahanLaporan');
+            renderLaporan(select ? select.value : '');
+        }
+
+        /* ---------- RENDER ---------- */
+        function renderLaporan(namaBahan) {
+            const tbody = document.getElementById('tbodyLaporan');
+            const strip = document.getElementById('stripTotal');
+            const empty = document.getElementById('emptyLaporan');
+            const wrap = document.querySelector('.laporan-table-wrap');
+            if (!tbody) return;
+
+            document.querySelectorAll('table.laporan-table thead th.sortable').forEach(function(th) {
+                th.classList.remove('sort-asc', 'sort-desc');
+            });
+            const activeTh = document.querySelector('table.laporan-table thead th.sortable[data-sort="' + sortBy + '"]');
+            if (activeTh) {
+                activeTh.classList.add(sortDir === 'asc' ? 'sort-asc' : 'sort-desc');
+            }
+
+            if (!namaBahan) {
+                tbody.innerHTML = '';
+                wrap.style.display = 'none'; empty.style.display = 'block'; strip.innerHTML = '';
+                return;
+            }
+
+            const rabMap = {};
+            dataLaporan.rab.forEach(function(r) {
+                if (String(r.uraian || '').trim().toLowerCase() !== String(namaBahan).trim().toLowerCase()) return;
+                const key = String(r.anggota || '').trim().toLowerCase();
+                rabMap[key] = (rabMap[key] || 0) + (parseFloat(r.volume) || 0);
+            });
+
+            const masukMap = {}; const tanggalMap = {};
+            dataLaporan.material.forEach(function(m) {
+                if (String(m.namaMaterial || '').trim().toLowerCase() !== String(namaBahan).trim().toLowerCase()) return;
+                const key = String(m.anggota || '').trim().toLowerCase();
+                masukMap[key] = (masukMap[key] || 0) + (parseFloat(m.volume) || 0);
+                const tglKey = tanggalKey(m.tanggal);
+                if (tglKey && (!tanggalMap[key] || tglKey > tanggalMap[key])) {
+                    tanggalMap[key] = tglKey;
+                }
+            });
+
+            const rows = [];
+            dataLaporan.anggota.forEach(function(a) {
+                const nama = String(a.nama || '-');
+                const key = String(nama).trim().toLowerCase();
+                const total = rabMap[key] || 0;
+                const masuk = masukMap[key] || 0;
+                const kurang = Math.max(0, total - masuk);
+                const tanggal = tanggalMap[key] ? formatTanggalPendek(tanggalMap[key]) : '-';
+                rows.push({
+                    nama: nama, tanggal: tanggal, tanggalKey: tanggalMap[key] || '',
+                    masuk: masuk, kurang: kurang, total: total,
+                    lengkap: (total > 0 && kurang === 0)
+                });
+            });
+
+            // Urutkan: total/masuk menempatkan yang punya order di atas
+            rows.sort(function(a, b) {
+                if (sortBy === 'nama') {
+                    return sortDir === 'asc' ? String(a.nama).localeCompare(b.nama, 'id') : String(b.nama).localeCompare(a.nama, 'id');
+                }
+                if (sortBy === 'tanggal') {
+                    const ta = a.tanggalKey || '', tb = b.tanggalKey || '';
+                    if (sortDir === 'asc') return ta < tb ? -1 : ta > tb ? 1 : 0;
+                    return ta > tb ? -1 : ta < tb ? 1 : 0;
+                }
+                if (sortBy === 'masuk' || sortBy === 'total') {
+                    const va = sortBy === 'masuk' ? a.masuk : a.total;
+                    const vb = sortBy === 'masuk' ? b.masuk : b.total;
+                    if (va !== vb) return sortDir === 'desc' ? vb - va : va - vb;
+                    return String(a.nama).localeCompare(b.nama, 'id');
+                }
+                return 0;
+            });
+
+            let totalMasuk = 0, totalKurang = 0, totalTotal = 0;
+            tbody.innerHTML = '';
+            if (rows.length === 0) {
+                wrap.style.display = 'none'; empty.style.display = 'block'; strip.innerHTML = '';
+                return;
+            }
+            wrap.style.display = 'block'; empty.style.display = 'none';
+
+            rows.forEach(function(r, index) {
+                totalMasuk += r.masuk; totalKurang += r.kurang; totalTotal += r.total;
+                const kurangLabel = r.kurang > 0 ? r.kurang + '' : '<span style="display:inline-flex;align-items:center;gap:4px;"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="6" cy="6" r="5" fill="#22c55e"/><path d="M4 6L5.25 7.25L8 4.75" stroke="white" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg> Lengkap</span>';
+                const kurangClass = r.kurang > 0 ? 'badge-kurang-ada' : 'badge-kurang-tidak';
+                const rowClass = r.lengkap ? 'lengkap' : (r.masuk === 0 ? 'kosong' : '');
+                const row = document.createElement('tr');
+                row.className = rowClass;
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td><div style="display:flex;align-items:center;gap:6px;"><button type="button" class="nama-btn" title="Lihat detail lengkap RAB">${escapeHtml(r.nama)}</button><button type="button" class="info-btn" title="Lihat detail lengkap" onclick="event.stopPropagation(); bukaRAB('${escapeJs(r.nama)}')"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="7" cy="7" r="6" stroke="#64748b" stroke-width="1.2"/><path d="M7 6V10" stroke="#64748b" stroke-width="1.2" stroke-linecap="round"/><circle cx="7" cy="4.5" r="0.8" fill="#64748b"/></svg></button></div></td>
+                    <td>${escapeHtml(r.tanggal)}</td>
+                    <td>${r.masuk}</td>
+                    <td><strong>${r.total}</strong></td>
+                    <td><span class="badge-kurang ${kurangClass}">${kurangLabel}</span></td>
+                `;
+                tbody.appendChild(row);
+                const namaBtn = row.querySelector('.nama-btn');
+                if (namaBtn) {
+                    namaBtn.addEventListener('click', function() { bukaRAB(r.nama); });
+                }
+            });
+
+            strip.innerHTML = `
+                <div class="total-chip"><span class="label">Total Masuk</span><span class="nilai">${totalMasuk}</span></div>
+                <div class="total-chip"><span class="label">Total Kurang</span><span class="nilai">${totalKurang}</span></div>
+                <div class="total-chip"><span class="label">Total Target (RAB)</span><span class="nilai">${totalTotal}</span></div>
+            `;
+        }
+
+        /* ---------- POPUP RAB ---------- */
+        function bukaRAB(namaAnggota) {
+            const select = document.getElementById('pilihBahanLaporan');
+            const namaBahan = select ? select.value : '';
+            const rabAnggota = (dataLaporan.rab || []).filter(function(r) {
+                return String(r.anggota || '').trim().toLowerCase() === String(namaAnggota).trim().toLowerCase();
+            });
+
+            const title = document.getElementById('rabModalTitle');
+            const body = document.getElementById('rabModalBody');
+            const totalEl = document.getElementById('rabModalTotal');
+            if (title) title.textContent = 'RAB Awal - ' + namaAnggota;
+            if (!body) return;
+
+            // Foto RAB kertas dari img/
+            const anggotaData = (dataLaporan.anggota || []).find(function(a) {
+                return String(a.nama || '').trim().toLowerCase() === String(namaAnggota).trim().toLowerCase();
+            });
+            const noUrut = anggotaData ? anggotaData.noUrut : '';
+            const fotoWrap = document.getElementById('rabPhotoWrap');
+            const fotoImg = document.getElementById('rabPhoto');
+            const fotoEmpty = document.getElementById('rabPhotoEmpty');
+            if (fotoWrap) fotoWrap.style.display = 'block';
+            if (fotoImg) {
+                fotoImg.style.display = 'none'; fotoImg.removeAttribute('src');
+            }
+            if (fotoEmpty) fotoEmpty.style.display = 'none';
+
+            if (noUrut) {
+                const daftarExt = ['jpg', 'jpeg', 'png', 'webp'];
+                const daftarNama = [String(parseInt(noUrut)).padStart(2, '0'), String(parseInt(noUrut) || '')];
+                let iNama = 0, idx = 0;
+                function cobaBerikutnya() {
+                    if (iNama >= daftarNama.length) {
+                        if (fotoEmpty) {
+                            fotoEmpty.style.display = 'block';
+                            fotoEmpty.textContent = 'Foto RAB kertas belum tersedia.';
+                        }
+                        return;
+                    }
+                    if (idx >= daftarExt.length) { iNama++; idx = 0; cobaBerikutnya(); return; }
+                    const src = 'images/rab/' + daftarNama[iNama] + '.' + daftarExt[idx] + '?v=' + Date.now();
+                    idx++;
+                    const tester = new Image();
+                    tester.onload = function() {
+                        if (fotoImg) { fotoImg.src = src; fotoImg.style.display = 'block'; }
+                        if (fotoEmpty) fotoEmpty.style.display = 'none';
+                    };
+                    tester.onerror = cobaBerikutnya;
+                    tester.src = src;
+                }
+                cobaBerikutnya();
+            }
+
+            if (rabAnggota.length === 0) {
+                body.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#64748b;">Belum ada RAB untuk anggota ini.</td></tr>';
+                if (totalEl) totalEl.innerHTML = '<span>Total RAB</span><span>Rp 0</span>';
+            } else {
+                let total = 0;
+                body.innerHTML = '';
+                rabAnggota.forEach(function(r) {
+                    const vol = parseFloat(r.volume) || 0;
+                    const harga = parseFloat(r.hargaSatuan) || 0;
+                    const jumlah = vol * harga;
+                    total += jumlah;
+                    const match = String(r.uraian || '').trim().toLowerCase() === String(namaBahan).trim().toLowerCase();
+                    const tr = document.createElement('tr');
+                    if (match) tr.className = 'match';
+                    tr.innerHTML = `
+                        <td>${escapeHtml(r.uraian || '-')}</td>
+                        <td>${vol}</td>
+                        <td>${escapeHtml(r.satuan || '-')}</td>
+                        <td>${formatRupiah(harga)}</td>
+                        <td>${formatRupiah(jumlah)}</td>
+                    `;
+                    body.appendChild(tr);
+                });
+                if (totalEl) {
+                    totalEl.innerHTML = '<span>Total RAB</span><span>' + formatRupiah(total) + '</span>';
+                }
+            }
+
+            const modal = document.getElementById('rabModal');
+            if (modal) modal.classList.add('active');
+        }
+
+        function tutupRAB() {
+            const modal = document.getElementById('rabModal');
+            if (modal) modal.classList.remove('active');
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') tutupRAB();
+        });
+
+        /* ---------- UNDUH CSV ---------- */
+        function unduhCSV() {
+            const select = document.getElementById('pilihBahanLaporan');
+            const namaBahan = select ? select.value : '';
+            if (!namaBahan) { alert('Pilih bahan terlebih dahulu.'); return; }
+
+            const rabMap = {};
+            dataLaporan.rab.forEach(function(r) {
+                if (String(r.uraian || '').trim().toLowerCase() !== String(namaBahan).trim().toLowerCase()) return;
+                const key = String(r.anggota || '').trim().toLowerCase();
+                rabMap[key] = (rabMap[key] || 0) + (parseFloat(r.volume) || 0);
+            });
+            const masukMap = {}; const tanggalMap = {};
+            dataLaporan.material.forEach(function(m) {
+                if (String(m.namaMaterial || '').trim().toLowerCase() !== String(namaBahan).trim().toLowerCase()) return;
+                const key = String(m.anggota || '').trim().toLowerCase();
+                masukMap[key] = (masukMap[key] || 0) + (parseFloat(m.volume) || 0);
+                const tglKey = tanggalKey(m.tanggal);
+                if (tglKey && (!tanggalMap[key] || tglKey > tanggalMap[key])) {
+                    tanggalMap[key] = tglKey;
+                }
+            });
+            let csv = 'NO,NAMA,TANGGAL,MASUK,KURANG,TOTAL\n';
+            dataLaporan.anggota.forEach(function(a, index) {
+                const nama = String(a.nama || '-');
+                const key = String(nama).trim().toLowerCase();
+                const total = rabMap[key] || 0;
+                const masuk = masukMap[key] || 0;
+                const kurang = Math.max(0, total - masuk);
+                const tanggal = tanggalMap[key] ? formatTanggalPendek(tanggalMap[key]) : '-';
+                csv += (index + 1) + ',' + '"' + nama.replace(/"/g, '""') + '"' + ',' + tanggal + ',' + masuk + ',' + kurang + ',' + total + '\n';
+            });
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.setAttribute('href', url);
+            link.setAttribute('download', 'Laporan-' + String(namaBahan).replace(/[^a-z0-9]/gi, '_') + '.csv');
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link); link.click(); document.body.removeChild(link);
+        }
+
+        /* ---------- UNDUH JPG ---------- */
+        function unduhJPG() {
+            const select = document.getElementById('pilihBahanLaporan');
+            const namaBahan = select ? select.value : '';
+            if (!namaBahan) { alert('Pilih bahan terlebih dahulu.'); return; }
+            if (typeof html2canvas !== 'function') {
+                alert('Library html2canvas belum termuat. Pastikan ada koneksi internet lalu muat ulang halaman.');
+                return;
+            }
+            const holder = document.createElement('div');
+            holder.style.cssText = 'position:fixed;left:-10000px;top:0;width:900px;background:#ffffff;padding:20px;box-sizing:border-box;font-family:Inter,sans-serif;';
+            const headerEl = document.querySelector('.laporan-header');
+            if (headerEl) {
+                const headerClone = headerEl.cloneNode(true);
+                headerClone.style.marginBottom = '14px'; holder.appendChild(headerClone);
+            }
+            const judul = document.createElement('div');
+            judul.style.cssText = 'font-size:17px;font-weight:800;color:#0f172a;margin:0 0 10px;';
+            judul.textContent = 'Bahan: ' + namaBahan; holder.appendChild(judul);
+            const stripEl = document.getElementById('stripTotal');
+            if (stripEl && stripEl.innerHTML.trim() !== '') {
+                const stripClone = stripEl.cloneNode(true); holder.appendChild(stripClone);
+            }
+            const tableWrapEl = document.querySelector('.laporan-table-wrap');
+            if (tableWrapEl) {
+                const tableClone = tableWrapEl.cloneNode(true);
+                tableClone.style.boxShadow = 'none'; tableClone.style.overflow = 'visible';
+                tableClone.style.marginTop = '10px'; holder.appendChild(tableClone);
+            }
+            const footerEl = document.getElementById('laporanFooter');
+            if (footerEl) {
+                const footerClone = footerEl.cloneNode(true);
+                footerClone.style.marginTop = '14px'; footerClone.style.marginBottom = '0';
+                holder.appendChild(footerClone);
+            }
+            document.body.appendChild(holder);
+            html2canvas(holder, { backgroundColor: '#ffffff', scale: 2, useCORS: true })
+                .then(function(canvas) {
+                    const link = document.createElement('a');
+                    link.download = 'Laporan-' + String(namaBahan).replace(/[^a-z0-9]/gi, '_') + '.jpg';
+                    link.href = canvas.toDataURL('image/jpeg', 0.95); link.click();
+                })
+                .catch(function(err) {
+                    console.error(err); alert('Gagal membuat gambar JPG.');
+                })
+                .finally(function() {
+                    if (holder.parentNode) holder.parentNode.removeChild(holder);
+                });
+            if (wrap.style.display === 'none') {
+                const chartWrap = document.getElementById('chartWrap');
+                if (chartWrap) chartWrap.style.display = 'none';
+                if (chartLaporan) { chartLaporan.destroy(); chartLaporan = null; }
+                return;
+            }
+
+            renderChart(rows);
+        }
+
+        function renderChart(rows) {
+            const ctx = document.getElementById('laporanChart');
+            const chartWrap = document.getElementById('chartWrap');
+            if (!ctx || !chartWrap) return;
+            if (typeof Chart === 'undefined') { chartWrap.style.display = 'none'; return; }
+            if (!rows || rows.length === 0) {
+                chartWrap.style.display = 'none';
+                if (chartLaporan) { chartLaporan.destroy(); chartLaporan = null; }
+                return;
+            }
+            const top = rows.slice(0, 10);
+            const labels = top.map(r => (r.nama.split(' ')[0] + ' ' + (r.nama.split(' ')[1] || '')).trim());
+            const dataMasuk = top.map(r => r.masuk);
+            const dataTotal = top.map(r => r.total);
+            if (chartLaporan) chartLaporan.destroy();
+            chartLaporan = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        { label: 'Masuk', data: dataMasuk, backgroundColor: '#2563eb', borderRadius: 6 },
+                        { label: 'RAB', data: dataTotal, backgroundColor: '#cbd5e1', borderRadius: 6 }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 11 } } } },
+                    scales: { x: { grid: { display: false } }, y: { beginAtZero: true, grid: { color: '#f8fafc' } } }
+                }
+            });
+            chartWrap.style.display = 'block';
+        }
+
+        /* ---------- POPUP RAB ---------- */
+
+            renderChart(rows);
+    </script>
+</body>
+</html>

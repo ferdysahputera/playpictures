@@ -22,6 +22,15 @@ function escapeHtml(nilai) {
         .replace(/'/g, '&#39;');
 }
 
+function escapeJs(nilai) {
+    return String(nilai == null ? '' : nilai)
+        .replace(/\\/g, '\\\\')
+        .replace(/'/g, "\\'")
+        .replace(/"/g, '\\"')
+        .replace(/\n/g, ' ')
+        .replace(/\r/g, '');
+}
+
 function kunciTanggalLokal(d) {
     return d.getFullYear() + '-' +
         String(d.getMonth() + 1).padStart(2, '0') + '-' +
