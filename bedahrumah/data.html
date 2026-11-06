@@ -10,26 +10,34 @@
     <link rel="stylesheet" href="css/style.css">
     <style>
         :root {
-            --ink: #0f172a;
-            --muted: #64748b;
-            --line: #e2e8f0;
-            --brand: #2563eb;
-            --brand-dark: #1d4ed8;
-            --green: #16a34a;
+            --ink: #0b1220;
+            --muted: #5b6474;
+            --line: #e3e7ee;
+            --line-soft: #eef0f4;
+            --surface: #ffffff;
+            --bg: #f5f6f8;
+            --navy: #10233f;
+            --navy-soft: #1a3354;
+            --brand: #1d4ed8;
+            --brand-dark: #163ea8;
+            --green: #12805c;
+            --red: #b42318;
         }
         * { box-sizing: border-box; }
         body {
             margin: 0;
-            font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-            background: #f1f5f9;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
             color: var(--ink);
+            font-size: 14px;
+            -webkit-font-smoothing: antialiased;
         }
-        .container { max-width: 950px; margin: 0 auto; padding: 1.2rem 1rem; }
+        .container { max-width: 1040px; margin: 0 auto; padding: 1.5rem 1.15rem 2.5rem; }
 
         /* ---------- LOADING OVERLAY ---------- */
         #loadingOverlay {
             position: fixed; inset: 0; z-index: 10000;
-            background: #ffffff;
+            background: var(--surface);
             display: flex; flex-direction: column;
             align-items: center; justify-content: center;
             font-family: inherit;
@@ -39,138 +47,221 @@
             pointer-events: none;
         }
         #loadingOverlay .brand {
-            font-size: 1.5rem; font-weight: 800; color: var(--brand);
-            margin-bottom: 0.25rem; letter-spacing: 0.02em;
+            font-size: 1.35rem; font-weight: 700; color: var(--navy);
+            margin-bottom: 0.25rem; letter-spacing: -0.01em;
         }
-        #loadingOverlay .sub { color: var(--muted); font-size: 0.95rem; margin-bottom: 1.5rem; }
         #loadingBarWrap {
-            width: clamp(260px, 40vw, 420px); height: 10px;
-            background: #e2e8f0; border-radius: 6px; overflow: hidden;
-            border: 1px solid #cbd5e1;
+            width: clamp(260px, 40vw, 380px); height: 4px;
+            background: #e9edf3; border-radius: 999px; overflow: hidden;
+            margin-top: 1.25rem;
         }
         #loadingBar {
-            height: 100%; width: 0%; background: linear-gradient(90deg, var(--brand), var(--green));
-            border-radius: 6px; transition: width 0.3s ease;
+            height: 100%; width: 0%; background: var(--brand);
+            border-radius: 999px; transition: width 0.3s ease;
         }
-        #loadingPct { margin-top: 0.75rem; font-size: 0.9rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+        #loadingPct { margin-top: 0.7rem; font-size: 0.8rem; color: var(--muted); font-variant-numeric: tabular-nums; letter-spacing: 0.04em; }
 
-        /* ---------- HEADER (minimalis) ---------- */
+        /* ---------- HEADER ---------- */
         .laporan-header {
-            background: #fff;
+            position: relative;
+            background: var(--surface);
             border: 1px solid var(--line);
-            border-radius: 12px;
-            padding: 1.1rem 1.4rem;
-            margin-bottom: 1rem;
+            border-radius: 10px;
+            padding: 1.4rem 1.6rem;
+            margin-bottom: 0.9rem;
+            box-shadow: 0 1px 2px rgba(16, 35, 63, 0.04);
+            overflow: hidden;
+        }
+        .laporan-header::before {
+            content: "";
+            position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
+            background: linear-gradient(180deg, var(--navy) 0%, var(--brand) 100%);
         }
         .laporan-header .head-row {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 1rem;
+            gap: 1.5rem;
             flex-wrap: wrap;
+        }
+        .laporan-header .head-brand { display: flex; align-items: center; gap: 0.9rem; }
+        .laporan-header .brand-mark {
+            width: 44px; height: 44px; border-radius: 8px;
+            background: var(--navy); color: #fff;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.8rem; font-weight: 700; letter-spacing: 0.05em;
+            flex-shrink: 0;
         }
         .laporan-header .head-text h1 {
             margin: 0;
-            font-size: 1.8rem;
-            font-weight: 800;
-            letter-spacing: -0.02em;
-            line-height: 1.15;
-            color: #111827;
+            font-size: 1.35rem;
+            font-weight: 700;
+            letter-spacing: -0.015em;
+            line-height: 1.25;
+            color: var(--navy);
         }
         .laporan-header .head-text .sub {
-            margin: 0.25rem 0 0;
+            margin: 0.2rem 0 0;
             color: var(--muted);
-            font-size: 0.9rem;
-            line-height: 1.4;
+            font-size: 0.82rem;
+            line-height: 1.45;
         }
-        .laporan-header .head-badge {
-            display: none;
+        .laporan-header .head-meta {
+            border-left: 1px solid var(--line);
+            padding-left: 1.35rem;
+            text-align: right;
+        }
+        .laporan-header .head-meta .meta-label {
+            display: block; font-size: 0.63rem; font-weight: 600;
+            text-transform: uppercase; letter-spacing: 0.1em;
+            color: var(--muted); margin-bottom: 0.2rem;
+        }
+        .laporan-header .head-meta .meta-value {
+            font-size: 0.86rem; font-weight: 600; color: var(--ink);
         }
         @media (max-width: 640px) {
-            .laporan-header { padding: 0.9rem 1.1rem; }
-            .laporan-header .head-text h1 { font-size: 1.35rem; }
-            .laporan-header .head-text .sub { font-size: 0.84rem; }
+            .laporan-header { padding: 1.1rem 1.2rem; }
+            .laporan-header .head-text h1 { font-size: 1.12rem; }
+            .laporan-header .head-text .sub { font-size: 0.78rem; }
+            .laporan-header .head-meta { display: none; }
+            .laporan-header .brand-mark { width: 38px; height: 38px; font-size: 0.72rem; }
         }
 
         /* ---------- CONTROLS ---------- */
         .laporan-controls {
-            display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap;
-            margin-bottom: 0.75rem;
-            background: #fff; padding: 0.75rem 1rem;
+            display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;
+            margin-bottom: 0.9rem;
+            background: var(--surface); padding: 0.85rem 1rem;
             border-radius: 10px; border: 1px solid var(--line);
         }
-        .laporan-controls label { font-size: 0.8rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; margin: 0; }
+        .laporan-controls label {
+            font-size: 0.66rem; font-weight: 600; color: var(--muted);
+            text-transform: uppercase; letter-spacing: 0.09em; margin: 0;
+        }
         .laporan-controls select {
-            border: 1px solid var(--line); background: #fff; color: var(--ink);
-            padding: 0.45rem 0.7rem; border-radius: 8px; font-size: 0.9rem; min-width: 170px;
+            appearance: none; -webkit-appearance: none;
+            border: 1px solid var(--line); background-color: var(--surface);
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%235b6474' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+            background-repeat: no-repeat; background-position: right 0.7rem center;
+            color: var(--ink); padding: 0.5rem 2rem 0.5rem 0.7rem;
+            border-radius: 6px; font-size: 0.86rem; font-family: inherit;
+            min-width: 220px; cursor: pointer;
+        }
+        .laporan-controls select:focus {
+            outline: 2px solid rgba(29, 78, 216, 0.22);
+            outline-offset: 1px; border-color: var(--brand);
         }
         .download-btn {
-            background: linear-gradient(135deg, var(--brand-dark) 0%, var(--brand) 100%);
-            color: #fff; border: none; padding: 0.45rem 0.95rem; border-radius: 8px;
-            font-weight: 700; font-size: 0.85rem; cursor: pointer;
-            box-shadow: 0 8px 16px -8px rgba(37,99,235,0.35);
-            transition: transform 0.15s, filter 0.15s;
+            background: var(--navy); color: #fff;
+            border: 1px solid var(--navy);
+            padding: 0.5rem 1rem; border-radius: 6px;
+            font-weight: 600; font-size: 0.82rem; font-family: inherit;
+            cursor: pointer; transition: background 0.15s, border-color 0.15s;
+            margin-left: auto;
         }
-        .download-btn:hover { transform: translateY(-1px); filter: brightness(1.08); }
-        .download-btn:active { transform: translateY(0); }
-        .download-btn.jpg { background: linear-gradient(135deg, #0f172a 0%, #334155 100%); box-shadow: 0 8px 16px -8px rgba(15,23,42,0.35); }
+        .download-btn:hover { background: var(--navy-soft); border-color: var(--navy-soft); }
+        .download-btn:active { background: #142a45; }
+        .download-btn.print {
+            background: var(--surface); color: var(--navy);
+            border: 1px solid #cfd6e0;
+        }
+        .download-btn.print:hover { background: #f4f6fa; border-color: #b9c2d0; }
+        .download-btn.print:active { background: #eef1f6; }
 
-        /* ---------- TOTAL STRIP ---------- */
-        .total-strip { display: flex; gap: 0.75rem; margin-top: 0.5rem; flex-wrap: wrap; }
-        .total-chip {
-            background: #fff; border: 1px solid var(--line); padding: 0.55rem 0.9rem;
-            border-radius: 10px; min-width: 130px; box-shadow: 0 4px 12px -6px rgba(15,23,42,0.03);
+        /* ---------- RINGKASAN (KPI) ---------- */
+        .total-strip {
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 0.75rem; margin-bottom: 0.9rem;
         }
-        .total-chip .label { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 0.2rem; display: block; }
-        .total-chip .nilai { font-size: 1.05rem; font-weight: 800; color: var(--ink); }
+        .total-chip {
+            position: relative; overflow: hidden;
+            background: var(--surface); border: 1px solid var(--line);
+            border-radius: 10px; padding: 0.95rem 1.1rem 0.85rem;
+        }
+        .total-chip::before {
+            content: ""; position: absolute; left: 0; top: 0; right: 0; height: 3px;
+            background: var(--line);
+        }
+        .total-chip:nth-child(1)::before { background: var(--brand); }
+        .total-chip:nth-child(2)::before { background: var(--red); }
+        .total-chip:nth-child(3)::before { background: var(--navy); }
+        .total-chip .label {
+            display: block; font-size: 0.63rem; font-weight: 600;
+            letter-spacing: 0.09em; text-transform: uppercase;
+            color: var(--muted); margin-bottom: 0.4rem;
+        }
+        .total-chip .nilai {
+            font-size: 1.4rem; font-weight: 700; color: var(--ink);
+            font-variant-numeric: tabular-nums; letter-spacing: -0.01em;
+        }
+
+        /* ---------- CHART ---------- */
+        .chart-wrap {
+            display: none; background: var(--surface);
+            border: 1px solid var(--line); border-radius: 10px;
+            padding: 0.85rem 1rem 0.7rem; margin-bottom: 0.9rem;
+        }
+        .chart-wrap::before {
+            content: "Grafik Realisasi per Anggota";
+            display: block; font-size: 0.63rem; font-weight: 600;
+            text-transform: uppercase; letter-spacing: 0.09em;
+            color: var(--muted); margin-bottom: 0.6rem;
+        }
+        .chart-box {
+            position: relative; height: 130px;
+            overflow-x: auto; overflow-y: hidden;
+            padding-bottom: 2px;
+        }
+        .chart-box::-webkit-scrollbar { height: 5px; }
+        .chart-box::-webkit-scrollbar-thumb { background: #d7dce4; border-radius: 999px; }
+        .chart-inner { position: relative; height: 100%; min-width: 100%; }
+        @media (max-width: 640px) {
+            .chart-box { height: 110px; }
+        }
 
         /* ---------- TABLE ---------- */
         .laporan-table-wrap {
             width: 100%; overflow-x: auto;
-            border: 1px solid var(--line); border-radius: 10px; background: #fff;
-            margin-top: 0.5rem;
+            border: 1px solid var(--line); border-radius: 10px; background: var(--surface);
         }
         table.laporan-table {
-            width: 100%; border-collapse: collapse; min-width: 600px;
+            width: 100%; border-collapse: collapse; min-width: 640px;
             font-size: 0.86rem;
         }
         table.laporan-table thead th {
-            background: #f8fafc; text-align: left; color: var(--muted);
-            font-weight: 700; font-size: 0.74rem; padding: 0.62rem 0.8rem;
-            border-bottom: 2px solid var(--line); white-space: nowrap;
-            text-transform: uppercase; letter-spacing: 0.03em;
-            cursor: pointer; user-select: none; position: relative;
-            font-family: ui-sans-serif, system-ui, sans-serif;
+            background: #f7f8fa; text-align: left; color: #475467;
+            font-weight: 600; font-size: 0.66rem; padding: 0.7rem 0.85rem;
+            border-bottom: 1px solid var(--line); white-space: nowrap;
+            text-transform: uppercase; letter-spacing: 0.07em;
+            user-select: none; position: relative;
         }
-        table.laporan-table thead th:hover { background: #f1f5f9; color: var(--brand-dark); }
+        table.laporan-table thead th.sortable { cursor: pointer; }
+        table.laporan-table thead th.sortable:hover { background: #f0f2f6; color: var(--navy); }
         table.laporan-table thead th.sortable::after {
-            content: " ↕"; font-size: 0.65rem; opacity: 0.35; margin-left: 0.25rem; color: #64748b;
+            content: "↕"; font-size: 0.6rem; opacity: 0.3; margin-left: 0.3rem;
         }
-        table.laporan-table thead th.sort-asc::after {
-            content: " ↑"; opacity: 1; color: var(--brand-dark);
-        }
-        table.laporan-table thead th.sort-desc::after {
-            content: " ↓"; opacity: 1; color: var(--brand-dark);
-        }
+        table.laporan-table thead th.sort-asc::after { content: "↑"; opacity: 1; color: var(--brand); }
+        table.laporan-table thead th.sort-desc::after { content: "↓"; opacity: 1; color: var(--brand); }
         table.laporan-table tbody td {
-            padding: 0.55rem 0.8rem; border-bottom: 1px solid #f1f5f9; color: var(--ink);
-            vertical-align: middle;
+            padding: 0.7rem 0.85rem; border-bottom: 1px solid var(--line-soft);
+            color: var(--ink); vertical-align: middle;
+            font-variant-numeric: tabular-nums;
         }
-        table.laporan-table tbody tr:nth-child(even) td { background: #fafbfc; }
-        table.laporan-table tbody tr:hover td { background: #eef4ff; }
-        table.laporan-table tbody tr.lengkap td { background: #f0fdf4 !important; color: #166534; }
-        table.laporan-table tbody tr.lengkap:hover td { background: #dcfce7 !important; }
-        table.laporan-table tbody tr.kosong td { color: #94a3b8; }
+        table.laporan-table tbody tr:last-child td { border-bottom: none; }
+        table.laporan-table tbody tr:nth-child(even) td { background: #fbfcfd; }
+        table.laporan-table tbody tr:hover td { background: #f6f8ff; }
+        table.laporan-table tbody tr.lengkap td { background: #f6fbf8 !important; }
+        table.laporan-table tbody tr.lengkap:hover td { background: #eff9f3 !important; }
+        table.laporan-table tbody tr.kosong td { color: #98a2b3; }
 
-        /* Nama clickable */
+        /* ---------- NAMA & AKSI ---------- */
         .nama-btn {
             background: none; border: none; padding: 0; margin: 0;
-            color: var(--brand-dark); font: inherit; font-weight: 700;
-            cursor: pointer; text-align: left; text-decoration: underline;
-            text-decoration-color: transparent; transition: text-decoration-color 0.15s;
+            color: var(--ink); font: inherit; font-weight: 600;
+            cursor: pointer; text-align: left;
+            transition: color 0.15s;
         }
-        .nama-btn:hover { text-decoration-color: var(--brand-dark); }
-        tr.lengkap .nama-btn { color: #15803d; }
+        .nama-btn:hover { color: var(--brand-dark); text-decoration: underline; text-underline-offset: 2px; }
         .info-btn {
             background: none;
             border: none;
@@ -181,102 +272,184 @@
             cursor: pointer;
             color: var(--muted);
         }
-        .info-btn:hover svg circle,
-        .info-btn:hover svg path {
-            stroke: var(--brand-dark);
-        }
+        .info-btn:hover svg circle { stroke: var(--brand-dark); }
+        .info-btn:hover svg path { stroke: var(--brand-dark); }
+        .info-btn:hover svg [fill="#64748b"] { fill: var(--brand-dark); }
 
         .badge-kurang {
-            display: inline-block; padding: 0.15rem 0.55rem; border-radius: 999px;
-            font-size: 0.72rem; font-weight: 700; white-space: nowrap;
+            display: inline-block; padding: 0.18rem 0.5rem; border-radius: 6px;
+            font-size: 0.72rem; font-weight: 600; white-space: nowrap;
+            font-variant-numeric: tabular-nums;
         }
-        .badge-kurang-tidak { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
-        .badge-kurang-ada { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+        .badge-kurang-tidak { background: #ecfdf3; color: #067647; border: 1px solid #abefc6; }
+        .badge-kurang-ada { background: #fef3f2; color: var(--red); border: 1px solid #fecdca; }
 
-        .empty-state { text-align: center; padding: 3rem 1rem; color: var(--muted); }
+        .empty-state { text-align: center; padding: 3rem 1rem; color: var(--muted); font-size: 0.86rem; }
 
         /* ---------- POPUP RAB ---------- */
         .rab-modal-overlay {
             display: none; position: fixed; inset: 0;
-            background: rgba(15,23,42,0.55); backdrop-filter: blur(3px);
+            background: rgba(11, 18, 32, 0.5); backdrop-filter: blur(3px);
             z-index: 10000; align-items: center; justify-content: center;
             padding: 1rem; box-sizing: border-box;
         }
         .rab-modal-overlay.active { display: flex; }
         .rab-modal {
-            background: #fff; border-radius: 14px; width: 100%;
-            max-width: 700px; max-height: 88vh; display: flex;
+            background: var(--surface); border-radius: 10px; width: 100%;
+            max-width: 720px; max-height: 88vh; display: flex;
             flex-direction: column; overflow: hidden;
-            box-shadow: 0 30px 60px -20px rgba(15,23,42,0.45);
+            box-shadow: 0 24px 48px -12px rgba(11, 18, 32, 0.35);
             animation: rabFade 0.18s ease;
         }
         @keyframes rabFade {
-            from { opacity: 0; transform: translateY(10px); }
+            from { opacity: 0; transform: translateY(8px); }
             to { opacity: 1; transform: translateY(0); }
         }
         .rab-modal-header {
-            padding: 0.9rem 1.1rem; background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+            padding: 1rem 1.25rem; background: var(--navy);
             color: #fff; display: flex; justify-content: space-between; align-items: center; gap: 1rem;
         }
-        .rab-modal-header h3 { margin: 0; font-size: 1rem; font-weight: 800; }
+        .rab-modal-header h3 { margin: 0; font-size: 0.95rem; font-weight: 600; letter-spacing: 0.01em; }
         .rab-modal-close {
-            background: transparent; border: none; color: #fff; font-size: 1.7rem;
-            line-height: 1; cursor: pointer; padding: 0 0.2rem;
+            background: transparent; border: none; color: #fff; font-size: 1.6rem;
+            line-height: 1; cursor: pointer; padding: 0 0.2rem; opacity: 0.8;
         }
-        .rab-modal-body { padding: 0.9rem 1.1rem; overflow: auto; }
+        .rab-modal-close:hover { opacity: 1; }
+        .rab-modal-body { padding: 1rem 1.25rem; overflow: auto; }
         .rab-photo {
-            border: 1px solid var(--line); border-radius: 10px; background: #f8fafc;
-            margin-bottom: 0.9rem; text-align: center; overflow: hidden;
+            border: 1px solid var(--line); border-radius: 8px; background: #fafbfc;
+            margin-bottom: 1rem; text-align: center; overflow: hidden;
         }
         .rab-photo img { max-width: 100%; height: auto; display: block; margin: 0 auto; }
         .rab-photo .photo-empty {
-            padding: 2rem 1rem; color: var(--muted); font-size: 0.85rem;
+            padding: 2rem 1rem; color: var(--muted); font-size: 0.82rem;
         }
         .rab-photo .photo-label {
-            font-size: 0.7rem; font-weight: 800; color: var(--muted);
-            text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.5rem; display: block;
+            font-size: 0.62rem; font-weight: 600; color: var(--muted);
+            text-transform: uppercase; letter-spacing: 0.09em; margin: 0.9rem 0 0.5rem; display: block;
         }
         .rab-modal table {
-            width: 100%; min-width: 0; border-collapse: collapse; font-size: 0.83rem;
+            width: 100%; min-width: 0; border-collapse: collapse; font-size: 0.82rem;
         }
         .rab-modal table th,
         .rab-modal table td {
-            padding: 0.5rem 0.55rem; border-bottom: 1px solid #f1f5f9; text-align: left;
+            padding: 0.55rem 0.6rem; border-bottom: 1px solid var(--line-soft); text-align: left;
         }
         .rab-modal table th {
-            background: #f8fafc; color: var(--muted); font-size: 0.7rem;
-            text-transform: uppercase; letter-spacing: 0.03em; white-space: nowrap;
+            background: #f7f8fa; color: #475467; font-size: 0.63rem; font-weight: 600;
+            text-transform: uppercase; letter-spacing: 0.07em; white-space: nowrap;
         }
-        .rab-modal tr.match td { background: #eef4ff; font-weight: 600; }
+        .rab-modal tr.match td { background: #f6f8ff; font-weight: 600; }
         .rab-modal-total {
-            padding: 0.8rem 1.1rem; border-top: 2px solid var(--line);
-            display: flex; justify-content: space-between; font-weight: 800;
-            color: var(--ink); background: #f8fafc;
+            padding: 0.9rem 1.25rem; border-top: 1px solid var(--line);
+            display: flex; justify-content: space-between; font-weight: 700;
+            color: var(--navy); background: #f7f8fa;
         }
 
         /* ---------- FOOTER ---------- */
         .laporan-footer {
-            margin-top: 1.5rem; padding: 1rem 1.2rem; border-radius: 10px;
-            background: #fff; border: 1px solid var(--line);
-            display: flex; flex-wrap: wrap; gap: 0.5rem 1rem;
+            margin-top: 1.25rem; padding: 1rem 1.2rem; border-radius: 10px;
+            background: var(--surface); border: 1px solid var(--line);
+            display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem;
             justify-content: space-between; align-items: center;
-            font-size: 0.8rem; color: var(--muted);
+            font-size: 0.76rem; color: var(--muted);
         }
         .laporan-footer .footer-item { display: inline-flex; align-items: center; gap: 0.35rem; }
-        .laporan-footer .footer-item strong { color: var(--ink); }
-        .laporan-footer a { color: var(--brand-dark); font-weight: 700; text-decoration: none; word-break: break-all; }
+        .laporan-footer .footer-item strong { color: var(--ink); font-weight: 600; }
+        .laporan-footer a { color: var(--brand-dark); font-weight: 600; text-decoration: none; word-break: break-all; }
         .laporan-footer a:hover { text-decoration: underline; }
-        .laporan-footer .footer-brand {
-            font-weight: 800; color: var(--brand-dark);
-            background: rgba(37,99,235,0.08); padding: 0.25rem 0.65rem;
-            border-radius: 999px; border: 1px solid rgba(37,99,235,0.18);
-        }
+        .laporan-footer .footer-brand { font-weight: 600; color: var(--muted); }
         @media (max-width: 640px) {
             .laporan-footer { flex-direction: column; align-items: flex-start; }
             .laporan-controls { flex-direction: column; align-items: stretch; }
-            .laporan-controls select, .laporan-controls button { width: 100%; }
-            table.laporan-table { min-width: 520px; font-size: 0.78rem; }
-            table.laporan-table thead th, table.laporan-table tbody td { padding: 0.45rem 0.5rem; }
+            .laporan-controls select, .laporan-controls .download-btn { width: 100%; margin-left: 0; }
+            .total-strip { grid-template-columns: 1fr; }
+            .total-chip .nilai { font-size: 1.25rem; }
+            table.laporan-table { min-width: 560px; font-size: 0.78rem; }
+            table.laporan-table thead th, table.laporan-table tbody td { padding: 0.5rem 0.55rem; }
+        }
+
+        /* ---------- PRINT ---------- */
+        .print-only { display: none; }
+        @media print {
+            @page { size: A4 portrait; margin: 9mm 10mm; }
+            html, body {
+                background: #fff !important;
+                -webkit-print-color-adjust: exact; print-color-adjust: exact;
+                font-size: 11px;
+            }
+            #loadingOverlay, .laporan-controls, .rab-modal-overlay, .info-btn { display: none !important; }
+            .container { max-width: none; margin: 0; padding: 0; }
+            .laporan-header, .total-strip, .chart-wrap, .laporan-table-wrap, .laporan-footer {
+                box-shadow: none !important; border-radius: 0 !important;
+            }
+            .laporan-header {
+                padding: 8px 10px 8px 14px !important;
+                margin-bottom: 6px !important;
+                border: none !important;
+                border-bottom: 1.5px solid #10233f !important;
+            }
+            .laporan-header::before { width: 3px; }
+            .laporan-header .brand-mark { width: 30px; height: 30px; font-size: 8px; border-radius: 4px; }
+            .laporan-header .head-text h1 { font-size: 13.5px !important; }
+            .laporan-header .head-text .sub { font-size: 9px !important; margin-top: 1px; }
+            .laporan-header .head-meta { padding-left: 10px; }
+            .laporan-header .head-meta .meta-label { font-size: 7px; margin-bottom: 1px; }
+            .laporan-header .head-meta .meta-value { font-size: 9px; }
+
+            .print-only {
+                display: flex !important; justify-content: space-between; align-items: baseline;
+                gap: 10px; margin: 0 0 6px; padding-bottom: 4px;
+                border-bottom: 1px solid #dfe3e9;
+                font-size: 9px; color: #5b6474;
+            }
+            .print-only .print-bahan { font-size: 11px; font-weight: 700; color: #10233f; }
+            .print-only .print-bahan span { font-weight: 500; color: #5b6474; font-size: 9px; }
+
+            .total-strip { gap: 5px !important; margin-bottom: 6px !important; }
+            .total-chip { padding: 5px 8px 4px !important; border-radius: 4px !important; }
+            .total-chip::before { height: 2px; }
+            .total-chip .label { font-size: 7px !important; margin-bottom: 1px !important; letter-spacing: 0.06em; }
+            .total-chip .nilai { font-size: 11.5px !important; }
+
+            .chart-wrap { padding: 6px 8px 4px !important; margin-bottom: 6px !important; border-radius: 4px !important; }
+            .chart-wrap::before { font-size: 7px !important; margin-bottom: 3px !important; }
+            .chart-box { overflow: visible !important; height: 78px !important; }
+            .chart-inner { width: 100% !important; height: 78px !important; }
+            #laporanChart { max-height: 78px !important; }
+
+            .laporan-table-wrap {
+                overflow: visible !important;
+                border: 1px solid #c3cad5 !important;
+                border-radius: 0 !important;
+                margin: 0 !important;
+            }
+            table.laporan-table { min-width: 0 !important; width: 100%; font-size: 9px !important; }
+            table.laporan-table thead { display: table-header-group; }
+            table.laporan-table tr { break-inside: avoid; page-break-inside: avoid; }
+            table.laporan-table thead th {
+                background: #eef1f6 !important; color: #10233f !important;
+                border-bottom: 1px solid #c3cad5 !important;
+                padding: 3px 5px !important; font-size: 7px !important; letter-spacing: 0.05em;
+            }
+            table.laporan-table thead th.sortable::after { content: "" !important; }
+            table.laporan-table tbody td {
+                padding: 2.5px 5px !important;
+                border-bottom: 1px solid #e6e9ef !important;
+                font-size: 9px !important;
+            }
+            table.laporan-table tbody tr.lengkap td { background: #f4faf7 !important; }
+            table.laporan-table tbody tr:nth-child(even) td { background: #fcfdfe !important; }
+            .badge-kurang { padding: 0 3px !important; font-size: 8px !important; border: none !important; background: transparent !important; }
+            .badge-kurang-ada { color: #b42318 !important; }
+            .badge-kurang-tidak { color: #067647 !important; }
+
+            .laporan-footer {
+                margin-top: 6px !important; padding: 5px 8px !important;
+                border: none !important; border-top: 1px solid #dfe3e9 !important;
+                border-radius: 0 !important; font-size: 8px !important;
+            }
+            .laporan-footer a { color: #10233f; text-decoration: none; }
         }
     </style>
 </head>
@@ -298,23 +471,36 @@
     <div class="container">
         <header class="laporan-header">
             <div class="head-row">
-                <div class="head-text">
-                    <h1>Laporan Material Masuk</h1>
-                    <p class="sub">Bedah Rumah Kelompok 2 • Desa Kampung Baru</p>
+                <div class="head-brand">
+                    <div class="brand-mark">BR</div>
+                    <div class="head-text">
+                        <h1>Laporan Material Masuk</h1>
+                        <p class="sub">Bedah Rumah Kelompok 2 &bull; Desa Kampung Baru</p>
+                    </div>
+                </div>
+                <div class="head-meta">
+                    <span class="meta-label">Jenis Laporan</span>
+                    <span class="meta-value">Realisasi Material</span>
                 </div>
             </div>
         </header>
 
+        <div class="print-only" id="printInfo">
+            <div class="print-bahan" id="printBahan">Bahan: -</div>
+            <div id="printMeta">-</div>
+        </div>
+
         <div class="laporan-controls">
             <label for="pilihBahanLaporan">Pilih Bahan</label>
             <select id="pilihBahanLaporan"></select>
+            <button class="download-btn print" id="btnCetak" onclick="cetakLaporan()">Cetak</button>
             <button class="download-btn jpg" id="btnUnduhJPG" onclick="unduhJPG()">Unduh JPG</button>
         </div>
 
         <div class="total-strip" id="stripTotal"></div>
 
-        <div class="chart-wrap" id="chartWrap" style="display:none; margin-top: 0.9rem; background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 0.9rem 1rem;">
-            <canvas id="laporanChart" height="200"></canvas>
+        <div class="chart-wrap" id="chartWrap">
+            <div class="chart-box"><div class="chart-inner" id="chartInner"><canvas id="laporanChart"></canvas></div></div>
         </div>
         <div class="laporan-table-wrap">
             <table class="laporan-table">
@@ -323,9 +509,10 @@
                         <th>NO</th>
                         <th class="sortable" data-sort="nama" onclick="urutkan('nama')">NAMA</th>
                         <th class="sortable" data-sort="tanggal" onclick="urutkan('tanggal')">TANGGAL</th>
+                        <th>SATUAN</th>
                         <th class="sortable" data-sort="masuk" onclick="urutkan('masuk')">MASUK</th>
                         <th class="sortable" data-sort="total" onclick="urutkan('total')">TOTAL</th>
-                        <th>KURANG</th>
+                        <th class="sortable" data-sort="status" onclick="urutkan('status')">KURANG</th>
                     </tr>
                 </thead>
                 <tbody id="tbodyLaporan"></tbody>
@@ -507,14 +694,20 @@
             if (!namaBahan) {
                 tbody.innerHTML = '';
                 wrap.style.display = 'none'; empty.style.display = 'block'; strip.innerHTML = '';
+                sembunyikanChart();
                 return;
             }
 
             const rabMap = {};
+            const satuanMap = {};
+            let satuanBahan = '';
             dataLaporan.rab.forEach(function(r) {
                 if (String(r.uraian || '').trim().toLowerCase() !== String(namaBahan).trim().toLowerCase()) return;
                 const key = String(r.anggota || '').trim().toLowerCase();
                 rabMap[key] = (rabMap[key] || 0) + (parseFloat(r.volume) || 0);
+                const sat = String(r.satuan || '').trim();
+                if (sat && !satuanMap[key]) satuanMap[key] = sat;
+                if (!satuanBahan && sat) satuanBahan = sat;
             });
 
             const masukMap = {}; const tanggalMap = {};
@@ -522,6 +715,9 @@
                 if (String(m.namaMaterial || '').trim().toLowerCase() !== String(namaBahan).trim().toLowerCase()) return;
                 const key = String(m.anggota || '').trim().toLowerCase();
                 masukMap[key] = (masukMap[key] || 0) + (parseFloat(m.volume) || 0);
+                const sat = String(m.satuan || '').trim();
+                if (sat && !satuanMap[key]) satuanMap[key] = sat;
+                if (!satuanBahan && sat) satuanBahan = sat;
                 const tglKey = tanggalKey(m.tanggal);
                 if (tglKey && (!tanggalMap[key] || tglKey > tanggalMap[key])) {
                     tanggalMap[key] = tglKey;
@@ -539,6 +735,7 @@
                 rows.push({
                     nama: nama, tanggal: tanggal, tanggalKey: tanggalMap[key] || '',
                     masuk: masuk, kurang: kurang, total: total,
+                    satuan: satuanMap[key] || satuanBahan || '-',
                     lengkap: (total > 0 && kurang === 0)
                 });
             });
@@ -559,6 +756,14 @@
                     if (va !== vb) return sortDir === 'desc' ? vb - va : va - vb;
                     return String(a.nama).localeCompare(b.nama, 'id');
                 }
+                if (sortBy === 'status') {
+                    const la = a.lengkap ? 1 : 0;
+                    const lb = b.lengkap ? 1 : 0;
+                    if (la !== lb) return sortDir === 'asc' ? la - lb : lb - la;
+                    const ka = a.kurang || 0, kb = b.kurang || 0;
+                    if (ka !== kb) return sortDir === 'asc' ? kb - ka : ka - kb;
+                    return String(a.nama).localeCompare(b.nama, 'id');
+                }
                 return 0;
             });
 
@@ -566,21 +771,24 @@
             tbody.innerHTML = '';
             if (rows.length === 0) {
                 wrap.style.display = 'none'; empty.style.display = 'block'; strip.innerHTML = '';
+                sembunyikanChart();
                 return;
             }
             wrap.style.display = 'block'; empty.style.display = 'none';
 
             rows.forEach(function(r, index) {
                 totalMasuk += r.masuk; totalKurang += r.kurang; totalTotal += r.total;
-                const kurangLabel = r.kurang > 0 ? r.kurang + '' : '<span style="display:inline-flex;align-items:center;gap:4px;"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="6" cy="6" r="5" fill="#22c55e"/><path d="M4 6L5.25 7.25L8 4.75" stroke="white" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg> Lengkap</span>';
+                const kurangLabel = r.kurang > 0 ? r.kurang + '' : 'Lengkap';
                 const kurangClass = r.kurang > 0 ? 'badge-kurang-ada' : 'badge-kurang-tidak';
+                const checkIcon = r.lengkap ? ' <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align:-1px;"><circle cx="6" cy="6" r="5" fill="#22c55e"/><path d="M4 6L5.25 7.25L8 4.75" stroke="white" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>' : '';
                 const rowClass = r.lengkap ? 'lengkap' : (r.masuk === 0 ? 'kosong' : '');
                 const row = document.createElement('tr');
                 row.className = rowClass;
                 row.innerHTML = `
-                    <td>${index + 1}</td>
+                    <td>${index + 1}${checkIcon}</td>
                     <td><div style="display:flex;align-items:center;gap:6px;"><button type="button" class="nama-btn" title="Lihat detail lengkap RAB">${escapeHtml(r.nama)}</button><button type="button" class="info-btn" title="Lihat detail lengkap" onclick="event.stopPropagation(); bukaRAB('${escapeJs(r.nama)}')"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="7" cy="7" r="6" stroke="#64748b" stroke-width="1.2"/><path d="M7 6V10" stroke="#64748b" stroke-width="1.2" stroke-linecap="round"/><circle cx="7" cy="4.5" r="0.8" fill="#64748b"/></svg></button></div></td>
                     <td>${escapeHtml(r.tanggal)}</td>
+                    <td>${escapeHtml(r.satuan)}</td>
                     <td>${r.masuk}</td>
                     <td><strong>${r.total}</strong></td>
                     <td><span class="badge-kurang ${kurangClass}">${kurangLabel}</span></td>
@@ -592,11 +800,32 @@
                 }
             });
 
+            const satuanStrip = satuanBahan ? ' ' + escapeHtml(satuanBahan) : '';
             strip.innerHTML = `
-                <div class="total-chip"><span class="label">Total Masuk</span><span class="nilai">${totalMasuk}</span></div>
-                <div class="total-chip"><span class="label">Total Kurang</span><span class="nilai">${totalKurang}</span></div>
-                <div class="total-chip"><span class="label">Total Target (RAB)</span><span class="nilai">${totalTotal}</span></div>
+                <div class="total-chip"><span class="label">Total Masuk</span><span class="nilai">${totalMasuk}${satuanStrip}</span></div>
+                <div class="total-chip"><span class="label">Total Kurang</span><span class="nilai">${totalKurang}${satuanStrip}</span></div>
+                <div class="total-chip"><span class="label">Total Target (RAB)</span><span class="nilai">${totalTotal}${satuanStrip}</span></div>
             `;
+
+            const printBahan = document.getElementById('printBahan');
+            const printMeta = document.getElementById('printMeta');
+            if (printBahan) {
+                printBahan.innerHTML = 'Bahan: ' + escapeHtml(namaBahan) +
+                    (satuanBahan ? ' <span>(' + escapeHtml(satuanBahan) + ')</span>' : '');
+            }
+            if (printMeta) {
+                printMeta.textContent = rows.length + ' anggota • Dicetak ' + new Date().toLocaleString('id-ID', {
+                    day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit'
+                });
+            }
+
+            renderChart(rows);
+        }
+
+        function sembunyikanChart() {
+            const chartWrap = document.getElementById('chartWrap');
+            if (chartWrap) chartWrap.style.display = 'none';
+            if (chartLaporan) { chartLaporan.destroy(); chartLaporan = null; }
         }
 
         /* ---------- POPUP RAB ---------- */
@@ -735,6 +964,37 @@
             document.body.appendChild(link); link.click(); document.body.removeChild(link);
         }
 
+        /* ---------- CETAK / PRINT ---------- */
+        function cetakLaporan() {
+            const select = document.getElementById('pilihBahanLaporan');
+            const namaBahan = select ? select.value : '';
+            if (!namaBahan) { alert('Pilih bahan terlebih dahulu.'); return; }
+
+            const box = document.querySelector('.chart-box');
+            const inner = document.getElementById('chartInner');
+            let lebarAsli = '';
+            if (box && inner) {
+                lebarAsli = inner.style.width;
+                inner.style.width = (box.clientWidth || 900) + 'px';
+                if (chartLaporan) chartLaporan.resize();
+            }
+
+            const pulihkan = function() {
+                if (inner) inner.style.width = lebarAsli;
+                if (chartLaporan) chartLaporan.resize();
+                window.removeEventListener('afterprint', pulihkan);
+            };
+            window.addEventListener('afterprint', pulihkan);
+
+            const judulAsli = document.title;
+            document.title = 'Laporan-' + String(namaBahan).replace(/[^a-z0-9]/gi, '_');
+            window.print();
+            setTimeout(function() {
+                document.title = judulAsli;
+                pulihkan();
+            }, 800);
+        }
+
         /* ---------- UNDUH JPG ---------- */
         function unduhJPG() {
             const select = document.getElementById('pilihBahanLaporan');
@@ -744,32 +1004,70 @@
                 alert('Library html2canvas belum termuat. Pastikan ada koneksi internet lalu muat ulang halaman.');
                 return;
             }
+
             const holder = document.createElement('div');
-            holder.style.cssText = 'position:fixed;left:-10000px;top:0;width:900px;background:#ffffff;padding:20px;box-sizing:border-box;font-family:Inter,sans-serif;';
+            holder.style.cssText = 'position:fixed;left:-10000px;top:0;width:900px;background:#ffffff;padding:26px 28px;box-sizing:border-box;font-family:Inter,Segoe UI,sans-serif;color:#0b1220;';
+
             const headerEl = document.querySelector('.laporan-header');
             if (headerEl) {
                 const headerClone = headerEl.cloneNode(true);
-                headerClone.style.marginBottom = '14px'; holder.appendChild(headerClone);
+                headerClone.style.marginBottom = '16px';
+                holder.appendChild(headerClone);
             }
-            const judul = document.createElement('div');
-            judul.style.cssText = 'font-size:17px;font-weight:800;color:#0f172a;margin:0 0 10px;';
-            judul.textContent = 'Bahan: ' + namaBahan; holder.appendChild(judul);
+
             const stripEl = document.getElementById('stripTotal');
+            const infoBar = document.createElement('div');
+            infoBar.style.cssText = 'display:flex;justify-content:space-between;align-items:baseline;gap:16px;margin:14px 0 12px;padding-bottom:8px;border-bottom:1px solid #e3e7ee;';
+            const infoLeft = document.createElement('div');
+            infoLeft.style.cssText = 'font-size:15px;font-weight:700;color:#10233f;';
+            infoLeft.textContent = 'Bahan: ' + namaBahan;
+            const infoRight = document.createElement('div');
+            infoRight.style.cssText = 'font-size:10px;color:#5b6474;';
+            infoRight.textContent = 'Dicetak ' + new Date().toLocaleString('id-ID', {
+                day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit'
+            });
+            infoBar.appendChild(infoLeft);
+            infoBar.appendChild(infoRight);
+            holder.appendChild(infoBar);
+
             if (stripEl && stripEl.innerHTML.trim() !== '') {
-                const stripClone = stripEl.cloneNode(true); holder.appendChild(stripClone);
+                const stripClone = stripEl.cloneNode(true);
+                stripClone.style.marginBottom = '14px';
+                holder.appendChild(stripClone);
             }
+
+            if (chartLaporan) {
+                const chartBox = document.createElement('div');
+                chartBox.style.cssText = 'margin-bottom:14px;padding:10px 12px 8px;border:1px solid #e3e7ee;border-radius:8px;';
+                const chartTitle = document.createElement('div');
+                chartTitle.style.cssText = 'font-size:9px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5b6474;margin-bottom:6px;';
+                chartTitle.textContent = 'Grafik Realisasi per Anggota';
+                const chartImg = document.createElement('img');
+                chartImg.src = chartLaporan.toBase64Image('image/png', 1);
+                chartImg.style.cssText = 'display:block;width:100%;height:auto;';
+                chartBox.appendChild(chartTitle);
+                chartBox.appendChild(chartImg);
+                holder.appendChild(chartBox);
+            }
+
             const tableWrapEl = document.querySelector('.laporan-table-wrap');
             if (tableWrapEl) {
                 const tableClone = tableWrapEl.cloneNode(true);
-                tableClone.style.boxShadow = 'none'; tableClone.style.overflow = 'visible';
-                tableClone.style.marginTop = '10px'; holder.appendChild(tableClone);
+                tableClone.style.boxShadow = 'none';
+                tableClone.style.overflow = 'visible';
+                tableClone.style.marginTop = '0';
+                tableClone.querySelectorAll('.info-btn').forEach(function(btn) { btn.remove(); });
+                holder.appendChild(tableClone);
             }
+
             const footerEl = document.getElementById('laporanFooter');
             if (footerEl) {
                 const footerClone = footerEl.cloneNode(true);
-                footerClone.style.marginTop = '14px'; footerClone.style.marginBottom = '0';
+                footerClone.style.marginTop = '16px';
+                footerClone.style.marginBottom = '0';
                 holder.appendChild(footerClone);
             }
+
             document.body.appendChild(holder);
             html2canvas(holder, { backgroundColor: '#ffffff', scale: 2, useCORS: true })
                 .then(function(canvas) {
@@ -783,14 +1081,6 @@
                 .finally(function() {
                     if (holder.parentNode) holder.parentNode.removeChild(holder);
                 });
-            if (wrap.style.display === 'none') {
-                const chartWrap = document.getElementById('chartWrap');
-                if (chartWrap) chartWrap.style.display = 'none';
-                if (chartLaporan) { chartLaporan.destroy(); chartLaporan = null; }
-                return;
-            }
-
-            renderChart(rows);
         }
 
         function renderChart(rows) {
@@ -803,32 +1093,64 @@
                 if (chartLaporan) { chartLaporan.destroy(); chartLaporan = null; }
                 return;
             }
-            const top = rows.slice(0, 10);
-            const labels = top.map(r => (r.nama.split(' ')[0] + ' ' + (r.nama.split(' ')[1] || '')).trim());
+            const top = rows.slice();
+            const labels = top.map(r => r.nama.split(' ')[0]);
             const dataMasuk = top.map(r => r.masuk);
             const dataTotal = top.map(r => r.total);
             if (chartLaporan) chartLaporan.destroy();
+            chartWrap.style.display = 'block';
+            const box = document.querySelector('.chart-box');
+            const inner = document.getElementById('chartInner');
+            if (box && inner) {
+                const lebarTersedia = box.clientWidth || 900;
+                const lebarMin = top.length * 46;
+                inner.style.width = Math.max(lebarMin, lebarTersedia) + 'px';
+            }
             chartLaporan = new Chart(ctx, {
                 type: 'bar',
                 data: {
                     labels: labels,
                     datasets: [
-                        { label: 'Masuk', data: dataMasuk, backgroundColor: '#2563eb', borderRadius: 6 },
-                        { label: 'RAB', data: dataTotal, backgroundColor: '#cbd5e1', borderRadius: 6 }
+                        { label: 'Masuk', data: dataMasuk, backgroundColor: '#1d4ed8', borderRadius: 2, maxBarThickness: 14, categoryPercentage: 0.72, barPercentage: 0.86 },
+                        { label: 'RAB', data: dataTotal, backgroundColor: '#e3e7ee', borderRadius: 2, maxBarThickness: 14, categoryPercentage: 0.72, barPercentage: 0.86 }
                     ]
                 },
                 options: {
                     responsive: true,
-                    plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 11 } } } },
-                    scales: { x: { grid: { display: false } }, y: { beginAtZero: true, grid: { color: '#f8fafc' } } }
+                    maintainAspectRatio: false,
+                    layout: { padding: { top: 2 } },
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            align: 'start',
+                            labels: {
+                                boxWidth: 7, boxHeight: 7, usePointStyle: true, pointStyle: 'rectRounded',
+                                padding: 12, font: { size: 10, family: 'Inter' }, color: '#5b6474'
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: '#10233f', padding: 8, cornerRadius: 4,
+                            titleFont: { size: 11, family: 'Inter' }, bodyFont: { size: 11, family: 'Inter' },
+                            displayColors: true, boxWidth: 6, boxHeight: 6, usePointStyle: true
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: { display: false },
+                            border: { display: false },
+                            ticks: { font: { size: 9, family: 'Inter' }, color: '#98a2b3', maxRotation: 0, autoSkip: false }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: '#f1f3f7', drawTicks: false },
+                            border: { display: false },
+                            ticks: { font: { size: 9, family: 'Inter' }, color: '#98a2b3', padding: 4, maxTicksLimit: 4 }
+                        }
+                    }
                 }
             });
             chartWrap.style.display = 'block';
         }
-
-        /* ---------- POPUP RAB ---------- */
-
-            renderChart(rows);
     </script>
 </body>
 </html>
