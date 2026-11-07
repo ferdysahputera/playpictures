@@ -119,11 +119,19 @@
         .laporan-header .head-meta .meta-value {
             font-size: 0.86rem; font-weight: 600; color: var(--ink);
         }
+        .laporan-header .head-meta #metaBahan {
+            display: block; margin-top: 0.15rem;
+            font-size: 0.82rem; font-weight: 700; color: var(--brand-dark);
+            word-break: break-word;
+        }
         @media (max-width: 640px) {
             .laporan-header { padding: 1.1rem 1.2rem; }
             .laporan-header .head-text h1 { font-size: 1.12rem; }
             .laporan-header .head-text .sub { font-size: 0.78rem; }
-            .laporan-header .head-meta { display: none; }
+            .laporan-header .head-meta {
+                border-left: none; padding-left: 0; text-align: left;
+                width: 100%; padding-top: 0.6rem; border-top: 1px solid var(--line);
+            }
             .laporan-header .brand-mark { width: 38px; height: 38px; font-size: 0.72rem; }
         }
 
@@ -252,6 +260,9 @@
         table.laporan-table tbody tr:hover td { background: #f6f8ff; }
         table.laporan-table tbody tr.lengkap td { background: #f6fbf8 !important; }
         table.laporan-table tbody tr.lengkap:hover td { background: #eff9f3 !important; }
+        table.laporan-table tbody tr.belum td { background: #fef3f2 !important; color: #912018; }
+        table.laporan-table tbody tr.belum:hover td { background: #fde8e6 !important; }
+        table.laporan-table tbody tr.belum .nama-btn { color: #912018; }
         table.laporan-table tbody tr.kosong td { color: #98a2b3; }
 
         /* ---------- NAMA & AKSI ---------- */
@@ -283,6 +294,7 @@
         }
         .badge-kurang-tidak { background: #ecfdf3; color: #067647; border: 1px solid #abefc6; }
         .badge-kurang-ada { background: #fef3f2; color: var(--red); border: 1px solid #fecdca; }
+        .badge-kurang-none { background: #f2f4f7; color: var(--muted); border: 1px solid var(--line); }
 
         .empty-state { text-align: center; padding: 3rem 1rem; color: var(--muted); font-size: 0.86rem; }
 
@@ -321,6 +333,17 @@
             margin-bottom: 1rem; text-align: center; overflow: hidden;
         }
         .rab-photo img { max-width: 100%; height: auto; display: block; margin: 0 auto; }
+        .rab-photo-loading {
+            display: none; align-items: center; justify-content: center;
+            padding: 2rem 1rem; color: var(--muted); font-size: 0.82rem;
+        }
+        .rab-photo-loading::before {
+            content: ""; display: inline-block; width: 16px; height: 16px;
+            margin-right: 8px; border: 2.5px solid #e2e8f0;
+            border-top-color: var(--brand); border-radius: 50%;
+            animation: rabSpin 0.8s linear infinite; vertical-align: middle;
+        }
+        @keyframes rabSpin { to { transform: rotate(360deg); } }
         .rab-photo .photo-empty {
             padding: 2rem 1rem; color: var(--muted); font-size: 0.82rem;
         }
@@ -396,27 +419,30 @@
             .laporan-header .head-meta { padding-left: 10px; }
             .laporan-header .head-meta .meta-label { font-size: 7px; margin-bottom: 1px; }
             .laporan-header .head-meta .meta-value { font-size: 9px; }
+            .laporan-header .head-meta #metaBahan { font-weight: 700; color: #10233f; }
 
             .print-only {
-                display: flex !important; justify-content: space-between; align-items: baseline;
-                gap: 10px; margin: 0 0 6px; padding-bottom: 4px;
+                display: block !important;
+                margin: 0 0 5px; padding-bottom: 3px;
                 border-bottom: 1px solid #dfe3e9;
                 font-size: 9px; color: #5b6474;
             }
-            .print-only .print-bahan { font-size: 11px; font-weight: 700; color: #10233f; }
-            .print-only .print-bahan span { font-weight: 500; color: #5b6474; font-size: 9px; }
+            .print-only .print-row {
+                display: flex; justify-content: flex-start; align-items: baseline; gap: 10px;
+            }
+            .print-only .print-summary {
+                margin-top: 2px; font-size: 8px; color: #5b6474;
+                display: flex; flex-wrap: wrap; gap: 0 10px;
+            }
+            .print-only .print-summary b { font-weight: 600; color: #10233f; }
 
-            .total-strip { gap: 5px !important; margin-bottom: 6px !important; }
-            .total-chip { padding: 5px 8px 4px !important; border-radius: 4px !important; }
-            .total-chip::before { height: 2px; }
-            .total-chip .label { font-size: 7px !important; margin-bottom: 1px !important; letter-spacing: 0.06em; }
-            .total-chip .nilai { font-size: 11.5px !important; }
+            .total-strip { display: none !important; }
 
-            .chart-wrap { padding: 6px 8px 4px !important; margin-bottom: 6px !important; border-radius: 4px !important; }
+            .chart-wrap { padding: 6px 8px 4px !important; margin-bottom: 6px !important; border-radius: 4px !important; border: 1px solid #c3cad5 !important; }
             .chart-wrap::before { font-size: 7px !important; margin-bottom: 3px !important; }
-            .chart-box { overflow: visible !important; height: 78px !important; }
-            .chart-inner { width: 100% !important; height: 78px !important; }
-            #laporanChart { max-height: 78px !important; }
+            .chart-box { overflow: visible !important; height: 104px !important; }
+            .chart-inner { width: 100% !important; height: 104px !important; }
+            #laporanChart { max-height: 104px !important; }
 
             .laporan-table-wrap {
                 overflow: visible !important;
@@ -438,11 +464,13 @@
                 border-bottom: 1px solid #e6e9ef !important;
                 font-size: 9px !important;
             }
-            table.laporan-table tbody tr.lengkap td { background: #f4faf7 !important; }
             table.laporan-table tbody tr:nth-child(even) td { background: #fcfdfe !important; }
+            table.laporan-table tbody tr.lengkap td { background: #f4faf7 !important; }
+            table.laporan-table tbody tr.belum td { background: #fef3f2 !important; color: #912018 !important; }
             .badge-kurang { padding: 0 3px !important; font-size: 8px !important; border: none !important; background: transparent !important; }
             .badge-kurang-ada { color: #b42318 !important; }
             .badge-kurang-tidak { color: #067647 !important; }
+            .badge-kurang-none { color: #5b6474 !important; font-style: italic; }
 
             .laporan-footer {
                 margin-top: 6px !important; padding: 5px 8px !important;
@@ -480,14 +508,16 @@
                 </div>
                 <div class="head-meta">
                     <span class="meta-label">Jenis Laporan</span>
-                    <span class="meta-value">Realisasi Material</span>
+                    <span class="meta-value">Realisasi Material <span id="metaBahan"></span></span>
                 </div>
             </div>
         </header>
 
         <div class="print-only" id="printInfo">
-            <div class="print-bahan" id="printBahan">Bahan: -</div>
-            <div id="printMeta">-</div>
+            <div class="print-row">
+                <div id="printMeta">-</div>
+            </div>
+            <div class="print-summary" id="printSummary"></div>
         </div>
 
         <div class="laporan-controls">
@@ -541,6 +571,7 @@
                 <div class="rab-photo" id="rabPhotoWrap">
                     <span class="photo-label">Foto RAB Kertas</span>
                     <img id="rabPhoto" src="" alt="Foto RAB" style="display:none;">
+                    <div id="rabPhotoLoading" class="rab-photo-loading">Memuat foto...</div>
                     <div id="rabPhotoEmpty" class="photo-empty">Foto RAB kertas belum tersedia.</div>
                 </div>
                 <table>
@@ -561,8 +592,8 @@
     <script src="js/config.js"></script>
     <script>
         let dataLaporan = { material: [], anggota: [], rab: [] };
-        let sortBy = 'masuk';
-        let sortDir = 'desc';
+        let sortBy = 'status';
+        let sortDir = 'asc';
         let bahanSelectTerinisialisasi = false;
         let loadingResolved = false;
         let chartLaporan = null;
@@ -694,6 +725,8 @@
             if (!namaBahan) {
                 tbody.innerHTML = '';
                 wrap.style.display = 'none'; empty.style.display = 'block'; strip.innerHTML = '';
+                const metaBahan = document.getElementById('metaBahan');
+                if (metaBahan) metaBahan.textContent = '';
                 sembunyikanChart();
                 return;
             }
@@ -757,9 +790,12 @@
                     return String(a.nama).localeCompare(b.nama, 'id');
                 }
                 if (sortBy === 'status') {
-                    const la = a.lengkap ? 1 : 0;
-                    const lb = b.lengkap ? 1 : 0;
-                    if (la !== lb) return sortDir === 'asc' ? la - lb : lb - la;
+                    const rank = function(x) {
+                        if (x.total === 0) return 2;
+                        return x.lengkap ? 1 : 0;
+                    };
+                    const ra = rank(a), rb = rank(b);
+                    if (ra !== rb) return sortDir === 'asc' ? ra - rb : rb - ra;
                     const ka = a.kurang || 0, kb = b.kurang || 0;
                     if (ka !== kb) return sortDir === 'asc' ? kb - ka : ka - kb;
                     return String(a.nama).localeCompare(b.nama, 'id');
@@ -778,10 +814,11 @@
 
             rows.forEach(function(r, index) {
                 totalMasuk += r.masuk; totalKurang += r.kurang; totalTotal += r.total;
-                const kurangLabel = r.kurang > 0 ? r.kurang + '' : 'Lengkap';
-                const kurangClass = r.kurang > 0 ? 'badge-kurang-ada' : 'badge-kurang-tidak';
+                const tidakPesan = r.total === 0;
+                const kurangLabel = tidakPesan ? 'Tidak Pesan' : (r.kurang > 0 ? r.kurang + '' : 'Lengkap');
+                const kurangClass = tidakPesan ? 'badge-kurang-none' : (r.kurang > 0 ? 'badge-kurang-ada' : 'badge-kurang-tidak');
                 const checkIcon = r.lengkap ? ' <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align:-1px;"><circle cx="6" cy="6" r="5" fill="#22c55e"/><path d="M4 6L5.25 7.25L8 4.75" stroke="white" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>' : '';
-                const rowClass = r.lengkap ? 'lengkap' : (r.masuk === 0 ? 'kosong' : '');
+                const rowClass = r.lengkap ? 'lengkap' : (tidakPesan ? 'kosong' : 'belum');
                 const row = document.createElement('tr');
                 row.className = rowClass;
                 row.innerHTML = `
@@ -807,16 +844,23 @@
                 <div class="total-chip"><span class="label">Total Target (RAB)</span><span class="nilai">${totalTotal}${satuanStrip}</span></div>
             `;
 
-            const printBahan = document.getElementById('printBahan');
-            const printMeta = document.getElementById('printMeta');
-            if (printBahan) {
-                printBahan.innerHTML = 'Bahan: ' + escapeHtml(namaBahan) +
-                    (satuanBahan ? ' <span>(' + escapeHtml(satuanBahan) + ')</span>' : '');
+            const metaBahan = document.getElementById('metaBahan');
+            if (metaBahan) {
+                metaBahan.textContent = '(' + namaBahan + (satuanBahan ? ' • ' + satuanBahan : '') + ')';
             }
+
+            const printMeta = document.getElementById('printMeta');
             if (printMeta) {
                 printMeta.textContent = rows.length + ' anggota • Dicetak ' + new Date().toLocaleString('id-ID', {
                     day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit'
                 });
+            }
+            const printSummary = document.getElementById('printSummary');
+            if (printSummary) {
+                printSummary.innerHTML =
+                    '<span>Masuk: <b>' + totalMasuk + satuanStrip + '</b></span>' +
+                    '<span>Kurang: <b>' + totalKurang + satuanStrip + '</b></span>' +
+                    '<span>Target: <b>' + totalTotal + satuanStrip + '</b></span>';
             }
 
             renderChart(rows);
@@ -976,12 +1020,26 @@
             if (box && inner) {
                 lebarAsli = inner.style.width;
                 inner.style.width = (box.clientWidth || 900) + 'px';
-                if (chartLaporan) chartLaporan.resize();
+            }
+            if (chartLaporan) {
+                chartLaporan.$tampilkanNilai = true;
+                chartLaporan.options.scales.y.grid.color = '#d5dbe4';
+                chartLaporan.options.scales.x.border.color = '#9aa5b5';
+                chartLaporan.options.scales.y.border.color = '#9aa5b5';
+                chartLaporan.resize();
+                chartLaporan.update('none');
             }
 
             const pulihkan = function() {
                 if (inner) inner.style.width = lebarAsli;
-                if (chartLaporan) chartLaporan.resize();
+                if (chartLaporan) {
+                    chartLaporan.$tampilkanNilai = false;
+                    chartLaporan.options.scales.y.grid.color = '#e6eaf1';
+                    chartLaporan.options.scales.x.border.color = '#c3cad5';
+                    chartLaporan.options.scales.y.border.color = '#c3cad5';
+                    chartLaporan.resize();
+                    chartLaporan.update('none');
+                }
                 window.removeEventListener('afterprint', pulihkan);
             };
             window.addEventListener('afterprint', pulihkan);
@@ -1016,19 +1074,6 @@
             }
 
             const stripEl = document.getElementById('stripTotal');
-            const infoBar = document.createElement('div');
-            infoBar.style.cssText = 'display:flex;justify-content:space-between;align-items:baseline;gap:16px;margin:14px 0 12px;padding-bottom:8px;border-bottom:1px solid #e3e7ee;';
-            const infoLeft = document.createElement('div');
-            infoLeft.style.cssText = 'font-size:15px;font-weight:700;color:#10233f;';
-            infoLeft.textContent = 'Bahan: ' + namaBahan;
-            const infoRight = document.createElement('div');
-            infoRight.style.cssText = 'font-size:10px;color:#5b6474;';
-            infoRight.textContent = 'Dicetak ' + new Date().toLocaleString('id-ID', {
-                day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit'
-            });
-            infoBar.appendChild(infoLeft);
-            infoBar.appendChild(infoRight);
-            holder.appendChild(infoBar);
 
             if (stripEl && stripEl.innerHTML.trim() !== '') {
                 const stripClone = stripEl.cloneNode(true);
@@ -1083,6 +1128,28 @@
                 });
         }
 
+        const nilaiBatangPlugin = {
+            id: 'nilaiBatang',
+            afterDatasetsDraw: function(chart) {
+                if (!chart.$tampilkanNilai) return;
+                const c = chart.ctx;
+                c.save();
+                c.font = '600 8px Inter, sans-serif';
+                c.textAlign = 'center';
+                c.textBaseline = 'bottom';
+                chart.data.datasets.forEach(function(ds, di) {
+                    const meta = chart.getDatasetMeta(di);
+                    meta.data.forEach(function(el, i) {
+                        const v = ds.data[i];
+                        if (!v) return;
+                        c.fillStyle = di === 0 ? '#0b1220' : '#5b6474';
+                        c.fillText(String(v), el.x, el.y - 3);
+                    });
+                });
+                c.restore();
+            }
+        };
+
         function renderChart(rows) {
             const ctx = document.getElementById('laporanChart');
             const chartWrap = document.getElementById('chartWrap');
@@ -1097,6 +1164,10 @@
             const labels = top.map(r => r.nama.split(' ')[0]);
             const dataMasuk = top.map(r => r.masuk);
             const dataTotal = top.map(r => r.total);
+            const warnaMasuk = top.map(function(r) {
+                if (r.total <= 0) return '#c3cad5';
+                return r.masuk >= r.total ? '#12805c' : '#b42318';
+            });
             if (chartLaporan) chartLaporan.destroy();
             chartWrap.style.display = 'block';
             const box = document.querySelector('.chart-box');
@@ -1111,14 +1182,15 @@
                 data: {
                     labels: labels,
                     datasets: [
-                        { label: 'Masuk', data: dataMasuk, backgroundColor: '#1d4ed8', borderRadius: 2, maxBarThickness: 14, categoryPercentage: 0.72, barPercentage: 0.86 },
-                        { label: 'RAB', data: dataTotal, backgroundColor: '#e3e7ee', borderRadius: 2, maxBarThickness: 14, categoryPercentage: 0.72, barPercentage: 0.86 }
+                        { label: 'Masuk', data: dataMasuk, backgroundColor: warnaMasuk, borderColor: '#0b5c42', borderWidth: 1, borderRadius: 2, maxBarThickness: 14, categoryPercentage: 0.72, barPercentage: 0.86 },
+                        { label: 'RAB', data: dataTotal, backgroundColor: '#e3e7ee', borderColor: '#b9c2d0', borderWidth: 1, borderRadius: 2, maxBarThickness: 14, categoryPercentage: 0.72, barPercentage: 0.86 }
                     ]
                 },
+                plugins: [nilaiBatangPlugin],
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    layout: { padding: { top: 2 } },
+                    layout: { padding: { top: 10 } },
                     plugins: {
                         legend: {
                             position: 'bottom',
@@ -1137,14 +1209,14 @@
                     scales: {
                         x: {
                             grid: { display: false },
-                            border: { display: false },
-                            ticks: { font: { size: 9, family: 'Inter' }, color: '#98a2b3', maxRotation: 0, autoSkip: false }
+                            border: { display: true, color: '#c3cad5', width: 1 },
+                            ticks: { font: { size: 9, family: 'Inter' }, color: '#5b6474', maxRotation: 0, autoSkip: false }
                         },
                         y: {
                             beginAtZero: true,
-                            grid: { color: '#f1f3f7', drawTicks: false },
-                            border: { display: false },
-                            ticks: { font: { size: 9, family: 'Inter' }, color: '#98a2b3', padding: 4, maxTicksLimit: 4 }
+                            grid: { color: '#e6eaf1', drawTicks: false },
+                            border: { display: true, color: '#c3cad5', width: 1 },
+                            ticks: { font: { size: 9, family: 'Inter' }, color: '#5b6474', padding: 4, maxTicksLimit: 4 }
                         }
                     }
                 }
