@@ -369,6 +369,81 @@
             color: var(--navy); background: #f7f8fa;
         }
 
+        /* ---------- POPUP TABS ---------- */
+        .rab-tabs {
+            display: flex; gap: 0; border-bottom: 1px solid var(--line);
+            margin: 0 -1.25rem 1rem;
+        }
+        .rab-tab {
+            flex: 1; background: #f7f8fa; border: none; border-bottom: 2px solid transparent;
+            padding: 0.7rem 0; font-size: 0.8rem; font-weight: 600; color: var(--muted);
+            cursor: pointer; white-space: nowrap; text-align: center;
+            transition: background 0.15s, color 0.15s;
+        }
+        .rab-tab:hover { background: #eef1f6; color: var(--ink); }
+        .rab-tab.active { background: var(--surface); color: var(--brand); border-bottom-color: var(--brand); }
+        .rab-tab:first-child { border-radius: 8px 0 0 0; }
+        .rab-tab:last-child { border-radius: 0 8px 0 0; }
+        .rab-tabpanel { display: none; animation: rabFade 0.15s ease; }
+        .rab-tabpanel.active { display: block; }
+
+        /* ---------- POPUP LOADING ---------- */
+        .rab-loading-overlay {
+            position: absolute; inset: 0; background: rgba(255, 255, 255, 0.85);
+            z-index: 60; display: none; flex-direction: column;
+            align-items: center; justify-content: center; gap: 0.8rem;
+        }
+        .rab-loading-overlay.showing { display: flex; }
+        .rab-spinner {
+            width: 30px; height: 30px; border: 3px solid #e3e7ee;
+            border-top-color: var(--brand); border-radius: 50%;
+            animation: rabSpin 0.8s linear infinite;
+        }
+        .rab-loading-bar { width: 200px; height: 7px; background: #e3e7ee; border-radius: 999px; overflow: hidden; }
+        .rab-loading-bar-fill { height: 100%; width: 0%; background: var(--brand); border-radius: 999px; transition: width 0.2s ease; }
+        .rab-loading-pct { font-size: 0.8rem; font-weight: 600; color: var(--ink); font-variant-numeric: tabular-nums; }
+
+        /* ---------- POPUP GALERI ---------- */
+        .rab-galeri {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 0.7rem; padding: 0.5rem 0;
+        }
+        .rab-galeri-item {
+            position: relative; border: 1px solid var(--line);
+            border-radius: 8px; overflow: hidden; background: #fafbfc;
+            aspect-ratio: 1; cursor: pointer;
+        }
+        .rab-galeri-item img { width: 100%; height: 100%; object-fit: cover; display: block; opacity: 0.92; transition: opacity 0.2s; }
+        .rab-galeri-item img:hover { opacity: 1; }
+        .rab-galeri-empty {
+            text-align: center; padding: 2rem 1rem; color: var(--muted);
+            font-size: 0.82rem;
+        }
+
+        /* ---------- POPUP LIGHTBOX ---------- */
+        .rab-lightbox {
+            display: none; position: fixed; inset: 0;
+            background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(4px);
+            z-index: 20000; align-items: center; justify-content: center;
+            padding: 1rem; box-sizing: border-box;
+        }
+        .rab-lightbox.active { display: flex; }
+        .rab-lightbox-content {
+            position: relative; max-width: 95vw; max-height: 85vh; width: auto; height: auto;
+            background: #000; border-radius: 8px; padding: 0.5rem; box-sizing: border-box;
+        }
+        .rab-lightbox-close {
+            position: absolute; top: 0.45rem; right: 0.75rem;
+            background: transparent; border: none; color: #fff; font-size: 2rem;
+            line-height: 1; cursor: pointer; opacity: 0.9; z-index: 10;
+            padding: 0 0.2rem;
+        }
+        .rab-lightbox-close:hover { opacity: 1; }
+        .rab-lightbox-caption {
+            margin-top: 0.5rem; text-align: center; color: #fff; font-size: 0.8rem;
+            font-variant-numeric: tabular-nums;
+        }
+
         /* ---------- FOOTER ---------- */
         .laporan-footer {
             margin-top: 1.25rem; padding: 1rem 1.2rem; border-radius: 10px;
@@ -564,26 +639,61 @@
     <div class="rab-modal-overlay" id="rabModal" onclick="tutupRAB()">
         <div class="rab-modal" onclick="event.stopPropagation()">
             <div class="rab-modal-header">
-                <h3 id="rabModalTitle">RAB Awal</h3>
+                <h3 id="rabModalTitle">Detail Anggota</h3>
                 <button type="button" class="rab-modal-close" onclick="tutupRAB()">&times;</button>
             </div>
             <div class="rab-modal-body">
-                <div class="rab-photo" id="rabPhotoWrap">
-                    <span class="photo-label">Foto RAB Kertas</span>
-                    <img id="rabPhoto" src="" alt="Foto RAB" style="display:none;">
-                    <div id="rabPhotoLoading" class="rab-photo-loading">Memuat foto...</div>
-                    <div id="rabPhotoEmpty" class="photo-empty">Foto RAB kertas belum tersedia.</div>
+                <div class="rab-loading-overlay" id="rabLoadingOverlay">
+                    <div class="rab-spinner"></div>
+                    <div class="rab-loading-pct" id="rabLoadingPct">0%</div>
+                    <div class="rab-loading-bar"><div class="rab-loading-bar-fill" id="rabLoadingBar"></div></div>
                 </div>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Uraian</th><th>Volume</th><th>Satuan</th><th>Harga Satuan</th><th>Jumlah</th>
-                        </tr>
-                    </thead>
-                    <tbody id="rabModalBody"></tbody>
-                </table>
+                <div class="rab-tabs">
+                    <button type="button" class="rab-tab active" id="tab-realisasi" onclick="bukaTabRAB(this, 'panel-realisasi')">Realisasi</button>
+                    <button type="button" class="rab-tab" id="tab-rab" onclick="bukaTabRAB(this, 'panel-rab')">RAB Awal</button>
+                    <button type="button" class="rab-tab" id="tab-galeri" onclick="bukaTabRAB(this, 'panel-galeri')">Galeri</button>
+                </div>
+                <!-- Tab 1: Realisasi semua bahan anggota -->
+                <div class="rab-tabpanel active" id="panel-realisasi">
+                    <table class="rab-table">
+                        <thead>
+                            <tr><th>Uraian (Bahan)</th><th>Satuan</th><th>Masuk</th><th>Belum</th><th>Total</th></tr>
+                        </thead>
+                        <tbody id="rabModalBodyRealisasi"></tbody>
+                    </table>
+                    <div class="rab-modal-total" id="rabModalTotalRealisasi"></div>
+                </div>
+                <!-- Tab 2: RAB Awal -->
+                <div class="rab-tabpanel" id="panel-rab">
+                    <div class="rab-photo" id="rabPhotoWrap">
+                        <span class="photo-label">Foto RAB Kertas</span>
+                        <img id="rabPhoto" src="" alt="Foto RAB" style="display:none;">
+                        <div id="rabPhotoLoading" class="rab-photo-loading">Memuat foto...</div>
+                        <div id="rabPhotoEmpty" class="photo-empty">Foto RAB kertas belum tersedia.</div>
+                    </div>
+                    <table class="rab-table">
+                        <thead>
+                            <tr><th>Uraian</th><th>Volume</th><th>Satuan</th><th>Harga Satuan</th><th>Jumlah</th></tr>
+                        </thead>
+                        <tbody id="rabModalBody"></tbody>
+                    </table>
+                    <div class="rab-modal-total" id="rabModalTotal"></div>
+                </div>
+                <!-- Tab 3: Galeri foto anggota dari Google Drive -->
+                <div class="rab-tabpanel" id="panel-galeri">
+                    <div id="rabGaleriWrap" class="rab-galeri"></div>
+                    <div id="rabGaleriEmpty" class="rab-galeri-empty">Galeri foto belum tersedia.</div>
+                </div>
             </div>
-            <div class="rab-modal-total" id="rabModalTotal"></div>
+        </div>
+    </div>
+
+    <!-- Lightbox full resolusi galeri -->
+    <div class="rab-lightbox" id="rabLightbox" onclick="tutupRabLightbox()">
+        <div class="rab-lightbox-content" onclick="event.stopPropagation()">
+            <button type="button" class="rab-lightbox-close" onclick="tutupRabLightbox()">&times;</button>
+            <img id="rabLightboxImg" src="" alt="Foto full resolusi" style="max-width:95vw;max-height:85vh;width:auto;height:auto;display:block;margin:0 auto;">
+            <div class="rab-lightbox-caption" id="rabLightboxCaption"></div>
         </div>
     </div>
 
@@ -872,6 +982,104 @@
             if (chartLaporan) { chartLaporan.destroy(); chartLaporan = null; }
         }
 
+        /* ---------- POPUP TABS ---------- */
+        function bukaTabRAB(btn, panelId) {
+            document.querySelectorAll('.rab-tab').forEach(function(t) { t.classList.remove('active'); });
+            document.querySelectorAll('.rab-tabpanel').forEach(function(p) { p.classList.remove('active'); });
+            btn.classList.add('active');
+            var p = document.getElementById(panelId);
+            if (p) p.classList.add('active');
+            if (panelId === 'panel-galeri') {
+                var curNama = document.getElementById('rabModalTitle').textContent.replace('Detail Anggota - ', '');
+                var curNoUrut = (dataLaporan.anggota || []).find(function(a) {
+                    return String(a.nama || '').trim().toLowerCase() === String(curNama).trim().toLowerCase();
+                });
+                bukaGaleri(curNoUrut ? curNoUrut.noUrut : '');
+            }
+        }
+
+        /* ---------- POPUP LOADING HELPERS ---------- */
+        function setRabLoading(pct) {
+            var bar = document.getElementById('rabLoadingBar');
+            var pctEl = document.getElementById('rabLoadingPct');
+            if (bar) bar.style.width = Math.round(pct) + '%';
+            if (pctEl) pctEl.textContent = Math.round(pct) + '%';
+        }
+        function showRabLoading(show) {
+            var ov = document.getElementById('rabLoadingOverlay');
+            if (ov) ov.classList.toggle('showing', !!show);
+        }
+
+        /* ---------- POPUP GALERI ---------- */
+        async function bukaGaleri(noUrut) {
+            var wrap = document.getElementById('rabGaleriWrap');
+            var empty = document.getElementById('rabGaleriEmpty');
+            if (!wrap) return;
+            wrap.innerHTML = '';
+            if (empty) empty.style.display = 'none';
+            showRabLoading(true);
+            setRabLoading(0);
+
+            var pct = 0;
+            var iv = setInterval(function() {
+                pct += Math.random() * 22;
+                if (pct > 88) pct = 88;
+                setRabLoading(pct);
+            }, 100);
+
+            try {
+                var folderId = getDriveFolderForMember(noUrut);
+                var images = await listDriveImages(folderId, DRIVE_API_KEY);
+                clearInterval(iv);
+                setRabLoading(100);
+                await new Promise(function(r) { setTimeout(r, 250); });
+                showRabLoading(false);
+                if (images.length === 0) {
+                    if (empty) { empty.style.display = 'block'; empty.textContent = 'Belum ada foto di galeri anggota ini.'; }
+                    return;
+                }
+                images.forEach(function(img) {
+                    var item = document.createElement('div');
+                    item.className = 'rab-galeri-item';
+                    var fullSrc = driveFullSizeUrl(img.url);
+                    var cap = img.nama || 'Foto';
+                    var imgEl = document.createElement('img');
+                    imgEl.src = escapeHtml(img.thumb || img.url);
+                    imgEl.alt = escapeHtml(cap);
+                    imgEl.loading = 'lazy';
+                    imgEl.style.cursor = 'pointer';
+                    imgEl.addEventListener('click', (function(s, c) { return function() { bukaRabLightbox(s, c); }; })(fullSrc, cap));
+                    item.appendChild(imgEl);
+                    wrap.appendChild(item);
+                });
+            } catch (e) {
+                clearInterval(iv);
+                setRabLoading(100);
+                showRabLoading(false);
+                if (empty) { empty.style.display = 'block'; empty.textContent = 'Gagal memuat galeri.'; }
+                console.error('Gagal memuat galeri:', e);
+            }
+        }
+
+        /* ---------- POPUP LIGHTBOX ---------- */
+        function bukaRabLightbox(src, caption) {
+            var img = document.getElementById('rabLightboxImg');
+            var cap = document.getElementById('rabLightboxCaption');
+            var lb = document.getElementById('rabLightbox');
+            if (img) img.src = src;
+            if (cap) cap.textContent = caption || '';
+            if (lb) lb.classList.add('active');
+        }
+        function tutupRabLightbox() {
+            var lb = document.getElementById('rabLightbox');
+            var img = document.getElementById('rabLightboxImg');
+            if (lb) lb.classList.remove('active');
+            if (img) img.src = '';
+        }
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') tutupRabLightbox();
+        });
+
         /* ---------- POPUP RAB ---------- */
         function bukaRAB(namaAnggota) {
             const select = document.getElementById('pilihBahanLaporan');
@@ -881,12 +1089,9 @@
             });
 
             const title = document.getElementById('rabModalTitle');
-            const body = document.getElementById('rabModalBody');
-            const totalEl = document.getElementById('rabModalTotal');
-            if (title) title.textContent = 'RAB Awal - ' + namaAnggota;
-            if (!body) return;
+            if (title) title.textContent = 'Detail Anggota - ' + namaAnggota;
 
-            // Foto RAB kertas dari img/
+            // Foto RAB kertas (tab RAB Awal)
             const anggotaData = (dataLaporan.anggota || []).find(function(a) {
                 return String(a.nama || '').trim().toLowerCase() === String(namaAnggota).trim().toLowerCase();
             });
@@ -895,9 +1100,7 @@
             const fotoImg = document.getElementById('rabPhoto');
             const fotoEmpty = document.getElementById('rabPhotoEmpty');
             if (fotoWrap) fotoWrap.style.display = 'block';
-            if (fotoImg) {
-                fotoImg.style.display = 'none'; fotoImg.removeAttribute('src');
-            }
+            if (fotoImg) { fotoImg.style.display = 'none'; fotoImg.removeAttribute('src'); }
             if (fotoEmpty) fotoEmpty.style.display = 'none';
 
             if (noUrut) {
@@ -906,10 +1109,7 @@
                 let iNama = 0, idx = 0;
                 function cobaBerikutnya() {
                     if (iNama >= daftarNama.length) {
-                        if (fotoEmpty) {
-                            fotoEmpty.style.display = 'block';
-                            fotoEmpty.textContent = 'Foto RAB kertas belum tersedia.';
-                        }
+                        if (fotoEmpty) { fotoEmpty.style.display = 'block'; fotoEmpty.textContent = 'Foto RAB kertas belum tersedia.'; }
                         return;
                     }
                     if (idx >= daftarExt.length) { iNama++; idx = 0; cobaBerikutnya(); return; }
@@ -925,6 +1125,64 @@
                 }
                 cobaBerikutnya();
             }
+
+            // ---- Tab 1: Realisasi semua bahan anggota (masuk, belum, total) ----
+            const bodyReal = document.getElementById('rabModalBodyRealisasi');
+            const totalRealEl = document.getElementById('rabModalTotalRealisasi');
+            if (bodyReal) {
+                const memberMat = (dataLaporan.material || []).filter(function(m) {
+                    return String(m.anggota || '').trim().toLowerCase() === String(namaAnggota).trim().toLowerCase();
+                });
+                const memberRab = (dataLaporan.rab || []).filter(function(r) {
+                    return String(r.anggota || '').trim().toLowerCase() === String(namaAnggota).trim().toLowerCase();
+                });
+                const map = {};
+                memberMat.forEach(function(m) {
+                    const key = String(m.namaMaterial || '').trim().toLowerCase();
+                    if (!key) return;
+                    if (!map[key]) map[key] = { nama: m.namaMaterial || '-', satuan: String(m.satuan || '-').trim() || '-', masuk: 0, total: 0 };
+                    map[key].masuk += parseFloat(m.volume) || 0;
+                    if (!map[key].satuan || map[key].satuan === '-') { if (m.satuan) map[key].satuan = String(m.satuan).trim(); }
+                });
+                memberRab.forEach(function(r) {
+                    const key = String(r.uraian || '').trim().toLowerCase();
+                    if (!key) return;
+                    if (!map[key]) map[key] = { nama: r.uraian || '-', satuan: String(r.satuan || '-').trim() || '-', masuk: 0, total: 0 };
+                    map[key].total += parseFloat(r.volume) || 0;
+                });
+                const daftar = Object.values(map).sort(function(a, b) { return String(a.nama).localeCompare(b.nama, 'id'); });
+
+                if (daftar.length === 0) {
+                    bodyReal.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#64748b;">Belum ada data bahan untuk anggota ini.</td></tr>';
+                    if (totalRealEl) totalRealEl.innerHTML = '<span>Total Masuk</span><span>-</span><span>Total Belum</span><span>-</span><span>Total Target</span><span>-</span>';
+                } else {
+                    let tmMasuk = 0, tmBelum = 0, tmTotal = 0;
+                    bodyReal.innerHTML = '';
+                    daftar.forEach(function(d) {
+                        const kurang = Math.max(0, d.total - d.masuk);
+                        tmMasuk += d.masuk; tmBelum += kurang; tmTotal += d.total;
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td>${escapeHtml(d.nama)}</td>
+                            <td>${escapeHtml(d.satuan)}</td>
+                            <td>${d.masuk}</td>
+                            <td>${kurang}</td>
+                            <td><strong>${d.total}</strong></td>
+                        `;
+                        bodyReal.appendChild(tr);
+                    });
+                    if (totalRealEl) {
+                        totalRealEl.innerHTML = '<span>Total Masuk</span><span>' + tmMasuk + '</span>' +
+                            '<span>Total Belum</span><span>' + tmBelum + '</span>' +
+                            '<span>Total Target</span><span>' + tmTotal + '</span>';
+                    }
+                }
+            }
+
+            // ---- Tab 2: RAB Awal ----
+            const body = document.getElementById('rabModalBody');
+            const totalEl = document.getElementById('rabModalTotal');
+            if (!body) return;
 
             if (rabAnggota.length === 0) {
                 body.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#64748b;">Belum ada RAB untuk anggota ini.</td></tr>';
@@ -953,6 +1211,10 @@
                     totalEl.innerHTML = '<span>Total RAB</span><span>' + formatRupiah(total) + '</span>';
                 }
             }
+
+            // Tab aktif awal: Realisasi
+            const tabReal = document.getElementById('tab-realisasi');
+            if (tabReal) bukaTabRAB(tabReal, 'panel-realisasi');
 
             const modal = document.getElementById('rabModal');
             if (modal) modal.classList.add('active');
