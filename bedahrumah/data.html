@@ -59,7 +59,8 @@
             height: 100%; width: 0%; background: var(--brand);
             border-radius: 999px; transition: width 0.3s ease;
         }
-        #loadingPct { margin-top: 0.7rem; font-size: 0.8rem; color: var(--muted); font-variant-numeric: tabular-nums; letter-spacing: 0.04em; }
+        #loadingPct { margin-top: 0.7rem; font-size: 0.8rem; color: var(--muted); font-variant-numeric: tabular-nums; letter-spacing: 0.04em; text-align: center; }
+        #loadingPctNum { margin-top: 0.15rem; font-size: 0.9rem; font-weight: 700; color: var(--brand); text-align: center; letter-spacing: 0.05em; }
 
         /* ---------- HEADER ---------- */
         .laporan-header {
@@ -443,6 +444,14 @@
             margin-top: 0.5rem; text-align: center; color: #fff; font-size: 0.8rem;
             font-variant-numeric: tabular-nums;
         }
+        .rab-lightbox-loading {
+            display: none; position: absolute; inset: 0; background: rgba(0, 0, 0, 0.6);
+            border-radius: 8px; flex-direction: column; align-items: center; justify-content: center;
+            gap: 0.7rem; z-index: 20;
+        }
+        .rab-lightbox-loading.showing { display: flex; }
+        .rab-lightbox-loading-text { color: #fff; font-size: 0.82rem; }
+        #rabLightboxImg { transition: opacity 0.2s ease; }
 
         /* ---------- FOOTER ---------- */
         .laporan-footer {
@@ -513,8 +522,7 @@
 
             .total-strip { display: none !important; }
 
-            .chart-wrap { padding: 6px 8px 4px !important; margin-bottom: 6px !important; border-radius: 4px !important; border: 1px solid #c3cad5 !important; }
-            .chart-wrap::before { font-size: 7px !important; margin-bottom: 3px !important; }
+            .chart-wrap { display: none !important; }
             .chart-box { overflow: visible !important; height: 104px !important; }
             .chart-inner { width: 100% !important; height: 104px !important; }
             #laporanChart { max-height: 104px !important; }
@@ -561,11 +569,12 @@
     <!-- Loading overlay -->
     <div id="loadingOverlay">
         <div style="display:flex;flex-direction:column;align-items:center;gap:0.5rem;">
-            <div class="brand">Loading</div>
-            <div id="loadingPct">0%</div>
-        </div>
-        <div id="loadingBarWrap"><div id="loadingBar"></div></div>
-        <div style="margin-top: 2.5rem; color: var(--muted); font-size: 0.75rem; text-align: center; line-height: 1.6;">
+                <div class="brand">Memuat Data</div>
+                <div id="loadingPct">memuat data, harap tunggu!!</div>
+                <div id="loadingPctNum">0%</div>
+                <div id="loadingBarWrap"><div id="loadingBar"></div></div>
+                </div>
+                <div style="margin-top: 2.5rem; color: var(--muted); font-size: 0.75rem; text-align: center; line-height: 1.6;">
             <div>&copy; ZAZA APP</div>
             <div>by Ferdy Sahputera</div>
         </div>
@@ -645,7 +654,7 @@
             <div class="rab-modal-body">
                 <div class="rab-loading-overlay" id="rabLoadingOverlay">
                     <div class="rab-spinner"></div>
-                    <div class="rab-loading-pct" id="rabLoadingPct">0%</div>
+                    <div class="rab-loading-pct" id="rabLoadingPct">Memuat foto, harap tunggu</div>
                     <div class="rab-loading-bar"><div class="rab-loading-bar-fill" id="rabLoadingBar"></div></div>
                 </div>
                 <div class="rab-tabs">
@@ -657,11 +666,10 @@
                 <div class="rab-tabpanel active" id="panel-realisasi">
                     <table class="rab-table">
                         <thead>
-                            <tr><th>Uraian (Bahan)</th><th>Satuan</th><th>Masuk</th><th>Belum</th><th>Total</th></tr>
+                            <tr><th>Uraian (Bahan)</th><th>Satuan</th><th>Masuk</th><th>Belum</th></tr>
                         </thead>
                         <tbody id="rabModalBodyRealisasi"></tbody>
                     </table>
-                    <div class="rab-modal-total" id="rabModalTotalRealisasi"></div>
                 </div>
                 <!-- Tab 2: RAB Awal -->
                 <div class="rab-tabpanel" id="panel-rab">
@@ -692,6 +700,10 @@
     <div class="rab-lightbox" id="rabLightbox" onclick="tutupRabLightbox()">
         <div class="rab-lightbox-content" onclick="event.stopPropagation()">
             <button type="button" class="rab-lightbox-close" onclick="tutupRabLightbox()">&times;</button>
+            <div class="rab-lightbox-loading" id="rabLightboxLoading">
+                <div class="rab-spinner"></div>
+                <div class="rab-lightbox-loading-text">Memuat foto, harap tunggu</div>
+            </div>
             <img id="rabLightboxImg" src="" alt="Foto full resolusi" style="max-width:95vw;max-height:85vh;width:auto;height:auto;display:block;margin:0 auto;">
             <div class="rab-lightbox-caption" id="rabLightboxCaption"></div>
         </div>
@@ -711,10 +723,10 @@
         /* ---------- LOADING ---------- */
         function setLoading(pct, teks) {
             const bar = document.getElementById('loadingBar');
-            const pctEl = document.getElementById('loadingPct');
+            const pctNum = document.getElementById('loadingPctNum');
             const p = Math.round(pct);
             if (bar) bar.style.width = p + '%';
-            if (pctEl) pctEl.textContent = p + '%';
+            if (pctNum) pctNum.textContent = p + '%';
         }
 
         async function hideLoading() {
@@ -766,6 +778,8 @@
                 hour: '2-digit', minute: '2-digit'
             });
         }
+
+        /* ---------- INISIALISASI ---------- */
 
         /* ---------- INISIALISASI ---------- */
         function inisialisasiLaporan() {
@@ -1003,7 +1017,7 @@
             var bar = document.getElementById('rabLoadingBar');
             var pctEl = document.getElementById('rabLoadingPct');
             if (bar) bar.style.width = Math.round(pct) + '%';
-            if (pctEl) pctEl.textContent = Math.round(pct) + '%';
+            if (pctEl) pctEl.textContent = 'Memuat foto, harap tunggu';
         }
         function showRabLoading(show) {
             var ov = document.getElementById('rabLoadingOverlay');
@@ -1066,15 +1080,31 @@
             var img = document.getElementById('rabLightboxImg');
             var cap = document.getElementById('rabLightboxCaption');
             var lb = document.getElementById('rabLightbox');
-            if (img) img.src = src;
+            var loading = document.getElementById('rabLightboxLoading');
             if (cap) cap.textContent = caption || '';
+            if (img) {
+                img.src = '';
+                img.style.opacity = '0';
+                if (loading) loading.classList.add('showing');
+                img.onload = function() {
+                    if (loading) loading.classList.remove('showing');
+                    img.style.opacity = '1';
+                };
+                img.onerror = function() {
+                    if (loading) loading.classList.remove('showing');
+                    img.style.opacity = '1';
+                };
+                img.src = src;
+            }
             if (lb) lb.classList.add('active');
         }
         function tutupRabLightbox() {
             var lb = document.getElementById('rabLightbox');
             var img = document.getElementById('rabLightboxImg');
+            var loading = document.getElementById('rabLightboxLoading');
             if (lb) lb.classList.remove('active');
-            if (img) img.src = '';
+            if (img) { img.src = ''; img.style.opacity = '1'; }
+            if (loading) loading.classList.remove('showing');
         }
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') tutupRabLightbox();
@@ -1126,9 +1156,8 @@
                 cobaBerikutnya();
             }
 
-            // ---- Tab 1: Realisasi semua bahan anggota (masuk, belum, total) ----
+            // ---- Tab 1: Realisasi semua bahan anggota (masuk, belum) ----
             const bodyReal = document.getElementById('rabModalBodyRealisasi');
-            const totalRealEl = document.getElementById('rabModalTotalRealisasi');
             if (bodyReal) {
                 const memberMat = (dataLaporan.material || []).filter(function(m) {
                     return String(m.anggota || '').trim().toLowerCase() === String(namaAnggota).trim().toLowerCase();
@@ -1153,29 +1182,20 @@
                 const daftar = Object.values(map).sort(function(a, b) { return String(a.nama).localeCompare(b.nama, 'id'); });
 
                 if (daftar.length === 0) {
-                    bodyReal.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#64748b;">Belum ada data bahan untuk anggota ini.</td></tr>';
-                    if (totalRealEl) totalRealEl.innerHTML = '<span>Total Masuk</span><span>-</span><span>Total Belum</span><span>-</span><span>Total Target</span><span>-</span>';
+                    bodyReal.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#64748b;">Belum ada data bahan untuk anggota ini.</td></tr>';
                 } else {
-                    let tmMasuk = 0, tmBelum = 0, tmTotal = 0;
                     bodyReal.innerHTML = '';
                     daftar.forEach(function(d) {
                         const kurang = Math.max(0, d.total - d.masuk);
-                        tmMasuk += d.masuk; tmBelum += kurang; tmTotal += d.total;
                         const tr = document.createElement('tr');
                         tr.innerHTML = `
                             <td>${escapeHtml(d.nama)}</td>
                             <td>${escapeHtml(d.satuan)}</td>
                             <td>${d.masuk}</td>
                             <td>${kurang}</td>
-                            <td><strong>${d.total}</strong></td>
                         `;
                         bodyReal.appendChild(tr);
                     });
-                    if (totalRealEl) {
-                        totalRealEl.innerHTML = '<span>Total Masuk</span><span>' + tmMasuk + '</span>' +
-                            '<span>Total Belum</span><span>' + tmBelum + '</span>' +
-                            '<span>Total Target</span><span>' + tmTotal + '</span>';
-                    }
                 }
             }
 
@@ -1276,36 +1296,6 @@
             const namaBahan = select ? select.value : '';
             if (!namaBahan) { alert('Pilih bahan terlebih dahulu.'); return; }
 
-            const box = document.querySelector('.chart-box');
-            const inner = document.getElementById('chartInner');
-            let lebarAsli = '';
-            if (box && inner) {
-                lebarAsli = inner.style.width;
-                inner.style.width = (box.clientWidth || 900) + 'px';
-            }
-            if (chartLaporan) {
-                chartLaporan.$tampilkanNilai = true;
-                chartLaporan.options.scales.y.grid.color = '#d5dbe4';
-                chartLaporan.options.scales.x.border.color = '#9aa5b5';
-                chartLaporan.options.scales.y.border.color = '#9aa5b5';
-                chartLaporan.resize();
-                chartLaporan.update('none');
-            }
-
-            const pulihkan = function() {
-                if (inner) inner.style.width = lebarAsli;
-                if (chartLaporan) {
-                    chartLaporan.$tampilkanNilai = false;
-                    chartLaporan.options.scales.y.grid.color = '#e6eaf1';
-                    chartLaporan.options.scales.x.border.color = '#c3cad5';
-                    chartLaporan.options.scales.y.border.color = '#c3cad5';
-                    chartLaporan.resize();
-                    chartLaporan.update('none');
-                }
-                window.removeEventListener('afterprint', pulihkan);
-            };
-            window.addEventListener('afterprint', pulihkan);
-
             const judulAsli = document.title;
             document.title = 'Laporan-' + String(namaBahan).replace(/[^a-z0-9]/gi, '_');
             window.print();
@@ -1341,20 +1331,6 @@
                 const stripClone = stripEl.cloneNode(true);
                 stripClone.style.marginBottom = '14px';
                 holder.appendChild(stripClone);
-            }
-
-            if (chartLaporan) {
-                const chartBox = document.createElement('div');
-                chartBox.style.cssText = 'margin-bottom:14px;padding:10px 12px 8px;border:1px solid #e3e7ee;border-radius:8px;';
-                const chartTitle = document.createElement('div');
-                chartTitle.style.cssText = 'font-size:9px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5b6474;margin-bottom:6px;';
-                chartTitle.textContent = 'Grafik Realisasi per Anggota';
-                const chartImg = document.createElement('img');
-                chartImg.src = chartLaporan.toBase64Image('image/png', 1);
-                chartImg.style.cssText = 'display:block;width:100%;height:auto;';
-                chartBox.appendChild(chartTitle);
-                chartBox.appendChild(chartImg);
-                holder.appendChild(chartBox);
             }
 
             const tableWrapEl = document.querySelector('.laporan-table-wrap');
