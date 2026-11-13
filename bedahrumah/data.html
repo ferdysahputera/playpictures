@@ -177,6 +177,20 @@
         .download-btn.print:hover { background: #f4f6fa; border-color: #b9c2d0; }
         .download-btn.print:active { background: #eef1f6; }
 
+        /* ---------- PDF RENDER OVERLAY ---------- */
+        .pdf-render-overlay {
+            position: fixed; inset: 0; z-index: 99999;
+            background: #ffffff; overflow: hidden;
+        }
+        .pdf-render-overlay::after {
+            content: "Menyiapkan PDF, harap tunggu...";
+            position: absolute; inset: 0; z-index: 5;
+            background: #ffffff;
+            display: flex; align-items: center; justify-content: center;
+            font-family: Inter, system-ui, sans-serif; font-size: 0.9rem;
+            font-weight: 600; color: #0b1220;
+        }
+
         /* ---------- RINGKASAN (KPI) ---------- */
         .total-strip {
             display: grid; grid-template-columns: repeat(3, 1fr);
@@ -562,6 +576,7 @@
             }
             .laporan-footer a { color: #10233f; text-decoration: none; }
         }
+
     </style>
 </head>
 <body>
@@ -637,7 +652,7 @@
         </div>
 
         <footer class="laporan-footer" id="laporanFooter">
-            <span class="footer-item">Cek data :  <a href="http://playpictures.my.id/bedahrumah/data.html" target="_blank" rel="noopener">playpictures.my.id/bedahrumah/data.html</a></span>
+            <span class="footer-item">Cek dat berkala di Website: <a href="http://playpictures.my.id/bedahrumah/data.html" target="_blank" rel="noopener">playpictures.my.id/bedahrumah/data.html</a></span>
             <span class="footer-item">Tanggal Cetak: <strong id="footerTanggal">-</strong></span>
             <span class="footer-item footer-brand">&copy; Ferdy Sahputera</span>
         </footer>
@@ -1300,20 +1315,11 @@
             window.print();
             setTimeout(function() {
                 document.title = judulAsli;
-                pulihkan();
             }, 800);
         }
 
-        /* ---------- UNDUH JPG ---------- */
-        function unduhJPG() {
-            const select = document.getElementById('pilihBahanLaporan');
-            const namaBahan = select ? select.value : '';
-            if (!namaBahan) { alert('Pilih bahan terlebih dahulu.'); return; }
-            if (typeof html2canvas !== 'function') {
-                alert('Library html2canvas belum termuat. Pastikan ada koneksi internet lalu muat ulang halaman.');
-                return;
-            }
-
+        /* ---------- BUILDER HOLDER LAPORAN (dipakai JPG & PDF) ---------- */
+        function buatHolderLaporan() {
             const holder = document.createElement('div');
             holder.style.cssText = 'position:fixed;left:-10000px;top:0;width:900px;background:#ffffff;padding:26px 28px;box-sizing:border-box;font-family:Inter,Segoe UI,sans-serif;color:#0b1220;';
 
@@ -1325,7 +1331,6 @@
             }
 
             const stripEl = document.getElementById('stripTotal');
-
             if (stripEl && stripEl.innerHTML.trim() !== '') {
                 const stripClone = stripEl.cloneNode(true);
                 stripClone.style.marginBottom = '14px';
@@ -1350,6 +1355,36 @@
                 holder.appendChild(footerClone);
             }
 
+            return holder;
+        }
+
+        /* ---------- AMBIL CSS @media print ASLI ---------- */
+        function ambilCssPrint(css) {
+            var idx = css.indexOf('@media print');
+            if (idx < 0) return '';
+            var start = css.indexOf('{', idx);
+            if (start < 0) return '';
+            var depth = 0, end = -1;
+            for (var i = start; i < css.length; i++) {
+                var ch = css.charAt(i);
+                if (ch === '{') depth++;
+                else if (ch === '}') { depth--; if (depth === 0) { end = i; break; } }
+            }
+            if (end < 0) return '';
+            return css.substring(start + 1, end);
+        }
+
+        /* ---------- UNDUH JPG ---------- */
+        function unduhJPG() {
+            const select = document.getElementById('pilihBahanLaporan');
+            const namaBahan = select ? select.value : '';
+            if (!namaBahan) { alert('Pilih bahan terlebih dahulu.'); return; }
+            if (typeof html2canvas !== 'function') {
+                alert('Library html2canvas belum termuat. Pastikan ada koneksi internet lalu muat ulang halaman.');
+                return;
+            }
+
+            const holder = buatHolderLaporan();
             document.body.appendChild(holder);
             html2canvas(holder, { backgroundColor: '#ffffff', scale: 2, useCORS: true })
                 .then(function(canvas) {
@@ -1365,7 +1400,7 @@
                 });
         }
 
-        const nilaiBatangPlugin = {
+const nilaiBatangPlugin = {
             id: 'nilaiBatang',
             afterDatasetsDraw: function(chart) {
                 if (!chart.$tampilkanNilai) return;

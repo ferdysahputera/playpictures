@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transparansi Kas - Bedah Rumah</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ink: #0b1220;
+            --muted: #5b6474;
+            --line: #e3e7ee;
+            --line-soft: #eef0f4;
+            --surface: #ffffff;
+            --bg: #f5f6f8;
+            --navy: #10233f;
+            --navy-soft: #1a3354;
+            --brand: #1d4ed8;
+            --brand-dark: #163ea8;
+            --green: #12805c;
+            --red: #b42318;
+        }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--ink);
+            font-size: 14px;
+            -webkit-font-smoothing: antialiased;
+        }
+        .container { max-width: 1040px; margin: 0 auto; padding: 1.5rem 1.15rem 2.5rem; }
+
+        /* ---------- LOADING OVERLAY ---------- */
+        #loadingOverlay {
+            position: fixed; inset: 0; z-index: 10000;
+            background: var(--surface);
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            font-family: inherit;
+        }
+        #loadingOverlay.hidden {
+            opacity: 0; transition: opacity 0.4s ease;
+            pointer-events: none;
+        }
+        #loadingOverlay .brand {
+            font-size: 1.35rem; font-weight: 700; color: var(--navy);
+            margin-bottom: 0.25rem; letter-spacing: -0.01em;
+        }
+        #loadingBarWrap {
+            width: clamp(260px, 40vw, 380px); height: 4px;
+            background: #e9edf3; border-radius: 999px; overflow: hidden;
+            margin-top: 1.25rem;
+        }
+        #loadingBar {
+            height: 100%; width: 0%; background: var(--brand);
+            border-radius: 999px; transition: width 0.3s ease;
+        }
+        #loadingPct { margin-top: 0.7rem; font-size: 0.8rem; color: var(--muted); text-align: center; letter-spacing: 0.04em; }
+        #loadingPctNum { margin-top: 0.15rem; font-size: 0.9rem; font-weight: 700; color: var(--brand); text-align: center; letter-spacing: 0.05em; }
+
+        /* ---------- HEADER ---------- */
+        .laporan-header {
+            position: relative;
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            padding: 1.4rem 1.6rem;
+            margin-bottom: 0.9rem;
+            box-shadow: 0 1px 2px rgba(16, 35, 63, 0.04);
+            overflow: hidden;
+        }
+        .laporan-header::before {
+            content: "";
+            position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
+            background: linear-gradient(180deg, var(--navy) 0%, var(--brand) 100%);
+        }
+        .laporan-header .head-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+        .laporan-header .head-brand { display: flex; align-items: center; gap: 0.9rem; }
+        .laporan-header .brand-mark {
+            width: 44px; height: 44px; border-radius: 8px;
+            background: var(--navy); color: #fff;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.8rem; font-weight: 700; letter-spacing: 0.05em;
+            flex-shrink: 0;
+        }
+        .laporan-header .head-text h1 {
+            margin: 0;
+            font-size: 1.35rem;
+            font-weight: 700;
+            letter-spacing: -0.015em;
+            line-height: 1.25;
+            color: var(--navy);
+        }
+        .laporan-header .head-text .sub {
+            margin: 0.2rem 0 0;
+            color: var(--muted);
+            font-size: 0.82rem;
+            line-height: 1.45;
+        }
+        .laporan-header .head-meta {
+            border-left: 1px solid var(--line);
+            padding-left: 1.35rem;
+            text-align: right;
+        }
+        .laporan-header .head-meta .meta-label {
+            display: block; font-size: 0.63rem; font-weight: 600;
+            text-transform: uppercase; letter-spacing: 0.1em;
+            color: var(--muted); margin-bottom: 0.2rem;
+        }
+        .laporan-header .head-meta .meta-value {
+            font-size: 0.86rem; font-weight: 600; color: var(--ink);
+        }
+        @media (max-width: 640px) {
+            .laporan-header { padding: 1.1rem 1.2rem; }
+            .laporan-header .head-text h1 { font-size: 1.12rem; }
+            .laporan-header .head-text .sub { font-size: 0.78rem; }
+            .laporan-header .head-meta {
+                border-left: none; padding-left: 0; text-align: left;
+                width: 100%; padding-top: 0.6rem; border-top: 1px solid var(--line);
+            }
+            .laporan-header .brand-mark { width: 38px; height: 38px; font-size: 0.72rem; }
+        }
+
+        /* ---------- CONTROLS ---------- */
+        .laporan-controls {
+            display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap;
+            margin-bottom: 0.9rem;
+            background: var(--surface); padding: 0.85rem 1rem;
+            border-radius: 10px; border: 1px solid var(--line);
+        }
+        .laporan-controls label {
+            font-size: 0.66rem; font-weight: 600; color: var(--muted);
+            text-transform: uppercase; letter-spacing: 0.09em; margin: 0;
+        }
+        .laporan-controls select,
+        .laporan-controls input[type="month"],
+        .laporan-controls input[type="search"] {
+            border: 1px solid var(--line); background-color: var(--surface);
+            color: var(--ink); padding: 0.5rem 0.7rem;
+            border-radius: 6px; font-size: 0.86rem; font-family: inherit;
+        }
+        .laporan-controls select {
+            appearance: none; -webkit-appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%235b6474' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+            background-repeat: no-repeat; background-position: right 0.7rem center;
+            padding-right: 2rem; cursor: pointer; min-width: 150px;
+        }
+        .laporan-controls input[type="month"] { min-width: 150px; }
+        .laporan-controls input[type="search"] { min-width: 170px; }
+        .laporan-controls select:focus,
+        .laporan-controls input:focus {
+            outline: 2px solid rgba(29, 78, 216, 0.22);
+            outline-offset: 1px; border-color: var(--brand);
+        }
+        .controls-actions { margin-left: auto; display: flex; gap: 0.5rem; flex-wrap: wrap; }
+        .download-btn {
+            background: var(--navy); color: #fff;
+            border: 1px solid var(--navy);
+            padding: 0.5rem 1rem; border-radius: 6px;
+            font-weight: 600; font-size: 0.82rem; font-family: inherit;
+            cursor: pointer; transition: background 0.15s, border-color 0.15s;
+            white-space: nowrap;
+        }
+        .download-btn:hover { background: var(--navy-soft); border-color: var(--navy-soft); }
+        .download-btn:active { background: #142a45; }
+        .download-btn.print {
+            background: var(--surface); color: var(--navy);
+            border: 1px solid #cfd6e0;
+        }
+        .download-btn.print:hover { background: #f4f6fa; border-color: #b9c2d0; }
+        .download-btn.print:active { background: #eef1f6; }
+
+        /* ---------- RINGKASAN (KPI) ---------- */
+        .total-strip {
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 0.75rem; margin-bottom: 0.9rem;
+        }
+        .total-chip {
+            position: relative; overflow: hidden;
+            background: var(--surface); border: 1px solid var(--line);
+            border-radius: 10px; padding: 0.95rem 1.1rem 0.85rem;
+        }
+        .total-chip::before {
+            content: ""; position: absolute; left: 0; top: 0; right: 0; height: 3px;
+            background: var(--line);
+        }
+        .total-chip.masuk::before { background: var(--green); }
+        .total-chip.keluar::before { background: var(--red); }
+        .total-chip.saldo::before { background: var(--navy); }
+        .total-chip .label {
+            display: block; font-size: 0.63rem; font-weight: 600;
+            letter-spacing: 0.09em; text-transform: uppercase;
+            color: var(--muted); margin-bottom: 0.4rem;
+        }
+        .total-chip .nilai {
+            font-size: 1.3rem; font-weight: 700; color: var(--ink);
+            font-variant-numeric: tabular-nums; letter-spacing: -0.01em;
+        }
+        .total-chip.masuk .nilai { color: var(--green); }
+        .total-chip.keluar .nilai { color: var(--red); }
+        .total-chip .sub-note {
+            display: block; margin-top: 0.25rem; font-size: 0.7rem; color: var(--muted);
+        }
+
+        /* ---------- TABLE ---------- */
+        .laporan-table-wrap {
+            width: 100%; overflow-x: auto;
+            border: 1px solid var(--line); border-radius: 10px; background: var(--surface);
+        }
+        table.laporan-table {
+            width: 100%; border-collapse: collapse; min-width: 700px;
+            font-size: 0.86rem;
+        }
+        table.laporan-table thead th {
+            background: #f7f8fa; text-align: left; color: #475467;
+            font-weight: 600; font-size: 0.66rem; padding: 0.7rem 0.85rem;
+            border-bottom: 1px solid var(--line); white-space: nowrap;
+            text-transform: uppercase; letter-spacing: 0.07em;
+            position: relative;
+        }
+        table.laporan-table thead th.sortable { cursor: pointer; user-select: none; }
+        table.laporan-table thead th.sortable:hover { background: #f0f2f6; color: var(--navy); }
+        table.laporan-table thead th.sortable::after {
+            content: "\2195"; font-size: 0.6rem; opacity: 0.35; margin-left: 0.3rem;
+        }
+        table.laporan-table thead th.sort-asc::after { content: "\2191"; opacity: 1; color: var(--brand); }
+        table.laporan-table thead th.sort-desc::after { content: "\2193"; opacity: 1; color: var(--brand); }
+        table.laporan-table tbody td {
+            padding: 0.7rem 0.85rem; border-bottom: 1px solid var(--line-soft);
+            color: var(--ink); vertical-align: middle;
+            font-variant-numeric: tabular-nums;
+        }
+        table.laporan-table tbody tr:last-child td { border-bottom: none; }
+        table.laporan-table tbody tr:nth-child(even) td { background: #fbfcfd; }
+        table.laporan-table tbody tr:hover td { background: #f6f8ff; }
+        table.laporan-table tbody tr.row-masuk td { background: #f6fbf8; }
+        table.laporan-table tbody tr.row-masuk:hover td { background: #eff9f3; }
+        table.laporan-table tbody tr.row-keluar td { background: #fef7f6; }
+        table.laporan-table tbody tr.row-keluar:hover td { background: #fdeeec; }
+
+        table.laporan-table tfoot td {
+            padding: 0.7rem 0.85rem; background: #f7f8fa;
+            border-top: 1.5px solid var(--line);
+            font-variant-numeric: tabular-nums;
+        }
+        table.laporan-table tfoot td:first-child { font-size: 0.7rem; letter-spacing: 0.06em; color: #475467; }
+
+        .nominal-masuk { color: var(--green); font-weight: 700; white-space: nowrap; }
+        .nominal-keluar { color: var(--red); font-weight: 700; white-space: nowrap; }
+        .nominal-kosong { color: #c3cad5; }
+        .saldo-cell { font-weight: 700; white-space: nowrap; }
+        .saldo-cell.negatif { color: var(--red); }
+        .jenis-tag {
+            display: inline-block; padding: 0.18rem 0.5rem; border-radius: 6px;
+            font-size: 0.72rem; font-weight: 600; white-space: nowrap;
+        }
+        .jenis-tag.masuk { background: #ecfdf3; color: #067647; border: 1px solid #abefc6; }
+        .jenis-tag.keluar { background: #fef3f2; color: var(--red); border: 1px solid #fecdca; }
+        .empty-state { text-align: center; padding: 2.5rem 1rem; color: var(--muted); font-size: 0.86rem; }
+
+        /* ---------- FOOTER ---------- */
+        .laporan-footer {
+            margin-top: 1.25rem; padding: 1rem 1.2rem; border-radius: 10px;
+            background: var(--surface); border: 1px solid var(--line);
+            display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem;
+            justify-content: space-between; align-items: center;
+            font-size: 0.76rem; color: var(--muted);
+        }
+        .laporan-footer .footer-item { display: inline-flex; align-items: center; gap: 0.35rem; }
+        .laporan-footer .footer-item strong { color: var(--ink); font-weight: 600; }
+        .laporan-footer a { color: var(--brand-dark); font-weight: 600; text-decoration: none; word-break: break-all; }
+        .laporan-footer a:hover { text-decoration: underline; }
+        .laporan-footer .footer-brand { font-weight: 600; color: var(--muted); }
+
+        @media (max-width: 640px) {
+            .laporan-footer { flex-direction: column; align-items: flex-start; }
+            .laporan-controls { flex-direction: column; align-items: stretch; }
+            .laporan-controls select,
+            .laporan-controls input[type="month"],
+            .laporan-controls input[type="search"] { width: 100%; }
+            .controls-actions { margin-left: 0; }
+            .controls-actions .download-btn { flex: 1; }
+            .total-strip { grid-template-columns: 1fr; }
+            .total-chip .nilai { font-size: 1.15rem; }
+            table.laporan-table { min-width: 620px; font-size: 0.78rem; }
+            table.laporan-table thead th, table.laporan-table tbody td { padding: 0.5rem 0.55rem; }
+        }
+
+        /* ---------- PRINT ---------- */
+        .print-only { display: none; }
+        @media print {
+            @page { size: A4 portrait; margin: 9mm 10mm; }
+            html, body {
+                background: #fff !important;
+                -webkit-print-color-adjust: exact; print-color-adjust: exact;
+                font-size: 11px;
+            }
+            #loadingOverlay, .laporan-controls, .no-print { display: none !important; }
+            .container { max-width: none; margin: 0; padding: 0; }
+            .laporan-header, .total-strip, .laporan-table-wrap, .laporan-footer {
+                box-shadow: none !important; border-radius: 0 !important;
+            }
+            .laporan-header {
+                padding: 8px 10px 8px 14px !important;
+                margin-bottom: 6px !important;
+                border: none !important;
+                border-bottom: 1.5px solid #10233f !important;
+            }
+            .laporan-header::before { width: 3px; }
+            .laporan-header .brand-mark { width: 30px; height: 30px; font-size: 8px; border-radius: 4px; }
+            .laporan-header .head-text h1 { font-size: 13.5px !important; }
+            .laporan-header .head-text .sub { font-size: 9px !important; margin-top: 1px; }
+            .laporan-header .head-meta { padding-left: 10px; }
+            .laporan-header .head-meta .meta-label { font-size: 7px; margin-bottom: 1px; }
+            .laporan-header .head-meta .meta-value { font-size: 9px; }
+
+            .print-only {
+                display: block !important;
+                margin: 0 0 5px; padding-bottom: 3px;
+                border-bottom: 1px solid #dfe3e9;
+                font-size: 9px; color: #5b6474;
+            }
+            .print-only .print-row {
+                display: flex; justify-content: flex-start; align-items: baseline; gap: 10px;
+            }
+            .print-only .print-summary {
+                margin-top: 2px; font-size: 8px; color: #5b6474;
+                display: flex; flex-wrap: wrap; gap: 0 10px;
+            }
+            .print-only .print-summary b { font-weight: 600; color: #10233f; }
+
+            .total-strip { display: none !important; }
+
+            .laporan-table-wrap {
+                overflow: visible !important;
+                border: 1px solid #c3cad5 !important;
+                border-radius: 0 !important;
+                margin: 0 !important;
+            }
+            table.laporan-table { min-width: 0 !important; width: 100%; font-size: 9px !important; }
+            table.laporan-table thead { display: table-header-group; }
+            table.laporan-table tr { break-inside: avoid; page-break-inside: avoid; }
+            table.laporan-table thead th {
+                background: #eef1f6 !important; color: #10233f !important;
+                border-bottom: 1px solid #c3cad5 !important;
+                padding: 3px 5px !important; font-size: 7px !important; letter-spacing: 0.05em;
+            }
+            table.laporan-table tbody td {
+                padding: 2.5px 5px !important;
+                border-bottom: 1px solid #e6e9ef !important;
+                font-size: 9px !important;
+            }
+            table.laporan-table tbody tr.row-masuk td { background: #f4faf7 !important; }
+            table.laporan-table tbody tr.row-keluar td { background: #fef3f2 !important; }
+            table.laporan-table thead th.sortable::after { content: "" !important; }
+            table.laporan-table tfoot td {
+                padding: 3px 5px !important; font-size: 9px !important;
+                background: #eef1f6 !important; border-top: 1px solid #c3cad5 !important;
+            }
+            .jenis-tag { padding: 0 3px !important; font-size: 8px !important; border: none !important; background: transparent !important; }
+            .jenis-tag.masuk { color: #067647 !important; }
+            .jenis-tag.keluar { color: #b42318 !important; }
+
+            .laporan-footer {
+                margin-top: 6px !important; padding: 5px 8px !important;
+                border: none !important; border-top: 1px solid #dfe3e9 !important;
+                border-radius: 0 !important; font-size: 8px !important;
+            }
+            .laporan-footer a { color: #10233f; text-decoration: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Loading overlay -->
+    <div id="loadingOverlay">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:0.5rem;">
+            <div class="brand">Memuat Data, harap tunggu....!!!</div>
+            <div id="loadingPct"></div>
+            <div id="loadingPctNum">0%</div>
+            <div id="loadingBarWrap"><div id="loadingBar"></div></div>
+        </div>
+        <div style="margin-top: 2.5rem; color: var(--muted); font-size: 0.75rem; text-align: center; line-height: 1.6;">
+            <div>&copy; Ferdy Sahputera</div>
+        </div>
+    </div>
+
+    <div class="container">
+        <header class="laporan-header">
+            <div class="head-row">
+                <div class="head-brand">
+                    <div class="brand-mark">BR</div>
+                    <div class="head-text">
+                        <h1>Transparansi Kas</h1>
+                        <p class="sub">Bedah Rumah Kelompok 2 &bull; Desa Kampung Baru</p>
+                    </div>
+                </div>
+                <div class="head-meta">
+                    <span class="meta-label">Jenis Laporan</span>
+                    <span class="meta-value">Kas Masuk &amp; Kas Keluar</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="print-only" id="printInfo">
+            <div class="print-row"><div id="printMeta">-</div></div>
+            <div class="print-summary" id="printSummary"></div>
+        </div>
+
+        <div class="laporan-controls">
+            <label for="filterKasBulan">Periode</label>
+            <input type="month" id="filterKasBulan">
+            <label for="filterKasJenis">Jenis</label>
+            <select id="filterKasJenis">
+                <option value="">Semua</option>
+                <option value="masuk">Kas Masuk</option>
+                <option value="keluar">Kas Keluar</option>
+            </select>
+            <label for="filterKasCari">Cari</label>
+            <input type="search" id="filterKasCari" placeholder="Keterangan...">
+            <div class="controls-actions">
+                <button class="download-btn print" type="button" onclick="resetFilterKas()">Reset</button>
+                <button class="download-btn print" type="button" onclick="cetakKas()">Cetak</button>
+                <button class="download-btn" type="button" onclick="unduhJPGKas()">Unduh JPG</button>
+            </div>
+        </div>
+
+        <div class="total-strip" id="stripTotal">
+            <div class="total-chip masuk">
+                <span class="label">Total Kas Masuk</span>
+                <span class="nilai" id="kasTotalMasuk">Rp 0</span>
+                <span class="sub-note" id="kasJumlahMasuk">0 transaksi</span>
+            </div>
+            <div class="total-chip keluar">
+                <span class="label">Total Kas Keluar</span>
+                <span class="nilai" id="kasTotalKeluar">Rp 0</span>
+                <span class="sub-note" id="kasJumlahKeluar">0 transaksi</span>
+            </div>
+            <div class="total-chip saldo">
+                <span class="label">Saldo Kas</span>
+                <span class="nilai" id="kasSaldo">Rp 0</span>
+                <span class="sub-note" id="kasJumlahTransaksi">0 transaksi</span>
+            </div>
+        </div>
+
+        <div class="laporan-table-wrap">
+            <table class="laporan-table" id="kasTable">
+                <thead>
+                    <tr>
+                        <th>TANGGAL</th>
+                        <th class="sortable" data-sort="masuk" onclick="urutkanKas('masuk')" style="text-align:right;">MASUK</th>
+                        <th class="sortable" data-sort="keluar" onclick="urutkanKas('keluar')" style="text-align:right;">KELUAR</th>
+                        <th>KETERANGAN</th>
+                    </tr>
+                </thead>
+                <tbody id="tbodyKas">
+                    <tr><td colspan="4" class="empty-state">Memuat data kas...</td></tr>
+                </tbody>
+                <tfoot id="tfootKas">
+                    <tr>
+                        <td><strong>TOTAL</strong></td>
+                        <td class="nominal-masuk" id="footMasuk" style="text-align:right;">Rp 0</td>
+                        <td class="nominal-keluar" id="footKeluar" style="text-align:right;">Rp 0</td>
+                        <td><strong>Sisa: <span id="footSisa">Rp 0</span></strong></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+
+        <div id="emptyKas" class="empty-state" style="display:none;">
+            <p>Belum ada transaksi kas. Silakan input melalui admin.</p>
+        </div>
+
+        <footer class="laporan-footer" id="laporanFooter">
+            <span class="footer-item">Website: <a href="http://playpictures.my.id/bedahrumah/kas.html" target="_blank" rel="noopener">playpictures.my.id/bedahrumah/kas.html</a></span>
+            <span class="footer-item">Tanggal Cetak: <strong id="footerTanggal">-</strong></span>
+            <span class="footer-item footer-brand">&copy; ZAZA APP &nbsp;|&nbsp; by Ferdy Sahputera</span>
+            <span class="footer-item no-print"><a href="index.html">&larr; Beranda</a> &nbsp;|&nbsp; <a href="data.html">Laporan Material</a></span>
+        </footer>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/kas.js"></script>
+</body>
+</html>

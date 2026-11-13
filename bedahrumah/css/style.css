@@ -1086,6 +1086,30 @@ main.container {
     box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.08);
 }
 
+.filter-inline input[type="month"],
+.filter-inline input[type="search"] {
+    border-radius: 12px;
+    border: 1px solid rgba(148, 163, 184, 0.5);
+    padding: 0.55rem 0.8rem;
+    font-size: 0.95rem;
+    background: #fff;
+    color: var(--text-primary);
+    font-family: inherit;
+}
+
+.filter-inline input[type="month"]:focus,
+.filter-inline input[type="search"]:focus {
+    outline: none;
+    border-color: rgba(37, 99, 235, 0.8);
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.08);
+}
+
+.page-hero button.btn-hero {
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+}
+
 .ringkasan-strip {
     display: flex;
     flex-wrap: wrap;
